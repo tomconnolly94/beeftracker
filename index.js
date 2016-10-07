@@ -7,6 +7,7 @@ app.use(express.static(__dirname + '/public'));
 
 // views is directory for all template files
 app.set('views', __dirname + '/views');
+app.set('css', __dirname + '/public/stylesheets');
 app.set('view engine', 'ejs');
 
 app.get('/', function(request, response) {
