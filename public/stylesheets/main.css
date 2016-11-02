@@ -9,30 +9,41 @@ wrapper{
 	margin:auto;
 }
 .box{
-	horizontal-align:centre;
    	width:49%;
    	height:100%;
     	background-color:red;
     	border:1px solid;
 	z-index:0;
-	transition:all 325ms ease-in-out 0s;
+	transition:all 325ms ease-in-out 0.1s;
 }
 
 .box:hover{
-   	   
    	position:absolute;
 	z-index:100;
-    	transition:all 325ms ease-in-out 0s;
+    	transition:all 325ms ease-in-out 0.1s;
 
 }
 
 #one{
 	float:left;
-	position:absolute;
+    position:absolute;
+    max-height: 100%;
+    background-image: "../assets/skeppy.jpg";
+    background-size:cover;
+    width: 50%;
+    height: 100%:
 }
 #two{
 	float:left;
 	overflow:hidden;
 	left:50%;
-	position:absolute;
+    position:absolute;
+    background-image: "../assets/eminem.jpg" ;
+    background-size:cover;
+    width: 50%;
+    height: 100%:
+}
+
+slideImage{
+    object-fit:fill;
 }
