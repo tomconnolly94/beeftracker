@@ -1,17 +1,38 @@
-#title { 
-    color: #ffffff; 
-    font-family: 'Raleway',sans-serif; 
-    font-size: 62px; 
-    font-weight: 800; 
-    line-height: 72px; 
-    margin: 0 0 24px; 
-    text-align: center; 
-    text-transform: uppercase;
+body{
+	margin:0;
+	padding:0;
+}
+wrapper{
+	overflow:hidden;
+	height:100%;
+	width:100%;
+	margin:auto;
+}
+.box{
+	horizontal-align:centre;
+   	width:49%;
+   	height:100%;
+    	background-color:red;
+    	border:1px solid;
+	z-index:0;
+	transition:all 200ms ease-in-out 0s;
 }
 
-#headerContainer {
-    background-color: black;
-    border: 0;
-    margin 0;
+.box:hover{
+   	   
+   	position:absolute;
+	z-index:100;
+    	transition:all 200ms ease-in-out 0s;
+
 }
 
+#one{
+	float:left;
+	position:absolute;
+}
+#two{
+	float:left;
+	overflow:hidden;
+	left:50%;
+	position:absolute;
+}
