@@ -6,8 +6,6 @@ var assert = require('assert');
 
 app.set('port', (process.env.PORT || 5000));
 
-app.set()
-
 app.use(express.static(__dirname + '/public'));
 
 // views is directory for all template files
