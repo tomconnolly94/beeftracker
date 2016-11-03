@@ -22,6 +22,10 @@ app.get('/db', function(request, response) {
   response.render('pages/db');
 });
 
+app.get('/beef', function(request, response){
+	response.render('pages/beef');
+});
+
 /*app.get('/beef/:tagId', function(req, res) {
   res.send("tagId is set to " + req.params.tagId);
 });*/
