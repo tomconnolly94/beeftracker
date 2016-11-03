@@ -32,24 +32,28 @@ app.get('/beef/:tagId', function(request, response) {
     
     console.log(process.env.MONGODB_URL);
     
-    var beefId = request.params.tagId;
+    var beefIdentifier = request.params.tagId;
     
     MongoClient.connect(process.env.MONGODB_URL, function(err, db) {
         if(err){ console.log(err);}else{
             
             console.log("Connected correctly to server.");
             
-            console.log(beefId);
+            console.log(beefIdentifier);
                 
-            var cursor = db.collection("beef_data").find({beefId : beefId});
+            var cursor = db.collection("beef_data").find({beefId : beefIdentifier});
+            
+            console.log(cursor);
+            
             cursor.each(function(err, doc) {
-                assert.equal(err, null);
+                if(err){ console.log(err);}else{
                 
-                if (doc != null) {
-                    response.render('pages/generic_beef.ejs', {name : doc.password});
-                } 
-                else{
-                    response.send("beef not found.")
+                    if (doc != null) {
+                        response.render('pages/generic_beef.ejs', {beefObject : doc.aggressor});
+                    } 
+                    else{
+                        response.send("beef not found.")
+                    }
                 }
             });
         
