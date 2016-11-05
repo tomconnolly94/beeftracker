@@ -36,14 +36,31 @@ app.get('/beef/:tagId', function(request, response) {
     
     MongoClient.connect(process.env.MONGODB_URL, function(err, db) {
         if(err){ console.log(err);}else{
+                        
+            var field_name = 'beefId';
             
-            console.log("Connected correctly to server.");
+            var qry = "{\"" + field_name + "\":" + beefIdentifier + "}"
+                        
+            db.collection("beef_data").find(JSON.parse(qry)).toArray(function(err, docs) {
+                console.log("########");
+                console.log(beefIdentifier);
+                console.log(docs.length);
+                console.log(docs[1]);
+                response.render('pages/generic_beef.ejs', {beefObject : docs[0]});
+                db.close()
+            });
             
-            console.log(beefIdentifier);
-                
-            var cursor = db.collection("beef_data").find({beefId : beefIdentifier});
             
-            console.log(cursor);
+            /*
+            //console.log(cursor);
+            var myDocument = cursor.hasNext() ? cursor.next() : null;
+
+            console.log(myDocument);
+            
+            if (myDocument) {
+                var myName = myDocument.aggressor;
+                console.log(myName + "line 53");
+            }
             
             cursor.each(function(err, doc) {
                 if(err){ console.log(err);}else{
@@ -55,7 +72,7 @@ app.get('/beef/:tagId', function(request, response) {
                         response.send("beef not found.")
                     }
                 }
-            });
+            });*/
         
             db.close();
         }
