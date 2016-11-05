@@ -34,7 +34,7 @@ app.get('/beef/:tagId', function(request, response) {
     
     var beefIdentifier = request.params.tagId;
     
-    MongoClient.connect(process.env.MONGODB_URL, function(err, db) {
+    MongoClient.connect("mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6", function(err, db) {
         if(err){ console.log(err);}else{
                         
             var field_name = 'beefId';
