@@ -46,7 +46,7 @@ app.get('/beef/:tagId', function(request, response) {
                 console.log(beefIdentifier);
                 console.log(docs.length);
                 console.log(docs[0]);
-                response.render('/views/pages/generic_beef.ejs', {beefObject : docs[0]});
+                response.render('pages/generic_beef.ejs', {beefObject : docs[0]});
                 db.close()
             });
             
