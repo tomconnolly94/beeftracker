@@ -1,0 +1,30 @@
+<html>
+
+    <head>
+    
+    </head>
+
+    <body>
+        <script>
+            //1. import and sanitise express objects
+            var beef = <%- JSON.stringify(beefObject)%>;
+            
+            //2. manipulate data   
+            
+            
+            
+            var targets = beef.targets[0];    
+            
+            var numOfTargets = Object.keys(beef.targets).length;
+            
+            for(var i = 1; i < numOfTargets; i++){
+                targets += ", " + beef.targets[i];
+            }
+            
+            //3. output data
+            document.body.innerHTML = beef.aggressor + " vs " + targets + "\n Date: " + beef.date;
+            console.log(beef);
+        </script>
+    </body>
+    
+</html>
