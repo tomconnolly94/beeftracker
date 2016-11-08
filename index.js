@@ -38,7 +38,7 @@ app.get('/beef/:tagId', function(request, response) {
                 console.log(beefIdentifier);
                 console.log(docs.length);
                 console.log(docs[0]);
-                response.render('pages/generic_beef.ejs', {beefObject : docs[0]});
+                response.render('pages/beef_server_version.ejs', {beefObject : docs[0]});
                 db.close()
             });
         
@@ -48,10 +48,7 @@ app.get('/beef/:tagId', function(request, response) {
 });
 
 app.post('/adduser', function(req,res){
-    
-    
-    
-    
+        
 })
 
 app.listen(app.get('port'), function() {
