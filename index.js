@@ -20,10 +20,6 @@ app.get('/db', function(request, response) {
   response.render('pages/db');
 });
 
-/*app.get('/beef/:tagId', function(req, res) {
-  res.send("tagId is set to " + req.params.tagId);
-});*/
-
 app.get('/beef/:tagId', function(request, response) {
     
     console.log(process.env.MONGODB_URL);
@@ -45,37 +41,10 @@ app.get('/beef/:tagId', function(request, response) {
                 response.render('pages/generic_beef.ejs', {beefObject : docs[0]});
                 db.close()
             });
-            
-            
-            /*
-            //console.log(cursor);
-            var myDocument = cursor.hasNext() ? cursor.next() : null;
-
-            console.log(myDocument);
-            
-            if (myDocument) {
-                var myName = myDocument.aggressor;
-                console.log(myName + "line 53");
-            }
-            
-            cursor.each(function(err, doc) {
-                if(err){ console.log(err);}else{
-                
-                    if (doc != null) {
-                        response.render('pages/generic_beef.ejs', {beefObject : doc.aggressor});
-                    } 
-                    else{
-                        response.send("beef not found.")
-                    }
-                }
-            });*/
         
             db.close();
         }
-    });
-    
-    //response.render('pages/mongodb_test.ejs', {name : "hello"});
-    
+    });    
 });
 
 app.post('/adduser', function(req,res){
