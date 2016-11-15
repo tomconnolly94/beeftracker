@@ -16,8 +16,8 @@ app.get('/', function(request, response) {
   response.render('pages/splash');
 });
 
-app.get('/db', function(request, response) {
-  response.render('pages/db');
+app.get('/home', function(request, response) {
+  response.render('pages/home_page.ejs');
 });
 
 app.get('/beef/:tagId', function(request, response) {
