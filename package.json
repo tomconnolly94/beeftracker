@@ -1,7 +1,7 @@
 {
-  "name": "node-js-getting-started",
+  "name": "beeftracker",
   "version": "0.2.5",
-  "description": "A sample Node.js app using Express 4",
+  "description": "An index of arguments occuring in the music industry.",
   "engines": {
     "node": "5.9.1"
   },
