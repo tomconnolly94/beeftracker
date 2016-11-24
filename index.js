@@ -12,6 +12,10 @@ app.use(express.static(__dirname + '/public'));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
+app.use('/libraries', express.static(__dirname + '/node_modules/'));
+
+app.use('/javascript', express.static(__dirname + '/public/node_modules/'));
+
 app.get('/', function(request, response) {
   response.render('pages/splash');
 });
@@ -26,14 +30,14 @@ app.get('/beef/:tagId', function(request, response) {
     
     var beefIdentifier = request.params.tagId;
     
-    MongoClient.connect("mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6", function(err, db) {
+    MongoClient.connect(process.env.MONGODB_URL, function(err, db) {
         if(err){ console.log(err);}else{
                         
             var field_name = 'beefId';
             
             var qry = "{\"" + field_name + "\":" + beefIdentifier + "}"
                         
-            db.collection("beef_data").find(JSON.parse(qry)).toArray(function(err, docs) {
+            db.collection("event_data").find(JSON.parse(qry)).toArray(function(err, docs) {
                 console.log("########");
                 console.log(beefIdentifier);
                 console.log(docs.length);
@@ -45,6 +49,35 @@ app.get('/beef/:tagId', function(request, response) {
             db.close();
         }
     });    
+});
+
+app.get('/search',function(req,res){
+    
+    MongoClient.connect(process.env.MONGODB_URL, function(err, db) {
+        if(err){ console.log(err);}else{
+            
+            console.log(req.query.key);
+            
+            var qry = "{ aggressor : /.*" + req.query.key + ".*/i}";
+            
+            console.log(qry);
+                        
+            var result = db.collection("event_data").find(JSON.parse(qry));
+                
+            console.log(result);
+            
+                var data=[];
+                
+                for(i=0;i<result.length;i++){
+                    data.push(result[i].first_name);
+                }
+                
+                response.end(data);
+        
+            db.close();
+        }
+    }); 
+    
 });
 
 app.post('/adduser', function(req,res){
