@@ -24,6 +24,10 @@ app.get('/home', function(request, response) {
   response.render('pages/home_page.ejs');
 });
 
+app.get('/beef', function(request, response) {
+  response.render('pages/beef_client_version.ejs');
+});
+
 app.get('/beef/:tagId', function(request, response) {
     
     console.log(process.env.MONGODB_URL);
@@ -52,6 +56,8 @@ app.get('/beef/:tagId', function(request, response) {
 });
 
 app.get('/search',function(req,res){
+    
+    var search_ref = req.body.search_ref;
     
     MongoClient.connect(process.env.MONGODB_URL, function(err, db) {
         if(err){ console.log(err);}else{
