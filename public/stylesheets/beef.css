@@ -45,7 +45,24 @@
     background-color: lightgrey;
     display: inline-block;
     border-radius: 20px;
+}
+
+.beef-description-content-inner{
+    display: inline-block;
+    width:calc(100% - 40px);
     padding:20px;
+}
+
+.beef-description-content-title{
+    background-color: lightgrey;
+    border-bottom-style: solid;
+    border-bottom-color: darkgrey;
+    border-bottom-right-radius: 20px;
+    display: inline-block;
+    padding: 0px 20px 20px 20px;
+    width:calc(100% - 60px);
+    margin-top:20px;
+    margin-left:20px;
 }
 
 #beef-content{
@@ -69,6 +86,9 @@
     width:calc(50% - 45px);
     margin-left:5%;
     margin-top:5px;
+}
+
+#beef-related-artists-inner{
     text-align: center;
 }
 
@@ -77,7 +97,6 @@
     margin-top:5px;
     overflow:visible;
     display: inline-block;
-    float:right;
     margin-right:5%;
     border-radius: 20px;
 }
