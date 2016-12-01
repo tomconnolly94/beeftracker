@@ -47,3 +47,30 @@ wrapper{
 slideImage{
     object-fit:fill;
 }
+
+#loginWrapper {
+  position: absolute;
+  width: 200px;
+  height: 150px;
+  left:50%;
+    top:10%;
+  background: red;
+  border-radius: 10% / 20%;
+  color: white;
+  text-align: center;
+  text-indent: .1em;
+    z-index:20000000000;
+    
+}
+#loginWrapper:before {
+  position: absolute;
+  width: 200px;
+  height: 150px;
+  margin: 20px 0;
+  background: green;
+  color: white;
+  text-align: center;
+  text-indent: .1em;
+    z-index:20000000001;
+}
+
