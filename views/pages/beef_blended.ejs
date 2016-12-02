@@ -1,0 +1,125 @@
+<html>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+	<link rel="stylesheet" type="text/css" href="/stylesheets/beef.css">
+	<head>
+	</head>
+	<body>
+		<div id="header">
+		</div>
+        
+        <script>
+            //import db data as a JSON
+            var beef = <%- JSON.stringify(beefObject)%>;
+            //init angular
+            var app = angular.module('searchResults', []);
+            
+            //create a controller to store all the data 
+            app.controller('resultController', function($scope) {
+                
+                $scope.data = [];
+                
+                for(var i = 0; i < beef.length; i++){
+                    
+                    if (!$scope.data[i]) $scope.data[i] = [];
+                    
+                    var record = {
+                            'aggressor' : beef[i].aggressor,
+                            'date' : beef[i].date.slice(0,10),
+                            'beefId' : beef[i].beefId
+                        }
+                    
+                    $scope.data[i] = record;
+                }
+                console.log($scope.data);
+            });
+            
+        </script>
+
+        
+		<div id="content">
+			<div id="inner-left-content" class="half-page">
+
+			</div>
+			<div id="inner-right-content" class="half-page">
+				<div id="beef-artist-content">
+					<div id="beef-artist-image">
+						<img src="assets/eminem.jpg" id="beef-artist-image-img">
+					</div>
+					<div id="beef-artist-details">
+						<h2>Rap God</h2>
+						<h3>Eminem</h3>
+						<h4>14 Oct 2013</h4>
+					</div>
+				</div>
+				<div id="beef-content">
+					<div id="beef-description" class="beef-description-content">
+						<div id="beef-description-title" class="beef-description-content-title">
+							<h2>Description</h2>
+						</div>
+						<div id="beef-description-inner" class="beef-description-content-inner">
+							"Rap God" was met with acclaim from music critics. Critics praised the song's lyrical content and rapping speed. Per Lijas of Time gave the song a positive review, stating that "the world can expect an immortal recording" based on "Rap God" and the album's lead single, "Berzerk".[22] Jim Farber of the Daily News compared the song to The Marshall Mathers LP, stating that the song "revives the super-sick humor of that era, which comes as a relief after all the internalizations and ruminating of Em’s more recent work".[23] Kory Grow of Rolling Stone also gave the song a positive review, praising that instead of "giving his chorus to an R&B crooner like Rihanna or the New Royales' Liz Rodrigues", "he instead delivers a straight rap refrain about feeling like a rap deity. His verses recall hip-hop history ... as much as his own history".[6] Nick Hill of Contact Music praised the song's rhyming and lyrical content. He exclaimed that the verse beginning at 4:20 best displays Eminem's rapping abilities.
+							<br/>
+							<br/>
+							Conversely, Consequence of Sound stated that, although the flow of the verses is impressive, the lyricism "falls victim to dated references [...] and the tired technique of using other rapper’s monikers to complete rhymes." They also noted that beat is "pedestrian at best", and that altogether the song "[lacks] the commercial appeal" of "Berzerk".[24]
+						</div>
+					</div>
+					<div id="beef-best-lyrics" class="beef-description-content">
+						<div id="beef-best-lyrics-title" class="beef-description-content-title">
+							<h2>Best Lyrics</h2>
+						</div>
+						<div id="beef-best-lyrics-inner" class="beef-description-content-inner">
+							Uh, sama lamaa duma lamaa you assuming I'm a human
+							<br/>
+							<br/>
+							What I gotta do to get it through to you I'm superhuman
+							<br/>
+							<br/>
+							Innovative and I'm made of rubber
+						</div>
+					</div>
+					<div id="beef-related-artists" class="beef-description-content">
+						<div id="beef-related-artists-title" class="beef-description-content-title">
+							<h2>Related Artists</h2>
+						</div>
+						<div id="beef-related-artists-inner" class="beef-description-content-inner">
+							Marshall Mathers
+							<br/>
+							Bigram Zayas
+							<br/>
+							Matthew Delgiorno
+							<br/>
+							Stephen Hacker
+							<br/>
+							Douglas Davis
+							<br/>
+							Richard Walters
+							<br/>
+							Dania Birks
+							<br/>
+							Juana Burns
+							<br/>
+							Juanita Lee
+							<br/>
+							Fatima Shaheed
+							<br/>
+							Kim Nazel
+						</div>
+					</div>
+					<div id="beef-video">
+						<iframe width="100%" height="300px" src="https://www.youtube.com/embed/XbGs_qK2PQA" frameborder="0" allowfullscreen="true" id="beef-video-iframe"></iframe>
+					</div>
+					<div id="beef-related-beef" class="beef-description-content">
+						<div id="beef-related-beef-title" class="beef-description-content-title">
+							<h2>Related Beef</h2>
+						</div>
+						<div id="beef-related-beef-inner" class="beef-description-content-inner">
+							<div class="beef-related-beef-">
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+		<div>
+	</body>
+</html>

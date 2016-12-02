@@ -4,6 +4,14 @@ var app = express();
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 
+var form = require("express-form")
+var field = form.field;
+// Put this statement near the top of your module
+var bodyParser = require('body-parser');
+// Put these statements before you define any routes.
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.json());
+
 app.set('port', (process.env.PORT || 5000));
 
 app.use(express.static(__dirname + '/public'));
@@ -28,6 +36,10 @@ app.get('/beef', function(request, response) {
   response.render('pages/beef_client_version.ejs');
 });
 
+app.get('/results', function(request, response) {
+  response.render('pages/search_results.ejs');
+});
+
 app.get('/beef/:tagId', function(request, response) {
     
     console.log(process.env.MONGODB_URL);
@@ -35,13 +47,16 @@ app.get('/beef/:tagId', function(request, response) {
     var beefIdentifier = request.params.tagId;
     
     MongoClient.connect(process.env.MONGODB_URL, function(err, db) {
-        if(err){ console.log(err);}else{
+        if(err){ console.log(err); }
+        else{
                         
             var field_name = 'beefId';
             
-            var qry = "{\"" + field_name + "\":" + beefIdentifier + "}"
+            var qry = "{\"" + field_name + "\":" + beefIdentifier + "}";
+            
+            console.log(qry);
                         
-            db.collection("event_data").find(JSON.parse(qry)).toArray(function(err, docs) {
+            db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
                 console.log("########");
                 console.log(beefIdentifier);
                 console.log(docs.length);
@@ -54,36 +69,39 @@ app.get('/beef/:tagId', function(request, response) {
         }
     });    
 });
+    
+app.post('/gen_search', form(field("search_ref")), function(req, res){
+    if (!req.form.isValid) { console.log(req.form.errors); } //print error to console
+    else {
+        //connecto to DB
+        MongoClient.connect(process.env.MONGODB_URL, function(err, db) {
+            if(err){ console.log(err); } //print error to console
+            else{ 
 
-app.get('/search',function(req,res){
-    
-    var search_ref = req.body.search_ref;
-    
-    MongoClient.connect(process.env.MONGODB_URL, function(err, db) {
-        if(err){ console.log(err);}else{
-            
-            console.log(req.query.key);
-            
-            var qry = "{ aggressor : /.*" + req.query.key + ".*/i}";
-            
-            console.log(qry);
-                        
-            var result = db.collection("event_data").find(JSON.parse(qry));
+                var field_name = 'aggressor';
+                var identifier = req.body.search_ref; 
+                console.log(identifier);
+
+                //var qry = "{ \"" + field_name + "\" : \" + identifier + "\" }";
                 
-            console.log(result);
-            
-                var data=[];
+                //var end = new RegExp('^'+identifier+'$', "i");
+                var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
                 
-                for(i=0;i<result.length;i++){
-                    data.push(result[i].first_name);
-                }
+                var qry = "{ \"" + field_name + "\" : " + end + " }";
                 
-                response.end(data);
-        
-            db.close();
-        }
-    }); 
-    
+                
+                console.log(qry);
+
+                db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+                    
+                    res.render('pages/search_results.ejs', {beefObject : docs});
+                    
+                });
+
+                db.close();
+            }
+        }); 
+    }
 });
 
 app.post('/adduser', function(req,res){

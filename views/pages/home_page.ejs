@@ -26,8 +26,9 @@
         <h2>Home</h2>
             
         <div class="the-basics">
-            <form method="post" action="/gen_search" enctype="multipart/form-data">
-                <input type="text" name="search_ref" placeholder="Type your Query">
+            <form method="post" action="/gen_search" enctype="application/json; charset=UTF-8">
+                <input type="text" name="search_ref">
+                <input type="submit">
             </form>
         </div>
 
