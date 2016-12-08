@@ -40,8 +40,8 @@ app.get('/results', function(request, response) {
   response.render('pages/search_results.ejs');
 });
 
-app.get('/artists', function(request, response) {
-  response.render('pages/artists.ejs');
+app.get('/artist', function(request, response) {
+  response.render('pages/artist.ejs');
 });
 
 app.get('/beef/:tagId', function(request, response) {
