@@ -6,3 +6,20 @@
 #image{
     float: left;
 }
+
+.event-container{
+    width:50%;
+    float: left;
+    margin: 0 auto;
+    margin-left: 40%;
+}
+
+.panel-container{
+    width:80%
+    margin 0 auto;
+}
+
+.event-box{
+    margin: 20px;
+    float:left;
+}
