@@ -1,34 +1,37 @@
 <html>
 	<link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
 	<link rel="stylesheet" type="text/css" href="/stylesheets/beef.css">
+    
 	<head>
 	</head>
-	<body>
+	<body np-app="searchResults">
 		<div id="header">
 		</div>
         
         <script>
             //import db data as a JSON
-            var beef = <%- JSON.stringify(beefObject)%>;
+            var beef = <%- JSON.stringify(beefObject) -%>;
             //init angular
             var app = angular.module('searchResults', []);
+            
+            console.log(beef);
             
             //create a controller to store all the data 
             app.controller('resultController', function($scope) {
                 
-                $scope.data = [];
                 
                 for(var i = 0; i < beef.length; i++){
                     
-                    if (!$scope.data[i]) $scope.data[i] = [];
                     
-                    var record = {
+                        var record = {
+                            'title' : beef[i].title,
                             'aggressor' : beef[i].aggressor,
                             'date' : beef[i].date.slice(0,10),
+                            'description' : beef[i].description,
+                            
                             'beefId' : beef[i].beefId
                         }
-                    
-                    $scope.data[i] = record;
+                    $scope.data = record;
                 }
                 console.log($scope.data);
             });
@@ -43,10 +46,10 @@
 			<div id="inner-right-content" class="half-page">
 				<div id="beef-artist-content">
 					<div id="beef-artist-image">
-						<img src="assets/eminem.jpg" id="beef-artist-image-img">
+						<!--<img src="assets/eminem.jpg" id="beef-artist-image-img">-->
 					</div>
-					<div id="beef-artist-details">
-						<h2>Rap God</h2>
+					<div id="beef-artist-details" ng-controller="resultController">
+						<h2>Rap God {{ data.aggressor }}</h2>
 						<h3>Eminem</h3>
 						<h4>14 Oct 2013</h4>
 					</div>
@@ -105,9 +108,9 @@
 							Kim Nazel
 						</div>
 					</div>
-					<div id="beef-video">
+					<!--<div id="beef-video">
 						<iframe width="100%" height="300px" src="https://www.youtube.com/embed/XbGs_qK2PQA" frameborder="0" allowfullscreen="true" id="beef-video-iframe"></iframe>
-					</div>
+					</div> -->
 					<div id="beef-related-beef" class="beef-description-content">
 						<div id="beef-related-beef-title" class="beef-description-content-title">
 							<h2>Related Beef</h2>

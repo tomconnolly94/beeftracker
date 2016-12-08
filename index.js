@@ -40,6 +40,10 @@ app.get('/results', function(request, response) {
   response.render('pages/search_results.ejs');
 });
 
+app.get('/artists', function(request, response) {
+  response.render('pages/artists.ejs');
+});
+
 app.get('/beef/:tagId', function(request, response) {
     
     console.log(process.env.MONGODB_URL);
@@ -57,11 +61,10 @@ app.get('/beef/:tagId', function(request, response) {
             console.log(qry);
                         
             db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
-                console.log("########");
-                console.log(beefIdentifier);
-                console.log(docs.length);
-                console.log(docs[0]);
-                response.render('pages/beef_server_version.ejs', {beefObject : docs[0]});
+                console.log("");
+                console.log("query: " + beefIdentifier);
+                console.log("response: " + docs.length);
+                response.render('pages/beef_blended.ejs', {beefObject : docs[0]});
                 db.close()
             });
         
