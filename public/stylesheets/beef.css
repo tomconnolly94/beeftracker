@@ -1,8 +1,11 @@
 #content{
     width:calc(100vw-160px);
-    height:100vh;
     /*padding-top:50px;*/
     padding:80px;
+}
+
+body{
+    background-color: #303131;
 }
 
 .half-page{

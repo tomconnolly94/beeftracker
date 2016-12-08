@@ -1,14 +1,14 @@
-#content{
+#beef-information-content{
     width:100%;
     height:100vw;
     padding-top:50px;
 }
 
-#inner-left-content{
+#beef-information-inner-left-content{
     float:left;
 }
 
-#inner-right-content{
+#beef-information-inner-right-content{
     float:right;
 }
 
