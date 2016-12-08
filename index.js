@@ -22,7 +22,7 @@ app.set('view engine', 'ejs');
 
 app.use('/libraries', express.static(__dirname + '/node_modules/'));
 
-app.use('/javascript', express.static(__dirname + '/public/node_modules/'));
+app.use('/controllers', express.static(__dirname + '/controllers'));
 
 app.get('/', function(request, response) {
   response.render('pages/splash');
@@ -44,9 +44,8 @@ app.get('/artist', function(request, response) {
   response.render('pages/artist.ejs');
 });
 
-app.get('/beef/:tagId', function(request, response) {
-    
-    console.log(process.env.MONGODB_URL);
+app.get('/search/:tagId', function(request, response) {
+   console.log(process.env.MONGODB_URL);
     
     var beefIdentifier = request.params.tagId;
     
@@ -64,13 +63,18 @@ app.get('/beef/:tagId', function(request, response) {
                 console.log("");
                 console.log("query: " + beefIdentifier);
                 console.log("response: " + docs.length);
-                response.render('pages/beef_blended.ejs', {beefObject : docs[0]});
+                response.send({beefObject : docs[0]});
                 db.close()
             });
         
             db.close();
         }
-    });    
+    }); 
+});
+
+app.get('/beef/:tagId', function(request, response) {
+    
+   response.render('pages/beef_blended.ejs');
 });
     
 app.post('/gen_search', form(field("search_ref")), function(req, res){

@@ -1,20 +1,18 @@
 <html>
-	<link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
-	<link rel="stylesheet" type="text/css" href="/stylesheets/beef.css">
-    
+	
 	<head>
+        <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/beef.css">
+            
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        
+        <script src="/controllers/beef_controller.js"></script>
 	</head>
 	<body np-app="searchResults">
 		<div id="header">
 		</div>
         
-        <script>
-            //import db data as a JSON
-            var beef = <%- JSON.stringify(beefObject) -%>;
-            //init angular
-            var app = angular.module('searchResults', []);
-            
-            console.log(beef);
+        <script>/*
             
             //create a controller to store all the data 
             app.controller('resultController', function($scope) {
@@ -35,7 +33,7 @@
                 }
                 console.log($scope.data);
             });
-            
+            */
         </script>
 
         
@@ -49,7 +47,7 @@
 						<!--<img src="assets/eminem.jpg" id="beef-artist-image-img">-->
 					</div>
 					<div id="beef-artist-details" ng-controller="resultController">
-						<h2>Rap God {{ data.aggressor }}</h2>
+						<h2>Rap God {{ content }}</h2>
 						<h3>Eminem</h3>
 						<h4>14 Oct 2013</h4>
 					</div>
