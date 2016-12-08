@@ -1,13 +1,7 @@
 #content{
-    width:calc(100vw-160px);
-    height:100vh;
-    /*padding-top:50px;*/
-    padding:80px;
-}
-
-.half-page{
-    width:50%;
-    height:100%;
+    width:100%;
+    height:100vw;
+    padding-top:50px;
 }
 
 #inner-left-content{
@@ -87,7 +81,6 @@
     width:calc(50% - 45px);
     margin-left:5%;
     margin-top:5px;
-}
 
 #beef-related-artists-inner{
     text-align: center;
@@ -103,7 +96,7 @@
 }
 
 #beef-video-iframe{
-    border-radius: 20px
+    border-radius: 20px;
 }
 
 #beef-related-beef{
