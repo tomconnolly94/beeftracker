@@ -36,6 +36,14 @@ app.get('/beef', function(request, response) {
   response.render('pages/beef_client_version.ejs');
 });
 
+app.get('/beef_timeline', function(request, response) {
+  response.render('pages/beef_timeline.ejs');
+});
+
+app.get('/beef_information', function(request, response) {
+  response.render('pages/beef_information.ejs');
+});
+
 app.get('/results', function(request, response) {
   response.render('pages/search_results.ejs');
 });
@@ -46,19 +54,19 @@ app.get('/artist', function(request, response) {
 
 app.get('/search/:tagId', function(request, response) {
    console.log(process.env.MONGODB_URL);
-    
+
     var beefIdentifier = request.params.tagId;
-    
+
     MongoClient.connect(process.env.MONGODB_URL, function(err, db) {
         if(err){ console.log(err); }
         else{
-                        
+
             var field_name = 'beefId';
-            
+
             var qry = "{\"" + field_name + "\":" + beefIdentifier + "}";
-            
+
             console.log(qry);
-                        
+
             db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
                 console.log("");
                 console.log("query: " + beefIdentifier);
@@ -66,53 +74,53 @@ app.get('/search/:tagId', function(request, response) {
                 response.send({beefObject : docs[0]});
                 db.close()
             });
-        
+
             db.close();
         }
-    }); 
+    });
 });
 
 app.get('/beef/:tagId', function(request, response) {
-    
+
    response.render('pages/beef_blended.ejs');
 });
-    
+
 app.post('/gen_search', form(field("search_ref")), function(req, res){
     if (!req.form.isValid) { console.log(req.form.errors); } //print error to console
     else {
         //connecto to DB
         MongoClient.connect(process.env.MONGODB_URL, function(err, db) {
             if(err){ console.log(err); } //print error to console
-            else{ 
+            else{
 
                 var field_name = 'aggressor';
-                var identifier = req.body.search_ref; 
+                var identifier = req.body.search_ref;
                 console.log(identifier);
 
                 //var qry = "{ \"" + field_name + "\" : \" + identifier + "\" }";
-                
+
                 //var end = new RegExp('^'+identifier+'$', "i");
                 var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
-                
+
                 var qry = "{ \"" + field_name + "\" : " + end + " }";
-                
-                
+
+
                 console.log(qry);
 
                 db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
-                    
+
                     res.render('pages/search_results.ejs', {beefObject : docs});
-                    
+
                 });
 
                 db.close();
             }
-        }); 
+        });
     }
 });
 
 app.post('/adduser', function(req,res){
-        
+
 })
 
 app.listen(app.get('port'), function() {
