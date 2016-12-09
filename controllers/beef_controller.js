@@ -17,7 +17,7 @@ app.config(function($routeProvider, $locationProvider){
 app.controller("resultController", ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
     
     //wait untill module has been configured by code above before running this
-    $scope.$on('$routeChangeSuccess', function() {
+    //$scope.$on('$routeChangeSuccess', function() {
         
         //make http request to server for data
         $http.get("/search/" + $routeParams.tagId).success(function(response){
@@ -50,5 +50,5 @@ app.controller("resultController", ['$scope','$http', '$routeParams', function($
             //failed http request
             console.log("Something went wrong");
         });
-    });
+    //});
 }]);
