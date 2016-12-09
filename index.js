@@ -2,11 +2,6 @@ var express = require('express');
 var path = require('path');
 var app = express();
 var MongoClient = require('mongodb').MongoClient;
-// Put this statement near the top of your module
-var bodyParser = require('body-parser');
-// Put these statements before you define any routes.
-app.use(bodyParser.urlencoded());
-app.use(bodyParser.json());
 
 app.set('port', (process.env.PORT || 5000));
 // views is directory for all template files
