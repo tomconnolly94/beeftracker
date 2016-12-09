@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+
+    <!--
+        Project: Beeftracker
+        Authors: Tom Connolly, James Langford, Dan Kerby
+        Date: 8/11/16
+    -->
+    
+    <head>
+        <title>Home</title>
+
+        <!-- css file references -->
+        <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/home_page.css">
+
+        <!-- javascript file references -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="/libraries/typeahead.min.js" type="text/javascript"></script>
+        
+    </head>
+    
+    <body>
+        
+        <h2>Home</h2>
+            
+        <div class="the-basics">
+            <form method="post" action="/gen_search" enctype="application/json; charset=UTF-8">
+                <input type="text" name="search_ref">
+                <input type="submit">
+            </form>
+        </div>
+
+        
+        
+    </body>
+</html>
