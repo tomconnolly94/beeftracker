@@ -1,5 +1,3 @@
-'use strict';
-
 var app = angular.module('searchResults', ['ngRoute']);
 
 app.config(function($routeProvider, $locationProvider){
