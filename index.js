@@ -81,7 +81,7 @@ app.get('/search_all/:search_term', function(request, response){
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
         else{
-            var field_name = 'aggressor';
+            var field_name = 'title';
             
             //code to create a qry string that matches NEAR to query string
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
