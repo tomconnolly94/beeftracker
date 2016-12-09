@@ -59,7 +59,7 @@ app.get('/search/:tagId', function(request, response) {
         }
     });
 });
-app.get('search_all/:tagId'. function(request, response){
+app.get('search_all/:tagId', function(request, response){
         
         });
 //pages that are not in the current release design but may be in the next
