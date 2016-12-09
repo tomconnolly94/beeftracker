@@ -13,7 +13,9 @@ app.set('view engine', 'ejs');
 //route to reference images
 app.use('/artist_images', express.static(__dirname + '/public/assets/images/artists/'));
 //route to reference libraries like angular
-app.use('/libraries', express.static(__dirname + '/node_modules/'));
+app.use('/libraries', express.static(__dirname + '/libs/'));
+//route to reference libraries like angular
+app.use('/modules', express.static(__dirname + '/node_modules/'));
 //route to reference controller scripts
 app.use('/controllers', express.static(__dirname + '/controllers/'));
 //route to reference css scripts
