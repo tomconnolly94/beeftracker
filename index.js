@@ -17,7 +17,7 @@ app.use('/controllers', express.static(__dirname + '/controllers/')); //route to
 app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //route to reference css scripts
 
 //permanent page routes
-app.get('/home', function(request, response) { response.render('pages/home_page.ejs'); });
+app.get('/', function(request, response) { response.render('pages/home_page.ejs'); });
 app.get('/beef/:tagId', function(request, response) { response.render('pages/beef_blended.ejs'); });
 app.get('/artist', function(request, response) { response.render('pages/artist.ejs'); });
 
