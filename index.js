@@ -54,7 +54,7 @@ app.get('/search/:tagId', function(request, response) {
 
     var identifier = request.params.tagId;
 
-    MongoClient.connect(mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6, function(err, db) {
+    MongoClient.connect("mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6", function(err, db) {
         if(err){ console.log(err); }
         else{
             var field_name = 'event_id';
