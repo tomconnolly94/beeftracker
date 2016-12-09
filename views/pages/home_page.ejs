@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html>
+<html ng-app="generalSearch">
 
     <!--
         Project: Beeftracker
@@ -16,23 +16,35 @@
         <link rel="stylesheet" type="text/css" href="/stylesheets/home_page.css">
 
         <!-- javascript file references -->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script src="/libraries/typeahead.min.js" type="text/javascript"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        
+        <script src="/controllers/home/search_app.js" type="text/javascript"></script>
+        <script src="/controllers/home/search_controller.js" type="text/javascript"></script>
         
     </head>
     
     <body>
         
         <h2>Home</h2>
+        <div ng-controller="searchController">
             
-        <div class="the-basics">
-            <form method="post" action="/search_all" enctype="application/json; charset=UTF-8">
-                <input type="text" name="search_ref" value="yes">
-                <input type="submit">
-            </form>
-        </div>
+            <div id="input" >                
+                <form novalidate>
+                    <input type="text" ng-model="search_term" ng-change="submit(search_term)"><br>
+                </form>
+                
+            </div>
 
-        
-        
+                <ul ng-repeat="record in records">
+                    <li><a ng-href="/beef/{{record.eventNum}}"> {{ record.name }} </a></li>
+                </ul>
+            
+                <!-- 
+                <p>{{ object.name }}</p>
+                <p>{{ object.song_title }}</p>
+                -->
+                
+        </div>
     </body>
 </html>

@@ -1,40 +1,61 @@
-var search = angular.module('app', []);
-
-search.controller("searchController", ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
+app.controller('searchController', ['$scope','$http', function($scope, $http) {
     
-    //wait untill module has been configured by code above before running this
-    $scope.$on('$routeChangeSuccess', function() {
+    $scope.submit = function(input){
         
-        //make http request to server for data
-        $http.get("/search/" + $routeParams.tagId).success(function(response){
-            //validate the url tagId to make sure the event exists
-            if(response.eventObject != undefined){
+        console.log(input);
+        console.log(input.length);
+        
+        if (input.length > 0 && input !=" ") {
+            //make http request to server for data
+            $http.get("/search_all/" + input).success(function(response){
                 
-                var eventObject = response.eventObject;
+                var events = response.events;
                 
-                //assign fields to scope
-                $scope.name = eventObject.aggressor;
-                $scope.song_title = eventObject.title;
-                $scope.date = eventObject.event_date.slice(0,10);
-                $scope.description = eventObject.description;
-                $scope.img_link = "/artist_images/" + eventObject.image_link;
-                $scope.top_lyrics = new Array();
-                
-                console.log(eventObject.top_lyrics);
-                
-                //loop through the top lyrics and assign them to the scope
-                for(var i = 0; i < Object.keys(eventObject.top_lyrics).length; i++){
-                    $scope.top_lyrics.push(eventObject.top_lyrics[i]);
+                //validate the url tagId to make sure the event exists                
+                if(events != undefined){
+                    
+                    $scope.records = new Array();
+                    
+                    console.log(events);
+                    
+                    for(var eventId = 0; eventId < events.length; eventId++){
+                        
+                        //create array to hold artists top lyrics
+                        var best_lyrics = new Array();
+                        
+                        //loop through the top lyrics and assign them to the scope
+                        for(var i = 0; i < Object.keys(events[eventId].top_lyrics).length; i++){
+                            best_lyrics.push(events[eventId].top_lyrics[i]);
+                        }
+                        
+                        //create data record
+                        var record = {
+                            name : events[eventId].aggressor,
+                            title : events[eventId].title,
+                            date : events[eventId].description,
+                            img_link : "artist_images/" + events[eventId].image_link,
+                            top_lyrics : best_lyrics,
+                            eventNum : events[eventId].event_id
+                        };
+                        
+                        //add data record to global scope
+                        $scope.records[eventId] = record;                   
+                    }
+                    console.log($scope.records);
                 }
-            }
-            else{
-                //error msg
-                console.log("An incorrect event_id has been used. please check the url")
-            }
-        }, 
-        function(response) {
-            //failed http request
-            console.log("Something went wrong");
-        });
-    });
+                else{
+                    //error msg
+                    console.log("Page not found on server");
+                }
+            }, 
+            function(response) {
+                //failed http request
+                console.log("Error in HTTP request in search_controller.js:searchController");
+            });
+        }
+        else {
+            //action for if search_term is empty 
+            $scope.records = [{}];
+        }
+    }
 }]);
