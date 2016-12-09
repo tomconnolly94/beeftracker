@@ -13,7 +13,9 @@
     "angular-route": "^1.4.1",
     "ejs": "2.4.1",
     "express": "4.13.3",
-    "mongodb": "2.2.11"
+    "mongodb": "2.2.11",
+    "method-override":"*",
+    "body-parser": "1.8"
   },
   "keywords": [
     "node",

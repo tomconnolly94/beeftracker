@@ -1,5 +1,6 @@
 //create all the modules that are needed to run this server
 var express = require('express');
+var bodyParser = require('body-parser');
 var path = require('path');
 var app = express();
 var MongoClient = require('mongodb').MongoClient;
@@ -9,12 +10,17 @@ app.set('port', (process.env.PORT || 5000));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
+app.use(express.bodyParser());
+app.use(express.methodOverride());
+
 // ### Reference Routes ### 
 app.use('/artist_images', express.static(__dirname + '/public/assets/images/artists/')); //route to reference images
 app.use('/libraries', express.static(__dirname + '/libs/')); //route to reference libraries like angular
 app.use('/modules', express.static(__dirname + '/node_modules/')); //route to reference libraries like angular
 app.use('/controllers', express.static(__dirname + '/controllers/')); //route to reference controller scripts
 app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //route to reference css scripts
+app.use('/bower_components', express.static(__dirname + '/bower_components/')); //route to reference css scripts
+
 
 //permanent page routes
 app.get('/', function(request, response) { response.render('pages/home_page.ejs'); });
@@ -31,9 +37,10 @@ app.get('/results', function(request, response) { response.render('pages/search_
 app.get('/search/:tagId', function(request, response) { 
    console.log(process.env.MONGODB_URL);
 
+    var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
     var identifier = request.params.tagId;
 
-    MongoClient.connect(process.env.MONGODB_URL, function(err, db) {
+    MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
         else{
             var field_name = 'event_id';
@@ -59,8 +66,10 @@ app.get('/search/:tagId', function(request, response) {
         }
     });
 });
-app.get('search_all/:tagId', function(request, response){
-        
+
+app.post('/search_all', function(request, response){
+    
+    console.log(request.body.search_ref);
         });
 //pages that are not in the current release design but may be in the next
 //app.get('/', function(request, response) { response.render('pages/splash'); });
