@@ -1,6 +1,6 @@
-var app = angular.module('searchResults', ['ngRoute']);
+var beef_module = angular.module('searchResults', ['ngRoute']);
 
-app.config(function($routeProvider, $locationProvider){
+beef_module.config(function($routeProvider, $locationProvider){
     $routeProvider.when('/beef/:tagId', {
         templateUrl: '',    
         controller: 'resultController'
@@ -10,4 +10,4 @@ app.config(function($routeProvider, $locationProvider){
         enabled:true,
         requireBase: false
     });
-})
+});

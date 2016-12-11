@@ -1,6 +1,6 @@
-app.controller("resultController", ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
+beef_module.controller("resultController", ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
     
-    //wait untill module has been configured by code above before running this
+    //wait untill module has been configured before running this
     $scope.$on('$routeChangeSuccess', function() {
         
         //make http request to server for data

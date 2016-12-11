@@ -4,10 +4,17 @@ h2 {
     text-align:center;
 }
 
-#search_box{
-    
-    
-    
+#search_box {
+    padding: 0;
+    height: 30px;
+    position: relative;
+    width:200px;
+    left: 47%;
+    outline: none;
+    border: 1px solid #cdcdcd;
+    border-color: rgba(0,0,0,.15);
+    background-color: white;
+    font-size: 16px;
 }
 
 ul {

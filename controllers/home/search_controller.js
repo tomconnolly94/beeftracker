@@ -1,11 +1,11 @@
-app.controller('searchController', ['$scope','$http', function($scope, $http) {
+search_module.controller('searchController', ['$scope','$http', function($scope, $http) {
     
     $scope.submit = function(input){
         
         console.log(input);
         console.log(input.length);
         
-        if (input.length > 0 && input !=" ") {
+        if (input.length > 1 && input !=" ") {
             //make http request to server for data
             $http.get("/search_all/" + input).success(function(response){
                 
