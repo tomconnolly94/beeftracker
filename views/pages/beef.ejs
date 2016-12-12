@@ -1,15 +1,16 @@
-<html>
+<html ng-app='beef_app_loader'>
 	<link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
 	<link rel="stylesheet" type="text/css" href="/stylesheets/beef.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
     <script src="/modules/angular-route/angular-route.min.js"></script>
+    <script src="/controllers/beef/beef_app_loader.js"></script>
     <script src="/controllers/beef/beef_app.js"></script>
     <script src="/controllers/beef/beef_controller.js"></script>
 	<script>
 		$(function(){
 	       $("#inner-left-content").load("/beef_timeline");
-	       $("#inner-right-content").load("/beef_information");
+	       //$("#inner-right-content").load("/beef_information");
 	    });
     </script>
 	<head>
@@ -18,10 +19,14 @@
 		<div id="header">
 		</div>
 		<div id="content">
-			<div id="inner-left-content" class="half-page">
+            <div  >
+                {{ name }}
+            
+            </div>
+			<div id="inner-left-content" class="half-page" load-left-directive>
 			</div>
-			<div id="inner-right-content" class="half-page">
+			<div id="inner-right-content" class="half-page" load-right-directive>
 			</div>
-		<div>
+        </div>
 	</body>
 </html>

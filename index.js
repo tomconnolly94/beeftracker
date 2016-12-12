@@ -38,11 +38,10 @@ app.use('/bower_components', express.static(__dirname + '/bower_components/')); 
 
 // ### Permanent page routes ###
 app.get('/', function(request, response) { response.render('pages/home.ejs'); });
-app.get('/beef/:tagId', function(request, response) { response.render('pages/beef_client_version.ejs'); });
+app.get('/beef/:tagId', function(request, response) { response.render('pages/beef.ejs'); });
 app.get('/artist/:tagId', function(request, response) { response.render('pages/artist.ejs'); });
 
 // ### Temporary development pages ###
-app.get('/beef', function(request, response) { response.render('pages/beef_client_version.ejs'); });
 app.get('/beef_timeline', function(request, response) { response.render('pages/beef_timeline.ejs'); });
 app.get('/beef_information', function(request, response) { response.render('pages/beef_information.ejs'); });
 app.get('/results', function(request, response) { response.render('pages/search_results.ejs'); });

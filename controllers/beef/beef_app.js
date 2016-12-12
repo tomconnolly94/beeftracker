@@ -10,9 +10,10 @@
 var beef_app = angular.module('beef', ['ngRoute']);
 
 beef_app.config(function($routeProvider, $locationProvider){
+    console.log("config");
     $routeProvider.when('/beef/:tagId', {
         templateUrl: '',    
-        controller: 'resultController'
+        controller: 'currentEventController'
     });
     // enable HTML5mode to disable hashbang urls
     $locationProvider.html5Mode({
