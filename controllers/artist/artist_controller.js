@@ -9,18 +9,15 @@ artist_module.controller("artistSearchController", ['$scope','$http', '$routePar
             if(response.events != undefined){
                 
                 var artist_object = response.events;
-                console.log(artist_object);
                 
                 //make http request to server for data
                 $http.get("/search_events_from_artist/" + artist_object.stage_name).success(function(response){
-                
-                    console.log(response);
-                    
+                                    
                     //assign fields to scope
                     $scope.stage_name = artist_object.stage_name;
                     $scope.birth_name = artist_object.birth_name;
                     $scope.d_o_b = artist_object.d_o_b.slice(0,10);
-                    $scope.img_link = "/artist_images/" + artist_object.image_link;
+                    $scope.img_link = "/artist_images/" + artist_object.img_link;
                     $scope.events = response.events;
                 }, 
                 function(response) {

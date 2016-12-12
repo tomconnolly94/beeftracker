@@ -148,7 +148,7 @@ app.get('/search_events_from_artist/:artist_name', function(request, response){
             
             console.log(qry);
             
-            db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+            db.collection("event_data").find(JSON.parse(qry)).sort({"date_added" : -1}).limit(3).toArray(function(queryErr, docs) {
                 console.log("");
                 console.log("query: " + identifier);
                 console.log("response: " + docs.length);
