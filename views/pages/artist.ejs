@@ -67,9 +67,12 @@
                     <h2>Recent Events:</h2>
                         <div class="grid" class="condensed">
                             <div class="row cells3" >
-                                    <button class="shortcut-button bg-cyan bg-active-darkBlue fg-white" ng-repeat="event in events">
-                                        <span class="title" ng-href="/beef/{{event.event_id}}">{{ event.title }}</span>
-                                    </button>
+                                <!--<button class="shortcut-button bg-cyan bg-active-darkBlue fg-white" ng-repeat="event in events" ng-href="/beef/{{event.event_id}}">
+                                    <span class="title" ng-href="/beef/{{event.event_id}}">{{ event.title }}</span>
+                                </button>-->
+                                <ul class="shortcut-button bg-cyan bg-active-darkBlue fg-white" ng-repeat="event in events" ng-repeat="record in records">
+                                    <li><a ng-href="/beef/{{event.event_id}}"> {{ event.title }} </a></li>
+                                </ul>
                             </div>
 
                             <div class="row cells3">
