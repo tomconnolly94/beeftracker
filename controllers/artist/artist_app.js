@@ -1,6 +1,6 @@
-var artist_module = angular.module('artist', ['ngRoute']);
+var artist_app = angular.module('artist', ['ngRoute']);
 
-artist_module.config(function($routeProvider, $locationProvider){
+artist_app.config(function($routeProvider, $locationProvider){
     $routeProvider.when('/artist/:tagId', {
         templateUrl: '',    
         controller: 'artistSearchController'

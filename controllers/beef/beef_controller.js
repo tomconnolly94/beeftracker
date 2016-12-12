@@ -1,4 +1,4 @@
-beef_module.controller("resultController", ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
+beef_app.controller("resultController", ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
     
     //wait untill module has been configured before running this
     $scope.$on('$routeChangeSuccess', function() {

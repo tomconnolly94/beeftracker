@@ -1,4 +1,4 @@
-artist_module.controller("artistSearchController", ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
+artist_app.controller("artistSearchController", ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
     
     //wait untill module has been configured before running this
     $scope.$on('$routeChangeSuccess', function() {

@@ -1,4 +1,4 @@
-var beef_module = angular.module('searchResults', ['ngRoute']);
+var beef_app = angular.module('searchResults', ['ngRoute']);
 
 beef_module.config(function($routeProvider, $locationProvider){
     $routeProvider.when('/beef/:tagId', {

@@ -1,10 +1,11 @@
 // ### Create all the modules that are needed to run this server ###
 var express = require('express');
+var app = express();
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var path = require('path');
-var app = express();
 var MongoClient = require('mongodb').MongoClient;
+//var SSE = require('sse-nodejs');
 
 // ### Configure node variables ###
 app.set('port', (process.env.PORT || 5000));
@@ -161,8 +162,48 @@ app.get('/search_events_from_artist/:artist_name', function(request, response){
     });
     
 });
+app.get('/search_recent_events/:num_of_events', function(request, response){
+    
+    var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
+    var limit = parseInt(request.params.num_of_events);
+    console.log(limit);
+    
+    MongoClient.connect(url, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            var field_name = 'aggressor';
+            console.log(limit);
+            
+            db.collection("event_data").find({}).sort({"date_added" : -1}).limit(limit).toArray(function(queryErr, docs) {
+                console.log("");
+                console.log("query: { }");
+                console.log("response: " + docs.length);
+                response.send( { events : docs } );
+                db.close()
+            });
 
+            db.close();
+        }
+    });
+    
+});
 
+/*
+
+// ### Server sent event trigger ###
+app.get('/time', function (req,res) {
+    var serverSent = SSE(res);
+ 
+    serverSent.sendEvent('time', function () {
+        return new Date
+    },1000);
+    serverSent.disconnect(function () {
+        console.log("disconnected");
+    })
+ 
+    serverSent.removeEvent('time',2000);
+ 
+});*/
 
 //pages that are not in the current release design but may be in the next
 //app.get('/', function(request, response) { response.render('pages/splash'); });

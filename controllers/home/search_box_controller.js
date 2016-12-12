@@ -1,4 +1,4 @@
-search_module.controller('searchController', ['$scope','$http', function($scope, $http) {
+home_app.controller('searchController', ['$scope','$http', function($scope, $http) {
     
     $scope.submit = function(input){
         

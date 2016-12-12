@@ -1,1 +1,0 @@
-var search_module = angular.module('generalSearch',[]);
