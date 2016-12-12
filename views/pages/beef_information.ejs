@@ -1,7 +1,11 @@
-<html>
+<html ng-app="beef">
 	<link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
 	<link rel="stylesheet" type="text/css" href="/stylesheets/beef_information.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="/modules/angular-route/angular-route.min.js"></script>
+    <script src="/controllers/beef/beef_app.js"></script>
+    <script src="/controllers/beef/beef_controller.js"></script>
 	<script>
 		$(function(){
 	      //$("#inner-left-content").load("/");
@@ -12,15 +16,15 @@
 	<body>
 		<div id="header">
 		</div>
-		<div id="beef-information-content" class="half-page">
+		<div id="beef-information-content" class="half-page" ng-controller="resultController">
 			<div id="beef-artist-content">
 				<div id="beef-artist-image">
-					<img src="assets/eminem.jpg" id="beef-artist-image-img">
+					<img src="{{ img_link }}" id="beef-artist-image-img">
 				</div>
 				<div id="beef-artist-details">
-					<h2>Rap God</h2>
-					<h3>Eminem</h3>
-					<h4>14 Oct 2013</h4>
+					<h2>{{ song_title }}</h2>
+					<h3>{{ name }}</h3>
+					<h4>{{ date }}</h4>
 				</div>
 			</div>
 			<div id="beef-content">
@@ -29,10 +33,7 @@
 						<h2>Description</h2>
 					</div>
 					<div id="beef-description-inner" class="beef-description-content-inner">
-						"Rap God" was met with acclaim from music critics. Critics praised the song's lyrical content and rapping speed. Per Lijas of Time gave the song a positive review, stating that "the world can expect an immortal recording" based on "Rap God" and the album's lead single, "Berzerk".[22] Jim Farber of the Daily News compared the song to The Marshall Mathers LP, stating that the song "revives the super-sick humor of that era, which comes as a relief after all the internalizations and ruminating of Em’s more recent work".[23] Kory Grow of Rolling Stone also gave the song a positive review, praising that instead of "giving his chorus to an R&B crooner like Rihanna or the New Royales' Liz Rodrigues", "he instead delivers a straight rap refrain about feeling like a rap deity. His verses recall hip-hop history ... as much as his own history".[6] Nick Hill of Contact Music praised the song's rhyming and lyrical content. He exclaimed that the verse beginning at 4:20 best displays Eminem's rapping abilities.
-						<br/>
-						<br/>
-						Conversely, Consequence of Sound stated that, although the flow of the verses is impressive, the lyricism "falls victim to dated references [...] and the tired technique of using other rapper’s monikers to complete rhymes." They also noted that beat is "pedestrian at best", and that altogether the song "[lacks] the commercial appeal" of "Berzerk".[24]
+				        {{ description }}
 					</div>
 				</div>
 				<div id="beef-best-lyrics" class="beef-description-content">
@@ -40,13 +41,9 @@
 						<h2>Best Lyrics</h2>
 					</div>
 					<div id="beef-best-lyrics-inner" class="beef-description-content-inner">
-						Uh, sama lamaa duma lamaa you assuming I'm a human
-						<br/>
-						<br/>
-						What I gotta do to get it through to you I'm superhuman
-						<br/>
-						<br/>
-						Innovative and I'm made of rubber
+						<ul>
+                            <li ng-repeat="lyrics in top_lyrics"> {{ lyrics }} </li>
+                        </ul>
 					</div>
 				</div>
 				<div id="beef-related-artists" class="beef-description-content">

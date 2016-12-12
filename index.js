@@ -38,7 +38,7 @@ app.use('/bower_components', express.static(__dirname + '/bower_components/')); 
 
 // ### Permanent page routes ###
 app.get('/', function(request, response) { response.render('pages/home.ejs'); });
-app.get('/beef/:tagId', function(request, response) { response.render('pages/beef_blended.ejs'); });
+app.get('/beef/:tagId', function(request, response) { response.render('pages/beef_client_version.ejs'); });
 app.get('/artist/:tagId', function(request, response) { response.render('pages/artist.ejs'); });
 
 // ### Temporary development pages ###

@@ -1,3 +1,15 @@
+/////////////////////////////////////////////////////////////////////////////////
+//
+//  File: search_box_controller.js
+//  Project: beeftracker
+//  Contributors: Tom Connolly
+//  Description: Sends a HTTP request to the node server to extract data from the
+//                  db and return it depending on the value that the user has 
+//                  entered. It then accepts a response of matching events and
+//                  binds them to models.
+//
+/////////////////////////////////////////////////////////////////////////////////
+
 home_app.controller('searchController', ['$scope','$http', function($scope, $http) {
     
     $scope.submit = function(input){
