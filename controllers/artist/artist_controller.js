@@ -1,3 +1,15 @@
+/////////////////////////////////////////////////////////////////////////////////
+//
+//  File: artist_controller.js
+//  Project: beeftracker
+//  Contributors: Tom Connolly
+//  Description: Sends a HTTP request to the node server to extract data from the
+//                  db and return it. With the HTTP is sent an ID which allows express
+//                  to locate the correct record. This data this then bound to variables
+//                  in the $scope.
+//
+/////////////////////////////////////////////////////////////////////////////////
+
 artist_app.controller("artistSearchController", ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
     
     //wait untill module has been configured before running this

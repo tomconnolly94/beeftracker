@@ -1,3 +1,12 @@
+/////////////////////////////////////////////////////////////////////////////////
+//
+//  File: beef_app.js
+//  Project: beeftracker
+//  Contributors: Tom Connolly
+//  Description: Creates and configures the angular app for the beef page
+//
+/////////////////////////////////////////////////////////////////////////////////
+
 var beef_app = angular.module('searchResults', ['ngRoute']);
 
 beef_module.config(function($routeProvider, $locationProvider){

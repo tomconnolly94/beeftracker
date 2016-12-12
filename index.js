@@ -1,3 +1,14 @@
+/////////////////////////////////////////////////////////////////////////////////
+//
+//  File: index.js
+//  Project: beeftracker
+//  Contributors: Tom Connolly, Dan Kerby, James Langford
+//  Description: index.js is a file designed to use express to interact with the 
+//                  node server. It defines routes, db search requests and sets 
+//                  directory routes
+//
+/////////////////////////////////////////////////////////////////////////////////
+
 // ### Create all the modules that are needed to run this server ###
 var express = require('express');
 var app = express();
@@ -26,7 +37,7 @@ app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //r
 app.use('/bower_components', express.static(__dirname + '/bower_components/')); //route to reference css scripts
 
 // ### Permanent page routes ###
-app.get('/', function(request, response) { response.render('pages/home_page.ejs'); });
+app.get('/', function(request, response) { response.render('pages/home.ejs'); });
 app.get('/beef/:tagId', function(request, response) { response.render('pages/beef_blended.ejs'); });
 app.get('/artist/:tagId', function(request, response) { response.render('pages/artist.ejs'); });
 

@@ -1,3 +1,15 @@
+/////////////////////////////////////////////////////////////////////////////////
+//
+//  File: event_stream_controller.js
+//  Project: beeftracker
+//  Contributors: Tom Connolly
+//  Description: Sends a HTTP request to the node server to extract data from the
+//                  db and return it. With the HTTP is sent a 'limit' so express 
+//                  knows how many records to return. These events are then assigned
+//                  to the $scope.
+//
+/////////////////////////////////////////////////////////////////////////////////
+
 home_app.controller('eventStreamController', ['$scope','$http', function($scope, $http) {
         
     var result_limit = 3;
