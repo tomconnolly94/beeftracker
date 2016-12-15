@@ -172,6 +172,37 @@ app.get('/search_events_from_artist/:artist_name', function(request, response){
     });
     
 });
+app.get('/search_events_from_event_id/:event_id', function(request, response){
+    
+    var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
+    var identifier = request.params.event_id;
+    
+    console.log(identifier);
+
+    MongoClient.connect(url, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            var field_name = 'event_id';
+            
+            //code to create a qry string that matches NEAR to query string
+            var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
+            var qry = "{ \"" + field_name + "\" : " + end + " }";
+            
+            console.log(qry);
+            
+            db.collection("event_data").find(JSON.parse(qry)).sort({"date_added" : -1}).limit(3).toArray(function(queryErr, docs) {
+                console.log("");
+                console.log("query: " + identifier);
+                console.log("response: " + docs.length);
+                response.send( { events : docs } );
+                db.close()
+            });
+
+            db.close();
+        }
+    });
+    
+});
 app.get('/search_recent_events/:num_of_events', function(request, response){
     
     var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
@@ -197,6 +228,70 @@ app.get('/search_recent_events/:num_of_events', function(request, response){
     });
     
 });
+app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(request, response){
+    
+    var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
+    var event_id = parseInt(request.params.event_id);
+    
+    MongoClient.connect(url, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            var field_name = 'event_id';
+            
+            //code to create a qry string that matches NEAR to query string
+            var end = "{ \"$regex\": \"" + event_id + "\", \"$options\": \"i\" }";
+            var qry = "{ \"" + field_name + "\" : " + end + " }";            
+            
+            console.log(qry);
+            
+            db.collection("event_data").find(qry).toArray(function(queryErr, docs_1) {
+                console.log("");
+                console.log("query: " + qry);
+                console.log("responses: " + docs_1.length);
+                
+                var orig_artist_name = docs_1[0].aggressor;
+                
+                for(var event_num = 0; event_num < docs_1.length; event_num++){
+                    
+                    var targets = docs_1[event_num].targets;
+                    
+                    for(var target_num = 0; target_num < targets.length; targets_num++){
+                        
+                        var field_name = 'aggressor';
+                        var identifier = target[target_num];
+            
+                        //code to create a qry string that matches NEAR to query string
+                        var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
+                        var qry = "{ \"" + field_name + "\" : " + end + " }";
+
+                        console.log(qry);
+
+
+                        db.collection("event_data").find(qry).toArray(function(queryErr, docs_2) {
+                            
+                            for(var event_num = 0; event_num < docs_2.length; event_num++){  
+                                for(var targets_target_num = 0; targets_target_num < docs_2[event_num]; event_num++){
+                                    if(docs_2[event_num].targets[targets_target_num] == orig_artist_name){
+                                        docs_1.push(docs_2[event_num]);
+                                    }
+                                }
+                            }
+                            response.send( { events : docs_1 } );
+                            db.close()
+                        });
+                        
+                    }
+                }
+                response.send( { events : docs_1 } );
+                db.close()
+            });
+
+            db.close();
+        }
+    });
+    
+});
+
 
 /*
 

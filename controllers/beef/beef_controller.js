@@ -10,11 +10,14 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-beef_app.controller("currentEventController", ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
+beefapp.controller("currentEventController", ['$scope','$http', '$routeParams', '$sce', function($scope,$http,$routeParams,$sce) {
     
-    console.log("controller run");
     //wait untill module has been configured before running this
     $scope.$on('$routeChangeSuccess', function() {
+        
+        $scope.trustSrc = function(src) {
+            return $sce.trustAsResourceUrl(src);
+        }
         
         //make http request to server for data
         $http.get("/search/" + $routeParams.tagId).success(function(response){
@@ -30,9 +33,8 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
                 $scope.description = eventObject.description;
                 $scope.img_link = "/artist_images/" + eventObject.image_link;
                 $scope.top_lyrics = new Array();
-                
-                console.log(eventObject.top_lyrics);
-                
+                $scope.url = eventObject.url;
+                                
                 //loop through the top lyrics and assign them to the scope
                 for(var i = 0; i < Object.keys(eventObject.top_lyrics).length; i++){
                     $scope.top_lyrics.push(eventObject.top_lyrics[i]);
