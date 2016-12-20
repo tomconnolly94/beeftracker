@@ -263,7 +263,7 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                     for(var target in targets){
                         
                         console.log("point3")
-                        console.log(target["1"]);
+                        console.log(target[]);
                     }
                         /*var field_name = 'aggressor';
                         var identifier = target;
