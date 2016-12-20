@@ -140,7 +140,7 @@ app.get('/search_artist/:artist_id', function(request, response){
         }
     });
     
-});
+                                                    });
 app.get('/search_events_from_artist/:artist_name', function(request, response){
     
     var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
@@ -240,34 +240,43 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
             
             //code to create a qry string that matches NEAR to query string
             var end = "{ \"$regex\": \"" + event_id + "\", \"$options\": \"i\" }";
-            var qry = "{ \"" + field_name + "\" : " + end + " }";            
+            var qry = "{ \"" + field_name + "\" : " + end + " }";
             
-            console.log(qry);
-            
-            db.collection("event_data").find(qry).toArray(function(queryErr, docs_1) {
-                console.log("");
-                console.log("query: " + qry);
+            db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs_1) {
+                
                 console.log("responses: " + docs_1.length);
+                console.log(docs_1);
                 
                 var orig_artist_name = docs_1[0].aggressor;
+                
+                console.log("point1")
                 
                 for(var event_num = 0; event_num < docs_1.length; event_num++){
                     
                     var targets = docs_1[event_num].targets;
                     
-                    for(var target_num = 0; target_num < targets.length; targets_num++){
+                    //targets = JSON.parse(targets);
+                    
+                    console.log(targets[0]);
+                    console.log(targets.length);
+                    
+                    for(var target in targets){
                         
-                        var field_name = 'aggressor';
-                        var identifier = target[target_num];
+                        console.log("point3")
+                        console.log(target["1"]);
+                    }
+                        /*var field_name = 'aggressor';
+                        var identifier = target;
             
                         //code to create a qry string that matches NEAR to query string
                         var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
                         var qry = "{ \"" + field_name + "\" : " + end + " }";
 
-                        console.log(qry);
+                        console.log("query 2" + qry);
 
-
-                        db.collection("event_data").find(qry).toArray(function(queryErr, docs_2) {
+                        db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs_2) {
+                            
+                            console.log(docs_2);
                             
                             for(var event_num = 0; event_num < docs_2.length; event_num++){  
                                 for(var targets_target_num = 0; targets_target_num < docs_2[event_num]; event_num++){
@@ -280,7 +289,7 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                             db.close()
                         });
                         
-                    }
+                    }*/
                 }
                 response.send( { events : docs_1 } );
                 db.close()
