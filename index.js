@@ -330,52 +330,53 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                             
                     var all_events = new Array();
                     
-                    all_events.push(main_event);
-                    
-                    //loop through targets 
+                    all_events.push(main_event[0]);
+                                            
+                    //mongo record field 
+                    var field_name = 'aggressor';
+
+                    //code to create a qry string that matches data
+                    var qry = "{ \"$or\": [";
+
                     for(var target_num = 0; target_num < Object.keys(targets).length; target_num++){
-                        
-                        //mongo record field 
-                        var field_name = 'aggressor';
+                        qry += "{ \"" + field_name + "\" : \"" + targets[target_num] + "\" }";
+                        if(target_num != Object.keys(targets).length-1){
+                            qry += ", ";
+                        }
+                    }
+                    
+                    qry += " ] } "
 
-                        //code to create a qry string that matches data
-                        var qry = "{ \"" + field_name + "\" : \"" + targets[target_num] + "\" }";
-                        
-                        console.log(qry);
-                        
-                        //init targets set
-                        var targets;
+                    console.log(qry);
 
-                        db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, events) {
-                                                        
-                            for(var event_num = 0; event_num < Object.keys(events).length; event_num++){
-                                
-                                var event = events[event_num];
-                                
-                                console.log(Object.keys(event.targets).length);
-                                
+                    db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, events) {
+                                                
+                        async.each(events, function(event, callback) {
+
                                 //loop through targets to check that one of them is orig_artist_name
                                 for(var sub_target_num = 0; sub_target_num < Object.keys(event.targets).length; sub_target_num++){
-                                
+
                                     var target = event.targets[sub_target_num];
-                                    console.log(target);
                                     
                                     if(target == orig_artist_name){
                                         all_events.push(event);
                                     }
                                 }
+                            callback(all_events);
+                        }, function(all_events, error) {
+                            // if any of the file processing produced an error, err would equal that error
+                            if( error ) { console.log(error); } else {
+                                console.log(all_events);
+                                response.send( { events : all_events } );
                             }
-                            
-                            console.log("start");
-                            console.log(all_events);
-                            
-                            response.send( { events : all_events } );
-                        });
-                    }
+                        });              
+                    });
                 }
-            ], function (error, success) {
-                if (error) { alert('Something is wrong!'); }
-                return alert('Done!');
+            ], function (error, all_events) {
+                if (error) { console.log(error); }
+                else{
+                    
+                }
             });
         }
     });

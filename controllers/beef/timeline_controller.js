@@ -10,10 +10,13 @@ beefapp.controller('timelineController', ['$scope','$http', '$routeParams', '$sc
                 
                 var events = response.events;
                 $scope.events = new Array();
+                
+                //sort the events by date
+                events.sort(custom_sort);
                                 
-                for(var i = 0; i < events.length;i++){
+                for(var event_index = 0; event_index < events.length; event_index++){
                     
-                    var eventObject = events[i];                    
+                    var eventObject = events[event_index];                    
                     var top_lyrics = new Array();
                     var targets = new Array();
 
@@ -30,11 +33,6 @@ beefapp.controller('timelineController', ['$scope','$http', '$routeParams', '$sc
                         else{
                             targets.push(eventObject.targets[i]);
                         }
-                    }                   
-                    
-                    //loop through the top lyrics and assign them to the scope
-                    for(var i = 0; i < Object.keys(eventObject.top_lyrics).length; i++){
-                        top_lyrics.push(eventObject.top_lyrics[i]);
                     }
                     
                     //create data record
@@ -46,13 +44,10 @@ beefapp.controller('timelineController', ['$scope','$http', '$routeParams', '$sc
                         img_link : "artist_images/" + eventObject.image_link,
                         top_lyrics : top_lyrics,
                         targets : targets,
-                        eventNum : eventObject.event_id
+                        event_num : eventObject.event_id
                     };
-                    
                     $scope.events.push(record);
-                    
                 }
-                console.log($scope.events);
             }
             else{
                 //error msg
@@ -66,3 +61,7 @@ beefapp.controller('timelineController', ['$scope','$http', '$routeParams', '$sc
     });
     
 }]);
+
+function custom_sort(event_1, event_2) {
+    return new Date(event_2.event_date).getTime() - new Date(event_1.event_date).getTime();
+}

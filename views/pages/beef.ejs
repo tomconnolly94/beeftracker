@@ -47,12 +47,14 @@
                     </div>
                     <div id="beef-timeline">
                         <div class="beef-timeline-event-left" ng-repeat="event in events">
-                            <div class="beef-timeline-event-date"> 
-                                {{ event.date }}
-                            </div>
-                            <div class="beef-timeline-event-name">
-                                {{ event.title }}
-                            </div>
+                            <a ng-href="/beef/{{event.event_num}}" >
+                                <div class="beef-timeline-event-date"> 
+                                    {{ event.date }}
+                                </div>
+                                <div class="beef-timeline-event-name">
+                                    {{ event.title }}
+                                </div>
+                            </a>
                         </div>
                         <div class="beef-timeline-event-right">
                         </div>
