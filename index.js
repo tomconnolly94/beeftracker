@@ -16,6 +16,7 @@ var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var path = require('path');
 var MongoClient = require('mongodb').MongoClient;
+var async = require("async");
 //var SSE = require('sse-nodejs');
 
 // ### Configure node variables ###
@@ -228,7 +229,7 @@ app.get('/search_recent_events/:num_of_events', function(request, response){
     });
     
 });
-app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(request, response){
+app.get('/search_all_events_in_timeline_from_event_id_orig/:event_id', function(request, response){
     
     var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
     var event_id = parseInt(request.params.event_id);
@@ -255,33 +256,30 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                     
                     var targets = docs_1[event_num].targets;
                     
-                    //targets = JSON.parse(targets);
+                    console.log(Object.keys(targets).length);
                     
-                    console.log(targets[0]);
-                    console.log(targets.length);
-                    
-                    for(var target in targets){
-                        
-                        console.log("point3")
-                        console.log(target[]);
-                    }
-                        /*var field_name = 'aggressor';
-                        var identifier = target;
+                    for(var target_num = 0; target_num < Object.keys(targets).length; target_num++){
+                                
+                        var field_name = 'aggressor';
+                        var identifier = targets[target_num];
             
                         //code to create a qry string that matches NEAR to query string
                         var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
                         var qry = "{ \"" + field_name + "\" : " + end + " }";
 
-                        console.log("query 2" + qry);
+                        console.log("query 2: " + qry);
 
                         db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs_2) {
                             
                             console.log(docs_2);
                             
+                            //loop through results
                             for(var event_num = 0; event_num < docs_2.length; event_num++){  
-                                for(var targets_target_num = 0; targets_target_num < docs_2[event_num]; event_num++){
+                                innerloop:
+                                for(var targets_target_num = 0; targets_target_num < Object.keys(docs_2[event_num].targets).length; event_num++){
                                     if(docs_2[event_num].targets[targets_target_num] == orig_artist_name){
                                         docs_1.push(docs_2[event_num]);
+                                        break innerloop;
                                     }
                                 }
                             }
@@ -289,7 +287,7 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                             db.close()
                         });
                         
-                    }*/
+                    }
                 }
                 response.send( { events : docs_1 } );
                 db.close()
@@ -300,7 +298,88 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
     });
     
 });
+app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(request, response){
+    
+    var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
+    var event_id = parseInt(request.params.event_id);
+    
+    MongoClient.connect(url, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            async.waterfall([
+                function(callback){
+                    //mongo record field 
+                    var field_name = 'event_id';
+            
+                    //code to create a qry string that matches NEAR to query string
+                    var end = "{ \"$regex\": \"" + event_id + "\", \"$options\": \"i\" }";
+                    var qry = "{ \"" + field_name + "\" : " + end + " }";
+                    //init targets set
+                    var targets;
 
+                    db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, main_event) {
+                        
+                        var orig_artist_name = main_event[0].aggressor;
+                        
+                        var targets = main_event[0].targets;
+                        
+                        callback(null, targets, orig_artist_name, main_event);
+                    });
+                },
+                function(targets, orig_artist_name, main_event, callback){
+                            
+                    var all_events = new Array();
+                    
+                    all_events.push(main_event);
+                    
+                    //loop through targets 
+                    for(var target_num = 0; target_num < Object.keys(targets).length; target_num++){
+                        
+                        //mongo record field 
+                        var field_name = 'aggressor';
+
+                        //code to create a qry string that matches data
+                        var qry = "{ \"" + field_name + "\" : \"" + targets[target_num] + "\" }";
+                        
+                        console.log(qry);
+                        
+                        //init targets set
+                        var targets;
+
+                        db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, events) {
+                                                        
+                            for(var event_num = 0; event_num < Object.keys(events).length; event_num++){
+                                
+                                var event = events[event_num];
+                                
+                                console.log(Object.keys(event.targets).length);
+                                
+                                //loop through targets to check that one of them is orig_artist_name
+                                for(var sub_target_num = 0; sub_target_num < Object.keys(event.targets).length; sub_target_num++){
+                                
+                                    var target = event.targets[sub_target_num];
+                                    console.log(target);
+                                    
+                                    if(target == orig_artist_name){
+                                        all_events.push(event);
+                                    }
+                                }
+                            }
+                            
+                            console.log("start");
+                            console.log(all_events);
+                            
+                            response.send( { events : all_events } );
+                        });
+                    }
+                }
+            ], function (error, success) {
+                if (error) { alert('Something is wrong!'); }
+                return alert('Done!');
+            });
+        }
+    });
+});
 
 /*
 
