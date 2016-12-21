@@ -66,15 +66,17 @@
                 <div id="headerm">
                     </div>
                     <div id="beef-information-content" class="half-pa2ge" ng-controller="currentEventController">
-                        <div id="beef-artist-content">
-                            <div id="beef-artist-image">
-                                <img src="{{ img_link }}" id="beef-artist-image-img">
-                            </div>
-                            <div id="beef-artist-details">
-                                <h2>{{ song_title }}</h2>
-                                <h3>{{ name }}</h3>
-                                <h4>{{ date }}</h4>
-                            </div>
+                        <div id="beef-artist-content" >
+                            <a ng-href="/artist/{{event_id}}" target="_self">
+                                <div id="beef-artist-image">
+                                    <img src="{{ img_link }}" id="beef-artist-image-img">
+                                </div>
+                                <div id="beef-artist-details">
+                                    <h2>{{ song_title }}</h2>
+                                    <h3>{{ name }}</h3>
+                                    <h4>{{ date }}</h4>
+                                </div>
+                            </a>
                         </div>
                         <div id="beef-content">
                             <div id="beef-description" class="beef-description-content">

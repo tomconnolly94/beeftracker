@@ -34,6 +34,7 @@ beefapp.controller("currentEventController", ['$scope','$http', '$routeParams', 
                 $scope.img_link = "/artist_images/" + eventObject.image_link;
                 $scope.top_lyrics = new Array();
                 $scope.url = eventObject.url;
+                $scope.event_id = eventObject.event_id;
                                 
                 //loop through the top lyrics and assign them to the scope
                 for(var i = 0; i < Object.keys(eventObject.top_lyrics).length; i++){
