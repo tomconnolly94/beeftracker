@@ -23,9 +23,7 @@ var async = require("async");
 app.set('port', (process.env.PORT || 5000));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride());
 
@@ -51,7 +49,7 @@ app.get('/results', function(request, response) { response.render('pages/search_
 app.get('/search/:tagId', function(request, response) { 
    console.log(process.env.MONGODB_URL);
 
-    var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
+    var url = process.env.MONGODB_URI;
     var identifier = request.params.tagId;
 
     MongoClient.connect(url, function(err, db) {
@@ -343,6 +341,4 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
 //app.get('/', function(request, response) { response.render('pages/splash'); });
 
 // ## Launch application ###
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
-});
+app.listen(app.get('port'), function() { console.log('Node app is running on port', app.get('port')); });
