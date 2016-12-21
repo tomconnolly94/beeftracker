@@ -35,18 +35,18 @@
                 <div id="beef-timeline-content">
                     <div id="artist-selection">
                         <div id="left-artist-selection" class="individual-artist-selection">
-                            <select class="artist-selection-dropdown" ng-repeat="event in events">
-                                <option> {{ events[0].name }} </option>
-                            </select>
+                            <div class="artist-selection-dropdown">
+                                <p ng-model="main_name"> {{ main_event.name }} </p>
+                            </div>
                         </div>
                         <div id="right-artist-selection" class="individual-artist-selection">
-                            <select class="artist-selection-dropdown">
-                                <option ng-repeat="target in events[0].targets">{{ target }}</option>
+                            <select class="artist-selection-dropdown" ng-model="drop_down" ng-change="handle_change()">
+                                <option ng-repeat="target in main_event.targets">{{ target }}</option>
                             </select>
                         </div>
                     </div>
                     <div id="beef-timeline">
-                        <div class="beef-timeline-event-left" ng-repeat="event in events">
+                        <div class="beef-timeline-event-left" style="background-color:{{event.colour}}" ng-repeat="event in events">
                             <a ng-href="/beef/{{event.event_num}}" >
                                 <div class="beef-timeline-event-date"> 
                                     {{ event.date }}
@@ -91,7 +91,7 @@
                                 </div>
                                 <div id="beef-best-lyrics-inner" class="beef-description-content-inner">
                                     <ul>
-                                        <li ng-repeat="lyrics in top_lyrics"> {{ lyrics }} </li>
+                                        <li ng-repeat="lyrics in top_lyrics"> "{{ lyrics }}.."</li>
                                     </ul>
                                 </div>
                             </div>
