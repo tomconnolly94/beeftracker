@@ -50,6 +50,7 @@ app.get('/search/:tagId', function(request, response) {
    console.log(process.env.MONGODB_URL);
 
     var url = process.env.MONGODB_URI;
+    console.log(" EYO  " + url)
     var identifier = request.params.tagId;
 
     MongoClient.connect(url, function(err, db) {
