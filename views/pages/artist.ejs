@@ -71,29 +71,9 @@
                                     <span class="title" ng-href="/beef/{{event.event_id}}">{{ event.title }}</span>
                                 </button>-->
                                 <ul class="shortcut-button bg-cyan bg-active-darkBlue fg-white" ng-repeat="event in events" ng-repeat="record in records">
-                                    <li><a ng-href="/beef/{{event.event_id}}"> {{ event.title }} </a></li>
+                                    <li><a ng-href="/beef/{{event.event_id}}" target="_self"> {{ event.title }} </a></li>
                                 </ul>
-                            </div>
-
-                            <div class="row cells3">
-                                <div class="event-box">
-                                    <button class="shortcut-button bg- ribbed-cyan bg-active-darkBlue fg-white">
-                                        <span class="title">Event 4</span>
-                                    </button>
-                                </div>
-                                <div class="event-box">
-                                    <button class="shortcut-button bg- ribbed-cyan bg-active-darkBlue fg-white">
-                                        <span class="title">Event 4</span>
-                                    </button>
-                                </div>
-                                <div class="event-box">
-                                    <button class="shortcut-button bg- ribbed-cyan bg-active-darkBlue fg-white">
-                                        <span class="title">Event 4</span>
-                                    </button>
-                                </div>
-                                    
-                                  
-                            </div>
+                            </div>                                  
                         </div>
                     </div>
                 </div>
