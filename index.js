@@ -80,7 +80,7 @@ app.get('/search/:tagId', function(request, response) {
         }
     });
 });
-app.get('/search_all/:search_term', function(request, response){
+app.get('/search_all/:search_term', function(request, response) {
     
     var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
     var identifier = request.params.search_term;
@@ -111,7 +111,7 @@ app.get('/search_all/:search_term', function(request, response){
     });
     
 });
-app.get('/search_artist/:artist_id', function(request, response){
+app.get('/search_artist/:artist_id', function(request, response) {
     
     var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
     var identifier = request.params.artist_id;
@@ -140,9 +140,8 @@ app.get('/search_artist/:artist_id', function(request, response){
             db.close();
         }
     });
-    
-                                                    });
-app.get('/search_events_from_artist/:artist_name', function(request, response){
+});
+app.get('/search_events_from_artist/:artist_name', function(request, response) {
     
     var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
     var identifier = request.params.artist_name;
@@ -173,7 +172,7 @@ app.get('/search_events_from_artist/:artist_name', function(request, response){
     });
     
 });
-app.get('/search_events_from_event_id/:event_id', function(request, response){
+app.get('/search_events_from_event_id/:event_id', function(request, response) {
     
     var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
     var identifier = request.params.event_id;
@@ -204,7 +203,7 @@ app.get('/search_events_from_event_id/:event_id', function(request, response){
     });
     
 });
-app.get('/search_recent_events/:num_of_events', function(request, response){
+app.get('/search_recent_events/:num_of_events', function(request, response) {
     
     var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
     var limit = parseInt(request.params.num_of_events);
@@ -229,7 +228,7 @@ app.get('/search_recent_events/:num_of_events', function(request, response){
     });
     
 });
-app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(request, response){
+app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(request, response) {
     
     var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
     var event_id = parseInt(request.params.event_id);
@@ -292,7 +291,7 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                         callback(null, targets, orig_artist_name, main_event, all_events);
                     });
                 },
-                function(targets, orig_artist_name, main_event, all_events, callback){ //gather the targets' responses
+                function(targets, orig_artist_name, main_event, all_events, callback){ //gather all the targets' responses
                      
                     //mongo record field 
                     var field_name = 'aggressor';
