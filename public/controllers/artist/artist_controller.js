@@ -31,6 +31,7 @@ artist_app.controller("artistSearchController", ['$scope','$http', '$routeParams
                     $scope.d_o_b = artist_object.d_o_b.slice(0,10);
                     $scope.img_link = "/artist_images/" + artist_object.img_link;
                     $scope.events = response.events;
+                    $scope.bio = response.bio;
                 }, 
                 function(response) {
                     //failed http request
