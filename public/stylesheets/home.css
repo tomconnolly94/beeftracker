@@ -1,18 +1,22 @@
 h2 {
     margin:0 auto;
-    font-size:3vw;
+    font-size:7vw;
     text-align:center;
 }
 
 #search_box {
-    padding: 0;
+    /*padding: 0;
     height: 30px;
     position: relative;
     width:200px;
     outline: none;
-    font-size: 16px;
+    font-size: 16px;*/
 }
 
 ul {
     list-style-type:none;
+}
+
+#search_area{
+    height:400px;
 }

@@ -36,9 +36,14 @@ beefapp.controller("currentEventController", ['$scope','$http', '$routeParams', 
                 $scope.url = eventObject.url;
                 $scope.event_id = eventObject.event_id;
                                 
-                //loop through the top lyrics and assign them to the scope
-                for(var i = 0; i < Object.keys(eventObject.top_lyrics).length; i++){
-                    $scope.top_lyrics.push(eventObject.top_lyrics[i]);
+                if(Object.keys(eventObject.top_lyrics).length < 1){
+                    $scope.top_lyrics.push("Not applicable");
+                }
+                else{
+                    //loop through the top lyrics and assign them to the scope
+                    for(var i = 0; i < Object.keys(eventObject.top_lyrics).length; i++){
+                        $scope.top_lyrics.push(eventObject.top_lyrics[i]);
+                    }
                 }
             }
             else{

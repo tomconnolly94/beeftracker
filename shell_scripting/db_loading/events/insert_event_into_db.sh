@@ -6,7 +6,7 @@ declare -a targets
 
 while read line; do
 
-	if [ $counter -eq 8 ]
+	if [ $counter -eq 7 ]
 	then
         IFS="|" read -a lyrics <<< "$line"
 	fi
@@ -73,10 +73,10 @@ insert_cmd='db.event_data.insert( {
 "aggressor" : '\"${data[1]}\"',
 "targets" : '$targets_string',
 "description" : '\"${data[3]}\"', 
-"date_added" : '${data[4]}', 
-"image_link" : '\"${data[5]}\"', 
-"url" : '\"${data[6]}\"', 
-"event_date" : '${data[7]}', 
+"date_added" : new Date(), 
+"image_link" : '\"${data[4]}\"', 
+"url" : '\"${data[5]}\"', 
+"event_date" : '${data[6]}', 
 "event_id" : '\"$event_count\"',
 "top_lyrics" :'$lyrics_string',
 "to_string" : '\"$to_string\"' 

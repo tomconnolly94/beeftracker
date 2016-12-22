@@ -1,6 +1,5 @@
 beefapp.controller('timelineController', ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
     
-    
     //wait untill module has been configured before running this
     $scope.$on('$routeChangeSuccess', function() {
         $scope.handle_change();

@@ -1,0 +1,8 @@
+event title
+aggressor
+targets (format - seperated by a '|')
+description
+image title
+video url
+date (format - 'new Date(year,month,day)')
+top lyrics (format - seperated by a '|')

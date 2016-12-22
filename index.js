@@ -31,7 +31,7 @@ app.use(methodOverride());
 app.use('/artist_images', express.static(__dirname + '/public/assets/images/artists/')); //route to reference images
 app.use('/libraries', express.static(__dirname + '/libs/')); //route to reference libraries like angular
 app.use('/modules', express.static(__dirname + '/node_modules/')); //route to reference libraries like angular
-app.use('/controllers', express.static(__dirname + '/controllers/')); //route to reference controller scripts
+app.use('/controllers', express.static(__dirname + '/public/controllers/')); //route to reference controller scripts
 app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //route to reference css scripts
 app.use('/bower_components', express.static(__dirname + '/bower_components/')); //route to reference css scripts
 
@@ -45,8 +45,7 @@ app.get('/beef_timeline', function(request, response) { response.render('pages/b
 app.get('/beef_information', function(request, response) { response.render('pages/beef_information.ejs'); });
 
 // ### Search functions ###
-app.get('/search/:tagId', function(request, response) { 
-   console.log(process.env.MONGODB_URL);
+app.get('/search/:tagId', function(request, response) {
 
     var url = process.env.MONGODB_URI;
     var identifier = request.params.tagId;
@@ -63,12 +62,7 @@ app.get('/search/:tagId', function(request, response) {
             
             var qry = "{ \"" + field_name + "\" : \"" + identifier + "\" }";
             
-            console.log(qry);
-            
             db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
-                console.log("");
-                console.log("query: " + identifier);
-                console.log("response: " + docs.length);
                 response.send({eventObject : docs[0]});
                 db.close()
             });
@@ -81,8 +75,6 @@ app.get('/search_all/:search_term', function(request, response) {
     
     var url = process.env.MONGODB_URI;
     var identifier = request.params.search_term;
-    
-    console.log(identifier);
 
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
@@ -93,12 +85,7 @@ app.get('/search_all/:search_term', function(request, response) {
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
             var qry = "{ \"" + field_name + "\" : " + end + " }";
             
-            console.log(qry);
-            
             db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
-                console.log("");
-                console.log("query: " + identifier);
-                console.log("response: " + docs.length);
                 response.send( { events : docs } );
                 db.close()
             });
@@ -112,8 +99,6 @@ app.get('/search_artist/:artist_id', function(request, response) {
     
     var url = process.env.MONGODB_URI;
     var identifier = request.params.artist_id;
-    
-    console.log(identifier);
 
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
@@ -124,16 +109,10 @@ app.get('/search_artist/:artist_id', function(request, response) {
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
             var qry = "{ \"" + field_name + "\" : " + end + " }";
             
-            console.log(qry);
-            
             db.collection("artist_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
-                console.log("");
-                console.log("query: " + identifier);
-                console.log("response: " + docs.length);
                 response.send( { events : docs[0] } );
                 db.close()
             });
-
             db.close();
         }
     });
@@ -142,8 +121,6 @@ app.get('/search_events_from_artist/:artist_name', function(request, response) {
     
     var url = process.env.MONGODB_URI;
     var identifier = request.params.artist_name;
-    
-    console.log(identifier);
 
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
@@ -154,16 +131,10 @@ app.get('/search_events_from_artist/:artist_name', function(request, response) {
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
             var qry = "{ \"" + field_name + "\" : " + end + " }";
             
-            console.log(qry);
-            
             db.collection("event_data").find(JSON.parse(qry)).sort({"date_added" : -1}).limit(3).toArray(function(queryErr, docs) {
-                console.log("");
-                console.log("query: " + identifier);
-                console.log("response: " + docs.length);
                 response.send( { events : docs } );
                 db.close()
             });
-
             db.close();
         }
     });
@@ -173,8 +144,6 @@ app.get('/search_events_from_event_id/:event_id', function(request, response) {
     
     var url = process.env.MONGODB_URI;
     var identifier = request.params.event_id;
-    
-    console.log(identifier);
 
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
@@ -185,16 +154,10 @@ app.get('/search_events_from_event_id/:event_id', function(request, response) {
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
             var qry = "{ \"" + field_name + "\" : " + end + " }";
             
-            console.log(qry);
-            
             db.collection("event_data").find(JSON.parse(qry)).sort({"date_added" : -1}).limit(3).toArray(function(queryErr, docs) {
-                console.log("");
-                console.log("query: " + identifier);
-                console.log("response: " + docs.length);
                 response.send( { events : docs } );
                 db.close()
             });
-
             db.close();
         }
     });
@@ -204,23 +167,16 @@ app.get('/search_recent_events/:num_of_events', function(request, response) {
     
     var url = process.env.MONGODB_URI;
     var limit = parseInt(request.params.num_of_events);
-    console.log(limit);
     
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
         else{
             var field_name = 'aggressor';
-            console.log(limit);
             
             db.collection("event_data").find({}).sort({"date_added" : -1}).limit(limit).toArray(function(queryErr, docs) {
-                console.log("");
-                console.log("query: { }");
-                console.log("response: " + docs.length);
                 response.send( { events : docs } );
                 db.close()
             });
-
-            db.close();
         }
     });
     
@@ -271,8 +227,6 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                             for(var sub_target_num = 0; sub_target_num < Object.keys(event.targets).length; sub_target_num++){
 
                                 var target_1 = event.targets[sub_target_num];
-                                
-                                console.log(targets);
 
                                 for(var orig_target_num = 0; orig_target_num < Object.keys(targets).length; orig_target_num++){
 
@@ -303,10 +257,12 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                         }
                     }
                     
-                    qry += " ] } "
+                    qry += " ] } ";
 
                     db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, events) {
                                                 
+                        console.log(events);
+                        
                         async.each(events, function(event, callback) {
 
                                 //loop through targets to check that one of them is orig_artist_name
@@ -318,12 +274,10 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                                         all_events.push(event);
                                     }
                                 }
-                            callback(all_events);
-                        }, function(all_events, error) {
-                            if( error ) { console.log(error); } else {
-                                response.send( { events : all_events } );
-                            }
-                        });              
+                            console.log("length in loop" + all_events.length);
+                            //callback(all_events);
+                        });  
+                        response.send( { events : all_events } );
                     });
                 }
             ], function (error, all_events) {
