@@ -120,6 +120,7 @@ app.get('/search_artist/:artist_id', function(request, response) {
 app.get('/search_events_from_artist/:artist_name', function(request, response) {
     
     var url = process.env.MONGODB_URI;
+    var identifier = request.params.artist_name;
 
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
