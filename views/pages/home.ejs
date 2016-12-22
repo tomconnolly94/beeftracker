@@ -11,8 +11,9 @@
     <head>
         <title>Home</title>
         <!-- css file references -->
-        <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/master.css">
         <link rel="stylesheet" type="text/css" href="/stylesheets/home.css">
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Michroma" />
         <!-- javascript library references -->
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -24,8 +25,8 @@
 
     <body>
         <div>
-            <h2>Home</h2>
-            <div ng-controller="searchController">
+            <h2> Beeftracker </h2>
+            <div id="search_area" ng-controller="searchController">
                 <div id="search_box">
                         <input type="text" ng-model="search_term" ng-change="submit(search_term)" placeholder="Search for an Event" id="search_box">
                 </div>
