@@ -1,5 +1,17 @@
 body{
-    background-color:black;
+    background-color:lightgray;
+}
+
+#behind{
+    z-index: 0;
+    background-color:indianred;
+    height:300px;
+    width:100%;
+}
+
+.headerWrapper{
+     width:80em;
+    margin: 0 auto;
 }
 
 .informationPane{
@@ -7,6 +19,7 @@ body{
     height:300px;
     width:100%;
     display: inline-block;
+    z-index:5;
 }
 
 .image{
@@ -22,9 +35,9 @@ body{
 
 .wrapper{
     height:100em;
-    width:80em;
+    width:70%;
     margin: 0 auto;
-    background-color:white;
+    background-color:whitesmoke;
 }
 
 
@@ -77,15 +90,16 @@ p{
     width:50%;
     height:100em;
     border-left: 1px solid gray;
+    padding:10px;
 }
 
 .eventContainer{
-    height: 100em;
+
     width:80%;
     margin:0 auto;
-    background-color: lightcoral;
+    background-color: lightgrey;
     display:block;
-    padding:10px;
+
     
     
 }
@@ -95,7 +109,7 @@ p{
     height:100px;
     width:100%;
     background-color: white;
-    margin:10px 0 10px 0;
+    border:10px;
 }
 
 #title{
