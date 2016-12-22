@@ -43,14 +43,12 @@ app.get('/artist/:tagId', function(request, response) { response.render('pages/a
 // ### Temporary development pages ###
 app.get('/beef_timeline', function(request, response) { response.render('pages/beef_timeline.ejs'); });
 app.get('/beef_information', function(request, response) { response.render('pages/beef_information.ejs'); });
-app.get('/results', function(request, response) { response.render('pages/search_results.ejs'); });
 
 // ### Search functions ###
 app.get('/search/:tagId', function(request, response) { 
    console.log(process.env.MONGODB_URL);
 
     var url = process.env.MONGODB_URI;
-    console.log(" EYO  " + url)
     var identifier = request.params.tagId;
 
     MongoClient.connect(url, function(err, db) {
@@ -81,7 +79,7 @@ app.get('/search/:tagId', function(request, response) {
 });
 app.get('/search_all/:search_term', function(request, response) {
     
-    var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
+    var url = process.env.MONGODB_URI;
     var identifier = request.params.search_term;
     
     console.log(identifier);
@@ -112,7 +110,7 @@ app.get('/search_all/:search_term', function(request, response) {
 });
 app.get('/search_artist/:artist_id', function(request, response) {
     
-    var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
+    var url = process.env.MONGODB_URI;
     var identifier = request.params.artist_id;
     
     console.log(identifier);
@@ -142,7 +140,7 @@ app.get('/search_artist/:artist_id', function(request, response) {
 });
 app.get('/search_events_from_artist/:artist_name', function(request, response) {
     
-    var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
+    var url = process.env.MONGODB_URI;
     var identifier = request.params.artist_name;
     
     console.log(identifier);
@@ -173,7 +171,7 @@ app.get('/search_events_from_artist/:artist_name', function(request, response) {
 });
 app.get('/search_events_from_event_id/:event_id', function(request, response) {
     
-    var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
+    var url = process.env.MONGODB_URI;
     var identifier = request.params.event_id;
     
     console.log(identifier);
@@ -204,7 +202,7 @@ app.get('/search_events_from_event_id/:event_id', function(request, response) {
 });
 app.get('/search_recent_events/:num_of_events', function(request, response) {
     
-    var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
+    var url = process.env.MONGODB_URI;
     var limit = parseInt(request.params.num_of_events);
     console.log(limit);
     
@@ -229,7 +227,7 @@ app.get('/search_recent_events/:num_of_events', function(request, response) {
 });
 app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(request, response) {
     
-    var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
+    var url = process.env.MONGODB_URI;
     var event_id = parseInt(request.params.event_id);
     
     MongoClient.connect(url, function(err, db) {
