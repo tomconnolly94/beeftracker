@@ -45,10 +45,6 @@ done
 
 targets_string="$targets_string } "
 
-echo $targets_string
-
-
-
 lyrics_string=' { '
 count=0
 
@@ -66,21 +62,27 @@ done
 
 lyrics_string="$lyrics_string } "
 
-echo $lyrics_string
-
-insert_cmd='db.event_data.insert( { 
-"title" : '\"${data[0]}\"', 
-"aggressor" : '\"${data[1]}\"',
-"targets" : '$targets_string',
-"description" : '\"${data[3]}\"', 
-"date_added" : new Date(), 
-"image_link" : '\"${data[4]}\"', 
-"url" : '\"${data[5]}\"', 
-"event_date" : '${data[6]}', 
-"event_id" : '\"$event_count\"',
-"top_lyrics" :'$lyrics_string',
-"to_string" : '\"$to_string\"' 
-} );'
+insert_cmd='db.event_data.update( 
+{ 
+    "title" : '\"${data[0]}\"' 
+}, 
+{ 
+    "title" : '\"${data[0]}\"', 
+    "aggressor" : '\"${data[1]}\"',
+    "targets" : '$targets_string',
+    "description" : '\"${data[3]}\"', 
+    "date_added" : new Date(), 
+    "image_link" : '\"${data[4]}\"', 
+    "url" : '\"${data[5]}\"', 
+    "event_date" : '${data[6]}', 
+    "event_id" : '\"$event_count\"',
+    "top_lyrics" :'$lyrics_string',
+    "to_string" : '\"$to_string\"' 
+},
+{ 
+    upsert : true 
+}
+);'
 
 echo $insert_cmd;
 

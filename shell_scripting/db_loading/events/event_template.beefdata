@@ -6,3 +6,5 @@ image title
 video url
 date (format - 'new Date(year,month,day)')
 top lyrics (format - seperated by a '|')
+
+<must have an empty line at the end to allow the bash script to parse it>

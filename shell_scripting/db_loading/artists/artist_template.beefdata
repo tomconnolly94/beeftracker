@@ -3,3 +3,5 @@ birth name
 date of birth (format - 'new Date(year,month,day)')
 image title
 bio
+
+<must have an empty line at the end to allow the bash script to parse it>
