@@ -40,7 +40,7 @@ home_app.controller('eventStreamController', ['$scope','$http', function($scope,
                     title : events[eventId].title,
                     description : events[eventId].description,
                     date : events[eventId].event_date,
-                    img_link : "artist_images/" + events[eventId].image_link,
+                    img_link : events[eventId].image_link,
                     top_lyrics : best_lyrics,
                     eventNum : events[eventId].event_id
                 };

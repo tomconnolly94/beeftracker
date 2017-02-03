@@ -6,10 +6,9 @@
 //  Description: Creates and configures the angular app for the beef page
 //
 /////////////////////////////////////////////////////////////////////////////////
+var beef_app = angular.module('beef_app', ['ngRoute', 'angular-loading-bar']);
 
-var beefapp = angular.module('beefapp', ['ngRoute']);
-
-beefapp.config(function($routeProvider, $locationProvider){
+beef_app.config(function($routeProvider, $locationProvider){
     console.log("config");
     $routeProvider.when('/beef/:tagId', {
         templateUrl: '',    
@@ -25,3 +24,11 @@ beefapp.config(function($routeProvider, $locationProvider){
         requireBase: false
     });
 });
+
+
+beef_app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+    cfpLoadingBarProvider.includeBar = true;
+    cfpLoadingBarProvider.includeSpinner = false;
+    cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
+    //cfpLoadingBarProvider.spinnerTemplate = '<div><span class="fa fa-spinner">Loading...</div>';
+}]);

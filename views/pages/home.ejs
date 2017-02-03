@@ -10,10 +10,14 @@
     
     <head>
         <title>Home</title>
-        <!-- css file references -->
-        <link rel="stylesheet" type="text/css" href="/stylesheets/master.css">
-        <link rel="stylesheet" type="text/css" href="/stylesheets/home.css">
-        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Michroma" />
+        <!-- icon -->
+        <link rel="shortcut icon" href="/images/steak.ico">
+        <!-- tag for mobile zoom -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- stylesheets -->
+        <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC" />
         <!-- javascript library references -->
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -21,13 +25,21 @@
         <script src="/controllers/home/home_app.js" type="text/javascript"></script>
         <script src="/controllers/home/search_box_controller.js" type="text/javascript"></script>
         <script src="/controllers/home/event_stream_controller.js" type="text/javascript"></script>
+        
+        <script> 
+            $(function(){
+                $("#top_bar").load("/partials/header.ejs"); 
+            });
+        </script>
     </head>
 
     <body>
         <div>
-            <h2> Beeftracker </h2>
+            <div id="top_bar"></div>
+            
             <div id="search_area" ng-controller="searchController">
                 <div id="search_box">
+                        <span class="glyphicon glyphicon-search"></span>
                         <input type="text" ng-model="search_term" ng-change="submit(search_term)" placeholder="Search for an Event" id="search_box">
                 </div>
                 <div id="search_results">
@@ -38,8 +50,8 @@
             </div>
             <hr/>
             <div id="event_stream" ng-controller="eventStreamController">
-                <ul ng-repeat="event in event_stream_events" >
-                    <li><img src="{{ event.img_link }}" height="75" width="75">
+                <ul ng-repeat="event in event_stream_events" style="list-style-type:none;">
+                    <li><img src="/event_images/{{ event.img_link }}" height="75" width="75">
                         <a ng-href="/beef/{{event.eventNum}}"> {{ event.title }} </a>
                     </li>
                 </ul>

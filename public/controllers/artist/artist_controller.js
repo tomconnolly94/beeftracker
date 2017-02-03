@@ -15,6 +15,8 @@ artist_app.controller("artistSearchController", ['$scope','$http', '$routeParams
     //wait untill module has been configured before running this
     $scope.$on('$routeChangeSuccess', function() {
         
+        
+        console.log("/search_artist/" + $routeParams.tagId);
         //make http request to server for data
         $http.get("/search_artist/" + $routeParams.tagId).success(function(response_1){
             //validate the url tagId to make sure the event exists
@@ -35,12 +37,12 @@ artist_app.controller("artistSearchController", ['$scope','$http', '$routeParams
                 }, 
                 function(response_2) {
                     //failed http request
-                    console.log("The client http get request has failed. artist_controller.js:33");
+                    console.log("The client http get request has failed. artist_controller.js:39");
                 });
             }
             else{
                 //error msg
-                console.log("An incorrect event_id has been used. please check the url. artist_controller.js:28")
+                console.log("An incorrect event_id has been used. please check the url. artist_controller.js:44")
             }
         }, 
         function(response_1) {

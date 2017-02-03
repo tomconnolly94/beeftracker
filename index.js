@@ -29,11 +29,14 @@ app.use(methodOverride());
 
 // ### Directory routes ### 
 app.use('/artist_images', express.static(__dirname + '/public/assets/images/artists/')); //route to reference images
+app.use('/event_images', express.static(__dirname + '/public/assets/images/events/')); //route to reference images
+app.use('/images', express.static(__dirname + '/public/assets/images/')); //route to reference images
 app.use('/libraries', express.static(__dirname + '/libs/')); //route to reference libraries like angular
 app.use('/modules', express.static(__dirname + '/node_modules/')); //route to reference libraries like angular
 app.use('/controllers', express.static(__dirname + '/public/controllers/')); //route to reference controller scripts
 app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //route to reference css scripts
 app.use('/bower_components', express.static(__dirname + '/bower_components/')); //route to reference css scripts
+app.use('/partials', express.static(__dirname + '/views/partials/')); //route to reference css scripts
 
 // ### Permanent page routes ###
 app.get('/', function(request, response) { response.render('pages/home.ejs'); });
@@ -45,10 +48,10 @@ app.get('/beef_timeline', function(request, response) { response.render('pages/b
 app.get('/beef_information', function(request, response) { response.render('pages/beef_information.ejs'); });
 
 // ### Search functions ###
-app.get('/search/:tagId', function(request, response) {
+app.get('/search/:event_id', function(request, response) {
 
     var url = process.env.MONGODB_URI;
-    var identifier = request.params.tagId;
+    var identifier = request.params.event_id;
 
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
@@ -107,10 +110,34 @@ app.get('/search_artist/:artist_id', function(request, response) {
             
             //code to create a qry string that matches NEAR to query string
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
-            var qry = "{ \"" + field_name + "\" : " + end + " }";
+            var qry = "{ \"" + field_name + "\" : \"" + identifier + "\" }";
+            
+            console.log(qry);
             
             db.collection("artist_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
                 response.send( { events : docs[0] } );
+                db.close()
+            });
+            db.close();
+        }
+    });
+});
+app.get('/search_artist_from_name/:artist_name', function(request, response) {
+    
+    var url = process.env.MONGODB_URI;
+    var identifier = request.params.artist_name;
+
+    MongoClient.connect(url, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            var field_name = 'stage_name';
+            
+            //code to create a qry string that matches NEAR to query string
+            var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
+            var qry = "{ \"" + field_name + "\" : \"" + identifier + "\" }";
+            
+            db.collection("artist_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+                response.send( { eventObject : docs[0] } );
                 db.close()
             });
             db.close();
@@ -198,6 +225,9 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                     var end = "{ \"$regex\": \"" + event_id + "\", \"$options\": \"i\" }";
                     var qry = "{ \"" + field_name + "\" : " + end + " }";
 
+                    console.log(qry);
+                    
+                    //db query: get the main event in question
                     db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, main_event) {
                         
                         var orig_artist_name = main_event[0].aggressor;
@@ -218,6 +248,7 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                     var end = "{ \"$regex\": \"" + orig_artist_name + "\", \"$options\": \"i\" }";
                     var qry = "{ \"" + field_name + "\" : " + end + " }";
 
+                    //db query: get all events by the original event's aggressor making sure only to store events that share a a target with the original event
                     db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, events) {
                         
                         async.each(events, function(event, callback) {
@@ -250,32 +281,36 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                     //code to create a qry string that matches data
                     var qry = "{ \"$or\": [";
 
+                    //build large query to match any events that have their aggressor as one of the targets extracted from the main event, then filter to make sure the main event agressor is one of the targets
                     for(var target_num = 0; target_num < Object.keys(targets).length; target_num++){
-                        qry += "{ \"" + field_name + "\" : \"" + targets[target_num] + "\" }";
+                        
+                        var target = '{ \"$regex\": \"' + targets[target_num] + '\", \"$options\": \"i\" }';
+                        
+                        qry += "{ \"" + field_name + "\" : " + target + " }";
                         if(target_num != Object.keys(targets).length-1){
                             qry += ", ";
                         }
                     }
                     
                     qry += " ] } ";
+                    
+                    console.log(qry);
 
                     db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, events) {
-                                                
+                        
                         console.log(events);
                         
                         async.each(events, function(event, callback) {
 
-                                //loop through targets to check that one of them is orig_artist_name
-                                for(var sub_target_num = 0; sub_target_num < Object.keys(event.targets).length; sub_target_num++){
+                            //loop through targets to check that one of them is orig_artist_name
+                            for(var sub_target_num = 0; sub_target_num < Object.keys(event.targets).length; sub_target_num++){
 
-                                    var target = event.targets[sub_target_num];
-                                    
-                                    if(target == orig_artist_name){
-                                        all_events.push(event);
-                                    }
+                                var target = event.targets[sub_target_num];
+
+                                if(target == orig_artist_name){
+                                    all_events.push(event);
                                 }
-                            console.log("length in loop" + all_events.length);
-                            //callback(all_events);
+                            }
                         });  
                         response.send( { events : all_events } );
                     });

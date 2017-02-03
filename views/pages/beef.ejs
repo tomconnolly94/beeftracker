@@ -1,117 +1,162 @@
-<html ng-app='beefapp'>
+<!DOCTYPE html>
+<html ng-app='beef_app' lang='en'>
     <head>
         
         <!--
         Page name: home.ejs
         Project: Beeftracker
-        Author: Dan Kerby
+        Author: Dan Kerby, Tom Connolly
         Date: 8/11/16
         -->
         
         <title>Beef</title>
+        <!-- icon -->
+        <link rel="shortcut icon" href="/images/steak.ico">        
+        <!-- tag for mobile zoom -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- stylesheets -->
         <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
-        <link rel="stylesheet" type="text/css" href="/stylesheets/beef.css">
-        <link rel="stylesheet" type="text/css" href="/stylesheets/beef_timeline.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC" />
+        <!--<link rel="stylesheet" type="text/css" href="/stylesheets/beef.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/beef_timeline.css">-->
+        
+        <!-- angular libraries --> 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.min.js"></script>
         <script src="/modules/angular-route/angular-route.min.js"></script>
+        <!-- controllers -->
         <script src="/controllers/beef/beef_app.js"></script>
         <script src="/controllers/beef/beef_controller.js"></script>
         <script src="/controllers/beef/timeline_controller.js"></script>
-        <script>
+        
+        <!-- other libraries -->
+        <link rel='stylesheet' href='/modules/angular-loading-bar/build/loading-bar.min.css' type='text/css' media='all' />
+        <script type='text/javascript' src='/modules/angular-loading-bar/build/loading-bar.min.js'></script>
+        
+        <script> 
             $(function(){
-               //$("#inner-left-content").load("/beef_timeline");
-               //$("#inner-right-content").load("/beef_information");
+                $("#top_bar").load("/partials/header.ejs"); 
+                $("#bottom_bar").load("/partials/footer.ejs"); 
             });
         </script>
-
 	</head>
 	<body>
-		<div id="header">
-		</div>
-		<div id="content">
-			<div id="inner-left-content" class="half-page" ng-controller="timelineController">
-                <div id="beef-timeline-content">
-                    <div id="artist-selection">
-                        <div id="left-artist-selection" class="individual-artist-selection">
-                            <div class="artist-selection-dropdown">
-                                <p ng-model="main_name"> {{ main_event.name }} </p>
-                            </div>
-                        </div>
-                        <div id="right-artist-selection" class="individual-artist-selection">
-                            <select class="artist-selection-dropdown" ng-model="drop_down" ng-change="handle_change()">
-                                <option ng-repeat="target in main_event.targets">{{ target }}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="beef-timeline">
-                        <div class="beef-timeline-event-left" style="background-color:{{event.colour}}" ng-repeat="event in events">
-                            <a ng-href="/beef/{{event.event_num}}" >
-                                <div class="beef-timeline-event-date"> 
-                                    {{ event.date }}
-                                </div>
-                                <div class="beef-timeline-event-name">
-                                    {{ event.title }}
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-			</div>
-			<div id="inner-right-content" class="half-page">
+        <div class="container">
+        
+            <!-- loading bar -->
+            <div id="loading-bar-container"></div>
+            <div id="header"></div>
+            <div id="top_bar"></div>
+            
+            <!-- rest of page -->
+            <div class="row">
                 
-                <div id="headerm">
-                    </div>
-                    <div id="beef-information-content" class="half-pa2ge" ng-controller="currentEventController">
-                        <div id="beef-artist-content" >
-                            <a ng-href="/artist/{{event_id}}" target="_self">
-                                <div id="beef-artist-image">
-                                    <img src="{{ img_link }}" id="beef-artist-image-img">
-                                </div>
-                                <div id="beef-artist-details">
-                                    <h2>{{ song_title }}</h2>
-                                    <h3>{{ name }}</h3>
-                                    <h4>{{ date }}</h4>
-                                </div>
-                            </a>
+                <div class="col-sm-8" ng-controller="timelineController">
+                    
+                    <div id="artist-selection" class="row">
+                        
+                        <div class="col-sm-5">
+                            <div class="artist-selection-dropdown">
+                                <h2 ng-model="main_name"><div id="main_aggressor"> {{ main_event.name }} </div></h2>
+                            </div>
                         </div>
-                        <div id="beef-content">
-                            <div id="beef-description" class="beef-description-content">
-                                <div id="beef-description-title" class="beef-description-content-title">
-                                    <h2>Description</h2>
-                                </div>
-                                <div id="beef-description-inner" class="beef-description-content-inner">
-                                    {{ description }}
-                                </div>
-                            </div>
-                            <div id="beef-best-lyrics" class="beef-description-content">
-                                <div id="beef-best-lyrics-title" class="beef-description-content-title">
-                                    <h2>Best Lyrics</h2>
-                                </div>
-                                <div id="beef-best-lyrics-inner" class="beef-description-content-inner">
-                                    <ul>
-                                        <li ng-repeat="lyrics in top_lyrics"> "{{ lyrics }}.."</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                            <div id="beef-video">
-                                <iframe width="400px" height="300px" ng-src="{{ trustSrc(url) }}" frameborder="0" allowfullscreen="true" id="beef-video-iframe"></iframe>-
-                            </div>
-                            <div id="beef-related-beef" class="beef-description-content">
-                             <!--   <div id="beef-related-beef-title" class="beef-description-content-title">
-                                    <h2>Related Beef</h2>
-                                </div>
-                                <div id="beef-related-beef-inner" class="beef-description-content-inner">
-                                    <div class="beef-related-beef-">
+                        
+                        <div class="col-sm-2"><h2>vs</h2></div>
+                        
+                        <div class="col-sm-5">
+                            <select class="form-control" ng-model="main_event.default_select" ng-options="target for target in main_event.targets"></select>
+                        </div>
+                        
+                        <!--<div class="dropdown" class="col-sm-5">
+                            <ul class="dropdown-menu" ng-repeat="target for target in main_event.targets">
+                                <li class="dropdown-menu"> {{ target }} </li>
+                            </ul>
+                        </div>-->
+                        
+                    </div>
 
-                                </div>
-                            </div>-->
-                        </div>
+                    <div>
+                        <ul style="padding:0px;">
+                            <li style="height:100px;background-color:{{event.colour}}; list-style-type:none; margin-left: {{ event.left_margin }}px; margin-right: {{ event.right_margin }}px;" ng-repeat="event in events">
+                                <a ng-href="/beef/{{event.event_num}}" style="color:#FFFFFF; font-weight:bold;">
+                                    <h3 style="margin:5px;"> {{ event.title }} - {{ event.name }} </h3>
+                                    
+                                    <h6 style="margin:5px;"> {{ event.date }} </h6>                                           
+                                </a>
+                            </li>
+                        </ul>    
                     </div>
-                </div> 
-			</div>
+                    
+                    <!--<div id="beef-timeline">
+                        <div style="background-color:{{event.colour}}" ng-repeat="event in events">
+                            <a ng-href="/beef/{{event.event_num}}">
+                                {{ event.date }}
+                                {{ event.title }}
+                            </a>
+                        </div>   
+                    </div>-->
+                    
+                </div>
+                
+                <div class="col-sm-4">
+
+                    <div id="headerm">
+                        </div>
+                        <div id="beef-information-content" class="half-pa2ge" ng-controller="currentEventController">
+                            <div id="beef-artist-content">
+                                
+                                    <div id="beef-artist-image">
+                                        <img  src="/event_images/{{ img_link }}" class="img-circle" height="200" width="250">
+                                    </div>
+                                    <div id="beef-artist-details">
+                                        <h2>{{ song_title }}</h2>
+                                        <a ng-href="/artist/{{artist_id}}" target="_self">
+                                            <h3>{{ name }}</h3>
+                                        </a>
+                                        <h4>{{ date }}</h4>
+                                    </div>
+                                
+                            </div>
+                            <div id="beef-content">
+                                <div id="beef-description" class="beef-description-content">
+                                    <div id="beef-description-title" class="beef-description-content-title">
+                                        <h2>Description</h2>
+                                    </div>
+                                    <div id="beef-description-inner" class="beef-description-content-inner">
+                                        {{ description }}
+                                    </div>
+                                </div>
+                                <div id="beef-best-lyrics" class="beef-description-content">
+                                    <div id="beef-best-lyrics-title" class="beef-description-content-title">
+                                        <h2>Best Lyrics</h2>
+                                    </div>
+                                    <div id="beef-best-lyrics-inner" class="beef-description-content-inner">
+                                        <ul>
+                                            <li ng-repeat="lyrics in top_lyrics"> "{{ lyrics }}.."</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div id="beef-video" class="embed-responsive embed-responsive-16by9">
+                                    <iframe width="400px" height="300px" ng-src="{{ trustSrc(url) }}" class="embed-responsive-item" frameborder="0" allowfullscreen="true" id="beef-video-iframe"></iframe>-
+                                </div>
+                                <div id="beef-related-beef" class="beef-description-content">
+                                 <!--   <div id="beef-related-beef-title" class="beef-description-content-title">
+                                        <h2>Related Beef</h2>
+                                    </div>
+                                    <div id="beef-related-beef-inner" class="beef-description-content-inner">
+                                        <div class="beef-related-beef-">
+
+                                    </div>
+                                </div>-->
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        <div id="bottom_bar" class="row" style="margin:50px 0px"></div>
         </div>
 	</body>
 </html>

@@ -6,8 +6,7 @@
 //  Description: Creates and configures the angular app for the artist page
 //
 /////////////////////////////////////////////////////////////////////////////////
-
-var artist_app = angular.module('artist', ['ngRoute']);
+var artist_app = angular.module('artist', ['ngRoute', 'angular-loading-bar']);
 
 artist_app.config(function($routeProvider, $locationProvider){
     $routeProvider.when('/artist/:tagId', {
@@ -20,3 +19,21 @@ artist_app.config(function($routeProvider, $locationProvider){
         requireBase: false
     });
 });
+
+artist_app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+    cfpLoadingBarProvider.includeBar = false;
+    //cfpLoadingBarProvider.includeSpinner = true;
+    //cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
+    //cfpLoadingBarProvider.spinnerTemplate = '<div><span class="fa fa-spinner">Loading...</div>';
+    
+    this.includeSpinner = true;
+    this.includeBar = true;
+    this.includeBackdrop = true;
+    this.latencyThreshold = 100;
+    this.startSize = 0.02;
+    this.parentSelector = 'body';
+    this.spinnerTemplate = '<div id="loading-bar-spinner"><div class="spinner-icon"></div></div>';
+    this.loadingBarTemplate = '<div id="loading-bar"><div class="bar"><div class="peg"></div></div></div>';
+    this.backdropTemplate = '<div class="modal-backdrop fade in" ng-class="{in: animate}" style="z-index: 1040;"></div>';
+
+  }])
