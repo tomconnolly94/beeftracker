@@ -12,10 +12,13 @@
         <title>Beef</title>
         <!-- icon -->
         <link rel="shortcut icon" href="/logo/steak.ico">        
+        
         <!-- tag for mobile zoom -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        
         <!-- stylesheets -->
         <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/beef.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC" />
         <!--<link rel="stylesheet" type="text/css" href="/stylesheets/beef.css">
@@ -26,6 +29,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.min.js"></script>
         <script src="/modules/angular-route/angular-route.min.js"></script>
+        
         <!-- controllers -->
         <script src="/controllers/beef/beef_app.js"></script>
         <script src="/controllers/beef/beef_controller.js"></script>
@@ -35,6 +39,10 @@
         <link rel='stylesheet' href='/modules/angular-loading-bar/build/loading-bar.min.css' type='text/css' media='all' />
         <script type='text/javascript' src='/modules/angular-loading-bar/build/loading-bar.min.js'></script>
         
+        <!-- javascript script imports -->
+        <script src="/js/load_background.js"></script>
+        
+        
         <script> 
             $(function(){
                 $("#top_bar").load("/partials/header.ejs"); 
@@ -42,8 +50,8 @@
             });
         </script>
 	</head>
-	<body>
-        <div class="container">
+	<body onload="load_background(this)" id="body">
+        <div class="container" style="background-color: rgba(255,255,255,0.75);" ng-cloak>
         
             <!-- loading bar -->
             <div id="loading-bar-container"></div>
@@ -83,9 +91,11 @@
                         <ul style="padding:0px;">
                             <li style="height:100px;background-color:{{event.colour}}; list-style-type:none; margin-left: {{ event.left_margin }}px; margin-right: {{ event.right_margin }}px;" ng-repeat="event in events">
                                 <a ng-href="/beef/{{event.event_num}}" style="color:#FFFFFF; font-weight:bold;">
-                                    <h3 style="margin:5px;"> {{ event.title }} - {{ event.name }} </h3>
+                                    <h3 style="margin:5px;font-weight:bold;"> {{ event.title }}</h3>
+                                    <h4 style="margin:5px;"> {{ event.name }} </h4>
                                     
-                                    <h6 style="margin:5px;"> {{ event.date }} </h6>                                           
+                                    <h5 style="margin:5px;"> {{ event.date }}</h5>
+                                    <img  src="/event_images/{{ event.img_link }}" class="img-circle" style="position:relative;bottom:70px;margin:5px;float:right;" height="75" width="75">
                                 </a>
                             </li>
                         </ul>    
@@ -93,16 +103,13 @@
                 </div>
                 
                 <div class="col-sm-5">
-
-                    <div id="headerm">
-                        </div>
                         <div ng-controller="currentEventController">
                             <div>
                                 <div id="beef-artist-image">
                                     <img  src="/event_images/{{ img_link }}" class="img-circle" height="200" width="250">
                                 </div>
                                 <div id="beef-artist-details">
-                                    <h2>{{ song_title }}</h2>
+                                    <h2 style="font-size:50px;font-weight:bold;">{{ song_title }}</h2>
                                     <a ng-href="/artist/{{artist_id}}" target="_self">
                                         <h3>{{ name }}</h3>
                                     </a>
