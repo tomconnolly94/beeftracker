@@ -1,7 +1,15 @@
 * {
 	font-family: "Amatic SC";
 }
+
+p, h1, h2, h3, h4, h5, h6, div {
+    color:#FFFFFF;
+}
+
+a {
+    color:#FFFFFF;
+}
 /* css code to hide elements until page is loaded */
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
-}
+

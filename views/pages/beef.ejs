@@ -51,12 +51,16 @@
         </script>
 	</head>
 	<body id="body">
-        <div class="container" style="background-color: rgba(255,255,255,0.75);" ng-cloak>
+        <div class="container" style="background-color: rgba(0,0,0,0.75);width:65%;" ng-cloak>
         
             <!-- loading bar -->
             <div id="loading-bar-container"></div>
             <div id="header"></div>
             <div id="top_bar"></div>
+            
+            <div class="row">
+                <div class="col-xs-12" style="height:60px;"></div>
+            </div>
             
             <!-- rest of page -->
             <div class="row">
@@ -68,14 +72,14 @@
 
                             <div class="col-sm-4">
                                 <div class="artist-selection-dropdown">
-                                    <h2 ng-model="main_name"><div id="main_aggressor"> {{ main_event.name }} </div></h2>
+                                    <h2 ng-model="main_name"><div id="main_aggressor" style="color:#000000;"> {{ main_event.name }} </div></h2>
                                 </div>
                             </div>
 
                             <div class="col-sm-3"><h2>vs</h2></div>
 
                             <div class="col-sm-5" ng-app>
-                                <select multiple class="form-control" ng-change="handle_change(selected_targets)" ng-model="selected_targets" ng-options="target for target in main_event.targets"></select>
+                                <select multiple class="form-control" ng-change="handle_change(selected_targets)" ng-model="selected_targets" ng-options="target for target in main_event.targets" style="color:#000000;"></select>
                             </div>
 
                             <!--<div class="dropdown" class="col-sm-5">
