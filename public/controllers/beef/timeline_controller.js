@@ -30,14 +30,41 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
 
                         //sort the events by date
                         events.sort(custom_sort);
+                        
+                        //$scope.selected_targets = [ "All" ];
+                        if($scope.selected_targets != undefined){
+                            $scope.selected_targets.push(main_aggressor);
+                            if($scope.selected_targets[0] != "None"){
+                                $scope.selected_targets.slice(0,1);
+                            }
+                        }
 
                         for(var event_index = 0; event_index < events.length; event_index++){
-
+                            
                             var eventObject = events[event_index];
-
-                            if($scope.drop_down == "All"){}
-                            else if($scope.drop_down != eventObject.aggressor && $scope.main_name != eventObject.aggressor){ continue; }
-
+                            var filter_found = false;
+                            
+                            //if no filters are applied
+                            if($scope.selected_targets == undefined || $scope.selected_targets[0] == "All"){}
+                            //
+                            //if some filters are applied, filter out un-neccessary records
+                            else{
+                                var filter_found = false;
+                                for(var i = 0; i < $scope.selected_targets.length; i++){
+                                    console.log($scope.selected_targets[i]);
+                                    console.log(eventObject.aggressor);
+                                    console.log($scope.main_name);
+                                    if($scope.selected_targets[i] == eventObject.aggressor){ 
+                                        filter_found = true;
+                                        break; 
+                                    }
+                                }
+                                //if the record is to be filtered out simply skip the code that creates the event object
+                                if(!filter_found){
+                                    continue;
+                                }
+                            }
+                            
                             var top_lyrics = new Array();
                             var targets = new Array();
 
@@ -47,6 +74,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                             }
 
                             targets.push("All");
+                            targets.push("None");
 
                             //loop through the targets and assign them to the scope
                             for(var i = 0; i < Object.keys(eventObject.targets).length; i++){
@@ -62,7 +90,6 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
 
                             var left;
                             var right;
-                            
                             //check if object is left aligned or right aligned
                             if(eventObject.aggressor == main_aggressor){
                                 left = 0;
@@ -83,7 +110,6 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 targets : targets,
                                 event_num : eventObject.event_id,
                                 colour : name_colour_map[eventObject.aggressor],
-                                default_select : targets[0],
                                 left_margin : left,
                                 right_margin : right
                             };
@@ -94,6 +120,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 $scope.main_name = record.name;
                             }
                         }
+                        console.log(events);
                     }
                     else{
                         //error msg

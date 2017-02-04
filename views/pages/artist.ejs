@@ -4,19 +4,17 @@
 
         <!--
             Project: Beeftracker
-            Authors: Tom Connolly, James Langford, Dan Kerby
+            Authors: Tom Connolly, James Langford
             Date: 8/11/16
         -->
 
     <head>
         <title>Beeftracker</title>
         <!-- icon -->
-        <link rel="shortcut icon" href="/images/steak.ico">
-            <!-- css file references -->
-
-        <!-- Latest compiled and minified bootstrap CSS -->
+        <link rel="shortcut icon" href="/logo/steak.ico">
         <!-- tag for mobile zoom -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        
         <!-- stylesheets -->
         <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -52,7 +50,7 @@
 
             <div class="row">
                 <div class="col-sm-4">
-                    <img class="img-circle" src="{{ img_link }}" class="img-thumbnail" height="200" width="300">
+                    <img class="img-circle" src="/artist_images/{{ img_link }}" class="img-thumbnail" height="200" width="300">
                 </div>
                 
                 <div class="col-sm-8">
@@ -80,7 +78,7 @@
                     <div class="eventContainer">
                         <div class="event"  ng-repeat="event in events">
                             <a ng-href="/beef/{{event.event_id}}" target="_self">
-                                <img class="img-thumbnail" ng-src="/artist_images/{{event.image_link}}" height="100" width="100">
+                                <img class="img-thumbnail" ng-src="/event_images/{{event.image_link}}" height="100" width="100">
 
 
                                 <p id="title">{{event.title}}</p>

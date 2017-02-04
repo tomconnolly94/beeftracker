@@ -31,7 +31,7 @@ artist_app.controller("artistSearchController", ['$scope','$http', '$routeParams
                     $scope.stage_name = artist_object.stage_name;
                     $scope.birth_name = artist_object.birth_name;
                     $scope.d_o_b = artist_object.d_o_b.slice(0,10);
-                    $scope.img_link = "/artist_images/" + artist_object.img_link;
+                    $scope.img_link = artist_object.img_link;
                     $scope.events = response_2.events;
                     $scope.bio = artist_object.bio;
                 }, 

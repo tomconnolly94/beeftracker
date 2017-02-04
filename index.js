@@ -30,8 +30,7 @@ app.use(methodOverride());
 // ### Directory routes ### 
 app.use('/artist_images', express.static(__dirname + '/public/assets/images/artists/')); //route to reference images
 app.use('/event_images', express.static(__dirname + '/public/assets/images/events/')); //route to reference images
-app.use('/images', express.static(__dirname + '/public/assets/images/')); //route to reference images
-app.use('/libraries', express.static(__dirname + '/libs/')); //route to reference libraries like angular
+app.use('/logo', express.static(__dirname + '/public/assets/images/logo/')); //route to reference images
 app.use('/modules', express.static(__dirname + '/node_modules/')); //route to reference libraries like angular
 app.use('/controllers', express.static(__dirname + '/public/controllers/')); //route to reference controller scripts
 app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //route to reference css scripts

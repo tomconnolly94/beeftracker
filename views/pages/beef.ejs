@@ -5,13 +5,13 @@
         <!--
         Page name: home.ejs
         Project: Beeftracker
-        Author: Dan Kerby, Tom Connolly
+        Author: Tom Connolly
         Date: 8/11/16
         -->
         
         <title>Beef</title>
         <!-- icon -->
-        <link rel="shortcut icon" href="/images/steak.ico">        
+        <link rel="shortcut icon" href="/logo/steak.ico">        
         <!-- tag for mobile zoom -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- stylesheets -->
@@ -53,28 +53,30 @@
             <!-- rest of page -->
             <div class="row">
                 
-                <div class="col-sm-8" ng-controller="timelineController">
+                <div class="col-sm-7" ng-controller="timelineController">
                     
-                    <div id="artist-selection" class="row">
-                        
-                        <div class="col-sm-5">
-                            <div class="artist-selection-dropdown">
-                                <h2 ng-model="main_name"><div id="main_aggressor"> {{ main_event.name }} </div></h2>
+                    <div class="jumbotron">
+                        <div id="artist-selection" class="row">
+
+                            <div class="col-sm-4">
+                                <div class="artist-selection-dropdown">
+                                    <h2 ng-model="main_name"><div id="main_aggressor"> {{ main_event.name }} </div></h2>
+                                </div>
                             </div>
+
+                            <div class="col-sm-3"><h2>vs</h2></div>
+
+                            <div class="col-sm-5" ng-app>
+                                <select multiple class="form-control" ng-change="handle_change(selected_targets)" ng-model="selected_targets" ng-options="target for target in main_event.targets"></select>
+                            </div>
+
+                            <!--<div class="dropdown" class="col-sm-5">
+                                <ul class="dropdown-menu" ng-repeat="target for target in main_event.targets">
+                                    <li class="dropdown-menu"> {{ target }} </li>
+                                </ul>
+                            </div>-->
+
                         </div>
-                        
-                        <div class="col-sm-2"><h2>vs</h2></div>
-                        
-                        <div class="col-sm-5">
-                            <select class="form-control" ng-model="main_event.default_select" ng-options="target for target in main_event.targets"></select>
-                        </div>
-                        
-                        <!--<div class="dropdown" class="col-sm-5">
-                            <ul class="dropdown-menu" ng-repeat="target for target in main_event.targets">
-                                <li class="dropdown-menu"> {{ target }} </li>
-                            </ul>
-                        </div>-->
-                        
                     </div>
 
                     <div>
@@ -87,37 +89,25 @@
                                 </a>
                             </li>
                         </ul>    
-                    </div>
-                    
-                    <!--<div id="beef-timeline">
-                        <div style="background-color:{{event.colour}}" ng-repeat="event in events">
-                            <a ng-href="/beef/{{event.event_num}}">
-                                {{ event.date }}
-                                {{ event.title }}
-                            </a>
-                        </div>   
-                    </div>-->
-                    
+                    </div>                    
                 </div>
                 
-                <div class="col-sm-4">
+                <div class="col-sm-5">
 
                     <div id="headerm">
                         </div>
-                        <div id="beef-information-content" class="half-pa2ge" ng-controller="currentEventController">
-                            <div id="beef-artist-content">
-                                
-                                    <div id="beef-artist-image">
-                                        <img  src="/event_images/{{ img_link }}" class="img-circle" height="200" width="250">
-                                    </div>
-                                    <div id="beef-artist-details">
-                                        <h2>{{ song_title }}</h2>
-                                        <a ng-href="/artist/{{artist_id}}" target="_self">
-                                            <h3>{{ name }}</h3>
-                                        </a>
-                                        <h4>{{ date }}</h4>
-                                    </div>
-                                
+                        <div ng-controller="currentEventController">
+                            <div>
+                                <div id="beef-artist-image">
+                                    <img  src="/event_images/{{ img_link }}" class="img-circle" height="200" width="250">
+                                </div>
+                                <div id="beef-artist-details">
+                                    <h2>{{ song_title }}</h2>
+                                    <a ng-href="/artist/{{artist_id}}" target="_self">
+                                        <h3>{{ name }}</h3>
+                                    </a>
+                                    <h4>{{ date }}</h4>
+                                </div>
                             </div>
                             <div id="beef-content">
                                 <div id="beef-description" class="beef-description-content">
