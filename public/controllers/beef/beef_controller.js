@@ -15,9 +15,11 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
     //wait untill module has been configured before running this
     $scope.$on('$routeChangeSuccess', function() {
         
-        $scope.trustSrc = function(src) {
+        /*$scope.trustSrc = function(src) {
             return $sce.trustAsResourceUrl(src);
-        }
+        }*/
+        
+        console.log($routeParams.tagId);
         
         //make http request to server for data
         $http.get("/search/" + $routeParams.tagId).success(function(response_1){
@@ -43,7 +45,7 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
                             $scope.img_link = eventObject.image_link;
                             $scope.top_lyrics = new Array();
                             $scope.url = eventObject.url;
-                            $scope.event_id = eventObject.event_id;
+                            $scope.event_id = eventObject._id;
 
                             if(Object.keys(eventObject.top_lyrics).length < 1){
                                 $scope.top_lyrics.push("Not applicable");

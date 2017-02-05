@@ -14,6 +14,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
             //validate the url tagId to make sure the event exists
             if(response.eventObject != undefined){
                 main_aggressor = response.eventObject.aggressor;
+                console.log($routeParams.tagId);
                
                 //make http request to server for data
                 $http.get("/search_all_events_in_timeline_from_event_id/" + $routeParams.tagId).success(function(response){
@@ -108,14 +109,14 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 img_link : eventObject.image_link,
                                 top_lyrics : top_lyrics,
                                 targets : targets,
-                                event_num : eventObject.event_id,
+                                event_num : eventObject._id,
                                 colour : name_colour_map[eventObject.aggressor],
                                 left_margin : left,
                                 right_margin : right
                             };
                             $scope.events.push(record);
 
-                            if($routeParams.tagId == eventObject.event_id){
+                            if($routeParams.tagId == eventObject._id){
                                 $scope.main_event = record;
                                 $scope.main_name = record.name;
                             }

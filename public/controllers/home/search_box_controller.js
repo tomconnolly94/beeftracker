@@ -47,7 +47,7 @@ home_app.controller('searchController', ['$scope','$http', function($scope, $htt
                             date : events[eventId].description,
                             img_link : "artist_images/" + events[eventId].image_link,
                             top_lyrics : best_lyrics,
-                            eventNum : events[eventId].event_id
+                            eventNum : events[eventId]._id
                         };
                         
                         //add data record to global scope

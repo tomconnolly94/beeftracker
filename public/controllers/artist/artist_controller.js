@@ -42,7 +42,7 @@ artist_app.controller("artistSearchController", ['$scope','$http', '$routeParams
             }
             else{
                 //error msg
-                console.log("An incorrect event_id has been used. please check the url. artist_controller.js:44")
+                console.log("An incorrect artist_id has been used. please check the url. artist_controller.js:44")
             }
         }, 
         function(response_1) {

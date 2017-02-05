@@ -42,7 +42,7 @@ home_app.controller('eventStreamController', ['$scope','$http', function($scope,
                     date : events[eventId].event_date,
                     img_link : events[eventId].image_link,
                     top_lyrics : best_lyrics,
-                    eventNum : events[eventId].event_id
+                    eventNum : events[eventId]._id
                 };
 
                 //add data record to global scope

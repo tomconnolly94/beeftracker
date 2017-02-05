@@ -17,7 +17,8 @@ var methodOverride = require('method-override');
 var path = require('path');
 var MongoClient = require('mongodb').MongoClient;
 var async = require("async");
-//var SSE = require('sse-nodejs');
+var ObjectID = require('mongodb').ObjectID;
+var BSON = require('bson');
 
 // ### Configure node variables ###
 app.set('port', (process.env.PORT || 5000));
@@ -57,16 +58,11 @@ app.get('/search/:event_id', function(request, response) {
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
         else{
-            var field_name = 'event_id';
+            console.log(identifier)
+            var object = BSON.ObjectID.createFromHexString(identifier);
             
-            /*
-            //code to create a qry string that matches NEAR to query string
-            var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
-            var qry = "{ \"" + field_name + "\" : " + end + " }";*/
-            
-            var qry = "{ \"" + field_name + "\" : \"" + identifier + "\" }";
-            
-            db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+            //db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+            db.collection("event_data").find( { _id : object } ).toArray(function(queryErr, docs) {
                 response.send({eventObject : docs[0]});
                 db.close()
             });
@@ -135,7 +131,7 @@ app.get('/search_artist_from_name/:artist_name', function(request, response) {
             
             //code to create a qry string that matches NEAR to query string
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
-            var qry = "{ \"" + field_name + "\" : \"" + identifier + "\" }";
+            var qry = "{ \"" + field_name + "\" : " + end + " }";
             
             db.collection("artist_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
                 response.send( { eventObject : docs[0] } );
@@ -176,7 +172,7 @@ app.get('/search_events_from_event_id/:event_id', function(request, response) {
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
         else{
-            var field_name = 'event_id';
+            var field_name = '_id';
             
             //code to create a qry string that matches NEAR to query string
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
@@ -212,24 +208,23 @@ app.get('/search_recent_events/:num_of_events', function(request, response) {
 app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(request, response) {
     
     var url = process.env.MONGODB_URI;
-    var event_id = parseInt(request.params.event_id);
+    var event_id = request.params.event_id;
     
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
         else{
             async.waterfall([
                 function(callback){
-                    //mongo record field 
-                    var field_name = 'event_id';
-            
-                    //code to create a qry string that matches NEAR to query string
-                    var end = "{ \"$regex\": \"" + event_id + "\", \"$options\": \"i\" }";
-                    var qry = "{ \"" + field_name + "\" : " + end + " }";
-
-                    console.log(qry);
+                    
+                    console.log(event_id);
+                    
+                    var object = BSON.ObjectID.createFromHexString(event_id);
+                    
+                    
+                    console.log(object);
                     
                     //db query: get the main event in question
-                    db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, main_event) {
+                    db.collection("event_data").find( { _id : object } ).toArray(function(queryErr, main_event) {
                         
                         var orig_artist_name = main_event[0].aggressor;
                         
