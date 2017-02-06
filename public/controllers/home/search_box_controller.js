@@ -45,7 +45,7 @@ home_app.controller('searchController', ['$scope','$http', function($scope, $htt
                             name : events[eventId].aggressor,
                             title : events[eventId].title,
                             date : events[eventId].description,
-                            img_link : "artist_images/" + events[eventId].image_link,
+                            img_link : events[eventId].image_link,
                             top_lyrics : best_lyrics,
                             eventNum : events[eventId]._id
                         };

@@ -58,7 +58,7 @@ app.get('/search/:event_id', function(request, response) {
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
         else{
-            console.log(identifier)
+            console.log(identifier);
             var object = BSON.ObjectID.createFromHexString(identifier);
             
             //db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
@@ -103,15 +103,9 @@ app.get('/search_artist/:artist_id', function(request, response) {
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
         else{
-            var field_name = 'artist_id';
-            
-            //code to create a qry string that matches NEAR to query string
-            var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
-            var qry = "{ \"" + field_name + "\" : \"" + identifier + "\" }";
-            
-            console.log(qry);
-            
-            db.collection("artist_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+            var object = BSON.ObjectID.createFromHexString(identifier);
+                        
+            db.collection("artist_data").find( { _id : object } ).toArray(function(queryErr, docs) {
                 response.send( { events : docs[0] } );
                 db.close()
             });

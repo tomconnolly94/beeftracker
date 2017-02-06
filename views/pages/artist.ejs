@@ -16,7 +16,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
         <!-- stylesheets -->
-        <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/beef.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC" />
         
@@ -37,17 +38,24 @@
         <script> 
             $(function(){
                 $("#top_bar").load("/partials/header.ejs"); 
+                $("#bottom_bar").load("/partials/footer.ejs"); 
             });
         </script>
         
 </head>
 
     <body>
+        <div class="container" class="col-sm-7" ng-controller="artistSearchController">
+        
+            <!-- loading bar -->
+        <div id="loading-bar-container"></div>
+        <div id="header"></div>
         <div id="top_bar"></div>
-        <div ng-controller="artistSearchController" class="container">
+            <div class="row">
+                <div class="col-xs-12" style="height:60px;"></div>
+            </div>
             
-            <div id="loading-bar-container"> </div>
-
+            <!-- rest of page -->
             <div class="row">
                 <div class="col-sm-4">
                     <img class="img-circle" src="/artist_images/{{ img_link }}" class="img-thumbnail" height="200" width="300">
@@ -77,7 +85,7 @@
                     <h2 id="rightHeader">Recent Events:</h2>                        
                     <div class="eventContainer">
                         <div class="event"  ng-repeat="event in events">
-                            <a ng-href="/beef/{{event.event_id}}" target="_self">
+                            <a ng-href="/beef/{{event._id}}" target="_self">
                                 <img class="img-thumbnail" ng-src="/event_images/{{event.image_link}}" height="100" width="100">
 
 
@@ -96,6 +104,7 @@
                     </div>
                 </div>
             </div>
+            <div id="bottom_bar" class="row" style="margin:50px 0px"></div>
         </div>
     </body>
 </html>

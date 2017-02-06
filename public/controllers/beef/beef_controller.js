@@ -19,6 +19,7 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
             return $sce.trustAsResourceUrl(src);
         }
         
+        console.log("url tag: ");
         console.log($routeParams.tagId);
         
         //make http request to server for data
@@ -38,7 +39,7 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
 
                             //assign fields to scope
                             $scope.name = eventObject.aggressor;
-                            $scope.artist_id = artist.artist_id;
+                            $scope.artist_id = artist._id;
                             $scope.song_title = eventObject.title;
                             $scope.date = eventObject.event_date.slice(0,10);
                             $scope.description = eventObject.description;
