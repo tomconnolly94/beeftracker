@@ -15,9 +15,9 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
     //wait untill module has been configured before running this
     $scope.$on('$routeChangeSuccess', function() {
         
-        /*$scope.trustSrc = function(src) {
+        $scope.trustSrc = function(src) {
             return $sce.trustAsResourceUrl(src);
-        }*/
+        }
         
         console.log($routeParams.tagId);
         

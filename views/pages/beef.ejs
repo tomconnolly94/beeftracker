@@ -65,7 +65,7 @@
             <!-- rest of page -->
             <div class="row">
                 
-                <div class="col-sm-7" ng-controller="timelineController">
+                <div class="col-sm-7" style="padding:0px 40px;" ng-controller="timelineController">
                     
                     <div class="jumbotron">
                         <div id="artist-selection" class="row">
@@ -76,7 +76,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-3"><h2>vs</h2></div>
+                            <div class="col-sm-3"><h2 style="color:#000000;">vs</h2></div>
 
                             <div class="col-sm-5" ng-app>
                                 <select multiple class="form-control" ng-change="handle_change(selected_targets)" ng-model="selected_targets" ng-options="target for target in main_event.targets" style="color:#000000;"></select>
@@ -121,19 +121,19 @@
                                 </div>
                             </div>
                             <div id="beef-content">
-                                <div id="beef-description" class="beef-description-content">
-                                    <div id="beef-description-title" class="beef-description-content-title">
+                                <div>
+                                    <div>
                                         <h2>Description</h2>
                                     </div>
-                                    <div id="beef-description-inner" class="beef-description-content-inner">
+                                    <div>
                                         {{ description }}
                                     </div>
                                 </div>
-                                <div id="beef-best-lyrics" class="beef-description-content">
-                                    <div id="beef-best-lyrics-title" class="beef-description-content-title">
+                                <div>
+                                    <div>
                                         <h2>Best Lyrics</h2>
                                     </div>
-                                    <div id="beef-best-lyrics-inner" class="beef-description-content-inner">
+                                    <div>
                                         <ul>
                                             <li ng-repeat="lyrics in top_lyrics"> "{{ lyrics }}.."</li>
                                         </ul>
