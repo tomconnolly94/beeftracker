@@ -52,12 +52,19 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                             else{
                                 var filter_found = false;
                                 for(var i = 0; i < $scope.selected_targets.length; i++){
-                                    console.log($scope.selected_targets[i]);
-                                    console.log(eventObject.aggressor);
-                                    console.log($scope.main_name);
-                                    if($scope.selected_targets[i] == eventObject.aggressor){ 
-                                        filter_found = true;
-                                        break; 
+                                    if($scope.selected_targets[i] == eventObject.aggressor){
+                                        for(var j = 0; j < Object.keys(eventObject.targets).length; j++){
+                                            console.log(eventObject.targets[j]);
+                                            console.log($scope.selected_targets[i]);
+                                            
+                                            for(var k = 0; k < $scope.selected_targets.length; k++){
+                                            
+                                                if($scope.selected_targets[k] == eventObject.targets[j]){
+                                                    filter_found = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                                 //if the record is to be filtered out simply skip the code that creates the event object
