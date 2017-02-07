@@ -25,8 +25,12 @@ option {
     -o-border-radius: 0;
 }
 
+/* if screen is smaller than 768px (mobile phone) apply these styles */
 @media (max-width: 768px) {
     #bootstrap-overrides .affix {
         position: static;
+    }
+    #nav_wrapper {
+        width:100%;
     }
 }
