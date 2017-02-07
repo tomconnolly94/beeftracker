@@ -42,12 +42,8 @@ app.use('/partials', express.static(__dirname + '/views/partials/')); //route to
 
 // ### Permanent page routes ###
 app.get('/', function(request, response) { response.render('pages/home.ejs'); });
-app.get('/beef/:tagId', function(request, response) { response.render('pages/beef.ejs'); });
+app.get('/beef/:tagId', function(request, response) { response.render('pages/beef_bootstrap_timeline.ejs'); });
 app.get('/artist/:tagId', function(request, response) { response.render('pages/artist.ejs'); });
-
-// ### Temporary development pages ###
-app.get('/beef_split/:tagId', function(request, response) { response.render('pages/beef_split.ejs'); });
-app.get('/beef_bootstrap_timeline/:tagId', function(request, response) { response.render('pages/beef_bootstrap_timeline.ejs'); });
 
 // ### Search functions ###
 app.get('/search/:event_id', function(request, response) {
