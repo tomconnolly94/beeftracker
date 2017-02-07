@@ -100,22 +100,24 @@
                                     <span class="{{event.glyphicon}}" style="color:#000000"></span>
                                 </div>
                                 
-                                <a ng-href="/beef/{{event.event_num}}" class="timeline-panel" style="height:150px;background-color:{{event.colour}};padding:0px;">
+                                <a ng-href="/beef/{{event.event_num}}" class="timeline-panel" style="background-color:{{event.colour}};padding:0px;">
                                     <!--<div class="timeline-panel" style="height:150px;background-color:{{event.colour}};padding:0px;">
                                     -->
                                         
-                                        <div style="height:100%;margin:20px;">
-                                            <div class="timeline-heading">
-                                                <h3 style="margin:5px;font-weight:bold;">{{ event.title }}</h3>
-                                            </div>
+                                        <div class="row" style="height:100%;margin:20px;text-align:right;">
+                                             
+                                            <img ng-src="/event_images/{{ event.img_link }}" class="img-circle col-sm-4" style="position:relative;margin:5px;padding:0px;float:left;" height="75" width="75">
+                                            
+                                            <div class="col-sm-7" style="position:relative;float:right;padding:0px">
+                                                <div class="timeline-heading">
+                                                    <h3 style="margin:5px;font-weight:bold;">{{ event.title }}</h3>
+                                                </div>
 
-                                            <div class="timeline-body">
-                                                <h4 style="margin:5px;">{{ event.name }}</h4>
+                                                <div class="timeline-body">
+                                                    <h4 style="margin:5px;">{{ event.name }}</h4>
 
-                                                <h5 style="margin:5px;">{{ event.date }}</h5>
-
-                                                <img  ng-src="/event_images/{{ event.img_link }}" class="img-circle" style="position:relative;bottom:70px;margin:5px;float:right;" height="75" width="75">
-
+                                                    <h5 style="margin:5px;">{{ event.date }}</h5>
+                                                </div>
                                             </div>
                                         </div>
                                     <!--
