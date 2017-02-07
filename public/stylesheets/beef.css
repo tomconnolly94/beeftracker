@@ -3,3 +3,30 @@ option {
     color:#000000;
     font-size:20px;
 }
+
+#beef_event{
+    height:100px;
+    list-style-type:none;
+    margin-top:5px;
+    margin-bottom:5px;
+    padding:5px;
+}
+/* styles to allow fixed, right hand panel */
+#nav.affix {
+    position: fixed;
+    top: 0;
+}
+#nav > .navbar-inner {
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -o-border-radius: 0;
+}
+
+@media (max-width: 768px) {
+    #bootstrap-overrides .affix {
+        position: static;
+    }
+}

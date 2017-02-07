@@ -18,6 +18,24 @@ beef_app.config(function($routeProvider, $locationProvider){
         templateUrl: '',    
         controller: 'timelineController'
     });
+    
+    //these route is for development ** should be removed before production **
+    $routeProvider.when('/beef_split/:tagId', {
+        templateUrl: '',    
+        controller: 'currentEventController',
+    });
+    $routeProvider.when('/beef_split/:tagId', {
+        templateUrl: '',    
+        controller: 'timelineController'
+    });
+    $routeProvider.when('/beef_bootstrap_timeline/:tagId', {
+        templateUrl: '',    
+        controller: 'currentEventController',
+    });
+    $routeProvider.when('/beef_bootstrap_timeline/:tagId', {
+        templateUrl: '',    
+        controller: 'timelineController'
+    });
     // enable HTML5mode to disable hashbang urls
     $locationProvider.html5Mode({
         enabled:true,

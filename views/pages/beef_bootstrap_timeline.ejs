@@ -10,6 +10,10 @@
         -->
         
         <title>Beef</title>
+        
+        
+        <meta charset="utf-8">
+        
         <!-- icon -->
         <link rel="shortcut icon" href="/logo/steak.ico">        
         
@@ -17,41 +21,48 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
         <!-- stylesheets -->
+        <link rel="stylesheet" type="text/css" href="/stylesheets/beef.css">
         <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css">
-        <link rel="stylesheet" type="text/css" href="/stylesheets/beef.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC" />
-        <link rel="stylesheet" type="text/css" href="/stylesheets/beef.css">
-        <!--<link rel="stylesheet" type="text/css" href="/stylesheets/beef_timeline.css">-->
+        <link rel="stylesheet" type="text/css" href="/stylesheets/timeline_styles.css">
         
         <!-- angular libraries --> 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.min.js"></script>
         <script src="/modules/angular-route/angular-route.min.js"></script>
+        <link rel='stylesheet' href='/modules/angular-loading-bar/build/loading-bar.min.css' type='text/css' media='all' />
+        <script type='text/javascript' src='/modules/angular-loading-bar/build/loading-bar.min.js'></script>
         
+        <!-- bootstrap libraries -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC" />
+                
         <!-- controllers -->
         <script src="/controllers/beef/beef_app.js"></script>
         <script src="/controllers/beef/beef_controller.js"></script>
         <script src="/controllers/beef/timeline_controller.js"></script>
         
         <!-- other libraries -->
-        <link rel='stylesheet' href='/modules/angular-loading-bar/build/loading-bar.min.css' type='text/css' media='all' />
-        <script type='text/javascript' src='/modules/angular-loading-bar/build/loading-bar.min.js'></script>
         
         <!-- javascript script imports -->
         <!--<script src="/js/load_background.js"></script>-->
-        
-        
+                
         <script> 
+            //load headers and footers
             $(document).ready(function(){
                 $("#top_bar").load("/partials/header.ejs"); 
                 $("#bottom_bar").load("/partials/footer.ejs");
             });
+            //when affixed panel is activated, make sure it stays the same width
+            $(window).scroll(function () {
+                $('#nav').width($('#nav').width());
+            });
         </script>
         
 	</head>
-	<body id="body">
+	<body id="bootstrap-overrides">
         <div class="container" ng-cloak>
         
             <!-- loading bar -->
@@ -83,27 +94,43 @@
                     </div>
 
                     <div id="timeline">
-                        <ul>
-                            <li style="height:100px;background-color:{{event.colour}}; list-style-type:none; margin-left: {{ event.left_margin }}px; margin-right: {{ event.right_margin }}px;" ng-repeat="event in events">
-                                <a ng-href="/beef/{{event.event_num}}">
-                                    <div style="color:#FFFFFF;">
-                                        <h3 style="margin:5px;font-weight:bold;">{{ event.title }}</h3>
-                                        <h4 style="margin:5px;">{{ event.name }}</h4>
+                        <ul class="timeline">
+                            <li style="list-style-type:none;" ng-repeat="event in events" class=" {{ event.timeline_event_class }} ">
+                                <div class="timeline-badge" style="background-color:#FFFFFF">
+                                    <span class="{{event.glyphicon}}" style="color:#000000"></span>
+                                </div>
+                                
+                                <a ng-href="/beef/{{event.event_num}}" class="timeline-panel" style="height:150px;background-color:{{event.colour}};padding:0px;">
+                                    <!--<div class="timeline-panel" style="height:150px;background-color:{{event.colour}};padding:0px;">
+                                    -->
+                                        
+                                        <div style="height:100%;margin:20px;">
+                                            <div class="timeline-heading">
+                                                <h3 style="margin:5px;font-weight:bold;">{{ event.title }}</h3>
+                                            </div>
 
-                                        <h5 style="margin:5px;">{{ event.date }}</h5>
-                                        <img  src="/event_images/{{ event.img_link }}" class="img-circle" style="position:relative;bottom:70px;margin:5px;float:right;" height="75" width="75">
-                                    </div>
-                                </a>
+                                            <div class="timeline-body">
+                                                <h4 style="margin:5px;">{{ event.name }}</h4>
+
+                                                <h5 style="margin:5px;">{{ event.date }}</h5>
+
+                                                <img  ng-src="/event_images/{{ event.img_link }}" class="img-circle" style="position:relative;bottom:70px;margin:5px;float:right;" height="75" width="75">
+
+                                            </div>
+                                        </div>
+                                    <!--
+                                </div>-->
+                                    </a>
                             </li>
                         </ul>   
                     </div>                    
                 </div>
                 
-                <div class="col-sm-5">
-                        <div ng-controller="currentEventController">
+                <div class="col-sm-5" id="nav_wrapper" style="width:41.66%;height:800px;" ng-controller="currentEventController">
+                    <div id="nav" style="margin-bottom:20px;" data-spy="affix" data-offset-top="250" class="nav nav-pills nav-stacked">
                             <div>
                                 <div id="beef-artist-image">
-                                    <img  src="/event_images/{{ img_link }}" class="img-circle" height="200" width="250">
+                                    <img ng-src="/event_images/{{ img_link }}" class="img-circle" height="200" width="250">
                                 </div>
                                 <div id="beef-artist-details">
                                     <h2 style="font-size:50px;font-weight:bold;">{{ song_title }}</h2>
@@ -113,9 +140,9 @@
                                     <h4>{{ date }}</h4>
                                 </div>
                             </div>
-                            <div id="beef-content">
+                            <div>
                                 <div>
-                                    <div>
+                                    <div style="width:100%;">
                                         <h2>Description</h2>
                                     </div>
                                     <div>
@@ -128,13 +155,13 @@
                                     </div>
                                     <div>
                                         <ul>
-                                            <li ng-repeat="lyrics in top_lyrics"> "{{ lyrics }}.."</li>
+                                            <li ng-repeat="lyrics in top_lyrics" style="list-style-type:none;"> "{{ lyrics }}.."</li>
                                         </ul>
                                     </div>
                                 </div>
 
-                                <div id="beef-video" class="embed-responsive embed-responsive-16by9">
-                                    <iframe width="400px" height="300px" ng-src="{{ trustSrc(url) }}" class="embed-responsive-item" frameborder="0" allowfullscreen="true" id="beef-video-iframe"></iframe>-
+                                <div id="videowrapper" class="embed-responsive embed-responsive-16by9">
+                                    <iframe style="width:100%;" ng-src="{{ trustSrc(url) }}" class="embed-responsive-item" allowfullscreen="true"></iframe>
                                 </div>
                                 <div id="beef-related-beef" class="beef-description-content">
                                  <!--   <div id="beef-related-beef-title" class="beef-description-content-title">
@@ -147,7 +174,7 @@
                                 </div>-->
                             </div>
                         </div>
-                    </div> 
+                    </div>
                 </div>
             </div>
             <div id="bottom_bar" class="row" style="margin:50px 0px"></div>

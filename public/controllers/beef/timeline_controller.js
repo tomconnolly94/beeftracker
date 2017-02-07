@@ -5,6 +5,8 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
         $scope.handle_change();
     });
     
+    var first_run = true;
+    
     $scope.handle_change = function(){
         
         //hold onto the main agressor for checks later which help positioning
@@ -15,6 +17,19 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
             if(response.eventObject != undefined){
                 main_aggressor = response.eventObject.aggressor;
                 console.log($routeParams.tagId);
+                
+                if(first_run){
+                    
+                    if($scope.selected_targets == undefined){
+                        $scope.selected_targets = new Array();
+                    }
+                    
+                    for(var i = 0; i < Object.keys(response.eventObject.targets).length; i++){
+                        console.log(response.eventObject.targets[i]);
+                        $scope.selected_targets.push(response.eventObject.targets[i]);
+                    }
+                    first_run = false;
+                }
                
                 //make http request to server for data
                 $http.get("/search_all_events_in_timeline_from_event_id/" + $routeParams.tagId).success(function(response){
@@ -51,14 +66,13 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                             //if some filters are applied, filter out un-neccessary records
                             else{
                                 var filter_found = false;
+                                //loop through filter selections, if the current event's aggressor is one of them, move into the if statement
                                 for(var i = 0; i < $scope.selected_targets.length; i++){
                                     if($scope.selected_targets[i] == eventObject.aggressor){
+                                        //loop through the events targets to make sure at LEAST one of the targets is a filter selection, otherwise the event is irrelevant
                                         for(var j = 0; j < Object.keys(eventObject.targets).length; j++){
-                                            console.log(eventObject.targets[j]);
-                                            console.log($scope.selected_targets[i]);
-                                            
+                                            //loop through the filter selections
                                             for(var k = 0; k < $scope.selected_targets.length; k++){
-                                            
                                                 if($scope.selected_targets[k] == eventObject.targets[j]){
                                                     filter_found = true;
                                                     break;
@@ -98,13 +112,38 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
 
                             var left;
                             var right;
+                            //turn on/off beef_split dev events for diffrerent margin sizes
+                            var beef_split_dev = false;
+                            var beef_bootstrap_timeline_dev = true;
+                            var timeline_event;
+                            var event_glyphicon = "glyphicon ";
                             //check if object is left aligned or right aligned
                             if(eventObject.aggressor == main_aggressor){
-                                left = 0;
-                                right = 50
+                                if(beef_split_dev){
+                                    left = "0px";
+                                    right = "60%";
+                                }
+                                else if(beef_bootstrap_timeline_dev){
+                                    timeline_event = "";
+                                    event_glyphicon += "glyphicon-chevron-left";
+                                }
+                                else{
+                                    left = 0;
+                                    right = 50;
+                                }
                             }else{
-                                left = 50;
-                                right = 0;
+                                if(beef_split_dev){
+                                    left = "60%";
+                                    right = "0px";
+                                }
+                                else if(beef_bootstrap_timeline_dev){
+                                    timeline_event = "timeline-inverted";
+                                    event_glyphicon += "glyphicon-chevron-right";
+                                }
+                                else{
+                                    left = 50;
+                                    right = 0;
+                                }
                             }
                             
                             //create data record
@@ -119,7 +158,9 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 event_num : eventObject._id,
                                 colour : name_colour_map[eventObject.aggressor],
                                 left_margin : left,
-                                right_margin : right
+                                right_margin : right,
+                                timeline_event_class : timeline_event,
+                                glyphicon : event_glyphicon
                             };
                             $scope.events.push(record);
 
