@@ -12,14 +12,14 @@
 
 home_app.controller('searchController', ['$scope','$http', function($scope, $http) {
     
-    $scope.submit = function(input){
+    $scope.submit = function(){
         
-        console.log(input);
-        console.log(input.length);
+        console.log($scope.search_term);
+        console.log($scope.search_term.length);
         
-        if (input.length > 1 && input !=" ") {
+        if ($scope.search_term.length > 1 && $scope.search_term !=" ") {
             //make http request to server for data
-            $http.get("/search_all/" + input).success(function(response){
+            $http.get("/search_all/" + $scope.search_term).success(function(response){
                 
                 var events = response.events;
                 
@@ -51,8 +51,20 @@ home_app.controller('searchController', ['$scope','$http', function($scope, $htt
                         };
                         
                         //add data record to global scope
-                        $scope.records[eventId] = record;                   
+                        $scope.records[eventId] = record;
+                        if($scope.records.length > 0){
+                            $scope.result_string = "Results:";
+                            $scope.results_details_string = events
+                        }
                     }
+                    //if($scope.records.length > 0){
+                        $scope.results_string = "Results:";
+                        $scope.results_details_string = $scope.records.length + " search results found";
+                    /*}
+                    else{
+                        $scope.results_string = "";
+                        $scope.results_details_string = "";                        
+                    }*/
                     console.log($scope.records);
                 }
                 else{
@@ -67,7 +79,9 @@ home_app.controller('searchController', ['$scope','$http', function($scope, $htt
         }
         else {
             //action for if search_term is empty 
-            $scope.records = [{}];
+            $scope.records = new Array();
+            $scope.results_string = "";
+            $scope.results_details_string = "";  
         }
     }
 }]);

@@ -3,16 +3,8 @@ option {
     color:#000000;
     font-size:20px;
 }
-
-#beef_event{
-    height:100px;
-    list-style-type:none;
-    margin-top:5px;
-    margin-bottom:5px;
-    padding:5px;
-}
 /* styles to allow fixed, right hand panel */
-#nav.affix {
+#nav_fixed.affix {
     position: fixed;
     top: 0;
 }
@@ -24,7 +16,6 @@ option {
     -moz-border-radius: 0;
     -o-border-radius: 0;
 }
-
 /* if screen is smaller than 768px (mobile phone) apply these styles */
 @media (max-width: 768px) {
     #bootstrap-overrides .affix {
@@ -33,4 +24,17 @@ option {
     #nav_wrapper {
         width:100%;
     }
+}
+/* styles for jumbotron filter*/
+#artist_filter_panel{
+    padding:30px;
+    background-color:#DDDDDD;
+}
+/* override default affix bottom config to make position absolute*/
+.affix-bottom {
+    position: absolute;
+}
+/* h3 is used for headers on the beef page so override with bold */
+#bootstrap-overrides h3, #bootstrap-overrides h2{
+    font-weight:bold;
 }

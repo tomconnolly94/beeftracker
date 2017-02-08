@@ -28,57 +28,86 @@
         
         <script> 
             $(function(){
-                $("#top_bar").load("/partials/header.ejs"); 
+                $("#top_bar").load("/partials/header.ejs");
+                $("#bottom_bar").load("/partials/footer.ejs");
             });
         </script>
     </head>
 
-    <body>
+    <body id="bootstrap-overrides">
         <div class="container">
+        
+            <div id="search_area" ng-controller="searchController">
             <div id="top_bar"></div>
-            
-            <div class="row">
-                <div id="search_area" class="col_sm_12" ng-controller="searchController">
-                    <div id="search_box">
-                            <span class="glyphicon glyphicon-search"></span>
-                            <input type="text" ng-model="search_term" ng-change="submit(search_term)" placeholder="Search for an Event" id="search_box">
+
+                <div id="search_box" class="row form-group form-group-lg" style="margin:0px;">
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4">
+
+                        <div class="row">
+                            <span class="col-sm-1 glyphicon glyphicon-search" style="width:40px;height:40px;padding:10px 0px 10px 10px;"></span>
+                            <div  class="col-sm-10" style="padding:0px;">
+                                <input type="text" ng-model="search_term" ng-change="submit()" style="width:100%;height:40px;font-size:25px;" placeholder="Search for an Event" id="search_box">
+                            </div>
+                        </div>
                     </div>
-                    <div id="search_results" style="padding:0px 250px;">
-                        <ul style="list-style-type:none;">
-                           <li ng-repeat="record in records" style="height:100px;background-color:#FF4444;">        
-                            <a ng-href="/beef/{{record.eventNum}}" style="color:#FFFFFF; font-weight:bold;">
-                                <h3 style="margin:5px;font-weight:bold;"> {{ record.title }}</h3>
-                                <img  src="/event_images/{{ record.img_link }}" class="img-circle" style="position:relative;bottom:25px;margin:5px;float:right;" height="75" width="75">
-                            </a>
-                        </li>
-                        </ul>
-                    </div>
+                    <div class="col-sm-4"></div>
                 </div>
-            </div>
-            <hr/>
-            
-            <!--<div id="event_stream" ng-controller="eventStreamController">
-                <ul style="padding:0px;" ng-repeat="event in events_stream_events">
-                    <li style="height:100px;/*background-color:{{event.colour}}; list-style-type:none; margin-left: {{ event.left_margin }}px; margin-right: {{ event.right_margin }}px;*/" >
-                        <a ng-href="/beef/{{event.eventNum}}" style="color:#FFFFFF; font-weight:bold;">
-                            <h3 style="margin:5px;font-weight:bold;"> {{ event.title }}</h3>
-                            <img  src="/event_images/{{ event.img_link }}" class="img-circle" style="position:relative;bottom:70px;margin:5px;float:right;" height="75" width="75">
-                        </a>
-                    </li>
-                </ul>    
-            </div> -->
-            <div class="row" style="padding:0px 250px;">
-                <div class="col_sm_12" style="height:60px;" ng-controller="eventStreamController">
+
+                <div id="search_results" class="row" style="padding:0px 250px;">
+                    
+                    
+                    <h3>{{ results_string }}</h3>
+                    <h4>{{ results_details_string }}</h4>
+                    
                     <ul style="list-style-type:none;">
-                        <li ng-repeat="event in event_stream_events" style="height:100px;background-color:#FF4444; list-style-type:none;">        
-                            <a ng-href="/beef/{{event.eventNum}}" style="color:#FFFFFF; font-weight:bold;">
-                                <h3 style="margin:5px;font-weight:bold;"> {{ event.title }}</h3>
-                                <img  src="/event_images/{{ event.img_link }}" class="img-circle" style="position:relative;bottom:25px;margin:5px;float:right;" height="75" width="75">
+
+                        <li ng-repeat="record in records" style="height:100px;background-color:#9C0505;">   
+
+                            <a ng-href="/beef/{{record.eventNum}}" style="font-weight:bold;">
+                                <h3 style="margin:5px;font-weight:bold;"> {{ record.title }}</h3>
+                                <img  ng-src="/event_images/{{ record.img_link }}" class="img-circle" style="position:relative;bottom:25px;margin:5px;float:right;" height="75" width="75">
                             </a>
                         </li>
                     </ul>
                 </div>
             </div>
+            
+            <hr>
+            
+            <div class="row" style="padding:0px 250px;">
+                <h3 style="text-align:center;">Recent Events:</h3>
+            </div>
+                
+            <div class="row" ng-controller="eventStreamController">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4">
+                    <ul>
+                        <li ng-repeat="event in event_stream_events" style="margin:30px 0px;">        
+                            <a ng-href="/beef/{{event.eventNum}}" style="height:120px;background-color:#9C0505;font-weight:bold;padding:0px;">
+
+                                <div class="row" style="width:100%;margin:0px;text-align:right;">
+
+                                    <div class="col-sm-3">
+                                        <img  ng-src="/event_images/{{ event.img_link }}" class="img-circle" style="position:relative;margin:10px;padding:0px;float:left;" height="100" width="100">
+                                    </div>
+                                    <div class="col-sm-8" style="position:relative;float:right;">
+
+                                        <h3 style="margin:5px;font-weight:bold;"> {{ event.title }}</h3>
+
+                                        <h5 style="margin:5px;">{{ event.name }}</h5>
+
+                                        <h5 style="margin:5px;">{{ event.date }}</h5>
+                                    </div>
+
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-4"></div>
+            </div>
+            <div id="bottom_bar" class="row" style="margin:50px 0px"></div>
         </div>
     </body>
 </html>

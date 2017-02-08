@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html ng-app="home">
+
+    <!--
+        Page name: home.ejs
+        Project: Beeftracker
+        Author: Tom Connolly
+        Date: 8/11/16
+    -->
+    
+    <head>
+        <title>Home</title>
+        <!-- icon -->
+        <link rel="shortcut icon" href="/logo/steak.ico">
+        <!-- tag for mobile zoom -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- stylesheets -->
+        <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC" />
+        <!-- javascript library references -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <!-- javascript file references -->
+        <script src="/controllers/home/home_app.js" type="text/javascript"></script>
+        <script src="/controllers/home/search_box_controller.js" type="text/javascript"></script>
+        <script src="/controllers/home/event_stream_controller.js" type="text/javascript"></script>
+        
+        <script> 
+            $(function(){
+                $("#top_bar").load("/partials/header.ejs");
+                $("#bottom_bar").load("/partials/footer.ejs");
+            });
+        </script>
+    </head>
+
+    <body id="bootstrap-overrides">
+        <div class="container">
+            hello
+        </div>
+    </body>
+</html>

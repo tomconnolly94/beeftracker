@@ -1,10 +1,11 @@
 /* make sure all elements always stretch to the bottom of the page*/
-html, body, container{
+html, body {
     height: 100%;
 }
-/* house fonts */
+/* apply to all tags */
 * {
 	font-family: "Amatic SC";
+    padding:0px;
 }
 /* default font colour */
 p, h1, h2, h3, h4, h5, h6, div, a {
@@ -18,10 +19,12 @@ p, h1, h2, h3, h4, h5, h6, div, a {
 .container{
     background-color: rgba(0,0,0,0.75);
     padding:0px 40px;
+    width:70%;
 }
 /* remove default padding from list items */
 ul { 
     padding:0px;
+    list-style-type: none;
 }
 /* apply faded background image (support of multiple browsers) */
 body {
@@ -49,4 +52,32 @@ a{
     display: block;
     width: 100%;
     height: 100%;
+}
+/* override white font with black */
+#bootstrap-overrides select, #bootstrap-overrides .black_font, #bootstrap-overrides input{
+    color:#000000;    
+}
+/* override font sizes */
+#bootstrap-overrides h1{
+    font-size:60px;
+}
+#bootstrap-overrides h2{
+    font-size:50px;
+}
+#bootstrap-overrides h3{
+    font-size:32px;
+    font-weight:bold;
+}
+#bootstrap-overrides h4{
+    font-size:18px;
+}
+#bootstrap-overrides h5{
+    font-size:14px;
+}
+#bootstrap-overrides h6{
+    font-size:12px;
+}
+/* hide scroll bar on beef event scroll panel */
+.pre-scrollable::-webkit-scrollbar { 
+    display: none; 
 }
