@@ -83,7 +83,7 @@
                 
                 <div class="col-sm-7" ng-controller="timelineController">
                     
-                    <div class="jumbotron" id="artist_filter_panel" style="display:inline-block;text-align:center;width:100%;">
+                    <div class="jumbotron" id="artist_filter_panel" style="display:inline-block;text-align:center;width:100%;margin:30px 0px;">
                         
                         <div class="col-sm-5">
                             <h3 ng-model="main_name"><div id="main_aggressor" class="black_font"> {{ main_event.name }} </div></h3>
@@ -132,34 +132,52 @@
                 
                 <div class="col-sm-5" id="nav_wrapper" ng-controller="currentEventController">
                     
-                    <div id="nav_fixed" data-spy="affix" data-offset-top="250" data-offset-bottom="250" class="nav nav-pills nav-stacked">
-                        <div class="pre-scrollable" style="max-height:100vh;">
+                    <div id="nav_fixed" data-spy="affix" data-offset-top="250" data-offset-bottom="250" class="nav nav-pills nav-stacked" style="margin:30px;">
+                        
                             
-                           <img ng-src="/event_images/{{ img_link }}" class="img-circle" height="200" width="250">
-                            
-                            <h2>{{ song_title }}</h2>
-                            
+                       <!--
+add styles below to #nav_fixed
+ data-spy="affix" data-offset-top="250" data-offset-bottom="250" 
+
+<img ng-src="/event_images/{{ img_link }}" class="img-circle" height="200" width="250">-->
+                        
+                        <div id="videowrapper" class="embed-responsive embed-responsive-16by9">
+                            <iframe style="width:100%;" ng-src="{{ trustSrc(url) }}" class="embed-responsive-item" allowfullscreen="true"></iframe>
+                        </div>
+
+                        <h2>{{ song_title }}</h2>
+
+                        <div id="scroll_panel" style="max-height:50vh;">
                             <a ng-href="/artist/{{artist_id}}" target="_self">
                                 <h3>{{ name }}</h3>
                             </a>
-                            
+
                             <h4>{{ date }}</h4>
 
                             <h3>Description</h3>
 
                             <p>{{ description }}</p>
 
+                            <p>{{ description }}</p>
+
+                            <p>{{ description }}</p>
+
+                            <p>{{ description }}</p>
+
+                            <p>{{ description }}</p>
+
                             <h3>Best Lyrics</h3>
 
                             <ul>
-                                <li ng-repeat="lyrics in top_lyrics"> <p> "{{ lyrics }}.." </p></li>
+                                <li ng-repeat="lyrics in top_lyrics"><p>"{{ lyrics }}.."</p></li>
                             </ul>
 
-                            <div id="videowrapper" class="embed-responsive embed-responsive-16by9">
-                                <iframe style="width:100%;" ng-src="{{ trustSrc(url) }}" class="embed-responsive-item" allowfullscreen="true"></iframe>
-                            </div>
-                                
+                            <!-- to be completed
                             <h3>Related Beef</h3>
+
+                            <ul>
+                                <li ng-repeat="beef_event in related_events"><p>"{{ beef_event }}.."</p></li>
+                            </ul>-->
 
                         </div>
                     </div>

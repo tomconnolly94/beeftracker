@@ -77,7 +77,3 @@ a{
 #bootstrap-overrides h6{
     font-size:12px;
 }
-/* hide scroll bar on beef event scroll panel */
-.pre-scrollable::-webkit-scrollbar { 
-    display: none; 
-}

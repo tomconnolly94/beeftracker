@@ -38,3 +38,11 @@ option {
 #bootstrap-overrides h3, #bootstrap-overrides h2{
     font-weight:bold;
 }
+/* style to create scroll panel if event data is too large to fit */
+#scroll_panel {
+    overflow-y:scroll;
+}
+/* hide scroll bar on scroll panel */
+#scroll_panel::-webkit-scrollbar{
+    display:none;
+}
