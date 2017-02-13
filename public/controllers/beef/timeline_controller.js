@@ -12,10 +12,10 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
         //hold onto the main agressor for checks later which help positioning
         var main_aggressor;
         
-        $http.get("/search/" + $routeParams.tagId).success(function(response){
+        $http.get("/search/" + $routeParams.tagId).success(function(response_1){
             //validate the url tagId to make sure the event exists
-            if(response.eventObject != undefined){
-                main_aggressor = response.eventObject.aggressor;
+            if(response_1.eventObject != undefined){
+                main_aggressor = response_1.eventObject.aggressor;
                 console.log($routeParams.tagId);
                 
                 if(first_run){
@@ -24,19 +24,19 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                         $scope.selected_targets = new Array();
                     }
                     
-                    for(var i = 0; i < Object.keys(response.eventObject.targets).length; i++){
-                        console.log(response.eventObject.targets[i]);
-                        $scope.selected_targets.push(response.eventObject.targets[i]);
+                    for(var i = 0; i < Object.keys(response_1.eventObject.targets).length; i++){
+                        console.log(response_1.eventObject.targets[i]);
+                        $scope.selected_targets.push(response_1.eventObject.targets[i]);
                     }
                     first_run = false;
                 }
                
                 //make http request to server for data
-                $http.get("/search_all_events_in_timeline_from_event_id/" + $routeParams.tagId).success(function(response){
+                $http.get("/search_all_events_in_timeline_from_event_id/" + $routeParams.tagId).success(function(response_2){
                     //validate the url tagId to make sure the event exists
-                    if(response.events != undefined){
+                    if(response_2.events != undefined){
 
-                        var events = response.events;
+                        var events = response_2.events;
                         $scope.events = new Array();
                         var name_colour_map = [];
                         var colour_index = 0;
@@ -146,6 +146,15 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 }
                             }
                             
+                            var border_colour = "#000000";
+                            var border_width = "1px";
+                            
+                            if(response_1.eventObject.title == eventObject.title){
+                                border_colour = "#FFFFFF";
+                                border_width = "5px";
+                                border_width = "5px";
+                            }
+                            
                             //create data record
                             var record = {
                                 name : eventObject.aggressor,
@@ -160,7 +169,9 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 left_margin : left,
                                 right_margin : right,
                                 timeline_event_class : timeline_event,
-                                glyphicon : event_glyphicon
+                                glyphicon : event_glyphicon,
+                                border_colour : border_colour,
+                                border_width : border_width
                             };
                             $scope.events.push(record);
 
@@ -176,7 +187,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                         console.log("An incorrect event_id has been used. please check the url")
                     }
                 }, 
-                function(response) {
+                function(response_2) {
                     //failed http request
                     console.log("Something went wrong");
                 });

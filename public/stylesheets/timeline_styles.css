@@ -118,8 +118,7 @@ float: right;
     margin-top: 0;
     color: inherit;
 }
-.timeline-body > p,
-.timeline-body > ul {
+.timeline-body > p, .timeline-body > ul {
     margin-bottom: 0;
 }
 .timeline-body > p + p {

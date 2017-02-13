@@ -25,12 +25,12 @@ option {
         width:100%;
     }
 }
-/* styles for jumbotron filter*/
+/* styles for jumbotron filter */
 #artist_filter_panel{
     padding:30px;
     background-color:#DDDDDD;
 }
-/* override default affix bottom config to make position absolute*/
+/* override default affix bottom config to make position absolute */
 .affix-bottom {
     position: absolute;
 }
@@ -45,4 +45,10 @@ option {
 /* hide scroll bar on scroll panel */
 #scroll_panel::-webkit-scrollbar{
     display:none;
+}
+/* re-scale timeline points */
+.timeline-badge{
+    -ms-transform: scale(0.5,0.5); /* IE 9 */
+    -webkit-transform: scale(0.5,0.5); /* Safari */
+    transform: scale(0.5,0.5);
 }

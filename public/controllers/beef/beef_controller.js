@@ -48,13 +48,25 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
                             $scope.url = eventObject.url;
                             $scope.event_id = eventObject._id;
 
-                            if(Object.keys(eventObject.top_lyrics).length < 1){
-                                $scope.top_lyrics.push("Not applicable");
-                            }
-                            else{
+                            if(Object.keys(eventObject.top_lyrics).length >= 1){
+                                
+                                $scope.top_lyrics = new Array();
+                                
                                 //loop through the top lyrics and assign them to the scope
                                 for(var i = 0; i < Object.keys(eventObject.top_lyrics).length; i++){
-                                    $scope.top_lyrics.push(eventObject.top_lyrics[i]);
+                                    
+                                    $scope.top_lyrics[i] = new Array();
+                                    
+                                    console.log(eventObject.top_lyrics);
+                                    
+                                    $scope.top_lyrics[i] = eventObject.top_lyrics[i];
+                                    
+                                    /* attempt at controller code for genius embedding
+                                    $scope.top_lyrics[i]["data_src_href"] = eventObject.top_lyrics[i]["data_src_href"];
+                                    $scope.top_lyrics[i]["href_1"] = eventObject.top_lyrics[i]["href_1"];
+                                    $scope.top_lyrics[i]["lyric"] = eventObject.top_lyrics[i]["lyric"];
+                                    $scope.top_lyrics[i]["href_2"] = eventObject.top_lyrics[i]["href_2"];
+                                    $scope.top_lyrics[i]["title"] = eventObject.top_lyrics[i]["title"];*/
                                 }
                             }
                         }

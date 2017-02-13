@@ -45,6 +45,7 @@ app.get('/', function(request, response) { response.render('pages/home.ejs'); })
 app.get('/beef/:tagId', function(request, response) { response.render('pages/beef_versions/beef_bootstrap_timeline.ejs'); });
 app.get('/artist/:tagId', function(request, response) { response.render('pages/artist.ejs'); });
 app.get('/contact_us/', function(request, response) { response.render('pages/contact_us.ejs'); });
+app.get('/about/', function(request, response) { response.render('pages/about_us.ejs'); });
 
 // ### Search functions ###
 app.get('/search/:event_id', function(request, response) {
