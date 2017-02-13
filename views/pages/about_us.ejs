@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html ng-app="home">
+
+    <!--
+        Page name: home.ejs
+        Project: Beeftracker
+        Author: Tom Connolly
+        Date: 8/11/16
+    -->
+    
+    <head>
+        <title>Home</title>
+        <!-- icon -->
+        <link rel="shortcut icon" href="/logo/steak.ico">
+        <!-- tag for mobile zoom -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- stylesheets -->
+        <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC" />
+        <!-- javascript library references -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <!-- javascript file references -->
+        <script src="/controllers/home/home_app.js" type="text/javascript"></script>
+        <script src="/controllers/home/search_box_controller.js" type="text/javascript"></script>
+        <script src="/controllers/home/event_stream_controller.js" type="text/javascript"></script>
+        
+        <script> 
+            $(function(){
+                $("#top_bar").load("/partials/header.ejs");
+                $("#bottom_bar").load("/partials/footer.ejs");
+            });
+        </script>
+    </head>
+
+    <body id="bootstrap-overrides">
+        <div class="container" style="text-align:center">
+            <div id="top_bar"></div>
+            
+            <div class="row">
+                
+                <div class="col-sm-3"></div>
+            
+                <div class="col-sm-6">
+                    <h2>Us</h2>
+                </div>
+                
+                <div class="col-sm-3"></div>
+            </div>
+                
+            <div class="row" style="height:100%">
+                
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8">
+                    <h3>
+                        At Beeftracker, we are attempting to provide a new medium of digesting information based in and around conflict. Sometimes news stories break and the format used to present the information is outdated and unsuitable and we think its high time someone provided and alternative.
+                    </h3>
+                    <h3>
+                        We believe that conflict is an important part of life, it shows that parties are willing to stand up for something larger than themselves. It is the basis of healthy democracy, the world's favourite entertainment and those who have the courage to participate must be celebrated. 
+                    </h3>
+                    <h3>
+                        History gives us unprecented access to information about other's failures and successes, making this information available is essential for a society to grow, learn and ultimately improve.
+                    </h3>
+                </div>
+                <div class="col-sm-2"></div>
+            </div>
+            
+            
+            <div id="bottom_bar"></div>
+        </div>
+    </body>
+</html>
