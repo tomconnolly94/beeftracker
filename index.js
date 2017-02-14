@@ -133,6 +133,114 @@ app.get('/search_artist_from_name/:artist_name', function(request, response) {
         }
     });
 });
+app.get('/search_related_artists_from_artist_id/:artist_id', function(request, response) {
+    
+    var url = process.env.MONGODB_URI;
+    var identifier = request.params.artist_id;
+
+    /*MongoClient.connect(url, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            console.log(identifier);
+            var object = BSON.ObjectID.createFromHexString(identifier);
+            
+            //db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+            db.collection("artist_data").find( { _id : object } ).toArray(function(queryErr, artist) {
+                                
+                var artist_object = artist[0];
+                
+                console.log(artist_object);
+                console.log(artist_object.stage_name);
+                
+                var identifier = artist_object.stage_name;
+                var field_name = 'aggressor';
+            
+                //code to create a qry string that matches NEAR to query string
+                var end = "{ \"$regex\": " + identifier + ", \"$options\": \"i\" }";
+                var qry = "{ \"" + field_name + "\" : \"" + identifier + "\" }";
+                console.log(qry);
+                
+                db.collection("event_data").find( JSON.parse(qry) ).toArray(function(queryErr, events) {
+                
+                    var targets = new Array();
+
+                    console.log(events);
+
+                    for(var i = 0; i < events[0].length; i++){
+
+                        for(var j = 0; j < events[i].targets.length; j++){
+                            targets.push(docs[i].targets[j]);
+                        }                    
+                    }
+                });
+                
+                response.send({targets : targets});
+                db.close()
+            });*/
+    
+    
+    MongoClient.connect(url, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            
+            async.waterfall([
+                function(callback){
+                    
+                    
+                    console.log(identifier);
+                    var object = BSON.ObjectID.createFromHexString(identifier);
+
+                    //db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+                    db.collection("artist_data").find( { _id : object } ).toArray(function(queryErr, artist) {
+
+                        var artist_object = artist[0];
+
+                        console.log(artist_object);
+                        console.log(artist_object.stage_name);
+
+                        var identifier = artist_object.stage_name;
+                        var field_name = 'aggressor';
+
+                        //code to create a qry string that matches NEAR to query string
+                        var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
+                        var qry = "{ \"" + field_name + "\" : " + end + " }";
+
+                        callback(null, qry);
+                    });
+                },
+                function(qry, callback){ //gather all the targets' responses
+                    
+                    console.log(qry);
+                    console.log(JSON.parse(qry));
+                    
+                    db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, event_objects) {
+
+                        var targets = new Array();
+
+                        console.log(event_objects);
+                        console.log(event_objects[0]);
+
+                        for(var i = 0; i < events[0].length; i++){
+
+                            for(var j = 0; j < events[i].targets.length; j++){
+                                targets.push(docs[i].targets[j]);
+                            }                    
+                        }
+                        
+                        response.send( { targets : targets } );
+                    });
+                }
+            ], 
+            function (error, all_events) {
+                if (error) { console.log(error); }
+                else{
+                    
+                }
+            });
+        }
+            db.close();
+    });
+});
 app.get('/search_events_from_artist/:artist_name', function(request, response) {
     
     var url = process.env.MONGODB_URI;
@@ -147,10 +255,32 @@ app.get('/search_events_from_artist/:artist_name', function(request, response) {
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
             var qry = "{ \"" + field_name + "\" : " + end + " }";
             
-            db.collection("event_data").find(JSON.parse(qry)).sort({"date_added" : -1}).limit(3).toArray(function(queryErr, docs) {
+            db.collection("event_data").find(JSON.parse(qry)).sort({"date_added" : -1}).limit(6).toArray(function(queryErr, docs) {
                 response.send( { events : docs } );
                 db.close()
             });
+            db.close();
+        }
+    });
+    
+});
+app.get('/search_events_from_artist_id/:artist_id', function(request, response) {
+    
+    var url = process.env.MONGODB_URI;
+    var identifier = request.params.artist_id;
+
+    MongoClient.connect(url, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            console.log(identifier);
+            var object = BSON.ObjectID.createFromHexString(identifier);
+            
+            //db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+            db.collection("artist_data").find( { _id : object } ).toArray(function(queryErr, docs) {
+                response.send({eventObject : docs[0]});
+                db.close()
+            });
+
             db.close();
         }
     });
@@ -309,6 +439,38 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                     
                 }
             });
+        }
+    });
+});
+app.get('/search_related_artists_from_artist/:artist_id', function(request, response) {
+
+    var url = process.env.MONGODB_URI;
+    var identifier = request.params.event_id;
+
+    MongoClient.connect(url, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            console.log(identifier);
+            var object = BSON.ObjectID.createFromHexString(identifier);
+            
+            //db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+            db.collection("artist_data").find( { _id : object } ).toArray(function(queryErr, docs) {
+                
+                var object = new Array();
+                
+                for(var i = 0; i < docs.length; i++){
+                    
+                    object.push(docs.targets);
+                    
+                }
+                
+                console.log(object);
+                
+                response.send({targetsObject : docs[0]});
+                db.close()
+            });
+
+            db.close();
         }
     });
 });

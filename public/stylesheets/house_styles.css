@@ -3,7 +3,7 @@ html, body {
     height: 100%;
 }
 /* apply to all tags */
-* {
+ bootstrap-overrides *, * {
 	font-family: "Amatic SC";
     padding:0px;
 }

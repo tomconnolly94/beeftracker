@@ -30,6 +30,8 @@
         <!-- Angular scripts -->
         <script src="/controllers/artist/artist_app.js" type="text/javascript"></script>
         <script src="/controllers/artist/artist_controller.js" type="text/javascript"></script>
+        <script src="/controllers/artist/recent_events_controller.js" type="text/javascript"></script>
+        <script src="/controllers/artist/related_artists_controller.js" type="text/javascript"></script>
         
         <!-- loading bar files -->
         <link rel='stylesheet' href='/modules/angular-loading-bar/build/loading-bar.min.css' type='text/css' media='all' />
@@ -44,8 +46,8 @@
         
 </head>
 
-    <body>
-        <div class="container" class="col-sm-7" ng-controller="artistSearchController">
+    <body id="bootstrap-overrides">
+        <div class="container" class="col-sm-7">
         
             <!-- loading bar -->
         <div id="loading-bar-container"></div>
@@ -57,21 +59,26 @@
             
             <!-- rest of page -->
             <div class="row">
-                <div class="col-sm-4">
-                    <img class="img-circle" src="/artist_images/{{ img_link }}" class="img-thumbnail" height="200" width="300">
-                </div>
+                <div class="col-sm-2"></div>
                 
-                <div class="col-sm-8">
-                    <h1>{{stage_name}}</h1>
-                    <p class="sub">{{birth_name}}</p>
-                    <p class="sub">{{d_o_b}}</p>
-                    <p>{{bio}}</p>
+                <div class="col-sm-8 row" ng-controller="artistSearchController">
+                    <div class="col-sm-4" style="height:100%">
+                        <img class="img-circle" src="/artist_images/{{ img_link }}" class="img-circle" height="100%" width="100%">
+                    </div>
+
+                    <div class="col-sm-8">
+                        <h1>{{stage_name}}</h1>
+                        <p class="sub">{{birth_name}}</p>
+                        <p class="sub">{{d_o_b}}</p>
+                        <p>{{bio}}</p>
+                    </div>
                 </div>
             </div>                            
 
             <div class="row">
                     
-                <div class="col-sm-6">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-4" ng-controller="relatedArtistsController">
                     <h2>About the screen:</h2>
                     <ul>
                     <li><span>At a point where colours can be swapped and changed to find something that will work.</span></li>
@@ -81,12 +88,12 @@
                     </ul>
                 </div>
 
-                <div class="col-sm-6">
+                <div class="col-sm-4" ng-controller="recentEventsController">
                     <h2 id="rightHeader">Recent Events:</h2>                        
                     <div class="eventContainer">
-                        <div class="event"  ng-repeat="event in events">
-                            <a ng-href="/beef/{{event._id}}" target="_self">
-                                <img class="img-thumbnail" ng-src="/event_images/{{event.image_link}}" height="100" width="100">
+                        <div class="event"  ng-repeat="event in events" style="width:50%;margin:0px;float:right;">
+                            <a ng-href="/beef/{{event._id}}" target="_self" style="padding:0px;">
+                                <img class="img-circle" ng-src="/event_images/{{event.image_link}}" style="margin:0px auto;" height="100" width="50%">
 
 
                                 <p id="title">{{event.title}}</p>
@@ -103,6 +110,7 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-sm-2"></div>
             </div>
             <div id="bottom_bar" class="row" style="margin:50px 0px"></div>
         </div>
