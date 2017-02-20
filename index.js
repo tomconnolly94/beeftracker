@@ -423,7 +423,7 @@ app.get('/search_related_artists_from_artist/:artist_id', function(request, resp
     });
 });
 
-// ### Page route error handling ####
+// ### Page 
 app.get('/*', function(req, res, next) {
     console.log("unrecognised url");
     res.render("pages/error.ejs");

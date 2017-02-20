@@ -20,6 +20,7 @@
   },
   "keywords": [
     "node",
+    "method-override": "*",
     "heroku",
     "express"
   ],
