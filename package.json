@@ -15,7 +15,6 @@
     "body-parser": "1.8",
     "ejs": "2.4.1",
     "express": "4.13.3",
-    "method-override": "*",
     "mongodb": "2.2.11"
   },
   "keywords": [
