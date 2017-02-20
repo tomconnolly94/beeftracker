@@ -23,5 +23,10 @@
     "heroku",
     "express"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "angularjs": "0.0.1",
+    "jquery": "^3.1.1",
+    "webpack": "^2.2.1"
+  }
 }

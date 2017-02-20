@@ -59,13 +59,13 @@ app.get('/search/:event_id', function(request, response) {
             console.log(identifier);
             var object = BSON.ObjectID.createFromHexString(identifier);
             
-            //db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
-            db.collection("event_data").find( { _id : object } ).toArray(function(queryErr, docs) {
+            //db.collection("event_data_v1_0").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+            db.collection("event_data_v1_0").find( { _id : object } ).toArray(function(queryErr, docs) {
                 response.send({eventObject : docs[0]});
-                db.close()
+                
             });
 
-            db.close();
+            
         }
     });
 });
@@ -83,12 +83,12 @@ app.get('/search_all/:search_term', function(request, response) {
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
             var qry = "{ \"" + field_name + "\" : " + end + " }";
             
-            db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+            db.collection("event_data_v1_0").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
                 response.send( { events : docs } );
-                db.close()
+                
             });
 
-            db.close();
+            
         }
     });
     
@@ -103,11 +103,10 @@ app.get('/search_artist/:artist_id', function(request, response) {
         else{
             var object = BSON.ObjectID.createFromHexString(identifier);
                         
-            db.collection("artist_data").find( { _id : object } ).toArray(function(queryErr, docs) {
-                response.send( { events : docs[0] } );
-                db.close()
+            db.collection("artist_data_v1_0").find( { _id : object } ).toArray(function(queryErr, docs) {
+                console.log(docs);
+                response.send( { artist : docs[0] } );
             });
-            db.close();
         }
     });
 });
@@ -125,11 +124,11 @@ app.get('/search_artist_from_name/:artist_name', function(request, response) {
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
             var qry = "{ \"" + field_name + "\" : " + end + " }";
             
-            db.collection("artist_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+            db.collection("artist_data_v1_0").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
                 response.send( { eventObject : docs[0] } );
-                db.close()
+                
             });
-            db.close();
+            
         }
     });
 });
@@ -138,47 +137,6 @@ app.get('/search_related_artists_from_artist_id/:artist_id', function(request, r
     var url = process.env.MONGODB_URI;
     var identifier = request.params.artist_id;
 
-    /*MongoClient.connect(url, function(err, db) {
-        if(err){ console.log(err); }
-        else{
-            console.log(identifier);
-            var object = BSON.ObjectID.createFromHexString(identifier);
-            
-            //db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
-            db.collection("artist_data").find( { _id : object } ).toArray(function(queryErr, artist) {
-                                
-                var artist_object = artist[0];
-                
-                console.log(artist_object);
-                console.log(artist_object.stage_name);
-                
-                var identifier = artist_object.stage_name;
-                var field_name = 'aggressor';
-            
-                //code to create a qry string that matches NEAR to query string
-                var end = "{ \"$regex\": " + identifier + ", \"$options\": \"i\" }";
-                var qry = "{ \"" + field_name + "\" : \"" + identifier + "\" }";
-                console.log(qry);
-                
-                db.collection("event_data").find( JSON.parse(qry) ).toArray(function(queryErr, events) {
-                
-                    var targets = new Array();
-
-                    console.log(events);
-
-                    for(var i = 0; i < events[0].length; i++){
-
-                        for(var j = 0; j < events[i].targets.length; j++){
-                            targets.push(docs[i].targets[j]);
-                        }                    
-                    }
-                });
-                
-                response.send({targets : targets});
-                db.close()
-            });*/
-    
-    
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
         else{
@@ -189,56 +147,69 @@ app.get('/search_related_artists_from_artist_id/:artist_id', function(request, r
                     
                     console.log(identifier);
                     var object = BSON.ObjectID.createFromHexString(identifier);
+                    
+                    //db.collection("event_data_v1_0").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+                    db.collection("artist_data_v1_0").find( { _id : object } ).toArray(function(error, artist) {
 
-                    //db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
-                    db.collection("artist_data").find( { _id : object } ).toArray(function(queryErr, artist) {
+                        
+                        if (error) { console.log(error); }
+                        else{
+                            
+                            if(artist[0] != undefined){
+                                var artist_object = artist[0];
 
-                        var artist_object = artist[0];
+                                console.log(artist_object);
+                                console.log(artist_object.stage_name);
 
-                        console.log(artist_object);
-                        console.log(artist_object.stage_name);
+                                var identifier = artist_object.stage_name;
+                                var field_name = 'aggressor';
 
-                        var identifier = artist_object.stage_name;
-                        var field_name = 'aggressor';
+                                //code to create a qry string that matches NEAR to query string
+                                var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
+                                var qry = "{ \"" + field_name + "\" : \"" + identifier + "\" }";
 
-                        //code to create a qry string that matches NEAR to query string
-                        var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
-                        var qry = "{ \"" + field_name + "\" : " + end + " }";
-
-                        callback(null, qry);
+                                callback(null, qry);
+                            }
+                        }
                     });
                 },
                 function(qry, callback){ //gather all the targets' responses
                     
                     console.log(qry);
-                    console.log(JSON.parse(qry));
-                    
-                    db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, event_objects) {
+                    console.log("#########################################################################################");
+                                        
+                    db.collection("event_data_v1_0").find(JSON.parse(qry)).toArray(function(error, event_objects) {
 
-                        var targets = new Array();
-
-                        console.log(event_objects);
-                        console.log(event_objects[0]);
-
-                        for(var i = 0; i < events[0].length; i++){
-
-                            for(var j = 0; j < events[i].targets.length; j++){
-                                targets.push(docs[i].targets[j]);
-                            }                    
-                        }
+                        console.log(event_objects.length);
+                        console.log(event_objects[0].targets.length);
+                        console.log(Object.keys(event_objects[0].targets));
                         
-                        response.send( { targets : targets } );
+                        if (error) { console.log(error); }
+                        else{                        
+                            var target_artists = new Array();
+                            
+                            for(var i = 0; i < event_objects.length; i++){
+                                for(var j = 0; j < Object.keys(event_objects[i].targets).length; j++){
+                                    var target_already_found = false;
+                                    for(var k = 0; k < target_artists.length; k++){
+                                        if(event_objects[i].targets[j] == target_artists[k]){
+                                            target_already_found = true;
+                                        }
+                                    }
+                                    if(!target_already_found){
+                                        target_artists.push(event_objects[i].targets[j]);
+                                    }
+                                }                    
+                            }
+                            response.send( { targets : target_artists } );
+                        }
                     });
                 }
             ], 
-            function (error, all_events) {
+            function (error) {
                 if (error) { console.log(error); }
-                else{
-                    
-                }
             });
-        }
-            db.close();
+        }        
     });
 });
 app.get('/search_events_from_artist/:artist_name', function(request, response) {
@@ -255,33 +226,11 @@ app.get('/search_events_from_artist/:artist_name', function(request, response) {
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
             var qry = "{ \"" + field_name + "\" : " + end + " }";
             
-            db.collection("event_data").find(JSON.parse(qry)).sort({"date_added" : -1}).limit(6).toArray(function(queryErr, docs) {
+            db.collection("event_data_v1_0").find(JSON.parse(qry)).sort({"date_added" : -1}).limit(6).toArray(function(queryErr, docs) {
                 response.send( { events : docs } );
-                db.close()
+                
             });
-            db.close();
-        }
-    });
-    
-});
-app.get('/search_events_from_artist_id/:artist_id', function(request, response) {
-    
-    var url = process.env.MONGODB_URI;
-    var identifier = request.params.artist_id;
-
-    MongoClient.connect(url, function(err, db) {
-        if(err){ console.log(err); }
-        else{
-            console.log(identifier);
-            var object = BSON.ObjectID.createFromHexString(identifier);
             
-            //db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
-            db.collection("artist_data").find( { _id : object } ).toArray(function(queryErr, docs) {
-                response.send({eventObject : docs[0]});
-                db.close()
-            });
-
-            db.close();
         }
     });
     
@@ -300,11 +249,10 @@ app.get('/search_events_from_event_id/:event_id', function(request, response) {
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
             var qry = "{ \"" + field_name + "\" : " + end + " }";
             
-            db.collection("event_data").find(JSON.parse(qry)).sort({"date_added" : -1}).limit(3).toArray(function(queryErr, docs) {
+            db.collection("event_data_v1_0").find(JSON.parse(qry)).sort({"date_added" : -1}).limit(3).toArray(function(queryErr, docs) {
                 response.send( { events : docs } );
-                db.close()
             });
-            db.close();
+            
         }
     });
     
@@ -319,9 +267,9 @@ app.get('/search_recent_events/:num_of_events', function(request, response) {
         else{
             var field_name = 'aggressor';
             
-            db.collection("event_data").find({}).sort({"date_added" : -1}).limit(limit).toArray(function(queryErr, docs) {
+            db.collection("event_data_v1_0").find({}).sort({"date_added" : -1}).limit(limit).toArray(function(queryErr, docs) {
                 response.send( { events : docs } );
-                db.close()
+                
             });
         }
     });
@@ -346,7 +294,7 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                     console.log(object);
                     
                     //db query: get the main event in question
-                    db.collection("event_data").find( { _id : object } ).toArray(function(queryErr, main_event) {
+                    db.collection("event_data_v1_0").find( { _id : object } ).toArray(function(queryErr, main_event) {
                         
                         var orig_artist_name = main_event[0].aggressor;
                         
@@ -367,7 +315,7 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                     var qry = "{ \"" + field_name + "\" : " + end + " }";
 
                     //db query: get all events by the original event's aggressor making sure only to store events that share a a target with the original event
-                    db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, events) {
+                    db.collection("event_data_v1_0").find(JSON.parse(qry)).toArray(function(queryErr, events) {
                         
                         async.each(events, function(event, callback) {
 
@@ -414,7 +362,7 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                     
                     console.log(qry);
 
-                    db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, events) {
+                    db.collection("event_data_v1_0").find(JSON.parse(qry)).toArray(function(queryErr, events) {
                         
                         console.log(events);
                         
@@ -453,8 +401,8 @@ app.get('/search_related_artists_from_artist/:artist_id', function(request, resp
             console.log(identifier);
             var object = BSON.ObjectID.createFromHexString(identifier);
             
-            //db.collection("event_data").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
-            db.collection("artist_data").find( { _id : object } ).toArray(function(queryErr, docs) {
+            //db.collection("event_data_v1_0").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+            db.collection("artist_data_v1_0").find( { _id : object } ).toArray(function(queryErr, docs) {
                 
                 var object = new Array();
                 
@@ -467,12 +415,19 @@ app.get('/search_related_artists_from_artist/:artist_id', function(request, resp
                 console.log(object);
                 
                 response.send({targetsObject : docs[0]});
-                db.close()
+                
             });
 
-            db.close();
+            
         }
     });
+});
+
+// ### Page route error handling ####
+app.get('/*', function(req, res, next) {
+    console.log("unrecognised url");
+    res.render("pages/error.ejs");
+    
 });
 
 //pages that are not in the current release design but may be in the next

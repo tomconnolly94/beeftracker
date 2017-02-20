@@ -16,9 +16,9 @@ artist_app.controller("relatedArtistsController", ['$scope','$http', '$routePara
     $scope.$on('$routeChangeSuccess', function() {
                 
         //make http request to server for data
-        $http.get("/search_related_artists_from_artist_id/" + $routeParams.tagId).success(function(targets){
-            $scope.targets = targets;
-            console.log($scope.targets);
+        $http.get("/search_related_artists_from_artist_id/" + $routeParams.tagId).success(function(target_objects){
+            console.log(target_objects.targets);
+            $scope.targets = target_objects.targets;
         }, 
         function(response_2) {
             //failed http request

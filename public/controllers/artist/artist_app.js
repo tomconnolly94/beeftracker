@@ -13,6 +13,14 @@ artist_app.config(function($routeProvider, $locationProvider){
         templateUrl: '',    
         controller: 'artistSearchController'
     });
+    $routeProvider.when('/artist/:tagId', {
+        templateUrl: '',    
+        controller: 'recentEventsController'
+    });
+    $routeProvider.when('/artist/:tagId', {
+        templateUrl: '',    
+        controller: 'relatedArtistsController'
+    });
     // enable HTML5mode to disable hashbang urls
     $locationProvider.html5Mode({
         enabled:true,

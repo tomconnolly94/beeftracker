@@ -14,17 +14,21 @@ artist_app.controller("artistSearchController", ['$scope','$http', '$routeParams
     
     //wait untill module has been configured before running this
     $scope.$on('$routeChangeSuccess', function() {
-        
+                
         $http.get("/search_artist/" + $routeParams.tagId).success(function(response_1){
             //validate the url tagId to make sure the event exists
-            if(response_1.events != undefined){
+            if(response_1 != undefined){
+                
+                var artist_object = response_1.artist;
                         
-                //assign fields to scope
-                $scope.stage_name = artist_object.stage_name;
-                $scope.birth_name = artist_object.birth_name;
-                $scope.d_o_b = artist_object.d_o_b.slice(0,10);
-                $scope.img_link = artist_object.img_link;
-                $scope.bio = artist_object.bio;
+                if(artist_object != undefined){
+                    //assign fields to scope
+                    $scope.stage_name = artist_object.stage_name;
+                    $scope.birth_name = artist_object.birth_name;
+                    $scope.d_o_b = artist_object.d_o_b.slice(0,10);
+                    $scope.img_link = artist_object.img_link;
+                    $scope.bio = artist_object.bio;
+                }
             }
             else{
                 //error msg

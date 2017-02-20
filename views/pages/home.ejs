@@ -10,23 +10,37 @@
     
     <head>
         <title>Home</title>
-        <!-- icon -->
-        <link rel="shortcut icon" href="/logo/steak.ico">
-        <!-- tag for mobile zoom -->
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- stylesheets -->
-        <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css">
+        <meta charset="utf-8"><!-- encoding version -->
+        <link rel="shortcut icon" href="/logo/steak.ico"><!-- icon -->
+        <meta name="viewport" content="width=device-width, initial-scale=1"><!-- tag for mobile zoom -->
+        
+        <!-- jQuery imports -->
+        <script src="/modules/jquery/dist/jquery.min.js"></script>
+        
+        <!--angular imports -->
+        <script src="/modules/angular/angular.min.js"></script>
+        <script src="/modules/angular-resource/angular-resource.min.js"></script>
+        <script src="/modules/angular-route/angular-route.min.js"></script>
+        <script type='text/javascript' src='/modules/angular-loading-bar/build/loading-bar.min.js'></script>
+        
+        <!-- bootstrap imports -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="/modules/bootstrap/bootstrap.min.js" crossorigin="anonymous"></script> 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC" />
-        <!-- javascript library references -->
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <!-- javascript file references -->
+        <link rel='stylesheet' href='/modules/angular-loading-bar/build/loading-bar.min.css' type='text/css' media='all' />
+                
+        <!-- bespoke javascript files -->
         <script src="/controllers/home/home_app.js" type="text/javascript"></script>
         <script src="/controllers/home/search_box_controller.js" type="text/javascript"></script>
         <script src="/controllers/home/event_stream_controller.js" type="text/javascript"></script>
+        <script src="/js/beef_tracker_colour_bank.js"></script>
         
-        <script> 
+        <!-- bespoke stylesheets -->
+        <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css">
+        
+        <script>
+            //load header and footer
             $(function(){
                 $("#top_bar").load("/partials/header.ejs");
                 $("#bottom_bar").load("/partials/footer.ejs");
@@ -54,22 +68,24 @@
                     <div class="col-sm-4"></div>
                 </div>
 
-                <div id="search_results" class="row" style="padding:0px 250px;">
-                    
-                    
-                    <h3>{{ results_string }}</h3>
-                    <h4>{{ results_details_string }}</h4>
-                    
-                    <ul style="list-style-type:none;">
+                <div id="search_results" class="row" style="padding:0px;">
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4">
+                        <h3>{{ results_string }}</h3>
+                        <h4>{{ results_details_string }}</h4>
 
-                        <li ng-repeat="record in records" style="height:100px;background-color:#9C0505;">   
+                        <ul style="list-style-type:none;">
 
-                            <a ng-href="/beef/{{record.eventNum}}" style="font-weight:bold;">
-                                <h3 style="margin:5px;font-weight:bold;"> {{ record.title }}</h3>
-                                <img  ng-src="/event_images/{{ record.img_link }}" class="img-circle" style="position:relative;bottom:25px;margin:5px;float:right;" height="75" width="75">
-                            </a>
-                        </li>
-                    </ul>
+                            <li ng-repeat="record in records" style="margin:30px 0px;">   
+
+                                <a ng-href="/beef/{{record.eventNum}}" style="font-weight:bold;height:120px;background-color:#9C0505;padding:0px;">
+                                    <h3 style="margin:5px;font-weight:bold;"> {{ record.title }}</h3>
+                                    <img  ng-src="/event_images/{{ record.img_link }}" class="img-circle" style="position:relative;bottom:25px;margin:5px;float:right;" height="75" width="75">
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-4"></div>
                 </div>
             </div>
             
@@ -84,7 +100,7 @@
                 <div class="col-sm-4">
                     <ul>
                         <li ng-repeat="event in event_stream_events" style="margin:30px 0px;">        
-                            <a ng-href="/beef/{{event.eventNum}}" style="height:120px;background-color:#9C0505;font-weight:bold;padding:0px;">
+                            <a ng-href="/beef/{{event.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;">
 
                                 <div class="row" style="width:100%;margin:0px;text-align:right;">
 

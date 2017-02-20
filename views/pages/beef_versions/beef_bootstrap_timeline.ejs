@@ -9,59 +9,54 @@
         Date: 8/11/16
         -->
         
-        <title>Beef</title>
+        <title>Beef</title> <!-- page tab title -->
+        <meta charset="utf-8"><!-- encoding version -->
+        <link rel="shortcut icon" href="/logo/steak.ico"><!-- icon -->
+        <meta name="viewport" content="width=device-width, initial-scale=1"><!-- tag for mobile zoom -->
         
+        <!-- incomplete script loading framework -->
+        <!--
+        <script src="/modules/script_loaders/script_tag_injector_function.js"></script>
+        <script src="/modules/script_loaders/page_grouping_scripts/beef_scripts_loader.js"></script>
+        -->
         
-        <meta charset="utf-8">
+        <!-- jQuery imports -->
+        <script src="/modules/jquery/dist/jquery.min.js"></script>
         
-        <!-- icon -->
-        <link rel="shortcut icon" href="/logo/steak.ico">        
-        
-        <!-- tag for mobile zoom -->
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        
-        <!-- stylesheets -->
-        <link rel="stylesheet" type="text/css" href="/stylesheets/beef.css">
-        <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css">
-        <link rel="stylesheet" type="text/css" href="/stylesheets/timeline_styles.css">
-        
-        <!-- angular libraries --> 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.min.js"></script>
+        <!--angular imports -->
+        <script src="/modules/angular/angular.min.js"></script>
+        <script src="/modules/angular-resource/angular-resource.min.js"></script>
         <script src="/modules/angular-route/angular-route.min.js"></script>
-        <link rel='stylesheet' href='/modules/angular-loading-bar/build/loading-bar.min.css' type='text/css' media='all' />
         <script type='text/javascript' src='/modules/angular-loading-bar/build/loading-bar.min.js'></script>
         
-        <!-- bootstrap libraries -->
+        <!-- bootstrap imports -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="/modules/bootstrap/bootstrap.min.js" crossorigin="anonymous"></script> 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC" />
-                
-        <!-- controllers -->
+        <link rel='stylesheet' href='/modules/angular-loading-bar/build/loading-bar.min.css' type='text/css' media='all' />
+        
+        <!-- bespoke javascript files -->
         <script src="/controllers/beef/beef_app.js"></script>
         <script src="/controllers/beef/beef_controller.js"></script>
         <script src="/controllers/beef/timeline_controller.js"></script>
+        <script src="/js/beef_tracker_colour_bank.js"></script>
+
+        <!-- bespoke stylesheets -->
+        <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/beef.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/timeline_styles.css">
         
-        <!-- other libraries -->
-        
-        <!-- javascript script imports -->
-        <!--<script src="/js/load_background.js"></script>-->
-        <script src="/js/genius_embed_injection.js"></script>
-        
-        <script> 
-            
-            //load headers and footers
-            $(document).ready(function(){
+        <script>
+            //load header and footer
+            $(function(){
                 $("#top_bar").load("/partials/header.ejs"); 
-                $("#bottom_bar").load("/partials/footer.ejs");        
+                $("#bottom_bar").load("/partials/footer.ejs");
             });
             
-            //when affixed panel is activated, make sure it stays the same width
-            $(window).scroll(function () {
-                $('#nav_fixed').width($('#nav_fixed').width());
-            });
+            //resizing of affixed scroll event details panel
+            $(window).scroll( function(){ $('#nav_wrapper .affix').width($('#nav_wrapper').width()); });
+            $(window).resize( function(){ $('#nav_wrapper .affix').width($('#nav_wrapper').width()); });
             
         </script>
         
@@ -106,7 +101,7 @@
                                     <span class="{{event.glyphicon}}" style="color:#000000"></span>
                                 </div>
                                 
-                                <a id="{{event.event_num}}" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" class="timeline-panel" style="background-color:{{event.colour}};padding:0px;border-width:{{event.border_width}};border-color:{{event.border_colour}}">                                        
+                                <a id="{{event.event_num}}" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" class="selectable_event timeline-panel" style="background-color:{{event.colour}};padding:0px;border-width:{{event.border_width}};border-color:{{event.border_colour}}">                                        
                                     <div class="row" style="margin:20px;text-align:right;">
 
                                         <img ng-src="/event_images/{{ event.img_link }}" class="img-circle col-sm-4" style="position:relative;margin:5px;padding:0px;float:left;" height="75" width="75">
@@ -133,21 +128,14 @@
                 
                 <div class="col-sm-5" id="nav_wrapper" ng-controller="currentEventController">
                     
-                    <div id="nav_fixed" data-spy="affix" data-offset-top="250" data-offset-bottom="250" class="nav nav-pills nav-stacked" style="margin:30px;">
-                        
-                            
-                       <!--
-add styles below to #nav_fixed
- data-spy="affix" data-offset-top="250" data-offset-bottom="250" 
-
-<img ng-src="/event_images/{{ img_link }}" class="img-circle" height="200" width="250">-->
-                        
+                    <div id="nav_fixed" data-spy="affix" data-offset-top="250" data-offset-bottom="250" class="nav nav-pills nav-stacked" style="margin:0px;width:100%;">
+                                                
                         <div id="videowrapper" class="embed-responsive embed-responsive-16by9">
                             <iframe style="width:100%;" ng-src="{{ trustSrc(url) }}" class="embed-responsive-item" allowfullscreen="true"></iframe>
                         </div>
 
                         <h2>{{ song_title }}</h2>
-
+                        
                         <div id="scroll_panel" style="max-height:50vh;">
                             <a ng-href="/artist/{{artist_id}}" target="_self">
                                 <h3>{{ name }}</h3>
@@ -216,6 +204,29 @@ add styles below to #nav_fixed
                             <ul>
                                 <li ng-repeat="beef_event in related_events"><p>"{{ beef_event }}.."</p></li>
                             </ul>-->
+                            
+                            <div class="row">
+                        
+                            <a class="col-sm-4" href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]=https://www.facebook.com/sharer/sharer.php?u=beeftracker.herokuapp.com/beef/{{ artist_id }}" target="_blank" onclick="window.open(this.href,'targetWindow','toolbar=no,location=0,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=250'); return false">
+                                <button style="width:100%;padding:0px; margin-top:10px;background-color:#3b5999" type="button" class="btn btn-facebook btn-lg">
+                                    <i class="fa fa-facebook fa-2"></i> 
+                                    <h6 style="max-width:100%;"> Share on FB </h6>
+                                </button>
+                            </a>
+                            <a class="twitter-share-button col-sm-4" href="https://twitter.com/intent/tweet?text=Just%20viewed%20some%20beef%20at%20beeftracker.herokuapp.com/beef/{{artist_id}}%20%23beeftracker%20%40beeftracker">
+                                <button style="width:100%;padding:0px; margin-top:10px;background-color:#4099FF" type="button" class="btn btn-twitter btn-lg">
+                                    <i class="fa fa-twitter fa-2"></i> 
+                                    <h6 style="max-width:100%;"> Tweet </h6>
+                                </button>
+                            </a>
+                            <a class="twitter-share-button col-sm-4" href="https://plus.google.com/share?url=Just%20viewed%20some%20beef%20at%20beeftracker.herokuapp.com/beef/{{artist_id}}%20%23beeftracker">
+                                <button style="width:100%;padding:0px; margin-top:10px;background-color:#dd4b39" type="button" class="btn btn-facebook btn-lg">
+                                    <i class="fa fa-google fa-2"></i> 
+                                    <h6 style="max-width:100%;"> Share on G+ </h6>
+                                </button>
+                            </a>
+                            
+                        </div>
 
                         </div>
                     </div>

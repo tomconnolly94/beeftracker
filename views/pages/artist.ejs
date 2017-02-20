@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+<!DOCTYPE html>
 <html ng-app="artist">
 
         <!--
@@ -10,41 +9,44 @@
 
     <head>
         <title>Beeftracker</title>
-        <!-- icon -->
-        <link rel="shortcut icon" href="/logo/steak.ico">
-        <!-- tag for mobile zoom -->
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8"><!-- encoding version -->
+        <link rel="shortcut icon" href="/logo/steak.ico"><!-- icon -->
+        <meta name="viewport" content="width=device-width, initial-scale=1"><!-- tag for mobile zoom -->
         
-        <!-- stylesheets -->
-        <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css">
-        <link rel="stylesheet" type="text/css" href="/stylesheets/beef.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC" />
+        <!-- jQuery imports -->
+        <script src="/modules/jquery/dist/jquery.min.js"></script>
         
-        <!-- javascript file references -->
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.min.js"></script>
+        <!--angular imports -->
+        <script src="/modules/angular/angular.min.js"></script>
+        <script src="/modules/angular-resource/angular-resource.min.js"></script>
         <script src="/modules/angular-route/angular-route.min.js"></script>
-
-        <!-- Angular scripts -->
+        <script type='text/javascript' src='/modules/angular-loading-bar/build/loading-bar.min.js'></script>
+        
+        <!-- bootstrap imports -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="/modules/bootstrap/bootstrap.min.js" crossorigin="anonymous"></script> 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC" />
+        <link rel='stylesheet' href='/modules/angular-loading-bar/build/loading-bar.min.css' type='text/css' media='all' />
+        
+        <!-- bespoke javascript files -->
         <script src="/controllers/artist/artist_app.js" type="text/javascript"></script>
         <script src="/controllers/artist/artist_controller.js" type="text/javascript"></script>
         <script src="/controllers/artist/recent_events_controller.js" type="text/javascript"></script>
         <script src="/controllers/artist/related_artists_controller.js" type="text/javascript"></script>
         
-        <!-- loading bar files -->
-        <link rel='stylesheet' href='/modules/angular-loading-bar/build/loading-bar.min.css' type='text/css' media='all' />
-        <script type='text/javascript' src='/modules/angular-loading-bar/build/loading-bar.min.js'></script>
-        
-        <script> 
+        <!-- bespoke stylesheets -->
+        <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css">
+                        
+        <script>
+            //load header and footer
             $(function(){
                 $("#top_bar").load("/partials/header.ejs"); 
-                $("#bottom_bar").load("/partials/footer.ejs"); 
+                $("#bottom_bar").load("/partials/footer.ejs");
             });
         </script>
         
-</head>
+    </head>
 
     <body id="bootstrap-overrides">
         <div class="container" class="col-sm-7">
@@ -58,7 +60,7 @@
             </div>
             
             <!-- rest of page -->
-            <div class="row">
+            <div class="row" id="artist_details">
                 <div class="col-sm-2"></div>
                 
                 <div class="col-sm-8 row" ng-controller="artistSearchController">
@@ -68,38 +70,50 @@
 
                     <div class="col-sm-8">
                         <h1>{{stage_name}}</h1>
-                        <p class="sub">{{birth_name}}</p>
-                        <p class="sub">{{d_o_b}}</p>
-                        <p>{{bio}}</p>
+                        <h4 class="sub">{{birth_name}}</h4>
+                        <h5 class="sub">{{d_o_b}}</h5>
+                        <h5>{{bio}}</h5>
                     </div>
                 </div>
-            </div>                            
-
+            </div>         
+            
             <div class="row">
+                <div class="col-xs-12" style="height:60px;"></div>
+            </div>
+            
+            <hr/>
+            
+
+            <div class="row" id="general_links_panel">
                     
                 <div class="col-sm-2"></div>
                 <div class="col-sm-4" ng-controller="relatedArtistsController">
-                    <h2>About the screen:</h2>
-                    <ul>
-                    <li><span>At a point where colours can be swapped and changed to find something that will work.</span></li>
-                    <li><span>Have to include a check to ensure all images are same size. (main is 250x250, thumbnails are 75x75)</span></li>
-                    <li><span>Each event button should be clickable (right now only the title is), "Artists included" is just sample information a button could have.</span></li>
-                    <li><span>Bio needs to be added to DB.</span></li>
-                    </ul>
+                    <h2>Related Artists:</h2>                        
+                    <div>
+                        <ul>
+                            <li ng-repeat="target in targets" style="width:50%;margin:0px;float:right;">
+                                <a ng-href="/artist/#" style="padding:0px;">
+
+                                    <p>{{ target }}</p>
+
+                                </a>
+                            </li>
+                        </ul>   
+                    </div>
                 </div>
 
                 <div class="col-sm-4" ng-controller="recentEventsController">
-                    <h2 id="rightHeader">Recent Events:</h2>                        
-                    <div class="eventContainer">
-                        <div class="event"  ng-repeat="event in events" style="width:50%;margin:0px;float:right;">
+                    <h2>Recent Events:</h2>                        
+                    <div>
+                        <div ng-repeat="event in events" style="width:50%;margin:0px;float:right;">
                             <a ng-href="/beef/{{event._id}}" target="_self" style="padding:0px;">
                                 <img class="img-circle" ng-src="/event_images/{{event.image_link}}" style="margin:0px auto;" height="100" width="50%">
 
 
-                                <p id="title">{{event.title}}</p>
+                                <p>{{event.title}}</p>
                                 Artists included: 
-                                <ul ng-repeat="target in event.targets">
-                                    <li>
+                                <ul>
+                                    <li ng-repeat="target in event.targets">
 
                                         {{ target }}
 

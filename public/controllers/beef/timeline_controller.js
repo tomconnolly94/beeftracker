@@ -17,6 +17,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
             if(response_1.eventObject != undefined){
                 main_aggressor = response_1.eventObject.aggressor;
                 console.log($routeParams.tagId);
+                console.log(response_1.eventObject);
                 
                 if(first_run){
                     
@@ -200,13 +201,4 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
 
 function custom_sort(event_1, event_2) {
     return new Date(event_2.event_date).getTime() - new Date(event_1.event_date).getTime();
-}
-
-function getNextColor(colour_index){
-    
-    var purple_colour_bank = ["#A11D5D","#83188A","#6915A1","#3D218A","#1D26A1"];
-    
-    var red_colour_bank = ["#9C0505","#DE0000","#D47777","#F79C9C","#FF0000"];
-    
-    return red_colour_bank[colour_index];
 }

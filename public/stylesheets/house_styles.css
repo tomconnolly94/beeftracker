@@ -69,13 +69,13 @@ a{
     font-weight:bold;
 }
 #bootstrap-overrides h4{
-    font-size:18px;
+    font-size:24px;
 }
 #bootstrap-overrides h5{
-    font-size:14px;
+    font-size:20px;
 }
 #bootstrap-overrides h6{
-    font-size:12px;
+    font-size:16px;
 }
 /* styles for footer */
 #bootstrap-overrides #bottom_bar {
@@ -103,4 +103,8 @@ a:hover {
 /* selected link */
 a:active {
     color: #666666;
+}
+/* change colour on hover over timeline event */
+#bootstrap-overrides a.selectable_event:hover{
+    background-color:#000000 !important;
 }
