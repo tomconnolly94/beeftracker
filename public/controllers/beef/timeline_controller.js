@@ -149,13 +149,11 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                             
                             var border_colour = "#000000";
                             var border_width = "1px";
-                            var onload = "";
                             
                             if(response_1.eventObject.title == eventObject.title){
                                 border_colour = "#FFFFFF";
                                 border_width = "5px";
                                 border_width = "5px";
-                                onload = "jump()";
                             }
                             
                             console.log(onload);
@@ -176,8 +174,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 timeline_event_class : timeline_event,
                                 glyphicon : event_glyphicon,
                                 border_colour : border_colour,
-                                border_width : border_width,
-                                onload_function : onload
+                                border_width : border_width
                             };
                             $scope.events.push(record);
 

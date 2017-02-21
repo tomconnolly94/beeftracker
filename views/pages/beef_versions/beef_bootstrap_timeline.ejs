@@ -79,8 +79,7 @@
                 $("#top_bar").load("/partials/header.ejs");
                 $("#bottom_bar").load("/partials/footer.ejs");
             });
-            
-                        
+                                    
         </script>
         
         
@@ -93,7 +92,15 @@
 	</head>
 	<body id="bootstrap-overrides">
         <div class="container" ng-cloak>
-        
+            
+            <div class="row">
+                <!--<div class="col-sm-4"></div>-->
+                <div class="col-sm-12" style="background-color:#FFFFFF;text-align:center;">
+                    <a href="https://freeonlinesurveys.com/s/iEIC8ouc" onclick="window.open(this.href, '','toolbar=0, location=0, directories=0, status=0, menubar=0, scrollbars=1, resizable=1, width=1024, height=768'); return false;">
+                        <h3 style="color:#000000;font-weight:bold;">When you have had a look around, please answer 10 questions to help improve this site</h3>
+                    </a>
+                <!--<div class="col-sm-4"></div>-->
+            </div>
             <!-- loading bar -->
             <div id="loading-bar-container"></div>
             <div id="header"></div>
@@ -125,13 +132,13 @@
 
                     <div id="timeline">
                         <ul class="timeline">
-                            <li ng-repeat="event in events">
+                            <li class="{{event.timeline_event_class}}" ng-repeat="event in events">
                                 
                                 <div class="timeline-badge" style="background-color:#FFFFFF;">
                                     <span class="{{event.glyphicon}}" style="color:#000000"></span>
                                 </div>
                                 
-                                <a ng-init={{event.onload_function}} name="{{event.event_num}}" id="{{event.event_num}}" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" class="selectable_event timeline-panel" style="background-color:{{event.colour}};padding:0px;border-width:{{event.border_width}};border-color:{{event.border_colour}}">                                        
+                                <a name="{{event.event_num}}" id="{{event.event_num}}" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" class="selectable_event timeline-panel" style="background-color:{{event.colour}};padding:0px;border-width:{{event.border_width}};border-color:{{event.border_colour}}">                                        
                                     <div class="row" style="margin:20px;text-align:right;">
 
                                         <img ng-src="/event_images/{{ event.img_link }}" class="img-circle col-sm-4" style="position:relative;margin:5px;padding:0px;float:left;" height="75" width="75">
