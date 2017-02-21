@@ -36,29 +36,59 @@
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC" />
         <link rel='stylesheet' href='/modules/angular-loading-bar/build/loading-bar.min.css' type='text/css' media='all' />
         
-        <!-- bespoke javascript files -->
-        <script src="/controllers/beef/beef_app.js"></script>
-        <script src="/controllers/beef/beef_controller.js"></script>
-        <script src="/controllers/beef/timeline_controller.js"></script>
-        <script src="/js/beef_tracker_colour_bank.js"></script>
-
         <!-- bespoke stylesheets -->
         <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css">
         <link rel="stylesheet" type="text/css" href="/stylesheets/beef.css">
         <link rel="stylesheet" type="text/css" href="/stylesheets/timeline_styles.css">
         
         <script>
+            //operations to be carried out on scroll
+            $(window).scroll( function(){ $('#nav_wrapper .affix').width($('#nav_wrapper').width()); });
+            //operations to be carried out on window resize
+            $(window).resize( function(){ 
+                $('#nav_wrapper .affix').width($('#nav_wrapper').width());
+                check_side_bar_affix();
+            });
+            // functions
+            
+            //check if details panel should be affixed or not
+            function check_side_bar_affix(){
+                console.log($(window));
+                if ($(window).innerWidth() <= 768){
+                    //$(window).off('.affix');
+                    $("#nav_fixed").removeClass("affix affix-top affix-bottom");
+                }
+                else{
+                    $("#nav_fixed").addClass("affix-bottom");
+                }
+            }
+            
+            function jump(){
+                var hash = location.hash;
+                hash = hash.substr(1);
+                console.log(hash);
+                console.log(document.getElementById(hash));
+                var top = document.getElementById(hash).offsetTop; //Getting Y of target element
+                window.scrollTo(0, top);  
+            }
+            
+            var x = check_side_bar_affix();
+            
             //load header and footer
             $(function(){
-                $("#top_bar").load("/partials/header.ejs"); 
+                $("#top_bar").load("/partials/header.ejs");
                 $("#bottom_bar").load("/partials/footer.ejs");
             });
             
-            //resizing of affixed scroll event details panel
-            $(window).scroll( function(){ $('#nav_wrapper .affix').width($('#nav_wrapper').width()); });
-            $(window).resize( function(){ $('#nav_wrapper .affix').width($('#nav_wrapper').width()); });
-            
+                        
         </script>
+        
+        
+        <!-- bespoke javascript files -->
+        <script src="/controllers/beef/beef_app.js"></script>
+        <script src="/controllers/beef/beef_controller.js"></script>
+        <script src="/controllers/beef/timeline_controller.js"></script>
+        <script src="/js/beef_tracker_colour_bank.js"></script>
         
 	</head>
 	<body id="bootstrap-overrides">
@@ -95,13 +125,13 @@
 
                     <div id="timeline">
                         <ul class="timeline">
-                            <li ng-repeat="event in events" class="{{ event.timeline_event_class }}">
+                            <li ng-repeat="event in events">
                                 
                                 <div class="timeline-badge" style="background-color:#FFFFFF;">
                                     <span class="{{event.glyphicon}}" style="color:#000000"></span>
                                 </div>
                                 
-                                <a id="{{event.event_num}}" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" class="selectable_event timeline-panel" style="background-color:{{event.colour}};padding:0px;border-width:{{event.border_width}};border-color:{{event.border_colour}}">                                        
+                                <a ng-init={{event.onload_function}} name="{{event.event_num}}" id="{{event.event_num}}" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" class="selectable_event timeline-panel" style="background-color:{{event.colour}};padding:0px;border-width:{{event.border_width}};border-color:{{event.border_colour}}">                                        
                                     <div class="row" style="margin:20px;text-align:right;">
 
                                         <img ng-src="/event_images/{{ event.img_link }}" class="img-circle col-sm-4" style="position:relative;margin:5px;padding:0px;float:left;" height="75" width="75">

@@ -36,7 +36,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                 $http.get("/search_all_events_in_timeline_from_event_id/" + $routeParams.tagId).success(function(response_2){
                     //validate the url tagId to make sure the event exists
                     if(response_2.events != undefined){
-
+                        
                         var events = response_2.events;
                         $scope.events = new Array();
                         var name_colour_map = [];
@@ -149,12 +149,16 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                             
                             var border_colour = "#000000";
                             var border_width = "1px";
+                            var onload = "";
                             
                             if(response_1.eventObject.title == eventObject.title){
                                 border_colour = "#FFFFFF";
                                 border_width = "5px";
                                 border_width = "5px";
+                                onload = "jump()";
                             }
+                            
+                            console.log(onload);
                             
                             //create data record
                             var record = {
@@ -172,7 +176,8 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 timeline_event_class : timeline_event,
                                 glyphicon : event_glyphicon,
                                 border_colour : border_colour,
-                                border_width : border_width
+                                border_width : border_width,
+                                onload_function : onload
                             };
                             $scope.events.push(record);
 
@@ -181,7 +186,6 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 $scope.main_name = record.name;
                             }
                         }
-                        console.log(events);
                     }
                     else{
                         //error msg
