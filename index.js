@@ -59,8 +59,8 @@ app.get('/search/:event_id', function(request, response) {
             console.log(identifier);
             var object = BSON.ObjectID.createFromHexString(identifier);
             
-            //db.collection("event_data_v1_0").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
-            db.collection("event_data_v1_0").find( { _id : object } ).toArray(function(queryErr, docs) {
+            //db.collection("event_data_v0_1").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+            db.collection("event_data_v0_1").find( { _id : object } ).toArray(function(queryErr, docs) {
                 response.send({eventObject : docs[0]});
                 
             });
@@ -83,7 +83,7 @@ app.get('/search_all/:search_term', function(request, response) {
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
             var qry = "{ \"" + field_name + "\" : " + end + " }";
             
-            db.collection("event_data_v1_0").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+            db.collection("event_data_v0_1").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
                 response.send( { events : docs } );
                 
             });
@@ -103,7 +103,7 @@ app.get('/search_artist/:artist_id', function(request, response) {
         else{
             var object = BSON.ObjectID.createFromHexString(identifier);
                         
-            db.collection("artist_data_v1_0").find( { _id : object } ).toArray(function(queryErr, docs) {
+            db.collection("artist_data_v0_1").find( { _id : object } ).toArray(function(queryErr, docs) {
                 console.log(docs);
                 response.send( { artist : docs[0] } );
             });
@@ -124,7 +124,7 @@ app.get('/search_artist_from_name/:artist_name', function(request, response) {
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
             var qry = "{ \"" + field_name + "\" : " + end + " }";
             
-            db.collection("artist_data_v1_0").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+            db.collection("artist_data_v0_1").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
                 response.send( { eventObject : docs[0] } );
                 
             });
@@ -148,8 +148,8 @@ app.get('/search_related_artists_from_artist_id/:artist_id', function(request, r
                     console.log(identifier);
                     var object = BSON.ObjectID.createFromHexString(identifier);
                     
-                    //db.collection("event_data_v1_0").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
-                    db.collection("artist_data_v1_0").find( { _id : object } ).toArray(function(error, artist) {
+                    //db.collection("event_data_v0_1").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+                    db.collection("artist_data_v0_1").find( { _id : object } ).toArray(function(error, artist) {
 
                         
                         if (error) { console.log(error); }
@@ -174,11 +174,8 @@ app.get('/search_related_artists_from_artist_id/:artist_id', function(request, r
                     });
                 },
                 function(qry, callback){ //gather all the targets' responses
-                    
-                    console.log(qry);
-                    console.log("#########################################################################################");
-                                        
-                    db.collection("event_data_v1_0").find(JSON.parse(qry)).toArray(function(error, event_objects) {
+                                                            
+                    db.collection("event_data_v0_1").find(JSON.parse(qry)).toArray(function(error, event_objects) {
 
                         console.log(event_objects.length);
                         console.log(event_objects[0].targets.length);
@@ -226,7 +223,7 @@ app.get('/search_events_from_artist/:artist_name', function(request, response) {
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
             var qry = "{ \"" + field_name + "\" : " + end + " }";
             
-            db.collection("event_data_v1_0").find(JSON.parse(qry)).sort({"date_added" : -1}).limit(6).toArray(function(queryErr, docs) {
+            db.collection("event_data_v0_1").find(JSON.parse(qry)).sort({"date_added" : -1}).limit(6).toArray(function(queryErr, docs) {
                 response.send( { events : docs } );
                 
             });
@@ -249,7 +246,7 @@ app.get('/search_events_from_event_id/:event_id', function(request, response) {
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
             var qry = "{ \"" + field_name + "\" : " + end + " }";
             
-            db.collection("event_data_v1_0").find(JSON.parse(qry)).sort({"date_added" : -1}).limit(3).toArray(function(queryErr, docs) {
+            db.collection("event_data_v0_1").find(JSON.parse(qry)).sort({"date_added" : -1}).limit(3).toArray(function(queryErr, docs) {
                 response.send( { events : docs } );
             });
             
@@ -267,7 +264,7 @@ app.get('/search_recent_events/:num_of_events', function(request, response) {
         else{
             var field_name = 'aggressor';
             
-            db.collection("event_data_v1_0").find({}).sort({"date_added" : -1}).limit(limit).toArray(function(queryErr, docs) {
+            db.collection("event_data_v0_1").find({}).sort({"date_added" : -1}).limit(limit).toArray(function(queryErr, docs) {
                 response.send( { events : docs } );
                 
             });
@@ -294,7 +291,7 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                     console.log(object);
                     
                     //db query: get the main event in question
-                    db.collection("event_data_v1_0").find( { _id : object } ).toArray(function(queryErr, main_event) {
+                    db.collection("event_data_v0_1").find( { _id : object } ).toArray(function(queryErr, main_event) {
                         
                         var orig_artist_name = main_event[0].aggressor;
                         
@@ -315,7 +312,7 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                     var qry = "{ \"" + field_name + "\" : " + end + " }";
 
                     //db query: get all events by the original event's aggressor making sure only to store events that share a a target with the original event
-                    db.collection("event_data_v1_0").find(JSON.parse(qry)).toArray(function(queryErr, events) {
+                    db.collection("event_data_v0_1").find(JSON.parse(qry)).toArray(function(queryErr, events) {
                         
                         async.each(events, function(event, callback) {
 
@@ -362,7 +359,7 @@ app.get('/search_all_events_in_timeline_from_event_id/:event_id', function(reque
                     
                     console.log(qry);
 
-                    db.collection("event_data_v1_0").find(JSON.parse(qry)).toArray(function(queryErr, events) {
+                    db.collection("event_data_v0_1").find(JSON.parse(qry)).toArray(function(queryErr, events) {
                         
                         console.log(events);
                         
@@ -401,8 +398,8 @@ app.get('/search_related_artists_from_artist/:artist_id', function(request, resp
             console.log(identifier);
             var object = BSON.ObjectID.createFromHexString(identifier);
             
-            //db.collection("event_data_v1_0").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
-            db.collection("artist_data_v1_0").find( { _id : object } ).toArray(function(queryErr, docs) {
+            //db.collection("event_data_v0_1").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
+            db.collection("artist_data_v0_1").find( { _id : object } ).toArray(function(queryErr, docs) {
                 
                 var object = new Array();
                 
