@@ -52,7 +52,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                         if($scope.selected_targets != undefined){
                             $scope.selected_targets.push(main_aggressor);
                             if($scope.selected_targets[0] != "None"){
-                                $scope.selected_targets.slice(0,1);
+                                //$scope.selected_targets.slice(0,1);
                             }
                         }
 
