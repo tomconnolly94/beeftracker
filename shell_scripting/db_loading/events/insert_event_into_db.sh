@@ -21,7 +21,7 @@ while read line; do
 
 done < "$1"
 
-count_command='db.event_data.count( { } )'
+count_command='db.event_data_v0_1.count( { } )'
 
 event_count=$( mongo ds141937.mlab.com:41937/heroku_w63fjrg6 -u tom -p tom --eval "$count_command";)
 event_count="${event_count:$length-1}" # take the last char off the end of the response
@@ -62,7 +62,7 @@ done
 
 lyrics_string="$lyrics_string } "
 
-insert_cmd='db.event_data.update( 
+insert_cmd='db.event_data_v0_1.update( 
 { 
     "title" : '\"${data[0]}\"' 
 }, 
