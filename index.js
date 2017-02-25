@@ -69,6 +69,7 @@ app.get('/sitemap', function(req, res) {
         res.send( xml );
   });
 });
+app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/pages/google3fc5d5a06ad26a53.html'); });
 
 // ### Search functions ###
 app.get('/search/:event_id', function(request, response) {
