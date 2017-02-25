@@ -19,6 +19,20 @@ var MongoClient = require('mongodb').MongoClient;
 var async = require("async");
 var ObjectID = require('mongodb').ObjectID;
 var BSON = require('bson');
+var sitemap_generator = require('sitemap');
+
+sitemap = sitemap_generator.createSitemap ({
+    hostname: 'beeftracker.co.uk',
+    cacheTime: 600000,        // 600 sec - cache purge period 
+    urls: [
+        { url: '/home/', changefreq: 'weekly', priority: 0.9 },
+        { url: '/artist//', changefreq: 'weekly',  priority: 0.7 },
+        { url: '/beef/', changefreq: 'weekly',  priority: 0.9 },
+        { url: '/about_us/', changefreq: 'weekly',  priority: 0.5 },
+        { url: '/contact_us/', changefreq: 'weekly',  priority: 0.5 },
+        { url: '/error/', changefreq: 'weekly',  priority: 0.7 },
+    ]
+});
 
 // ### Configure node variables ###
 app.set('port', (process.env.PORT || 5000));
@@ -39,6 +53,7 @@ app.use('/js', express.static(__dirname + '/public/javascript/')); //route to re
 app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //route to reference css scripts
 app.use('/bower_components', express.static(__dirname + '/bower_components/')); //route to reference css scripts
 app.use('/partials', express.static(__dirname + '/views/partials/')); //route to reference css scripts
+app.use('/sitemap', express.static('pages/sitemap.xml'));
 
 // ### Permanent page routes ###
 app.get('/', function(request, response) { response.render('pages/home.ejs'); });
@@ -46,7 +61,7 @@ app.get('/beef/:tagId', function(request, response) { response.render('pages/bee
 app.get('/artist/:tagId', function(request, response) { response.render('pages/artist.ejs'); });
 app.get('/contact_us/', function(request, response) { response.render('pages/contact_us.ejs'); });
 app.get('/about/', function(request, response) { response.render('pages/about_us.ejs'); });
-app.get('/sitemap', function(request, response) { response.render('pages/sitemap.xml'); });
+//app.get('/sitemap/', function(request, response) { response.send('pages/sitemap.xml'); });
 
 // ### Search functions ###
 app.get('/search/:event_id', function(request, response) {

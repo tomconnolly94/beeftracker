@@ -16,7 +16,8 @@
     "ejs": "2.4.1",
     "express": "4.13.3",
     "method-override": "*",
-    "mongodb": "2.2.11"
+    "mongodb": "2.2.11",
+    "sitemap": "^1.9.0"
   },
   "keywords": [
     "node",
