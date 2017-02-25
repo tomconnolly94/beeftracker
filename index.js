@@ -72,7 +72,7 @@ app.get('/sitemap', function(req, res) {
 }); // access to sitemap generated above
 
 // ### Verification files ###
-//app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/pages/google3fc5d5a06ad26a53.html'); });
+app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/pages/google3fc5d5a06ad26a53.html'); });
 app.get('/BingSiteAuth.xml', function(request, response) { response.sendFile(__dirname + '/views/pages/BingSiteAuth.xml'); });
 
 // ### Search functions ###
