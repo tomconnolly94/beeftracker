@@ -46,6 +46,7 @@ app.get('/beef/:tagId', function(request, response) { response.render('pages/bee
 app.get('/artist/:tagId', function(request, response) { response.render('pages/artist.ejs'); });
 app.get('/contact_us/', function(request, response) { response.render('pages/contact_us.ejs'); });
 app.get('/about/', function(request, response) { response.render('pages/about_us.ejs'); });
+app.get('/sitemap', function(request, response) { response.render('pages/sitemap.xml'); });
 
 // ### Search functions ###
 app.get('/search/:event_id', function(request, response) {
