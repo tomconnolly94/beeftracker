@@ -21,6 +21,7 @@ var ObjectID = require('mongodb').ObjectID;
 var BSON = require('bson');
 var sitemap_generator = require('sitemap');
 
+// ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({
     hostname: 'http://www.beeftracker.co.uk',
     cacheTime: 600000,        // 600 sec - cache purge period 
@@ -55,11 +56,11 @@ app.use('/bower_components', express.static(__dirname + '/bower_components/')); 
 app.use('/partials', express.static(__dirname + '/views/partials/')); //route to reference css scripts
 
 // ### Permanent page routes ###
-app.get('/', function(request, response) { response.render('pages/home.ejs'); });
-app.get('/beef/:tagId', function(request, response) { response.render('pages/beef_versions/beef_bootstrap_timeline.ejs'); });
-app.get('/artist/:tagId', function(request, response) { response.render('pages/artist.ejs'); });
-app.get('/contact_us/', function(request, response) { response.render('pages/contact_us.ejs'); });
-app.get('/about/', function(request, response) { response.render('pages/about_us.ejs'); });
+app.get('/', function(request, response) { response.render('pages/home.ejs'); }); //home page
+app.get('/beef/:tagId', function(request, response) { response.render('pages/beef_versions/beef_bootstrap_timeline.ejs'); }); //beef page
+app.get('/artist/:tagId', function(request, response) { response.render('pages/artist.ejs'); }); //artist page
+app.get('/contact_us/', function(request, response) { response.render('pages/contact_us.ejs'); }); // contact us page
+app.get('/about/', function(request, response) { response.render('pages/about_us.ejs'); }); // about_us page
 app.get('/sitemap', function(req, res) {
     sitemap.toXML( function (err, xml) {
         if (err) {
@@ -68,8 +69,10 @@ app.get('/sitemap', function(req, res) {
         res.header('Content-Type', 'application/xml');
         res.send( xml );
   });
-});
-app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/pages/google3fc5d5a06ad26a53.html'); });
+}); // access to sitemap generated above
+
+// ### Verification files ###
+//app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/pages/google3fc5d5a06ad26a53.html'); });
 
 // ### Search functions ###
 app.get('/search/:event_id', function(request, response) {
@@ -451,7 +454,7 @@ app.get('/*', function(req, res, next) {
     
 });
 
-//pages that are not in the current release design but may be in the next
+//pages that are not in the current release design but may used later on
 //app.get('/', function(request, response) { response.render('pages/splash'); });
 
 // ## Launch application ###
