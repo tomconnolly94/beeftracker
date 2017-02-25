@@ -57,7 +57,7 @@ app.use('/partials', express.static(__dirname + '/views/partials/')); //route to
 
 // ### Permanent page routes ###
 app.get('/', function(request, response) { response.render('pages/home.ejs'); }); //home page
-app.get('/beef/:tagId', function(request, response) { response.render('pages/beef_versions/beef_bootstrap_timeline.ejs'); }); //beef page
+app.get('/beef/:tagId', function(request, response) { response.render('pages/beef.ejs'); }); //beef page
 app.get('/artist/:tagId', function(request, response) { response.render('pages/artist.ejs'); }); //artist page
 app.get('/contact_us/', function(request, response) { response.render('pages/contact_us.ejs'); }); // contact us page
 app.get('/about/', function(request, response) { response.render('pages/about_us.ejs'); }); // about_us page
@@ -448,7 +448,7 @@ app.get('/search_related_artists_from_artist/:artist_id', function(request, resp
     });
 });
 
-// ### Page to serv on unrecognised url path ###
+// ### Page to serve and error page on unrecognised url path ###
 app.get('/*', function(req, res, next) {
     console.log("unrecognised url");
     res.render("pages/error.ejs");
