@@ -54,9 +54,9 @@ a{
     height: 100%;
 }
 /* override white font with black */
-#bootstrap-overrides select, #bootstrap-overrides .black_font, #bootstrap-overrides input{
+/*#bootstrap-overrides select, #bootstrap-overrides .black_font, #bootstrap-overrides input{
     color:#000000;    
-}
+}*/
 /* override font sizes */
 #bootstrap-overrides h1{
     font-size:60px;
