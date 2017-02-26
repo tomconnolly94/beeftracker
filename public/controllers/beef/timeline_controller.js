@@ -48,14 +48,11 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                         //sort the events by date
                         events.sort(custom_sort);
                         
-                        //$scope.selected_targets = [ "All" ];
-                        if($scope.selected_targets != undefined){
-                            $scope.selected_targets.push(main_aggressor);
-                            if($scope.selected_targets[0] != "None"){
-                                //$scope.selected_targets.slice(0,1);
-                            }
+                        $scope.selected_targets.push(main_aggressor);
+                        if($scope.selected_targets[0] == "None"){
+                            $scope.selected_targets.slice(0,1);
                         }
-
+                        
                         for(var event_index = 0; event_index < events.length; event_index++){
                             
                             var eventObject = events[event_index];
@@ -71,12 +68,17 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 for(var i = 0; i < $scope.selected_targets.length; i++){
                                     if($scope.selected_targets[i] == eventObject.aggressor){
                                         //loop through the events targets to make sure at LEAST one of the targets is a filter selection, otherwise the event is irrelevant
-                                        for(var j = 0; j < Object.keys(eventObject.targets).length; j++){
-                                            //loop through the filter selections
-                                            for(var k = 0; k < $scope.selected_targets.length; k++){
-                                                if($scope.selected_targets[k] == eventObject.targets[j]){
-                                                    filter_found = true;
-                                                    break;
+                                        if($scope.selected_targets.length == 1 && $scope.selected_targets[0] != "All"){
+                                            
+                                        }
+                                        else{
+                                            for(var j = 0; j < Object.keys(eventObject.targets).length; j++){
+                                                //loop through the filter selections
+                                                for(var k = 0; k < $scope.selected_targets.length; k++){
+                                                    if($scope.selected_targets[k] == eventObject.targets[j]){
+                                                        filter_found = true;
+                                                        break;
+                                                    }
                                                 }
                                             }
                                         }
