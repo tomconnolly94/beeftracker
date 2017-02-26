@@ -28,7 +28,7 @@ ul {
 }
 /* apply faded background image (support of multiple browsers) */
 body {
-    background-image: url(/background_images/the-blueprint.jpg) ;
+    background-image: url(/background_images/the-blueprint.jpg);
     background-color: #FFFFFF;
     background-attachment: fixed !important;
         

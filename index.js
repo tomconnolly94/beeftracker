@@ -27,8 +27,8 @@ sitemap = sitemap_generator.createSitemap ({
     cacheTime: 600000,        // 600 sec - cache purge period 
     urls: [
         { url: '/home/', changefreq: 'weekly', priority: 0.9 },
-        { url: '/artist//', changefreq: 'weekly',  priority: 0.7 },
-        { url: '/beef/', changefreq: 'weekly',  priority: 0.9 },
+        { url: '/artist/{{%20trustSrc(url)%20}}', changefreq: 'weekly',  priority: 0.7 },
+        { url: '/beef/{{%20trustSrc(url)%20}}', changefreq: 'weekly',  priority: 0.9 },
         { url: '/about_us/', changefreq: 'weekly',  priority: 0.5 },
         { url: '/contact_us/', changefreq: 'weekly',  priority: 0.5 },
         { url: '/error/', changefreq: 'weekly',  priority: 0.7 },
