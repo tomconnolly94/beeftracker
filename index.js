@@ -74,6 +74,7 @@ app.get('/sitemap', function(req, res) {
 // ### Verification files ###
 app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/pages/verification_files/google3fc5d5a06ad26a53.html'); });
 app.get('/BingSiteAuth.xml', function(request, response) { response.sendFile(__dirname + '/views/pages/verification_files/BingSiteAuth.xml'); });
+app.get('/robots.txt', function(request, response) { response.sendFile(__dirname + '/views/pages/verification_files/robots.txt'); }); //robots config file
 
 // ### Search functions ###
 app.get('/search/:event_id', function(request, response) {
