@@ -108,8 +108,8 @@
             </div>
                 
             <div class="row" ng-controller="eventStreamController">
-                <div class="col-sm-4"></div>
-                <div class="col-sm-4">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
                     <ul>
                         <li ng-repeat="event in event_stream_events" style="margin:30px 0px;">        
                             <a ng-href="/beef/{{event.eventNum}}#{{event.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;">
@@ -133,7 +133,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-sm-4"></div>
+                <div class="col-sm-3"></div>
             </div>
             <div id="bottom_bar" class="row" style="margin:50px 0px"></div>
         </div>
