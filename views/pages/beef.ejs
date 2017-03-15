@@ -107,12 +107,7 @@
             <div id="loading-bar-container"></div>
             <div id="header"></div>
             <div id="top_bar"></div>
-            
-            <!-- spacer bar -->
-            <div class="row">
-                <div class="col-xs-12" style="height:60px;"></div>
-            </div>
-            
+                    
             <!-- rest of page -->
             <div class="row">
                 
@@ -170,7 +165,7 @@
                     <div id="nav_fixed" data-spy="affix" data-offset-top="250" data-offset-bottom="250" class="nav nav-pills nav-stacked" style="margin:30px 0px 0px 0px;width:100%;">
                                                 
                         <div id="videowrapper" class="embed-responsive embed-responsive-16by9">
-                            <iframe style="width:100%;" ng-src="{{ trustSrc(url) }}" class="embed-responsive-item" allowfullscreen="true"></iframe>
+                            <iframe style="width:100%;" ng-src="{{ trustSrc(youtube_link) }}" class="embed-responsive-item" allowfullscreen="true"></iframe>
                         </div>
 
                         <h2>{{ song_title }}</h2>
@@ -185,25 +180,35 @@
                             <h3>Description</h3>
 
                             <p>{{ description }}</p>
-
-                            <p>{{ description }}</p>
-
-                            <p>{{ description }}</p>
-
-                            <p>{{ description }}</p>
-
-                            <p>{{ description }}</p>
-
-                            <h3>Best Lyrics</h3>
+                            
+                            <div class="row" style="text-align:center;padding:10px;">
+                                <div class="col-sm-1"></div>
+                                <div class="jumbotron col-sm-3" style="padding:0px;height:60%;margin:5px;"><h4 style="margin:10px;"><a ng-href="{{ spotify_link }}" target="_blank">Spotify</a></h4></div>
+                                <div class="jumbotron col-sm-3" style="padding:0px;height:60%;margin:5px;"><h4 style="margin:10px;"><a ng-href="{{ genius_link }}" target="_blank">Genius</a></h4></div>
+                                <div class="jumbotron col-sm-3" style="padding:0px;height:60%;margin:5px;"><h4 style="margin:10px;"><a ng-href="{{ wikipedia_link }}" target="_blank">Wikipedia</a></h4></div>
+                                <div class="col-sm-1"></div>
+                            </div>
                             
                             <ul>
-                                
-                                <li ng-repeat="lyric_item in top_lyrics" style="margin:5px;">
-                                    "{{ lyric_item }}... "
+                                <li ng-repeat="(key, highlight_group) in highlights" style="margin:0px;">
+                                    <h3>{{ key }}</h3>
+                                    <ul>
+                                        <li ng-repeat="(key, val) in highlight_group">
+                                            <p> "{{ val }}" </p>
+                                        </li>
+                                    </ul>
                                 </li>
-                            
                             </ul>
-                            
+                                
+                            <h3>Data Sources</h3>
+                            <ul>
+                                <li ng-repeat="source in data_sources" style="margin:5px;">
+                                    <p>{{ source }}</p>
+                                </li>
+                            </ul>
+                            <div class="row">
+                                <div class="col-sm-12" style="height:20px;"></div>
+                            </div>
 
                             <!-- unfished genius embedding, first my attempt to draw data from database, not working, i think due to html being computed way before the angular returns with the data so the blockquotes cannot transform to iframe tags
                             <ul>
@@ -236,14 +241,7 @@
                             <script async crossorigin src='//genius.com/annotations/load_standalone_embeds.js'></script>
 
                             -->
-                            
-                            <!-- to be completed
-                            <h3>Related Beef</h3>
-
-                            <ul>
-                                <li ng-repeat="beef_event in related_events"><p>"{{ beef_event }}.."</p></li>
-                            </ul>-->
-                            
+                                                        
                             <div class="row">
                         
                             <a class="col-sm-4" href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]=https://www.facebook.com/sharer/sharer.php?u=beeftracker.herokuapp.com/beef/{{ artist_id }}" target="_blank" onclick="window.open(this.href,'targetWindow','toolbar=no,location=0,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=250'); return false">

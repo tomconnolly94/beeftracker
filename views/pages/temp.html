@@ -1,19 +1,23 @@
-db.actor_data.insert( { stage_name : "Jay-Z",
-birth_name : "Shawn Carter",
-nicknames : { 0 : "Hov", 1 : "Jigga" },
-d_o_b : new Date(1969,12,4),
-img_link : "jayz.jpg",
-acheivements : { 
-    0 : "All 12 albums released went Platinum at least once", 
-    1 : "Collaborations with artists such as Biggie Smalls, Kanye West, J Cole, Rihanna and many more...", 
-    2 : "100 wins from 201 nominations for various awards including 21 grammy's"
-}, 
-bio : "Shawn Corey Carter (born December 4, 1969), known professionally as Jay Z, is an American rapper, businessman, and investor. Formerly known as Jay-Z, he is one of the best-selling musicians of all time, having sold more than 100 million records, while receiving 21 Grammy Awards for his music. MTV ranked him the "Greatest MC of all time" in 2006. Rolling Stone ranked three of his albums—Reasonable Doubt (1996), The Blueprint (2001), and The Black Album (2003)—among the 500 greatest albums of all time. In 2014, Forbes estimated his net worth at nearly $520 million, making him one of the richest hip hop artists in the U.S.", 
-youtube_link : "https://www.youtube.com/user/JayZVEVO", 
-wiki_page : "https://en.wikipedia.org/wiki/Jay_Z", 
-spotify_link : "https://play.spotify.com/artist/3nFkdlSjzX9mRTtwJOzDYB"
-} );
-
-
-
-db.actor_data.insert( { stage_name : "Jay-Z" , birth_name : "Shawn Carter", nicknames : { 0 : "Hov", 1 : "Jigga" }, d_o_b : new Date(1969,12,4), img_link : "jayz.jpg", acheivements : { 0 : "All 12 albums released went Platinum at least once", 1 : "Collaborations with artists such as Biggie Smalls, Kanye West, J Cole, Rihanna and many more...", 2 : "100 wins from 201 nominations for various awards including 21 grammy's"}, bio : "Shawn Corey Carter (born December 4, 1969), known professionally as Jay Z, is an American rapper, businessman, and investor. Formerly known as Jay-Z, he is one of the best-selling musicians of all time, having sold more than 100 million records, while receiving 21 Grammy Awards for his music. MTV ranked him the \"Greatest MC of all time\" in 2006. Rolling Stone ranked three of his albums—Reasonable Doubt (1996), The Blueprint (2001), and The Black Album (2003)—among the 500 greatest albums of all time. In 2014, Forbes estimated his net worth at nearly $520 million, making him one of the richest hip hop artists in the U.S.", youtube_link : "https://www.youtube.com/user/JayZVEVO", wiki_page : "https://en.wikipedia.org/wiki/Jay_Z", spotify_link : "https://play.spotify.com/artist/3nFkdlSjzX9mRTtwJOzDYB"} );
+db.event_data_v0_2.update( {    "title" : "Ether",
+	                            "aggressor" : ObjectId("58b4a4a11017192673ed9b04"),
+                                "targets" : [
+                                    ObjectId("58aa010181ac3fb6091fa61c")
+                                ],
+                                "description" : "\"Ether\" is a song by hip hop recording artist Nas, from his 2001 album Stillmatic. The song was a response to Jay-Z\'s \"Takeover\", a diss track directed towards Nas and Prodigy which appears on Jay-Z\'s album The Blueprint, during the Jay-Z vs. Nas and Prodigy feud. Nas named the song Ether because \"I was told a long time ago, ghosts and spirits don't like the fumes from ether, and I just wanted to affect him with my weapon and get to his soul\".",
+                                "date_added" : new Date(),
+                                "event_date" : new Date(2001,12,18),
+                                "highlights" : {
+                                    "top_lyrics" : {
+                                        "0" : "I got this, locked since Nine-One (1991), I am the truest/ Name a rapper that I ain't influenced.",
+                                        "1" : "Then you got the nerve to say that you're better than Big/ Dick-suckin' lips, why don't you let the late great veteran live"
+                                    }
+                                },
+                                "loc_img_link" : "nas.jpg",
+                                "youtube_link" : "https://www.youtube.com/embed/0ePQKD9iBfU",
+                                "spotify_link" : "https://play.spotify.com/album/0cLzuJG2UDa0axMQkF7JR6",
+                                "genius_link" : "https://genius.com/Nas-ether-lyrics",
+                                "wikipedia_link" : "https://en.wikipedia.org/wiki/Ether_(song)",
+                                "data_sources" : {
+                                    "1" : "https://en.wikipedia.org/wiki/Ether_(song)"
+                                },
+                                "to_string" : "Ether"})

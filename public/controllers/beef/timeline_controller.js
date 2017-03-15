@@ -7,54 +7,64 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
     
     var first_run = true;
     
-    $scope.handle_change = function(){
+    $scope.handle_change = function(){ //function created to allow recall without page reload
         
         //hold onto the main agressor for checks later which help positioning
         var main_aggressor;
         
-        $http.get("/search/" + $routeParams.tagId).success(function(response_1){
+        $http.get("/search_events_by_id/" + $routeParams.tagId).success(function(response_1){
             //validate the url tagId to make sure the event exists
             if(response_1.eventObject != undefined){
-                main_aggressor = response_1.eventObject.aggressor;
-                console.log($routeParams.tagId);
-                console.log(response_1.eventObject);
                 
+                //get the main event's aggressor
+                main_aggressor = response_1.eventObject.aggressor_object[0];
+                
+                //if its the first time this function is called, init arrays
                 if(first_run){
                     
-                    if($scope.selected_targets == undefined){
-                        $scope.selected_targets = new Array();
-                    }
+                    $scope.selected_targets = new Array();
                     
-                    for(var i = 0; i < Object.keys(response_1.eventObject.targets).length; i++){
-                        console.log(response_1.eventObject.targets[i]);
-                        $scope.selected_targets.push(response_1.eventObject.targets[i]);
+                    //add targets of main event to filter so theyre all shown on the timeline by default
+                    for(var i = 0; i < response_1.eventObject.targets.length; i++){
+                        $scope.selected_targets.push(response_1.eventObject.targets[i].stage_name);
                     }
+                    //set this flag so the above code is only run once
                     first_run = false;
                 }
                
                 //make http request to server for data
-                $http.get("/search_all_events_in_timeline_from_event_id/" + $routeParams.tagId).success(function(response_2){
-                    //validate the url tagId to make sure the event exists
+                $http.get("/search_all_related_events_in_timeline_by_id/" + $routeParams.tagId).success(function(response_2){
+                    
+                    //validate the url tagId to make sure there are events to sort
                     if(response_2.events != undefined){
                         
+                        //extract events array
                         var events = response_2.events;
+                        console.log(events);
+                        //init vars to be used later
                         $scope.events = new Array();
                         var name_colour_map = [];
                         var colour_index = 0;
-
+                        
+                        //set default selection for the filter
                         if($scope.drop_down == undefined){ $scope.drop_down = "All"; }
-                        if($scope.main_name == undefined){ $scope.main_name = "Loading..."; }
 
                         //sort the events by date
                         events.sort(custom_sort);
                         
-                        $scope.selected_targets.push(main_aggressor);
+                        //add main aggressor to make sure the left hand side of the timeline is selected
+                        $scope.selected_targets.push(main_aggressor.stage_name);
+                        
+                        //if the 'none' option is selected clear all targets and display only the main aggressors tracks
                         if($scope.selected_targets[0] == "None"){
-                            $scope.selected_targets.slice(0,1);
+                            $scope.selected_targets = new Array();
+                            $scope.selected_targets.push(main_aggressor.stage_name);
                         }
                         
+                        //loop through the list of events
                         for(var event_index = 0; event_index < events.length; event_index++){
                             
+                            //extract event
                             var eventObject = events[event_index];
                             var filter_found = false;
                             
@@ -63,19 +73,16 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                             //
                             //if some filters are applied, filter out un-neccessary records
                             else{
-                                var filter_found = false;
                                 //loop through filter selections, if the current event's aggressor is one of them, move into the if statement
                                 for(var i = 0; i < $scope.selected_targets.length; i++){
-                                    if($scope.selected_targets[i] == eventObject.aggressor){
-                                        //loop through the events targets to make sure at LEAST one of the targets is a filter selection, otherwise the event is irrelevant
-                                        if($scope.selected_targets.length == 1 && $scope.selected_targets[0] != "All"){
-                                            
-                                        }
+                                    if($scope.selected_targets[i] == eventObject.aggressor_object[0].stage_name){
+                                        //loop through the events targets to make sure at LEAST one of the events targets is selected in the filter, otherwise the event is irrelevant
+                                        if($scope.selected_targets.length == 1 && $scope.selected_targets[0] != "All"){}
                                         else{
-                                            for(var j = 0; j < Object.keys(eventObject.targets).length; j++){
+                                            for(var j = 0; j < eventObject.targets.length; j++){
                                                 //loop through the filter selections
                                                 for(var k = 0; k < $scope.selected_targets.length; k++){
-                                                    if($scope.selected_targets[k] == eventObject.targets[j]){
+                                                    if($scope.selected_targets[k] == eventObject.targets[j].stage_name){
                                                         filter_found = true;
                                                         break;
                                                     }
@@ -90,21 +97,15 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 }
                             }
                             
-                            var top_lyrics = new Array();
+                            //array to hold the options displayed in the filter, only the main_event needs a target set 
                             var targets = new Array();
-
-                            //loop through the top lyrics and assign them to the scope
-                            for(var i = 0; i < Object.keys(eventObject.top_lyrics).length; i++){
-                                top_lyrics.push(eventObject.top_lyrics[i]);
-                            }
 
                             targets.push("All");
                             targets.push("None");
 
                             //loop through the targets and assign them to the scope
                             for(var i = 0; i < Object.keys(eventObject.targets).length; i++){
-                                targets.push(eventObject.targets[i]);
-
+                                targets.push(eventObject.targets[i].stage_name);
                             }
 
                             //extract an appropriate colour from the colour bank
@@ -121,7 +122,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                             var timeline_event;
                             var event_glyphicon = "glyphicon ";
                             //check if object is left aligned or right aligned
-                            if(eventObject.aggressor == main_aggressor){
+                            if(eventObject.aggressor_object[0].stage_name == main_aggressor.stage_name){
                                 if(beef_split_dev){
                                     left = "0px";
                                     right = "60%";
@@ -158,16 +159,12 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 border_width = "5px";
                             }
                             
-                            console.log(onload);
-                            
                             //create data record
                             var record = {
-                                name : eventObject.aggressor,
+                                name : eventObject.aggressor_object[0].stage_name,
                                 title : eventObject.title,
                                 date : eventObject.event_date.slice(0,10),
-                                description : eventObject.description,
-                                img_link : eventObject.image_link,
-                                top_lyrics : top_lyrics,
+                                img_link : eventObject.loc_img_link,
                                 targets : targets,
                                 event_num : eventObject._id,
                                 colour : name_colour_map[eventObject.aggressor],
@@ -178,6 +175,8 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 border_colour : border_colour,
                                 border_width : border_width
                             };
+                            console.log(record);
+                            console.log($scope.events);
                             $scope.events.push(record);
 
                             if($routeParams.tagId == eventObject._id){
@@ -185,6 +184,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 $scope.main_name = record.name;
                             }
                         }
+                        console.log($scope.events);
                     }
                     else{
                         //error msg

@@ -19,54 +19,51 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
             return $sce.trustAsResourceUrl(src);
         }
         
-        console.log("url tag: ");
-        console.log($routeParams.tagId);
-        
         //make http request to server for data
-        $http.get("/search/" + $routeParams.tagId).success(function(response_1){
+        $http.get("/search_events_by_id/" + $routeParams.tagId).success(function(response_1){
             //validate the url tagId to make sure the event exists
             if(response_1.eventObject != undefined){
                 
                 var eventObject = response_1.eventObject;
-                console.log(eventObject);
                 
                     //make http request to server for data
-                    $http.get("/search_artist_from_name/" + eventObject.aggressor).success(function(response_2){
+                    $http.get("/search_actors_by_id/" + eventObject.aggressor).success(function(response_2){
                         //validate the url tagId to make sure the event exists
-                        if(response_2.eventObject != undefined){
-
-                            var artist = response_2.eventObject;
+                        if(response_2.artist != undefined){
+                            
+                            var artist = response_2.artist;
 
                             //assign fields to scope
-                            $scope.name = eventObject.aggressor;
+                            $scope.name = artist.stage_name;
                             $scope.artist_id = artist._id;
                             $scope.song_title = eventObject.title;
-                            $scope.date = eventObject.event_date.slice(0,10);
+                            $scope.date = eventObject.event_date.slice(0, 10);
                             $scope.description = eventObject.description;
-                            $scope.img_link = eventObject.image_link;
-                            $scope.top_lyrics = new Array();
-                            $scope.url = eventObject.url;
+                            $scope.img_link = eventObject.loc_img_link;
+                            $scope.highlights = eventObject.highlights;
+                            console.log(eventObject.highlights);
+                            $scope.youtube_link = eventObject.youtube_link;
+                            $scope.spotify_link = eventObject.spotify_link;
+                            $scope.genius_link = eventObject.genius_link;
+                            $scope.wikipedia_link = eventObject.wikipedia_link;
+                            $scope.data_sources = eventObject.data_sources;
                             $scope.event_id = eventObject._id;
 
-                            if(Object.keys(eventObject.top_lyrics).length >= 1){
+                            /*if(Object.keys(eventObject.top_lyrics).length >= 1){
                                 
                                 $scope.top_lyrics = new Array();
                                 
                                 //loop through the top lyrics and assign them to the scope
-                                for(var i = 0; i < Object.keys(eventObject.top_lyrics).length; i++){
-                                    
-                                    $scope.top_lyrics[i] = new Array();
-                                    
-                                    console.log(eventObject.top_lyrics);
-                                    
+                                for(var i = 0; i < Object.keys(eventObject.top_lyrics).length; i++){              
                                     $scope.top_lyrics[i] = eventObject.top_lyrics[i];
-                                    
-                                    /* attempt at controller code for genius embedding
-                                    $scope.top_lyrics[i]["data_src_href"] = eventObject.top_lyrics[i]["data_src_href"];
-                                    $scope.top_lyrics[i]["href_1"] = eventObject.top_lyrics[i]["href_1"];
-                                    $scope.top_lyrics[i]["lyric"] = eventObject.top_lyrics[i]["lyric"];
-                                    $scope.top_lyrics[i]["href_2"] = eventObject.top_lyrics[i]["href_2"];
-                                    $scope.top_lyrics[i]["title"] = eventObject.top_lyrics[i]["title"];*/
+                                }
+                            }*/
+                            
+                            if(Object.keys(eventObject.data_sources).length >= 1){
+                                $scope.data_sources = new Array();
+                                //loop through the top lyrics and assign them to the scope
+                                for(var i = 0; i < Object.keys(eventObject.data_sources).length; i++){                     
+                                    $scope.data_sources[i] = eventObject.data_sources[i];
                                 }
                             }
                         }

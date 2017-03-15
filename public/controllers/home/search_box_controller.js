@@ -19,7 +19,7 @@ home_app.controller('searchController', ['$scope','$http', function($scope, $htt
         
         if ($scope.search_term.length > 1 && $scope.search_term !=" ") {
             //make http request to server for data
-            $http.get("/search_all/" + $scope.search_term).success(function(response){
+            $http.get("/search_events_by_to_string/" + $scope.search_term).success(function(response){
                 
                 var events = response.events;
                 

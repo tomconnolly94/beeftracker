@@ -12,47 +12,42 @@
 
 home_app.controller('eventStreamController', ['$scope','$http', function($scope, $http) {
         
-    var result_limit = 3;
+    var result_limit = 6;
     
-    $http.get("/search_recent_events/" + result_limit).success(function(response){
-                
-        var events = response.events;
-        console.log(events);
-
+    $http.get("/search_recent_events/" + result_limit).success(function(events_object){
+        
         //validate the url tagId to make sure the event exists                
-        if(events != undefined){
+        if(events_object != undefined){
 
+            
+            var events = events_object.events;
             $scope.event_stream_events = new Array();
 
             for(var eventId = 0; eventId < events.length; eventId++){
 
                 //create array to hold artists top lyrics
                 var best_lyrics = new Array();
+                console.log(events[eventId]);
+                var artist_object = events[eventId].aggressor_object[0];
 
-                //loop through the top lyrics and assign them to the scope
-                for(var i = 0; i < Object.keys(events[eventId].top_lyrics).length; i++){
-                    best_lyrics.push(events[eventId].top_lyrics[i]);
-                }
-                
                 //create data record
                 var event = {
-                    name : events[eventId].aggressor,
+                    name : artist_object.stage_name,
                     title : events[eventId].title,
                     description : events[eventId].description,
-                    date : events[eventId].event_date,
-                    img_link : events[eventId].image_link,
+                    date : events[eventId].event_date.slice(0,10),
+                    img_link : events[eventId].loc_img_link,
                     top_lyrics : best_lyrics,
                     eventNum : events[eventId]._id
                 };
 
                 //add data record to global scope
-                $scope.event_stream_events[eventId] = event;                   
+                $scope.event_stream_events[eventId] = event;
             }
-            console.log($scope.event_stream_events);
         }
         else{
             //error msg
-            console.log("Page not found on server");
+            console.log("No events found in database");
         }
     }, 
     function(response) {

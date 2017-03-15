@@ -9,7 +9,6 @@
 var beef_app = angular.module('beef_app', ['ngRoute', 'angular-loading-bar']);
 
 beef_app.config(function($routeProvider, $locationProvider){
-    console.log("config");
     $routeProvider.when('/beef/:tagId', {
         templateUrl: '',    
         controller: 'currentEventController',

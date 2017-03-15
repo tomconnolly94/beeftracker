@@ -10,15 +10,26 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-artist_app.controller("relatedArtistsController", ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
+artist_app.controller("relatedActorsController", ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
 
         //wait untill module has been configured before running this
     $scope.$on('$routeChangeSuccess', function() {
                 
         //make http request to server for data
-        $http.get("/search_related_artists_from_artist_id/" + $routeParams.tagId).success(function(target_objects){
-            console.log(target_objects.targets);
-            $scope.targets = target_objects.targets;
+        $http.get("/search_related_actors_by_id/" + $routeParams.tagId).success(function(response){
+            $scope.actors = new Array();
+            console.log(response);
+            var actors = response.actors;
+            console.log(actors);
+            for(var i = 0; i < actors.length; i++){
+                var actor = {
+                    _id : actors[i],
+                    loc_img_link : actors[i].loc_img_link,
+                    stage_name : actors[i].stage_name
+                };
+                console.log(actor);
+                $scope.actors.push(actor);
+            }
         }, 
         function(response_2) {
             //failed http request

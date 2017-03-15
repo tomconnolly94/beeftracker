@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="artist">
+<html ng-app="actor">
 
         <!--
             Project: Beeftracker
@@ -16,6 +16,7 @@
         <!-- jQuery imports -->
         <script src="/modules/jquery/dist/jquery.min.js"></script>
         
+
         <!--angular imports -->
         <script src="/modules/angular/angular.min.js"></script>
         <script src="/modules/angular-resource/angular-resource.min.js"></script>
@@ -65,74 +66,95 @@
         <div id="loading-bar-container"></div>
         <div id="header"></div>
         <div id="top_bar"></div>
-            <div class="row">
-                <div class="col-xs-12" style="height:60px;"></div>
-            </div>
             
             <!-- rest of page -->
             <div class="row" id="artist_details">
-                <div class="col-sm-2"></div>
+                <div class="col-sm-1"></div>
                 
-                <div class="col-sm-8 row" ng-controller="artistSearchController">
-                    <div class="col-sm-4" style="height:100%">
-                        <img class="img-circle" src="/artist_images/{{ img_link }}" class="img-circle" height="100%" width="100%">
-                    </div>
+                <div class="col-sm-10 row" ng-controller="artistSearchController">
+                    
+                    <div class="col-sm-12 row">
+                        <div class="col-sm-4" style="height:100%">
+                            <img class="img-circle" src="/artist_images/{{ img_link }}" class="img-circle" height="100%" width="100%">
+                        </div>
 
-                    <div class="col-sm-8">
-                        <h1>{{stage_name}}</h1>
-                        <h4 class="sub">{{birth_name}}</h4>
-                        <h5 class="sub">{{d_o_b}}</h5>
-                        <h5>{{bio}}</h5>
+                        <div class="col-sm-8">
+                            <h1>{{ stage_name }}</h1>
+                            <h4 class="sub">{{ birth_name }}</h4>
+                            <h5 class="sub">{{ d_o_b }}</h5>
+                            <h5 class="sub">{{ origin }}</h5>
+                            <p>{{bio}}</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 row" style="padding:0px;">
+                        <div class="col-sm-2">
+                            <h4>Occupations</h4>
+                            <ul>
+                                <li ng-repeat="occupation in occupations">
+                                {{ occupation }}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-8" style="height:100%;">
+                            <div class="row" style="text-align:center;padding:0px;margin:40px;">
+                                <!--<div class="col-sm-1" style="padding:0px;"></div>-->
+                                <div class="jumbotron col-sm-3" style="padding:0px;height:60%;margin:10px;"><h4 style="margin:10px;"><a ng-href="{{ spotify_link }}" target="_blank" >Spotify</a></h4></div>
+                                <div class="jumbotron col-sm-3 col-centered" style="padding:0px;height:60%;margin:10px;"><h4 style="margin:10px;"><a ng-href="{{ youtube_link }}" target="_blank" >Youtube</a></h4></div>
+                                <div class="jumbotron col-sm-3" style="padding:0px;height:60%;margin:10px;"><h4 style="margin:10px;"><a ng-href="{{ wikipedia_link }}" target="_blank" >Wikipedia</a></h4></div>
+                                <!--<div class="col-sm-1" style="padding:0px;"></div>-->
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <h4>Associated with {{ stage_name }}:</h4>
+                            <ul>
+                                <li ng-repeat="artist in associated_actors">
+                                {{ artist }}
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>         
             
             <div class="row">
-                <div class="col-xs-12" style="height:60px;"></div>
+                <div class="col-xs-12" style="height:20px;"></div>
             </div>
             
             <hr/>
             
-
             <div class="row" id="general_links_panel">
                     
                 <div class="col-sm-2"></div>
-                <div class="col-sm-4" ng-controller="relatedArtistsController">
-                    <h2>Related Artists:</h2>                        
-                    <div>
-                        <ul>
-                            <li ng-repeat="target in targets" style="width:50%;margin:0px;float:right;">
-                                <a ng-href="/artist/#" style="padding:0px;">
-
-                                    <p>{{ target }}</p>
-
-                                </a>
-                            </li>
-                        </ul>   
-                    </div>
+                <div class="col-sm-4" ng-controller="relatedActorsController">
+                    <h2>Related Artists:</h2>        
+                        <div ng-repeat="actor in actors" style="width:50%;margin:0px;float:left;">
+                            <a ng-href="/artist/{{ actor._id }}" target="_self" style="padding:0px;">
+                                <img class="img-circle" ng-src="/event_images/{{ actor.loc_img_link }}" style="margin:0px auto;" height="100" width="50%">
+                                <h5>{{ actor.stage_name }}</h5>
+                            </a>
+                        </div>
                 </div>
 
                 <div class="col-sm-4" ng-controller="recentEventsController">
-                    <h2>Recent Events:</h2>                        
-                    <div>
-                        <div ng-repeat="event in events" style="width:50%;margin:0px;float:right;">
+                    <h2>Recent Events:</h2>
+                        <div ng-repeat="event in events" style="width:50%;margin:0px;float:left;">
                             <a ng-href="/beef/{{event._id}}" target="_self" style="padding:0px;">
-                                <img class="img-circle" ng-src="/event_images/{{event.image_link}}" style="margin:0px auto;" height="100" width="50%">
+                                <img class="img-circle" ng-src="/event_images/{{event.loc_img_link}}" style="margin:0px auto;" height="100" width="50%">
 
 
-                                <p>{{event.title}}</p>
+                                <h5>{{ event.title }}</h5>
+                                <h6>{{ event.aggressor_object[0].stage_name }}</h6>
                                 Artists included: 
                                 <ul>
                                     <li ng-repeat="target in event.targets">
 
-                                        {{ target }}
+                                        <p>{{ target.stage_name }}</p>
 
                                     </li>
                                 </ul>
 
                             </a>
                         </div>
-                    </div>
                 </div>
                 <div class="col-sm-2"></div>
             </div>
