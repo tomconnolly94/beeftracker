@@ -1,0 +1,16 @@
+stage name
+birth name
+nickame_1 | nickname_2
+date of birth (format - 'new Date(year,month,day)')
+occupation_1 | occupation_2
+origin
+acheivement_1 | acheivement_2
+bio
+youtube_link
+wiki_page
+spotify_link
+data_source_1 | data_source_2
+associated_actor_1 | associated_actor_2
+image title
+
+<must have an empty line at the end to allow the bash script to parse it>

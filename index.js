@@ -88,17 +88,17 @@ app.get('/search_events_by_id/:event_id', function(request, response) {
             var object = BSON.ObjectID.createFromHexString(identifier);
             
             //standard query to match an event and resolve aggressor and targets references
-            db.collection("event_data_v0_2").aggregate([{ $match: { _id : object } },
-                                                        { $unwind : "$targets"}, 
-                                                        { $lookup : { from: "actor_data_v0_2", localField: "aggressor", foreignField: "_id", as: "aggressor_object" }}, 
-                                                        { $lookup : { from: "actor_data_v0_2", localField: "targets", foreignField: "_id", as: "targets" }}, 
+            db.collection("event_data_v0_2").aggregate([{ $match: { _id : object } }, //query 
+                                                        { $unwind : "$targets"}, //allows the $lookup with each field in $targets
+                                                        { $lookup : { from: "actor_data_v0_2", localField: "aggressor", foreignField: "_id", as: "aggressor_object" }}, //resolve the 'aggressor' field
+                                                        { $lookup : { from: "actor_data_v0_2", localField: "targets", foreignField: "_id", as: "targets" }}, //resolve each of the targets fields
                                                        ]).toArray(function(queryErr, docs) {
                 response.send({eventObject : docs[0]});
             });
         }
     });
 }); //search for an event using its _id
-app.get('/search_events_by_to_string/:search_term', function(request, response) {
+app.get('/search_all/:search_term', function(request, response) {
     
     var url = process.env.MONGODB_URI;
     var identifier = request.params.search_term;
@@ -106,15 +106,49 @@ app.get('/search_events_by_to_string/:search_term', function(request, response) 
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
         else{
-            var field_name = 'to_string';
+            var all_objects = new Array();
             
-            //code to create a qry string that matches NEAR to query string
-            var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
-            var qry = "{ \"" + field_name + "\" : " + end + " }";
+            async.waterfall([
+                function(callback){
+                    //var object = BSON.ObjectID.createFromHexString(identifier);
             
-            db.collection("event_data_v0_2").find(JSON.parse(qry)).toArray(function(queryErr, docs) {
-                response.send( { events : docs } );
+                    //standard query to match an event and resolve aggressor and targets references
+                    db.collection("event_data_v0_2").aggregate([{ $match: { title : { $regex : identifier, $options : "i"} } },
+                                                                { $lookup : { 
+                                                                    from: "actor_data_v0_2",
+                                                                    localField: "aggressor",
+                                                                    foreignField: "_id",
+                                                                    as: "aggressor_object" } }
+                                                               ]).toArray(function(queryErr, events) {
+                        if(queryErr){ console.log(queryErr); }
+                        else{
+                            console.log(events);
+                            all_objects = events;
+                            callback(null);
+                        }
+                    });
+
+                },
+                function(callback){ 
+                    //standard query to match an event and resolve aggressor and targets references
+                    db.collection("actor_data_v0_2").aggregate([{ $match: { stage_name : { $regex : identifier, $options : "i"} } }
+                                                               ]).toArray(function(queryErr, events) {
+                        if(err){ console.log(queryErr); }
+                        else{
+                            for(var i = 0; i < events.length;i++){
+                                all_objects.push(events[i]);                                
+                            }
+                            response.send( { events : all_objects } );
+                        }
+                    });
+                }
+            ], function (error, all_events) {
+                if (error) { console.log(error); }
+                else{
+                    
+                }
             });
+            
         }
     });
 }); //search for any events matching a to_string consisting of concatenated artist_id and event title

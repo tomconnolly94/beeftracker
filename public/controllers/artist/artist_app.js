@@ -29,8 +29,8 @@ artist_app.config(function($routeProvider, $locationProvider){
 });
 
 artist_app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
-    cfpLoadingBarProvider.includeBar = false;
-    //cfpLoadingBarProvider.includeSpinner = true;
-    //cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
-    //cfpLoadingBarProvider.spinnerTemplate = '<div><span class="fa fa-spinner">Loading...</div>';
+    cfpLoadingBarProvider.includeBar = true;
+    cfpLoadingBarProvider.includeSpinner = false;
+    cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
+    cfpLoadingBarProvider.spinnerTemplate = '<div><span class="fa fa-spinner">Loading...</div>';
   }])

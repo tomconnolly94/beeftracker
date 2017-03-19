@@ -1,0 +1,15 @@
+event title
+aggressor
+targets (format - seperated by a '|')
+description
+image title
+video url (embed friendly link)
+date (format - 'new Date(year,month,day)')
+top lyrics (format - no quotes, seperated by a '|')
+
+<must have an empty line at the end to allow the bash script to parse it>
+
+
+
+orig steak logo:
+http://images.clipartpanda.com/t-bone-clipart-t-bone-steak-clipart.png

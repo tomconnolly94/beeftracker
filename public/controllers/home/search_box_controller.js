@@ -19,7 +19,7 @@ home_app.controller('searchController', ['$scope','$http', function($scope, $htt
         
         if ($scope.search_term.length > 1 && $scope.search_term !=" ") {
             //make http request to server for data
-            $http.get("/search_events_by_to_string/" + $scope.search_term).success(function(response){
+            $http.get("/search_all/" + $scope.search_term).success(function(response){
                 
                 var events = response.events;
                 
@@ -28,25 +28,17 @@ home_app.controller('searchController', ['$scope','$http', function($scope, $htt
                     
                     $scope.records = new Array();
                     
-                    console.log(events);
-                    
-                    for(var eventId = 0; eventId < events.length; eventId++){
+                    for(var eventId = 0; eventId < Object.keys(events).length; eventId++){
                         
-                        //create array to hold artists top lyrics
-                        var best_lyrics = new Array();
-                        
-                        //loop through the top lyrics and assign them to the scope
-                        for(var i = 0; i < Object.keys(events[eventId].top_lyrics).length; i++){
-                            best_lyrics.push(events[eventId].top_lyrics[i]);
-                        }
+                        console.log(events[eventId]);
+                        console.log(events[eventId].aggressor_object[0].stage_name);
                         
                         //create data record
                         var record = {
-                            name : events[eventId].aggressor,
+                            name : events[eventId].aggressor_object[0].stage_name,
                             title : events[eventId].title,
                             date : events[eventId].description,
-                            img_link : events[eventId].image_link,
-                            top_lyrics : best_lyrics,
+                            img_link : events[eventId].loc_img_link,
                             eventNum : events[eventId]._id
                         };
                         

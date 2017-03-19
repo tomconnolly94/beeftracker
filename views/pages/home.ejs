@@ -72,7 +72,7 @@
                         <div class="row">
                             <span class="col-sm-1 glyphicon glyphicon-search" style="width:40px;height:40px;padding:10px 0px 10px 10px;"></span>
                             <div  class="col-sm-10" style="padding:0px;">
-                                <input type="text" ng-model="search_term" ng-change="submit()" style="width:100%;height:40px;font-size:25px;" placeholder="Search for an Event" id="search_box">
+                                <input type="text" ng-model="search_term" ng-change="submit()" style="width:100%;height:40px;font-size:25px;color:#000000" placeholder="Search for an Event" id="search_box">
                             </div>
                         </div>
                     </div>
@@ -87,11 +87,18 @@
 
                         <ul style="list-style-type:none;">
 
-                            <li ng-repeat="record in records" style="margin:30px 0px;">   
+                            <li ng-repeat="record in records" style="margin:30px 0px;font-weight:bold;background-color:#9C0505;padding:20px;">   
 
-                                <a ng-href="/beef/{{record.eventNum}}#{{record.eventNum}}" style="font-weight:bold;height:120px;background-color:#9C0505;padding:0px;">
-                                    <h3 style="margin:5px;font-weight:bold;"> {{ record.title }}</h3>
-                                    <img  ng-src="/event_images/{{ record.img_link }}" class="img-circle" style="position:relative;bottom:25px;margin:5px;float:right;" height="75" width="75">
+                                <a ng-href="/beef/{{record.eventNum}}#{{record.eventNum}}">
+                                    <div class="row">
+                                        <div class="col-sm-8" style="padding:0px;">
+                                            <h3 style="margin:5px;font-weight:bold;"> {{ record.title }} </h3>
+                                            <h4 style="margin:5px;font-weight:bold;"> {{ record.name }} </h4>
+                                        </div>
+                                        <div class="col-sm-4" style="margin:0px;padding:0px;">
+                                            <img  ng-src="/event_images/{{ record.img_link }}" class="img-circle" style="width:100%;height:100%;">
+                                        </div>
+                                    </div>
                                 </a>
                             </li>
                         </ul>
@@ -102,8 +109,12 @@
             
             <hr>
             
-            <div class="row" style="padding:0px 250px;">
-                <h3 style="text-align:center;">Recent Events:</h3>
+            <div class="row" >
+                <div class="col-sm-5"></div>
+                <div class="col-sm-2">
+                    <h3 style="text-align:center;">Recent Events:</h3>
+                </div>
+                <div class="col-sm-5"></div>
             </div>
                 
             <div class="row" ng-controller="eventStreamController">

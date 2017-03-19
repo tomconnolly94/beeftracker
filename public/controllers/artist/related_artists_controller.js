@@ -17,18 +17,19 @@ artist_app.controller("relatedActorsController", ['$scope','$http', '$routeParam
                 
         //make http request to server for data
         $http.get("/search_related_actors_by_id/" + $routeParams.tagId).success(function(response){
-            $scope.actors = new Array();
+            $scope.associated_actors = new Array();
             console.log(response);
             var actors = response.actors;
             console.log(actors);
-            for(var i = 0; i < actors.length; i++){
+            for(var i = 0; i < Object.keys(actors).length; i++){
                 var actor = {
                     _id : actors[i],
                     loc_img_link : actors[i].loc_img_link,
                     stage_name : actors[i].stage_name
                 };
                 console.log(actor);
-                $scope.actors.push(actor);
+                $scope.associated_actors.push(actor);
+                console.log($scope.associated_actors);
             }
         }, 
         function(response_2) {

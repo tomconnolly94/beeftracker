@@ -108,7 +108,7 @@
                             <h4>Associated with {{ stage_name }}:</h4>
                             <ul>
                                 <li ng-repeat="artist in associated_actors">
-                                {{ artist }}
+                                    {{ artist.stage_name }}
                                 </li>
                             </ul>
                         </div>
@@ -127,7 +127,7 @@
                 <div class="col-sm-2"></div>
                 <div class="col-sm-4" ng-controller="relatedActorsController">
                     <h2>Related Artists:</h2>        
-                        <div ng-repeat="actor in actors" style="width:50%;margin:0px;float:left;">
+                        <div ng-repeat="actor in associated_actors" style="width:50%;margin:0px;float:left;">
                             <a ng-href="/artist/{{ actor._id }}" target="_self" style="padding:0px;">
                                 <img class="img-circle" ng-src="/event_images/{{ actor.loc_img_link }}" style="margin:0px auto;" height="100" width="50%">
                                 <h5>{{ actor.stage_name }}</h5>

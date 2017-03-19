@@ -3,19 +3,6 @@ option {
     color:#000000;
     font-size:20px;
 }
-/* styles to allow fixed, right hand panel */
-#nav_fixed.affix {
-    position: fixed;
-    top: 0;
-}
-#nav > .navbar-inner {
-    border-left: 0;
-    border-right: 0;
-    border-radius: 0;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
-    -o-border-radius: 0;
-}
 /* if screen is smaller than 768px (mobile phone) apply these styles */
 @media (max-width: 768px) {
     #bootstrap-overrides .affix {
@@ -26,14 +13,32 @@ option {
     }
     
 }
+
+@media (min-width:768px){
+    
+    /* styles to allow fixed, right hand panel */
+    #nav_fixed.affix {
+        position: fixed;
+        top: 0;
+    }
+    #nav > .navbar-inner {
+        border-left: 0;
+        border-right: 0;
+        border-radius: 0;
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        -o-border-radius: 0;
+    }
+    
+    /* override default affix bottom config to make position absolute */
+    .affix-bottom {
+        position: absolute;
+    }
+}
 /* styles for jumbotron filter */
 #artist_filter_panel{
     padding:30px;
     background-color:#DDDDDD;
-}
-/* override default affix bottom config to make position absolute */
-.affix-bottom {
-    position: absolute;
 }
 /* h3 is used for headers on the beef page so override with bold */
 #bootstrap-overrides h3, #bootstrap-overrides h2{
