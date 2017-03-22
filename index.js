@@ -122,7 +122,6 @@ app.get('/search_all/:search_term', function(request, response) {
                                                                ]).toArray(function(queryErr, events) {
                         if(queryErr){ console.log(queryErr); }
                         else{
-                            console.log(events);
                             all_objects = events;
                             callback(null);
                         }
@@ -168,10 +167,11 @@ app.get('/search_actors_by_id/:artist_id', function(request, response) {
                                                             from: "actor_data_v0_2",
                                                                      localField: "associated_actors",
                                                                      foreignField: "_id",
-                                                                     as: "associated_actor_objects" }}                                                        
+                                                                     as: "associated_actor_objects" }}
                                                        ]).toArray(function(queryErr, docs) {
                 if(queryErr){ console.log(queryErr); }
                 else{
+                    console.log(docs[0]);
                     response.send( { artist : docs[0] } );
                 }
             });

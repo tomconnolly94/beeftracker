@@ -28,16 +28,45 @@ artist_app.controller("artistSearchController", ['$scope','$http', '$routeParams
                     $scope.stage_name = artist_object.stage_name;
                     $scope.birth_name = artist_object.birth_name;
                     $scope.d_o_b = artist_object.d_o_b.slice(0,10);
-                    $scope.img_link = artist_object.loc_img_link;
+                    $scope.loc_img_link = artist_object.links.mf_img_link;
                     $scope.bio = artist_object.bio;
                     $scope.data_sources = artist_object.data_sources;
                     $scope.nicknames = artist_object.nicknames;
                     $scope.occupations = artist_object.occupations;
                     $scope.origin = artist_object.origin;
-                    $scope.spotify_link = artist_object.spotify_link;
+                    
+                    delete artist_object.links["mf_img_link"];
+                    $scope.links = [];
+
+                    var triple;
+                    var grouped_in = 3;
+
+                    for (var i = 0; i < Object.keys(artist_object.links).length; i++) {
+                        if (!triple) {
+                            triple = [];
+                        }
+
+                        record = { "button_name" : Object.keys(artist_object.links)[i],
+                                  "url" : artist_object.links[Object.keys(artist_object.links)[i]] };
+
+                        triple.push(record);
+
+                        if (((i+1) % grouped_in) === 0) {
+                            $scope.links.push(triple);
+                            triple = null;
+                        }
+                    }
+                    if (triple) {
+                        $scope.links.push(triple);
+                    }
+                    
+                    /*$scope.spotify_link = artist_object.spotify_link;
                     $scope.wikipedia_link = artist_object.wiki_page;
                     $scope.youtube_link = artist_object.youtube_link;
+                    */
                     $scope.associated_actors = new Array();
+                    
+                    console.log(artist_object);
                     
                     for(var i = 0; i < artist_object.associated_actor_objects; i++){
                         $scope.associated_actors.push(artist_object.stage_name);

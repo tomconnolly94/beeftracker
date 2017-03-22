@@ -39,32 +39,42 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
                             $scope.song_title = eventObject.title;
                             $scope.date = eventObject.event_date.slice(0, 10);
                             $scope.description = eventObject.description;
-                            $scope.img_link = eventObject.loc_img_link;
                             $scope.highlights = eventObject.highlights;
-                            console.log(eventObject.highlights);
-                            $scope.youtube_link = eventObject.youtube_link;
-                            $scope.spotify_link = eventObject.spotify_link;
-                            $scope.genius_link = eventObject.genius_link;
-                            $scope.wikipedia_link = eventObject.wikipedia_link;
-                            $scope.data_sources = eventObject.data_sources;
+                            $scope.data_sources = Object.values(eventObject.data_sources);
                             $scope.event_id = eventObject._id;
-
-                            /*if(Object.keys(eventObject.top_lyrics).length >= 1){
-                                
-                                $scope.top_lyrics = new Array();
-                                
-                                //loop through the top lyrics and assign them to the scope
-                                for(var i = 0; i < Object.keys(eventObject.top_lyrics).length; i++){              
-                                    $scope.top_lyrics[i] = eventObject.top_lyrics[i];
-                                }
-                            }*/
                             
-                            if(Object.keys(eventObject.data_sources).length >= 1){
-                                $scope.data_sources = new Array();
-                                //loop through the top lyrics and assign them to the scope
-                                for(var i = 0; i < Object.keys(eventObject.data_sources).length; i++){                     
-                                    $scope.data_sources[i] = eventObject.data_sources[i];
+                            //if record has no video link, use the image link instead
+                            if(eventObject.links.mf_video_link.length > 0){
+                               $scope.mf_link = eventObject.links.mf_video_link; 
+                            }
+                            else{
+                                $scope.mf_link = "/event_images/" + eventObject.links.mf_img_link; 
+                            }
+                            $scope.loc_img_link = eventObject.links.mf_img_link;
+                            delete eventObject.links["mf_video_link"];
+                            delete eventObject.links["mf_img_link"];
+                            $scope.links = [];
+
+                            var triple;
+                            var grouped_in = 3;
+                            
+                            for (var i = 0; i < Object.keys(eventObject.links).length; i++) {
+                                if (!triple) {
+                                    triple = [];
                                 }
+                                
+                                record = { "button_name" : Object.keys(eventObject.links)[i],
+                                          "url" : eventObject.links[Object.keys(eventObject.links)[i]] };
+                                
+                                triple.push(record);
+                                
+                                if (((i+1) % grouped_in) === 0) {
+                                    $scope.links.push(triple);
+                                    triple = null;
+                                }
+                            }
+                            if (triple) {
+                                $scope.links.push(triple);
                             }
                         }
                         else{

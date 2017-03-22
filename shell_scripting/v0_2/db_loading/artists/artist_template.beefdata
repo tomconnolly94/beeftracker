@@ -1,16 +1,14 @@
 stage name
 birth name
-nickame_1 | nickname_2
+nickames (format - Strings seperated by a '|')
 date of birth (format - 'new Date(year,month,day)')
-occupation_1 | occupation_2
+occupations (format - Strings seperated by a '|')
 origin
-acheivement_1 | acheivement_2
+acheivements (format - Strings seperated by a '|')
 bio
-youtube_link
-wiki_page
-spotify_link
-data_source_1 | data_source_2
-associated_actor_1 | associated_actor_2
-image title
+mf_img_link
+variable_links (format - records seperated by a '|' name/url seperated by '#' eg "Spotify#spotify_link|Wikipedia#wikipedia_link|Genius#genius_link")
+data_sources (format - Strings seperated by a '|')
+associated_actors (format - Strings seperated by a '|')
 
 <must have an empty line at the end to allow the bash script to parse it>

@@ -1,11 +1,13 @@
 event title
-aggressor
-targets (format - seperated by a '|')
+aggressor (format - ObjectId)
+targets (format - ObjectId's seperated by a '|')
 description
-image title
-video url (embed friendly link)
-date (format - 'new Date(year,month,day)')
-top lyrics (format - no quotes, seperated by a '|')
+event date (format - 'new Date(year,month,day)')
+highlights (format - categories seperated by a '|' items seperated by '#' eg "Top Lyrics#lyric_1#lyric_2|Live Performances#live_perf_1#live_perf_2")
+mf_video_link
+mf_img_link
+data sources (format - urls seperated by a '|')
+variable_links (format - records seperated by a '|' name/url seperated by '#' eg "Spotify#spotify_link|Wikipedia#wikipedia_link|Genius#genius_link")
 
 <must have an empty line at the end to allow the bash script to parse it>
 

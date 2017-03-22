@@ -21,10 +21,10 @@ artist_app.controller("relatedActorsController", ['$scope','$http', '$routeParam
             console.log(response);
             var actors = response.actors;
             console.log(actors);
-            for(var i = 0; i < Object.keys(actors).length; i++){
+            for(var i = 0; i < actors.length; i++){
                 var actor = {
                     _id : actors[i],
-                    loc_img_link : actors[i].loc_img_link,
+                    loc_img_link : actors[i].links.mf_img_link,
                     stage_name : actors[i].stage_name
                 };
                 console.log(actor);

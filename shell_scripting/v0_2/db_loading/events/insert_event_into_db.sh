@@ -5,14 +5,22 @@ declare -a lyrics
 declare -a targets
 
 while read line; do
-
-	if [ $counter -eq 7 ]
-	then
-        IFS="|" read -a lyrics <<< "$line"
-	fi
+    
     if [ $counter -eq 2 ]
 	then
         IFS="|" read -a targets <<< "$line"
+	fi
+    if [ $counter -eq 5 ]
+	then
+        IFS="|" read -a highlights <<< "$line"
+	fi
+	if [ $counter -eq 8 ]
+	then
+        IFS="|" read -a data_sources <<< "$line"
+	fi
+	if [ $counter -eq 9 ]
+	then
+        IFS="|" read -a variable_links <<< "$line"
 	fi
 
     data[$counter]=$line
@@ -45,22 +53,24 @@ done
 
 targets_string="$targets_string } "
 
-lyrics_string=' { '
+links_string='{ links : { mf_video_link : ${data[6]}, mf_img_link : ${data[7]}, '
 count=0
 
-for i in "${lyrics[@]}"
+for i in "${variable_links[@]}"
 do
-    lyrics_string="$lyrics_string \"$count\" : \"$i\""
+    IFS="#" read -a name_url_pair <<< "$i"
+
+    links_string="$lyrics_string \"${name_url_pair[0]}\" : \"${name_url_pair[1]}\""
     new_count=$((count+1))
-    if [ ${#lyrics[@]} -eq $new_count ] ; then
-        lyrics_string="$lyrics_string"
+    if [ ${#variable_links[@]} -eq $new_count ] ; then
+        links_string="$links_string"
     else
-        lyrics_string="$lyrics_string ,"
+        links_string="$links_string ,"
     fi
     count=$((count+1))
 done
 
-lyrics_string="$lyrics_string } "
+links_string="$links_string } } "
 
 insert_cmd='db.event_data_v0_1.update( 
 { 
@@ -73,7 +83,7 @@ insert_cmd='db.event_data_v0_1.update(
     "description" : '\"${data[3]}\"', 
     "date_added" : new Date(), 
     "image_link" : '\"${data[4]}\"', 
-    "url" : '\"${data[5]}\"', 
+    "links" : '\"${data[5]}\"', 
     "event_date" : '${data[6]}', 
     "event_id" : '\"$event_count\"',
     "top_lyrics" :'$lyrics_string',
@@ -86,4 +96,4 @@ insert_cmd='db.event_data_v0_1.update(
 
 echo $insert_cmd;
 
-mongo ds141937.mlab.com:41937/heroku_w63fjrg6 -u tom -p tom --eval "$insert_cmd"
+#mongo ds141937.mlab.com:41937/heroku_w63fjrg6 -u tom -p tom --eval "$insert_cmd"

@@ -138,7 +138,7 @@
                                 <a name="{{event.event_num}}" id="{{event.event_num}}" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" class="selectable_event timeline-panel" style="background-color:{{event.colour}};padding:0px;border-width:{{event.border_width}};border-color:{{event.border_colour}}">                                        
                                     <div class="row" style="margin:20px;text-align:right;">
 
-                                        <img ng-src="/event_images/{{ event.img_link }}" class="img-circle col-sm-4" style="position:relative;margin:5px;padding:0px;float:left;" height="75" width="75">
+                                        <img ng-src="/event_images/{{ event.loc_img_link }}" class="img-circle col-sm-4" style="position:relative;margin:5px;padding:0px;float:left;" height="75" width="75">
 
                                         <div class="col-sm-7" style="position:relative;float:right;">
 
@@ -163,9 +163,10 @@
                 <div class="col-sm-5" id="nav_wrapper" ng-controller="currentEventController">
                     
                     <div id="nav_fixed" data-spy="affix" data-offset-top="250" data-offset-bottom="250" class="nav nav-pills nav-stacked" style="margin:30px 0px 0px 0px;width:100%;">
-                                                
-                        <div id="videowrapper" class="embed-responsive embed-responsive-16by9">
-                            <iframe style="width:100%;" ng-src="{{ trustSrc(youtube_link) }}" class="embed-responsive-item" allowfullscreen="true"></iframe>
+                        <div id="main_feature">                     
+                            <div id="videowrapper" class="embed-responsive embed-responsive-16by9">
+                                <iframe style="width:100%;" scrolling="no" ng-src="{{ trustSrc( mf_link) }}" class="embed-responsive-item" allowfullscreen="true"></iframe>
+                            </div>
                         </div>
 
                         <h2>{{ song_title }}</h2>
@@ -181,14 +182,26 @@
 
                             <p>{{ description }}</p>
                             
-                            <div class="row" style="text-align:center;padding:10px;">
+                            <!--<div class="row" style="text-align:center;padding:10px;">
                                 <div class="col-sm-1"></div>
                                 <div class="jumbotron col-sm-3" style="padding:0px;height:60%;margin:5px;"><h4 style="margin:10px;"><a ng-href="{{ spotify_link }}" target="_blank">Spotify</a></h4></div>
                                 <div class="jumbotron col-sm-3" style="padding:0px;height:60%;margin:5px;"><h4 style="margin:10px;"><a ng-href="{{ genius_link }}" target="_blank">Genius</a></h4></div>
                                 <div class="jumbotron col-sm-3" style="padding:0px;height:60%;margin:5px;"><h4 style="margin:10px;"><a ng-href="{{ wikipedia_link }}" target="_blank">Wikipedia</a></h4></div>
                                 <div class="col-sm-1"></div>
-                            </div>
+                            </div>-->
                             
+                            <div id="link_area">
+                                <div class="row" ng-repeat="triples in links">
+                                    <div class="col-sm-1"></div>
+                                    <div ng-repeat="record in triples" class="jumbotron col-sm-3" style="padding:0px;height:60%;margin:5px;">
+                                        <h4 style="margin:10px;text-align:center"><a ng-href="{{ record.url }}" target="_blank">
+                                            <b>{{ record.button_name }}</b></a>
+                                        </h4>
+                                    </div>
+                                    <div class="col-sm-1"></div>
+                                </div>
+                            </div>
+                                
                             <ul>
                                 <li ng-repeat="(key, highlight_group) in highlights" style="margin:0px;">
                                     <h3>{{ key }}</h3>
@@ -203,11 +216,11 @@
                             <h3>Data Sources</h3>
                             <ul>
                                 <li ng-repeat="source in data_sources" style="margin:5px;">
-                                    <p>{{ source }}</p>
+                                    <a ng-href="{{source}}">{{ source }}</a>
                                 </li>
                             </ul>
                             <div class="row">
-                                <div class="col-sm-12" style="height:20px;"></div>
+                                <div class="col-sm-12" style="height:30px;"></div>
                             </div>
 
                             <!-- unfished genius embedding, first my attempt to draw data from database, not working, i think due to html being computed way before the angular returns with the data so the blockquotes cannot transform to iframe tags
@@ -268,6 +281,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12" style="height:50px;"></div>
             </div>
             <div id="bottom_bar"></div>
         </div>

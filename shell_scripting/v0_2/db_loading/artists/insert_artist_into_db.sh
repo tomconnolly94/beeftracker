@@ -65,4 +65,4 @@ insert_cmd='db.artist_data_v0_1.insert( {
 
 echo $insert_cmd;
 
-mongo ds141937.mlab.com:41937/heroku_w63fjrg6 -u tom -p tom --eval "$insert_cmd"
+#mongo ds141937.mlab.com:41937/heroku_w63fjrg6 -u tom -p tom --eval "$insert_cmd"

@@ -75,7 +75,7 @@
                     
                     <div class="col-sm-12 row">
                         <div class="col-sm-4" style="height:100%">
-                            <img class="img-circle" src="/artist_images/{{ img_link }}" class="img-circle" height="100%" width="100%">
+                            <img class="img-circle" src="/artist_images/{{ loc_img_link }}" class="img-circle" height="100%" width="100%">
                         </div>
 
                         <div class="col-sm-8">
@@ -95,13 +95,23 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="col-sm-8" style="height:100%;">
+                        <!--<div class="col-sm-8" style="height:100%;">
                             <div class="row" style="text-align:center;padding:0px;margin:40px;">
-                                <!--<div class="col-sm-1" style="padding:0px;"></div>-->
                                 <div class="jumbotron col-sm-3" style="padding:0px;height:60%;margin:10px;"><h4 style="margin:10px;"><a ng-href="{{ spotify_link }}" target="_blank" >Spotify</a></h4></div>
                                 <div class="jumbotron col-sm-3 col-centered" style="padding:0px;height:60%;margin:10px;"><h4 style="margin:10px;"><a ng-href="{{ youtube_link }}" target="_blank" >Youtube</a></h4></div>
                                 <div class="jumbotron col-sm-3" style="padding:0px;height:60%;margin:10px;"><h4 style="margin:10px;"><a ng-href="{{ wikipedia_link }}" target="_blank" >Wikipedia</a></h4></div>
-                                <!--<div class="col-sm-1" style="padding:0px;"></div>-->
+                            </div>
+                        </div>-->
+                        
+                        <div id="link_area" class="col-sm-8">
+                                <div class="row" ng-repeat="triples in links">
+                                    <div class="col-sm-1"></div>
+                                    <div ng-repeat="record in triples" class="jumbotron col-sm-3" style="padding:0px;height:60%;margin:5px;">
+                                        <h4 style="margin:10px;text-align:center"><a ng-href="{{ record.url }}" target="_blank">
+                                            <b>{{ record.button_name }}</b></a>
+                                        </h4>
+                                    </div>
+                                    <div class="col-sm-1"></div>
                             </div>
                         </div>
                         <div class="col-sm-2">

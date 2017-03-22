@@ -164,7 +164,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 name : eventObject.aggressor_object[0].stage_name,
                                 title : eventObject.title,
                                 date : eventObject.event_date.slice(0,10),
-                                img_link : eventObject.loc_img_link,
+                                loc_img_link : eventObject.links.mf_img_link,
                                 targets : targets,
                                 event_num : eventObject._id,
                                 colour : name_colour_map[eventObject.aggressor],

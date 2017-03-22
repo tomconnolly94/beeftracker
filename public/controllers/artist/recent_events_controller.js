@@ -16,37 +16,33 @@ artist_app.controller("recentEventsController", ['$scope','$http', '$routeParams
     $scope.$on('$routeChangeSuccess', function() {
            
         //make http request to server for data
-        $http.get("/search_actors_by_id/" + $routeParams.tagId).success(function(response){
-            var artist = response.artist;
-            console.log(response);
-            console.log(artist);
+        $http.get("/search_actors_by_id/" + $routeParams.tagId).success(function(response_1){
+            var artist = response_1.artist;
         
                 //make http request to server for data
-                $http.get("/search_events_by_event_aggressor/" + artist._id).success(function(response){
+                $http.get("/search_events_by_event_aggressor/" + artist._id).success(function(response_2){
                     
                     $scope.events = new Array();
                     
-                    for(var i = 0; i < response.events[0].length; i++){
+                    for(var i = 0; i < Object.keys(response_2.events).length; i++){
                         
-                        event = response.events[i];
+                        event = response_2.events[i];
                         var record = {
                                 title : event.title,
                                 aggressor : event.aggressor_object[0].stage_name,
-                                targets : events.targets,
-                                loc_img_link : events.loc_img_link
+                                targets : event.targets,
+                                loc_img_link : event.links.mf_img_link
                             };
                         
                         $scope.events[i] = record;
                     }
-                    $scope.events = response.events;
-                    console.log(response);
                 }, 
                 function(response_2) {
                     //failed http request
                     console.log("The client http get request has failed. artist_controller.js:39");
                 });
             }, 
-        function(response_2) {
+        function(response_1) {
             //failed http request
             console.log("The client http get request has failed. artist_controller.js:39");
         });

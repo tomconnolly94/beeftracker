@@ -38,7 +38,7 @@ home_app.controller('searchController', ['$scope','$http', function($scope, $htt
                             name : events[eventId].aggressor_object[0].stage_name,
                             title : events[eventId].title,
                             date : events[eventId].description,
-                            img_link : events[eventId].loc_img_link,
+                            img_link : events[eventId].links.mf_img_link,
                             eventNum : events[eventId]._id
                         };
                         
