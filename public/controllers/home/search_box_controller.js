@@ -21,47 +21,52 @@ home_app.controller('searchController', ['$scope','$http', function($scope, $htt
             //make http request to server for data
             $http.get("/search_all/" + $scope.search_term).success(function(response){
                 
-                var events = response.events;
+                var objects = response.objects;
+                console.log(response);
                 
                 //validate the url tagId to make sure the event exists                
-                if(events != undefined){
+                if(objects != undefined){
                     
                     $scope.records = new Array();
+                    console.log(objects);
                     
-                    for(var eventId = 0; eventId < Object.keys(events).length; eventId++){
+                    for(var objectId = 0; objectId < objects.length; objectId++){
                         
-                        console.log(events[eventId]);
-                        console.log(events[eventId].aggressor_object[0].stage_name);
+                        var obj = objects[objectId];
+                        var name = "";
+                        var title = "";
                         
+                        //if object is an event config record differently
+                        if(obj.hasOwnProperty('aggressor')){
+                            title = objects[objectId].title;
+                            name = objects[objectId].name;
+                        }
+                        else{
+                            title = objects[objectId].stage_name;
+                        }
+                        
+                                                
                         //create data record
                         var record = {
-                            name : events[eventId].aggressor_object[0].stage_name,
-                            title : events[eventId].title,
-                            date : events[eventId].description,
-                            img_link : events[eventId].links.mf_img_link,
-                            eventNum : events[eventId]._id
+                            name : name,
+                            title : title,
+                            img_link : objects[objectId].links.mf_img_link,
+                            eventNum : objects[objectId]._id
                         };
                         
                         //add data record to global scope
-                        $scope.records[eventId] = record;
-                        if($scope.records.length > 0){
-                            $scope.result_string = "Results:";
-                            $scope.results_details_string = events
-                        }
+                        $scope.records[objectId] = record;
                     }
-                    //if($scope.records.length > 0){
-                        $scope.results_string = "Results:";
-                        $scope.results_details_string = $scope.records.length + " search results found";
-                    /*}
-                    else{
-                        $scope.results_string = "";
-                        $scope.results_details_string = "";                        
-                    }*/
-                    console.log($scope.records);
+                    //if there are results, provide a title for the results panel
+                    if($scope.records.length > 0){
+                        $scope.result_string = "Results:";
+                        $scope.results_details_string = objects.length + " results:"
+                    }
+                    
                 }
                 else{
                     //error msg
-                    console.log("Page not found on server");
+                    console.log("No matching results found.");
                 }
             }, 
             function(response) {

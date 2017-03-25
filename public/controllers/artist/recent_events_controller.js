@@ -27,7 +27,9 @@ artist_app.controller("recentEventsController", ['$scope','$http', '$routeParams
                     for(var i = 0; i < Object.keys(response_2.events).length; i++){
                         
                         event = response_2.events[i];
+                        console.log(event);
                         var record = {
+                                _id : event._id,
                                 title : event.title,
                                 aggressor : event.aggressor_object[0].stage_name,
                                 targets : event.targets,

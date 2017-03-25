@@ -175,8 +175,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 border_colour : border_colour,
                                 border_width : border_width
                             };
-                            console.log(record);
-                            console.log($scope.events);
+                            
                             $scope.events.push(record);
 
                             if($routeParams.tagId == eventObject._id){

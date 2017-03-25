@@ -25,6 +25,7 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
             if(response_1.eventObject != undefined){
                 
                 var eventObject = response_1.eventObject;
+                console.log(eventObject);
                 
                     //make http request to server for data
                     $http.get("/search_actors_by_id/" + eventObject.aggressor).success(function(response_2){

@@ -21,8 +21,6 @@ artist_app.controller("artistSearchController", ['$scope','$http', '$routeParams
                 
                 var artist_object = response_1.artist;
                 
-                console.log(artist_object);
-                
                 if(artist_object != undefined){
                     //assign fields to scope
                     $scope.stage_name = artist_object.stage_name;
@@ -59,18 +57,13 @@ artist_app.controller("artistSearchController", ['$scope','$http', '$routeParams
                     if (triple) {
                         $scope.links.push(triple);
                     }
-                    
-                    /*$scope.spotify_link = artist_object.spotify_link;
-                    $scope.wikipedia_link = artist_object.wiki_page;
-                    $scope.youtube_link = artist_object.youtube_link;
-                    */
+                    /*
+                    //code to deal with associated actors data, not in current version
                     $scope.associated_actors = new Array();
                     
-                    console.log(artist_object);
-                    
-                    for(var i = 0; i < artist_object.associated_actor_objects; i++){
-                        $scope.associated_actors.push(artist_object.stage_name);
-                    }
+                    for(var i = 0; i < artist_object.associated_actor_objects.length; i++){
+                        $scope.associated_actors.push(artist_object.associated_actor_objects[i]);
+                    }*/
                 }
             }
             else{

@@ -21,13 +21,17 @@ home_app.controller('eventStreamController', ['$scope','$http', function($scope,
 
             
             var events = events_object.events;
-            $scope.event_stream_events = new Array();
+            //$scope.event_stream_events = new Array();
+            $scope.event_stream_events_col_1 = new Array();
+            $scope.event_stream_events_col_2 = new Array();
+            $scope.event_stream_events_col_3 = new Array();
+            
+            var column_for_insert = 1;
 
             for(var eventId = 0; eventId < events.length; eventId++){
 
                 //create array to hold artists top lyrics
                 var best_lyrics = new Array();
-                console.log(events[eventId]);
                 var artist_object = events[eventId].aggressor_object[0];
 
                 //create data record
@@ -42,7 +46,21 @@ home_app.controller('eventStreamController', ['$scope','$http', function($scope,
                 };
 
                 //add data record to global scope
-                $scope.event_stream_events[eventId] = event;
+                //$scope.event_stream_events[eventId] = event;
+                
+                if(column_for_insert == 1){
+                    $scope.event_stream_events_col_1.push(event);
+                    column_for_insert++;
+                }
+                else if(column_for_insert == 2){
+                    $scope.event_stream_events_col_2.push(event);
+                    column_for_insert++;
+                }
+                else{
+                    $scope.event_stream_events_col_3.push(event);
+                    column_for_insert = 1;
+                }
+                
             }
         }
         else{
