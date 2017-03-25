@@ -12,7 +12,7 @@
 
 home_app.controller('eventStreamController', ['$scope','$http', function($scope, $http) {
         
-    var result_limit = 6;
+    var result_limit = 9;
     
     $http.get("/search_recent_events/" + result_limit).success(function(events_object){
         

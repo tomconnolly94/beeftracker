@@ -53,7 +53,6 @@
             
             //check if details panel should be affixed or not
             function check_side_bar_affix(){
-                console.log($(window));
                 if ($(window).innerWidth() <= 768){
                     //$(window).off('.affix');
                     $("#nav_fixed").removeClass("affix affix-top affix-bottom");
@@ -136,23 +135,24 @@
                                 </div>
                                 
                                 <a name="{{event.event_num}}" id="{{event.event_num}}" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" class="selectable_event timeline-panel" style="background-color:{{event.colour}};padding:0px;border-width:{{event.border_width}};border-color:{{event.border_colour}}">                                        
-                                    <div class="row" style="margin:20px;text-align:right;">
-
-                                        <img ng-src="/event_images/{{ event.loc_img_link }}" class="img-circle col-sm-4" style="position:relative;margin:5px;padding:0px;float:left;" height="75" width="75">
-
-                                        <div class="col-sm-7" style="position:relative;float:right;">
-
-                                            <div class="timeline-heading">
-                                                <h4 style="margin:5px;font-weight:bold;">{{ event.title }}</h4>
-                                            </div>
-
-                                            <div class="timeline-body">
-
-                                                <h5 style="margin:5px;">{{ event.name }}</h5>
-                                                <h5 style="margin:5px;">{{ event.date }}</h5>
-
-                                            </div>
+                                    <div style="padding:15px;">
+                                        
+                                        <div class="row" style="width:100%;position:relative;">
+                                            <h5 class="col-sm-12" style="margin:5px;font-weight:bold;">{{ event.title }}</h5>
                                         </div>
+                                        
+                                        <div class="row"> <!--style="position:relative;float:right;">-->
+
+                                            <div class="timeline-body col-sm-7">
+
+                                                <h6 style="margin:5px;">{{ event.name }}</h6>
+                                                <h6 style="margin:5px;">{{ event.date }}</h6>
+
+                                            </div>
+                                            <img ng-src="/event_images/{{ event.loc_img_link }}" class="img-circle col-sm-4" style="<!--position:relative;-->margin:5px;padding:0px;<!--float:left;-->" height="75" width="75">
+                                        </div>
+                                        
+                                        
                                     </div>
                                 </a>
                             </li>

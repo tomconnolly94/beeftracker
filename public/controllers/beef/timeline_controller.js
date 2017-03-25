@@ -22,12 +22,14 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                 //if its the first time this function is called, init arrays
                 if(first_run){
                     
+                    //targets selected by default in filter
                     $scope.selected_targets = new Array();
                     
                     //add targets of main event to filter so theyre all shown on the timeline by default
                     for(var i = 0; i < response_1.eventObject.targets.length; i++){
                         $scope.selected_targets.push(response_1.eventObject.targets[i].stage_name);
                     }
+                    console.log($scope.selected_targets);
                     //set this flag so the above code is only run once
                     first_run = false;
                 }
@@ -40,7 +42,6 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                         
                         //extract events array
                         var events = response_2.events;
-                        console.log(events);
                         //init vars to be used later
                         $scope.events = new Array();
                         var name_colour_map = [];
@@ -183,7 +184,6 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 $scope.main_name = record.name;
                             }
                         }
-                        console.log($scope.events);
                     }
                     else{
                         //error msg

@@ -352,54 +352,89 @@ app.get('/search_all_related_events_in_timeline_by_id/:event_id', function(reque
                     }
                     
                     var all_events = new Array();
-                    console.log(artists);
                     
                     //standard query to match an event and resolve aggressor and targets references
                     db.collection("event_data_v0_2").aggregate([{ $match: { aggressor : { $in : artists }} },
                                                                 { $unwind : "$targets"}, 
                                                                 { $lookup : { from: "actor_data_v0_2", localField: "aggressor", foreignField: "_id", as: "aggressor_object" }}, 
-                                                                { $lookup : { from: "actor_data_v0_2", localField: "targets", foreignField: "_id", as: "targets" }}/*,
-                                                                { $group : { 
-                                                                    _id : "$_id",
-                                                                    title : "$title",
-                                                                    aggressor : "$aggressor",
-                                                                    targets : { $push : "$targets"},
-                                                                    description : "$description",
-                                                                    date_added : "$data_added",
-                                                                    event_date : "$event_date",
-                                                                    highlights : "$highlights",
-                                                                    data_sources : "$data_sources",
-                                                                    links : "$links",
-                                                                    aggressor_object : "$aggressor_object"
-                                                                    event : {
-                                                                        title : "$title",
-                                                                        event : { $push : "$$ROOT"}
-                                                                    }
-                                                                }}*/
+                                                                { $lookup : { from: "actor_data_v0_2", localField: "targets", foreignField: "_id", as: "targets" }}
                                                                ]).toArray(function(queryErr, events) {
-                    //db.collection("event_data_v0_2").find({ aggressor : { $in : artists } }).toArray(function(queryErr, events) {
                         if(err){ console.log(queryErr); }
                         else{
                             
-                            console.log(events);
-                            console.log(events[0].targets);
+                            var event_store = new Array();
+                            
                             async.each(events, function(event, callback) {
                                 
-                                if(event.aggressor.toString() == main_event.aggressor.toString()){
-                                    all_events.push(event);
-                                }
-                                else{
-                                    
-                                    //loop through targets to check that one of them is orig_artist_name
-                                    for(var sub_target_num = 0; sub_target_num < event.targets.length; sub_target_num++){
+                                console.log(event_store.indexOf(event));
+                                console.log(all_events);
+                                
+                                //if(event_store.indexOf(event) == -1){
+                                
+                                    if(event.aggressor.toString() == main_event.aggressor.toString()){
+                                        all_events.push(event);
+                                    }
+                                    else{
 
-                                        var target = event.targets[sub_target_num];
+                                        //loop through targets to check that one of them is orig_artist_name
+                                        for(var sub_target_num = 0; sub_target_num < event.targets.length; sub_target_num++){
 
-                                        if(target._id.toString() === main_event.aggressor_object[0]._id.toString()){
-                                            all_events.push(event);
+                                            var target = event.targets[sub_target_num];
+
+                                            //should this event be included
+                                            if(target._id.toString() === main_event.aggressor_object[0]._id.toString()){
+                                                /*
+                                                //code attempting to check for duplicate results and combine them
+                                                var event_exists = false;
+                                                
+                                                for(var i = 0; i < all_events.length; i++){
+                                                    console.log(all_events[i]._id.toString());
+                                                    console.log(event._id.toString());
+                                                    if(all_events[i]._id.toString() == event._id.toString()){
+                                                        event_exists = true;
+                                                    }
+                                                }
+                                                
+                                                if(!event_exists){*/
+                                                    all_events.push(event);
+                                                /*}
+                                                else{
+                                                    var index = all_events.indexOf(event);
+                                                    var existing_event = all_events[index];
+                                                    
+                                                    console.log(existing_event.title);
+                                                    
+                                                    for(var j = 0; j < event.targets.length; j++){
+
+                                                        if(existing_event.targets.indexOf(event.targets[j]) == -1){
+                                                            existing_event.targets.push(event.targets[j]);
+                                                        }
+
+                                                    }
+                                                    console.log(event);
+                                                }*/
+                                                
+                                            }
                                         }
                                     }
-                                }
+                                    event_store.push(event);
+                                /*}
+                                else{
+                                    var index = all_events.indexOf(event);
+                                    var existing_event = all_events[index];
+                                    
+                                    console.log(event);
+                                    
+                                    for(var j = 0; j < event.targets.length; j++){
+
+                                        if(existing_event.targets.indexOf(event.targets[j]) == -1){
+                                            existing_event.targets.push(event.targets[j]);
+                                        }
+
+                                    }
+                                    console.log(event);
+                                    
+                                }*/
                             });
                             console.log(all_events.length);
                             response.send( { events : all_events } );
