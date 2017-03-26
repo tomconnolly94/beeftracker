@@ -72,8 +72,13 @@ app.get('/sitemap', function(req, res) {
 }); // access to sitemap generated above
 
 // ### Verification files ###
+<<<<<<< HEAD
 app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/pages/verification_files/google3fc5d5a06ad26a53.html'); }); //google verification
 app.get('/BingSiteAuth.xml', function(request, response) { response.sendFile(__dirname + '/views/pages/verification_files/BingSiteAuth.xml'); }); //bing notification
+=======
+app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/pages/verification_files/google3fc5d5a06ad26a53.html'); });
+app.get('/BingSiteAuth.xml', function(request, response) { response.sendFile(__dirname + '/views/pages/verification_files/BingSiteAuth.xml'); });
+>>>>>>> 76e6f2b40e2e62b606c0d2e4d4df5c67a1151baf
 app.get('/robots.txt', function(request, response) { response.sendFile(__dirname + '/views/pages/verification_files/robots.txt'); }); //robots config file
 
 // ### Search functions ###
@@ -461,5 +466,10 @@ app.get('/*', function(req, res, next) { res.render("pages/error.ejs"); });
 //pages that are not in the current release design but may used later on
 //app.get('/', function(request, response) { response.render('pages/splash'); });
 
+<<<<<<< HEAD
 // ### Launch application ####
 app.listen(app.get('port'), function() { console.log('Node app is running on port', app.get('port')); });
+=======
+// ## Launch application ###
+app.listen(app.get('port'), function() { console.log('Node app is running on port', app.get('port')); });
+>>>>>>> 76e6f2b40e2e62b606c0d2e4d4df5c67a1151baf
