@@ -90,6 +90,10 @@
 
             ga('create', 'UA-92664606-1', 'auto');
             ga('send', 'pageview');
+            
+            $timeout(function() {
+              $anchorScroll('myAnchor');
+            });
         </script>
         
         <!-- bespoke javascript files -->
@@ -115,13 +119,13 @@
                     <div class="jumbotron" id="artist_filter_panel" style="display:inline-block;text-align:center;width:100%;margin:30px 0px;background-color:#000000">
                         
                         <div class="col-sm-5">
-                            <h3 ng-model="main_name"><div id="main_aggressor" class="black_font"> {{ main_event.name }} </div></h3>
+                            <h3 ng-model="main_name"><div id="main_aggressor" class="black_font"> {{ main_aggressor.stage_name }} </div></h3>
                         </div>
 
                         <div class="col-sm-2"><h3 class="black_font">vs</h3></div>
 
                         <div class="col-sm-5" ng-app>
-                            <select multiple class="form-control" ng-change="handle_change(selected_targets)" ng-model="selected_targets" ng-options="target for target in main_event.targets" style="height:90px;"></select>
+                            <select multiple class="form-control" ng-change="handle_change(selected_targets)" ng-model="selected_targets" ng-options="target for target in filter_options" style="height:90px;"></select>
                         </div>
                         
                     </div>
@@ -141,7 +145,7 @@
                                             <h5 class="col-sm-12" style="margin:5px;font-weight:bold;">{{ event.title }}</h5>
                                         </div>
                                         
-                                        <div class="row"> <!--style="position:relative;float:right;">-->
+                                        <div class="row"> 
 
                                             <div class="timeline-body col-sm-7">
 
@@ -161,15 +165,15 @@
                 </div>
                 
                 <div class="col-sm-5" id="nav_wrapper" ng-controller="currentEventController">
-                    
-                    <div id="nav_fixed" data-spy="affix" data-offset-top="250" data-offset-bottom="250" class="nav nav-pills nav-stacked" style="margin:30px 0px 0px 0px;width:100%;">
+                                    
+                    <div id="nav_fixed" data-spy="affix" data-offset-top="120" data-offset-bottom="250" class="nav nav-pills nav-stacked" style="margin:30px 0px 0px 0px;width:100%;">
                         <div id="main_feature">                     
                             <div id="videowrapper" class="embed-responsive embed-responsive-16by9">
                                 <iframe style="width:100%;" scrolling="no" ng-src="{{ trustSrc( mf_link) }}" class="embed-responsive-item" allowfullscreen="true"></iframe>
                             </div>
                         </div>
 
-                        <h2>{{ song_title }}</h2>
+                        <h2>{{ title }}</h2>
                         
                         <div id="scroll_panel" style="max-height:50vh;">
                             <a ng-href="/artist/{{artist_id}}" target="_self">

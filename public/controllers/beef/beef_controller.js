@@ -37,7 +37,7 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
                             //assign fields to scope
                             $scope.name = artist.stage_name;
                             $scope.artist_id = artist._id;
-                            $scope.song_title = eventObject.title;
+                            $scope.title = eventObject.title;
                             $scope.date = eventObject.event_date.slice(0, 10);
                             $scope.description = eventObject.description;
                             $scope.highlights = eventObject.highlights;

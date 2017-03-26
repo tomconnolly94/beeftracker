@@ -42,7 +42,7 @@
         <script>
             //load header and footer
             $(function(){
-                $("#top_bar").load("/partials/header.ejs");
+                //$("#top_bar").load("/partials/header.ejs");
                 $("#bottom_bar").load("/partials/footer.ejs");
             });
         </script>
@@ -63,7 +63,18 @@
         <div class="container">
         
             <div id="search_area" ng-controller="searchController">
-            <div id="top_bar"></div>
+                <div id="top_bar">
+                    <div class="row">
+                        <div class="col-sm-12">
+                        <a href="/" target="_self">
+                            <h1 style="text-align:center;font-size:90px;color:#FFFFFF;margin-top:10px;">
+                                <img src="/logo/steak.png" height="90" width="90">eeftracker
+                            </h1>
+                        </a>
+                    </div>           
+                </div>
+                    <hr style="margin:10px 0px 30px 0px;">
+                </div>
 
                 <div id="search_box" class="row form-group form-group-lg" style="margin:0px;">
                     <div class="col-sm-4"></div>
@@ -89,7 +100,7 @@
 
                             <li ng-repeat="record in records" style="margin:30px 0px;font-weight:bold;background-color:#9C0505;padding:20px;">   
 
-                                <a ng-href="/beef/{{record.eventNum}}#{{record.eventNum}}">
+                                <a ng-href="{{record.type_path}}{{record.eventNum}}#{{record.eventNum}}">
                                     <div class="row">
                                         <div class="col-sm-8" style="padding:0px;">
                                             <h3 style="margin:5px;font-weight:bold;"> {{ record.title }} </h3>
@@ -117,7 +128,7 @@
                 <div class="col-sm-4"></div>
             </div>
                 
-            <div class="row" ng-controller="eventStreamController">
+            <div class="row" style="padding:75px;" ng-controller="eventStreamController">
                 <div class="col-sm-4">
                     <ul>
                         <li ng-repeat="event_col_1 in event_stream_events_col_1 track by $index" style="margin:30px 0px;">        

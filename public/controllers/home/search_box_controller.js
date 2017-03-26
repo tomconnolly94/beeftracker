@@ -35,14 +35,17 @@ home_app.controller('searchController', ['$scope','$http', function($scope, $htt
                         var obj = objects[objectId];
                         var name = "";
                         var title = "";
+                        var type_path = "";
                         
                         //if object is an event config record differently
-                        if(obj.hasOwnProperty('aggressor')){
+                        if(obj.hasOwnProperty('aggressor')){ //object is an event
                             title = objects[objectId].title;
                             name = objects[objectId].name;
+                            type_path = "/beef/";
                         }
-                        else{
+                        else{//object is an artists
                             title = objects[objectId].stage_name;
+                            type_path = "/artist/";
                         }
                         
                                                 
@@ -51,7 +54,8 @@ home_app.controller('searchController', ['$scope','$http', function($scope, $htt
                             name : name,
                             title : title,
                             img_link : objects[objectId].links.mf_img_link,
-                            eventNum : objects[objectId]._id
+                            eventNum : objects[objectId]._id,
+                            type_path : type_path
                         };
                         
                         //add data record to global scope

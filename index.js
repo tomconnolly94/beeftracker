@@ -89,10 +89,34 @@ app.get('/search_events_by_id/:event_id', function(request, response) {
             
             //standard query to match an event and resolve aggressor and targets references
             db.collection("event_data_v0_2").aggregate([{ $match: { _id : object } }, //query 
-                                                        { $unwind : "$targets"}, //allows the $lookup with each field in $targets
-                                                        { $lookup : { from: "actor_data_v0_2", localField: "aggressor", foreignField: "_id", as: "aggressor_object" }}, //resolve the 'aggressor' field
-                                                        { $lookup : { from: "actor_data_v0_2", localField: "targets", foreignField: "_id", as: "targets" }}, //resolve each of the targets fields
+                                                        { $unwind : "$targets" }, //allows the $lookup with each field in $targets
+                                                        { $lookup : { 
+                                                            from: "actor_data_v0_2", 
+                                                            localField: "aggressor", 
+                                                            foreignField: "_id", 
+                                                            as: "aggressor_object" 
+                                                        }}, //resolve the 'aggressor' field
+                                                        { $lookup : { 
+                                                            from: "actor_data_v0_2", 
+                                                            localField: "targets", 
+                                                            foreignField: "_id", 
+                                                            as: "target_objects" 
+                                                        }},
+                                                        { $group: {
+                                                            _id : "$_id",
+                                                            title : { "$max" : "$title"},
+                                                            aggressor_object : { "$max" : "$aggressor_object"},
+                                                            aggressor : { "$max" : "$aggressor"},
+                                                            description : { "$max" : "$description"},
+                                                            date_added : { "$max" : "$date_added"},
+                                                            event_date : { "$max" : "$event_date"},
+                                                            highlights : { "$max" : "$highlights"},
+                                                            data_sources : { "$max" : "$data_sources"},
+                                                            links : { "$max" : "$links"},
+                                                            targets : { "$addToSet": "$target_objects" }
+                                                        }} //resolve each of the targets fields
                                                        ]).toArray(function(queryErr, docs) {
+                console.log(docs);
                 response.send({eventObject : docs[0]});
             });
         }
@@ -323,17 +347,30 @@ app.get('/search_all_related_events_in_timeline_by_id/:event_id', function(reque
             
                     //standard query to match an event and resolve aggressor and targets references
                     db.collection("event_data_v0_2").aggregate([{ $match: { _id : object } },
-                                                                { $unwind : "$targets"}, 
                                                                 { $lookup : { 
                                                                     from: "actor_data_v0_2",
                                                                     localField: "aggressor",
                                                                     foreignField: "_id",
-                                                                    as: "aggressor_object" }}, //resolve the aggressor reference to an aggressor_object field
+                                                                    as: "aggressor_object" }},
+                                                                { $unwind : "$targets"},
                                                                 { $lookup : { 
                                                                     from: "actor_data_v0_2",
                                                                     localField: "targets",
                                                                     foreignField: "_id",
-                                                                    as: "targets" }} //resolve each target reference to an artist object in targets[]
+                                                                    as: "target_objects" }},
+                                                                { $group: {
+                                                                    _id : "$_id",
+                                                                    title : { "$max" : "$title"},
+                                                                    aggressor_object : { "$max" : "$aggressor_object"},
+                                                                    aggressor : { "$max" : "$aggressor"},
+                                                                    description : { "$max" : "$description"},
+                                                                    date_added : { "$max" : "$date_added"},
+                                                                    event_date : { "$max" : "$event_date"},
+                                                                    highlights : { "$max" : "$highlights"},
+                                                                    data_sources : { "$max" : "$data_sources"},
+                                                                    links : { "$max" : "$links"},
+                                                                    targets : { "$addToSet": "$target_objects" }
+                                                                }}
                                                                ]).toArray(function(queryErr, main_event) {
                         if(queryErr){ console.log(queryErr); }
                         else{
@@ -345,10 +382,10 @@ app.get('/search_all_related_events_in_timeline_by_id/:event_id', function(reque
                 function(main_event, callback){ //gather all the targets' responses
                      
                     var artists = new Array();
-                    artists.push(main_event.aggressor);
+                    artists.push(main_event.aggressor_object[0]._id);
                     
                     for(var i = 0; i < main_event.targets.length; i++){
-                        artists.push(main_event.targets[i]._id);
+                        artists.push(main_event.targets[i][0]._id);
                     }
                     
                     var all_events = new Array();
@@ -356,20 +393,36 @@ app.get('/search_all_related_events_in_timeline_by_id/:event_id', function(reque
                     //standard query to match an event and resolve aggressor and targets references
                     db.collection("event_data_v0_2").aggregate([{ $match: { aggressor : { $in : artists }} },
                                                                 { $unwind : "$targets"}, 
-                                                                { $lookup : { from: "actor_data_v0_2", localField: "aggressor", foreignField: "_id", as: "aggressor_object" }}, 
-                                                                { $lookup : { from: "actor_data_v0_2", localField: "targets", foreignField: "_id", as: "targets" }}
+                                                                { $lookup : { 
+                                                                    from: "actor_data_v0_2", 
+                                                                    localField: "aggressor", 
+                                                                    foreignField: "_id", 
+                                                                    as: "aggressor_object" }}, 
+                                                                { $lookup : { 
+                                                                    from: "actor_data_v0_2", 
+                                                                    localField: "targets", 
+                                                                    foreignField: "_id", 
+                                                                    as: "target_objects" }},
+                                                                { $group: {
+                                                                    _id : "$_id",
+                                                                    title : { "$max" : "$title"},
+                                                                    aggressor_object : { "$max" : "$aggressor_object"},
+                                                                    aggressor : { "$max" : "$aggressor"},
+                                                                    description : { "$max" : "$description"},
+                                                                    date_added : { "$max" : "$date_added"},
+                                                                    event_date : { "$max" : "$event_date"},
+                                                                    highlights : { "$max" : "$highlights"},
+                                                                    data_sources : { "$max" : "$data_sources"},
+                                                                    links : { "$max" : "$links"},
+                                                                    targets : { "$addToSet": "$target_objects" }
+                                                                }}
                                                                ]).toArray(function(queryErr, events) {
                         if(err){ console.log(queryErr); }
                         else{
-                            
+                        
                             var event_store = new Array();
                             
                             async.each(events, function(event, callback) {
-                                
-                                console.log(event_store.indexOf(event));
-                                console.log(all_events);
-                                
-                                //if(event_store.indexOf(event) == -1){
                                 
                                     if(event.aggressor.toString() == main_event.aggressor.toString()){
                                         all_events.push(event);
@@ -379,64 +432,15 @@ app.get('/search_all_related_events_in_timeline_by_id/:event_id', function(reque
                                         //loop through targets to check that one of them is orig_artist_name
                                         for(var sub_target_num = 0; sub_target_num < event.targets.length; sub_target_num++){
 
-                                            var target = event.targets[sub_target_num];
+                                            var target = event.targets[sub_target_num][0];
 
                                             //should this event be included
                                             if(target._id.toString() === main_event.aggressor_object[0]._id.toString()){
-                                                /*
-                                                //code attempting to check for duplicate results and combine them
-                                                var event_exists = false;
-                                                
-                                                for(var i = 0; i < all_events.length; i++){
-                                                    console.log(all_events[i]._id.toString());
-                                                    console.log(event._id.toString());
-                                                    if(all_events[i]._id.toString() == event._id.toString()){
-                                                        event_exists = true;
-                                                    }
-                                                }
-                                                
-                                                if(!event_exists){*/
                                                     all_events.push(event);
-                                                /*}
-                                                else{
-                                                    var index = all_events.indexOf(event);
-                                                    var existing_event = all_events[index];
-                                                    
-                                                    console.log(existing_event.title);
-                                                    
-                                                    for(var j = 0; j < event.targets.length; j++){
-
-                                                        if(existing_event.targets.indexOf(event.targets[j]) == -1){
-                                                            existing_event.targets.push(event.targets[j]);
-                                                        }
-
-                                                    }
-                                                    console.log(event);
-                                                }*/
-                                                
                                             }
                                         }
                                     }
-                                    event_store.push(event);
-                                /*}
-                                else{
-                                    var index = all_events.indexOf(event);
-                                    var existing_event = all_events[index];
-                                    
-                                    console.log(event);
-                                    
-                                    for(var j = 0; j < event.targets.length; j++){
-
-                                        if(existing_event.targets.indexOf(event.targets[j]) == -1){
-                                            existing_event.targets.push(event.targets[j]);
-                                        }
-
-                                    }
-                                    console.log(event);
-                                    
-                                }*/
                             });
-                            console.log(all_events.length);
                             response.send( { events : all_events } );
                         }
                     });

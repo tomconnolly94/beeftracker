@@ -47,6 +47,8 @@ option {
 /* style to create scroll panel if event data is too large to fit */
 #scroll_panel {
     overflow-y:scroll;
+    overflow-x:hidden;
+    width:100%;
 }
 /* hide scroll bar on scroll panel */
 #scroll_panel::-webkit-scrollbar{
