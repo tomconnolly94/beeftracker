@@ -83,7 +83,7 @@ a{
 }
 /* styles for footer */
 #bootstrap-overrides #bottom_bar {
-    position:absolute;
+    /*position:absolute;*/
     margin:20px auto;
     bottom:0px;
     width: 100%;
