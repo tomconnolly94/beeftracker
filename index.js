@@ -88,6 +88,7 @@ app.get('/search_events_by_id/:event_id', function(request, response) {
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
         else{
+            console.log(identifier);
             var object = BSON.ObjectID.createFromHexString(identifier);
             
             //standard query to match an event and resolve aggressor and targets references
