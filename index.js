@@ -61,6 +61,7 @@ app.get('/beef/:tagId', function(request, response) { response.render('pages/bee
 app.get('/artist/:tagId', function(request, response) { response.render('pages/artist.ejs'); }); //artist page
 app.get('/contact_us/', function(request, response) { response.render('pages/contact_us.ejs'); }); // contact us page
 app.get('/about/', function(request, response) { response.render('pages/about_us.ejs'); }); // about_us page
+app.get('/terms_of_use/', function(request, response) { response.render('pages/terms_of_use.ejs'); }); // about_us page
 app.get('/sitemap', function(req, res) {
     sitemap.toXML( function (err, xml) {
         if (err) {

@@ -19,7 +19,7 @@ p, h1, h2, h3, h4, h5, h6, div, a {
 .container{
     background-color: rgba(0,0,0,0.75);
     padding:0px 40px;
-    min-height:170%;
+    min-height:130%;
     position:relative;
 }
 /* remove default padding from list items */
