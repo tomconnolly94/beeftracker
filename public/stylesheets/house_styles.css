@@ -116,6 +116,12 @@ a:active {
     background-color:#000000;
 }
 
+@media (max-width: 425px) {
+    #bootstrap-overrides h1 {
+        font-size:50px;
+    }
+}
+
 @media (min-width: 768px) {
 .container {
     width:100%;
