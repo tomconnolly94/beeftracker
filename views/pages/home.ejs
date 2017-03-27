@@ -102,7 +102,7 @@
 
                             <li ng-repeat="record in records" style="margin:30px 0px;font-weight:bold;background-color:#9C0505;padding:20px;">   
 
-                                <a ng-href="{{record.type_path}}{{record.eventNum}}#{{record.eventNum}}">
+                                <a ng-href="{{record.type_path}}{{record.eventNum}}#{{record.eventNum}}" target="_self">
                                     <div class="row">
                                         <div class="col-sm-8" style="padding:0px;">
                                             <h3 style="margin:5px;font-weight:bold;"> {{ record.title }} </h3>
@@ -134,7 +134,7 @@
                 <div class="col-sm-4">
                     <ul>
                         <li ng-repeat="event_col_1 in event_stream_events_col_1 track by $index" style="margin:30px 0px;">        
-                            <a ng-href="/beef/{{event_col_1.eventNum}}#{{event_col_1.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;">
+                            <a ng-href="/beef/{{event_col_1.eventNum}}#{{event_col_1.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;" target="_self">
 
                                 <div class="row" style="width:100%;margin:0px;text-align:right;">
 
@@ -158,7 +158,7 @@
                 <div class="col-sm-4">
                     <ul>
                         <li ng-repeat="event_col_2 in event_stream_events_col_2 track by $index" style="margin:30px 0px;">        
-                            <a ng-href="/beef/{{event_col_2.eventNum}}#{{event_col_2.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;">
+                            <a ng-href="/beef/{{event_col_2.eventNum}}#{{event_col_2.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;" target="_self">
 
                                 <div class="row" style="width:100%;margin:0px;text-align:right;">
 
@@ -182,7 +182,7 @@
                 <div class="col-sm-4">
                      <ul>
                         <li ng-repeat="event_col_3 in event_stream_events_col_3 track by $index" style="margin:30px 0px;">        
-                            <a ng-href="/beef/{{event_col_3.eventNum}}#{{event_col_3.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;">
+                            <a ng-href="/beef/{{event_col_3.eventNum}}#{{event_col_3.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;" target="_self">
 
                                 <div class="row" style="width:100%;margin:0px;text-align:right;">
 
