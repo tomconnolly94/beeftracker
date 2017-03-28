@@ -56,12 +56,13 @@ app.use('/bower_components', express.static(__dirname + '/bower_components/')); 
 app.use('/partials', express.static(__dirname + '/views/partials/')); //route to reference css scripts
 
 // ### Permanent page routes ###
-app.get('/', function(request, response) { response.render('pages/home.ejs'); }); //home page
-app.get('/beef/:tagId', function(request, response) { response.render('pages/beef.ejs'); }); //beef page
-app.get('/artist/:tagId', function(request, response) { response.render('pages/artist.ejs'); }); //artist page
-app.get('/contact_us/', function(request, response) { response.render('pages/contact_us.ejs'); }); // contact us page
-app.get('/about/', function(request, response) { response.render('pages/about_us.ejs'); }); // about_us page
-app.get('/terms_of_use/', function(request, response) { response.render('pages/terms_of_use.ejs'); }); // about_us page
+app.get('/', function(request, response) { response.render('pages/dynamic_pages/home.ejs'); }); //home page
+app.get('/beef/:tagId', function(request, response) { response.render('pages/dynamic_pages/beef.ejs'); }); //beef page
+app.get('/artist/:tagId', function(request, response) { response.render('pages/dynamic_pages/artist.ejs'); }); //artist page
+app.get('/submit_event/', function(request, response) { response.render('pages/form_pages/submit_event.ejs'); }); // contact us page
+app.get('/contact_us/', function(request, response) { response.render('pages/static_pages/contact_us.ejs'); }); // contact us page
+app.get('/about/', function(request, response) { response.render('pages/static_pages/about_us.ejs'); }); // about_us page
+app.get('/terms_of_use/', function(request, response) { response.render('pages/static_pages/terms_of_use.ejs'); }); // about_us page
 app.get('/sitemap', function(req, res) {
     sitemap.toXML( function (err, xml) {
         if (err) {
@@ -73,11 +74,11 @@ app.get('/sitemap', function(req, res) {
 }); // access to sitemap generated above
 
 // ### Verification files ###
-app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/pages/verification_files/google3fc5d5a06ad26a53.html'); }); //google verification
-app.get('/BingSiteAuth.xml', function(request, response) { response.sendFile(__dirname + '/views/pages/verification_files/BingSiteAuth.xml'); }); //bing notification
-app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/pages/verification_files/google3fc5d5a06ad26a53.html'); });
-app.get('/BingSiteAuth.xml', function(request, response) { response.sendFile(__dirname + '/views/pages/verification_files/BingSiteAuth.xml'); });
-app.get('/robots.txt', function(request, response) { response.sendFile(__dirname + '/views/pages/verification_files/robots.txt'); }); //robots config file
+app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/verification_files/google3fc5d5a06ad26a53.html'); }); //google verification
+app.get('/BingSiteAuth.xml', function(request, response) { response.sendFile(__dirname + '/views/verification_files/BingSiteAuth.xml'); }); //bing notification
+app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/verification_files/google3fc5d5a06ad26a53.html'); });
+app.get('/BingSiteAuth.xml', function(request, response) { response.sendFile(__dirname + '/views/verification_files/BingSiteAuth.xml'); });
+app.get('/robots.txt', function(request, response) { response.sendFile(__dirname + '/views/verification_files/robots.txt'); }); //robots config file
 
 // ### Search functions ###
 app.get('/search_events_by_id/:event_id', function(request, response) {
@@ -459,8 +460,23 @@ app.get('/search_all_related_events_in_timeline_by_id/:event_id', function(reque
     });
 }); //make multiple database queries to gather all existing events involving both the aggressor and at least one of the targets
 
+app.get('/search_all_artists/', function(request, response) {
+
+    var url = process.env.MONGODB_URI;
+    
+    MongoClient.connect(url, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            //standard query to match an event and resolve aggressor and targets references
+            db.collection("actor_data_v0_2").find().toArray(function(queryErr, docs) {
+                console.log(docs);
+                response.send({actors : docs});
+            });
+        }
+    });
+}); //search for an event using its _id
 // ### Serve an error page on unrecognised url path ###
-app.get('/*', function(req, res, next) { res.render("pages/error.ejs"); });
+app.get('/*', function(req, res, next) { res.render("pages/static_pages/error.ejs"); });
 
 //pages that are not in the current release design but may used later on
 //app.get('/', function(request, response) { response.render('pages/splash'); });

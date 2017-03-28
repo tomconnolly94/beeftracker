@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html ng-app="submit_event">
+
+    <!--
+        Page name: home.ejs
+        Project: Beeftracker
+        Author: Tom Connolly
+        Date: 8/11/16
+    -->
+    
+    <head>
+        <title>Submit New Event!</title>
+        <meta charset="utf-8"><!-- encoding version -->
+        <meta name="description" content="Beeftracker is a brand new way to read the news, working from crowd sourced data it aims to put news events back into their context by stringing them together in a timeline. Check it out now!">
+        <link rel="shortcut icon" href="/logo/steak.ico"><!-- icon -->
+        <meta name="viewport" content="width=device-width, initial-scale=1"><!-- tag for mobile zoom -->
+        
+        <!-- jQuery imports -->
+        <script src="/modules/jquery/dist/jquery.min.js"></script>
+        
+        <!--angular imports -->
+        <script src="/modules/angular/angular.min.js"></script>
+        <!-- bootstrap imports -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="/modules/bootstrap/bootstrap.min.js" crossorigin="anonymous"></script> 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC" />
+        <link rel='stylesheet' href='/modules/angular-loading-bar/build/loading-bar.min.css' type='text/css' media='all' />
+                
+        <script src="https://apis.google.com/js/plusone.js"></script>
+        
+        
+        <!-- bespoke javascript files -->
+        <script src="/controllers/submit_event/submit_event_app.js"></script>
+        <script src="/controllers/submit_event/submit_get_options.js"></script>
+        
+        <!-- bespoke stylesheets -->
+        <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/header.css">
+        
+        <script> 
+            $(function(){
+                $("#top_bar").load("/partials/header.ejs");
+                $("#bottom_bar").load("/partials/footer.ejs");
+            });
+        </script>
+        
+        <!-- include google analytics -->
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-92664606-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    </head>
+
+    <body id="bootstrap-overrides">
+        <div class="container" style="text-align:center">
+            <div id="top_bar"></div>
+            
+            <!-- spacer bar -->
+            <div class="row">
+                <div class="col-xs-12" style="height:20px;"></div>
+            </div>
+            
+            <h2>Submit New Beef Here!</h2>
+            
+            <!-- spacer bar -->
+            <div class="row">
+                <div class="col-xs-12" style="min-height:40px;"></div>
+            </div>
+            <div style="height:300px;" ng-controller="submitOptions">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">           
+                     <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="title">Title:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="email" placeholder="Enter email">
+                            </div>
+                        </div>
+                         
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="title">Select Actor</label>
+                            <div class="col-sm-8" style="margin:0px;">
+                                <select multiple class="form-control">
+                                    <option ng-repeat="actor in actors" >{{ actor.stage_name }}</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2" style="padding:0px;margin:0px;">
+                                <button type="button" class="btn btn-default" style="color:#000000;height:60%;margin:20% 0;">New Actor</button>
+                            </div>
+                        </div>
+                         
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="birth_name">Stage Name:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="stage_name" placeholder="Enter the name the Actor is most famous for">
+                            </div>
+                        </div>
+                         
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="birth_name">Birth Name:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="birth_name" placeholder="Enter the name of the actor before they became famous, separated with commas.">
+                            </div>
+                        </div>
+                         
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="title">Nicknames:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="nicknames" placeholder="Enter any nicknames , separated with commas.">
+                            </div>
+                        </div>
+                         
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div> 
+                <div class="col-sm-3" style="height:100%"></div>                
+            </div>
+            <div id="bottom_bar"></div>
+        </div>
+    </body>
+</html>

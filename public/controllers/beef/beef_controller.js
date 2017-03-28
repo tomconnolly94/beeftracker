@@ -19,6 +19,8 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
             return $sce.trustAsResourceUrl(src);
         }
         
+        console.log($routeParams.tagId);
+        
         //make http request to server for data
         $http.get("/search_events_by_id/" + $routeParams.tagId).success(function(response_1){
             //validate the url tagId to make sure the event exists
