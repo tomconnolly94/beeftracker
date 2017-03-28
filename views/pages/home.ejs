@@ -44,7 +44,7 @@
         <script>
             //load header and footer
             $(function(){
-                //$("#top_bar").load("/partials/header.ejs");
+                $("#top_bar").load("/partials/header.ejs");
                 $("#bottom_bar").load("/partials/footer.ejs");
             });
         </script>
@@ -63,21 +63,11 @@
 
     <body id="bootstrap-overrides">
         <div class="container">
+            
+            <div id="top_bar"></div>
         
             <div id="search_area" ng-controller="searchController">
-                <div id="top_bar">
-                    <div class="row">
-                        <div class="col-sm-12">
-                        <a href="/" target="_self">
-                            <h1 id="header_heading">
-                                <img id="header_image" src="/logo/steak.png">eeftracker
-                            </h1>
-                        </a>
-                    </div>           
-                </div>
-                    <hr id="header_hr">
-                </div>
-
+    
                 <div id="search_box" class="row form-group form-group-lg" style="margin:0px;">
                     <div class="col-sm-4"></div>
                     <div class="col-sm-4">
