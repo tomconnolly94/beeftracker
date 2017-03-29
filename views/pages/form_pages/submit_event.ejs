@@ -29,6 +29,9 @@
                 
         <script src="https://apis.google.com/js/plusone.js"></script>
         
+        <link rel="stylesheet" href="dist/daterangepicker.min.css">
+        <script type="text/javascript" src="moment.min.js"></script>
+        <script type="text/javascript" src="dist/jquery.daterangepicker.min.js"></script>
         
         <!-- bespoke javascript files -->
         <script src="/controllers/submit_event/submit_event_app.js"></script>
@@ -38,7 +41,8 @@
         <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css">
         <link rel="stylesheet" type="text/css" href="/stylesheets/header.css">
         
-        <script> 
+        <script>
+            //load header and footer
             $(function(){
                 $("#top_bar").load("/partials/header.ejs");
                 $("#bottom_bar").load("/partials/footer.ejs");
@@ -72,7 +76,7 @@
             <div class="row">
                 <div class="col-xs-12" style="min-height:40px;"></div>
             </div>
-            <div style="height:300px;" ng-controller="submitOptions">
+            <div style="height:100%" ng-controller="submitOptions" class="row">
                 <div class="col-sm-3"></div>
                 <div class="col-sm-6">           
                      <form class="form-horizontal">
@@ -85,35 +89,38 @@
                          
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="title">Select Actor</label>
-                            <div class="col-sm-8" style="margin:0px;">
+                            <div class="col-sm-7" style="margin:0px;">
+                                <select class="form-control">
+                                    <option ng-repeat="actor in actors" >{{ actor.stage_name }}</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3" style="padding:0px;margin:0px;">
+                                <button type="button" class="btn btn-default" style="color:#000000;height:60%;margin:0px;">New Actor</button>
+                            </div>
+                        </div>
+                         
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="title">Select Targets</label>
+                            <div class="col-sm-7" style="margin:0px;">date
                                 <select multiple class="form-control">
                                     <option ng-repeat="actor in actors" >{{ actor.stage_name }}</option>
                                 </select>
                             </div>
-                            <div class="col-sm-2" style="padding:0px;margin:0px;">
+                            <div class="col-sm-3" style="padding:0px;margin:0px;">
                                 <button type="button" class="btn btn-default" style="color:#000000;height:60%;margin:20% 0;">New Actor</button>
                             </div>
                         </div>
                          
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="birth_name">Stage Name:</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="stage_name" placeholder="Enter the name the Actor is most famous for">
+                         <div class="form-group row">
+                            <label class="control-label col-sm-2" for="comment">Description:</label>
+                            <div class="col-sm-10" style="margin:0px;">
+                                <textarea class="form-control" rows="3" id="comment"></textarea>
                             </div>
                         </div>
                          
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="birth_name">Birth Name:</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="birth_name" placeholder="Enter the name of the actor before they became famous, separated with commas.">
-                            </div>
-                        </div>
-                         
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="title">Nicknames:</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="nicknames" placeholder="Enter any nicknames , separated with commas.">
-                            </div>
+                        <div class="form-group row">
+                            <label class="control-label col-sm-2" for="comment">Date:</label>
+                                <input id="date-range13" class="col-sm-9" size="40" value="2015-03-01" style="margin:0 17px;color:#000000">
                         </div>
                          
                         <div class="form-group">
@@ -123,7 +130,7 @@
                         </div>
                     </form>
                 </div> 
-                <div class="col-sm-3" style="height:100%"></div>                
+                <div class="col-sm-3"></div>                
             </div>
             <div id="bottom_bar"></div>
         </div>
