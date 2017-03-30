@@ -31,7 +31,6 @@
         
         <link rel="stylesheet" href="dist/daterangepicker.min.css">
         <script type="text/javascript" src="moment.min.js"></script>
-        <script type="text/javascript" src="dist/jquery.daterangepicker.min.js"></script>
         
         <!-- bespoke javascript files -->
         <script src="/controllers/submit_event/submit_event_app.js"></script>
@@ -47,6 +46,41 @@
                 $("#top_bar").load("/partials/header.ejs");
                 $("#bottom_bar").load("/partials/footer.ejs");
             });
+            
+            $(document).ready(function() {
+                var max_fields      = 10; //maximum input boxes allowed
+                var highlights_title_wrapper         = $(".highlights_title_target"); //Fields wrapper
+                var highlights_content_wrapper         = $(".highlights_content_target"); //Fields wrapper
+                var highlight_title_add_button      = $(".highlight_title_add_field_button"); //Add button ID
+                var highlight_content_add_button      = $(".highlight_content_add_field_button"); //Add button ID
+
+                var highlight_title_count = 1; //initlal text box count
+                $(highlight_title_add_button).click(function(e){ //on add input button click
+                    e.preventDefault();
+                    if(highlight_title_count < max_fields){ //max input box allowed
+                        highlight_title_count++; //text box increment
+                        $(highlights_title_wrapper).append('<div class="col-sm-12 row"><div class="col-sm-9 row" style="padding:0px;margin:0px 15px;"><input type="text" name="mytext[]" class="col-sm-12" style="color:#000000;" placeholder="Highlight title.. eg \'Top Lyrics\'/\'Best Quotes\'"></div><div class="col-sm-3 row"><div class="col-sm-2"></div><button class="highlight_title_add_field_button" class="col-sm-8" style="color:#000000;width:100%;">+</button><div class="col-sm-2"></div></div></div> <div class="col-sm-12 row" style="padding:0px;margin:5px 0px;" ><div class="col-sm-2"><span class="glyphicon glyphicon-triangle-right" style="margin:10px;"></span></div><div class="col-sm-7 row highlights_content_target" style="padding:0px;margin:0px 0px 0px 15px;"><input type="text" name="mytext[]" class="col-sm-12" style="color:#000000;"></div><div class="col-sm-3 row"><div class="col-sm-3"></div><button class="highlight_content_add_field_button" class="col-sm-6" style="color:#000000;width:50%;" placeholder="Highlight 1">+</button><div class="col-sm-3"></div></div></div>'); //add input box
+                    }
+                });
+                
+                var highlight_content_count = 1; //initlal text box count
+                $(highlight_content_add_button).click(function(e){ //on add input button click
+                    e.preventDefault();
+                    if(x < max_fields){ //max input box allowed
+                        x++; //text box increment
+                        $(wrapper).append('<div><input type="text" name="mytext[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
+                    }
+                });
+
+                $(highlights_title_wrapper).on("click",".remove_field", function(e){ //user click on remove text
+                    e.preventDefault(); $(this).parent('div').remove(); x--;
+                })
+                
+                $(highlights_content_wrapper).on("click",".remove_field", function(e){ //user click on remove text
+                    e.preventDefault(); $(this).parent('div').remove(); x--;
+                })
+            });
+            
         </script>
         
         <!-- include google analytics -->
@@ -80,48 +114,89 @@
                 <div class="col-sm-3"></div>
                 <div class="col-sm-6">           
                      <form class="form-horizontal">
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="title">Title:</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="email" placeholder="Enter email">
+                         
+                        <div class="form-group row">
+                            <label class="control-label col-sm-3" style="text-align:center;" for="title">Title:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="title" placeholder="Enter title">
                             </div>
                         </div>
                          
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="title">Select Actor</label>
-                            <div class="col-sm-7" style="margin:0px;">
-                                <select class="form-control">
-                                    <option ng-repeat="actor in actors" >{{ actor.stage_name }}</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-3" style="padding:0px;margin:0px;">
-                                <button type="button" class="btn btn-default" style="color:#000000;height:60%;margin:0px;">New Actor</button>
+                        <div class="form-group row">
+                            <label class="control-label col-sm-3" style="text-align:center;" for="title">Select Actor</label>
+                            <div class="col-sm-9" style="margin:0px;">
+                                <div class="col-sm-9" style="padding:0px;margin:0px;">
+                                    <select class="form-control">
+                                        <option ng-repeat="actor in actors" >{{ actor.stage_name }}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3" style="padding:0px;margin:0px;">
+                                    <button type="button" class="btn btn-default" style="color:#000000;height:60%;margin:0px 10px;">Add new</button>
+                                </div>
                             </div>
                         </div>
                          
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="title">Select Targets</label>
-                            <div class="col-sm-7" style="margin:0px;">date
-                                <select multiple class="form-control">
-                                    <option ng-repeat="actor in actors" >{{ actor.stage_name }}</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-3" style="padding:0px;margin:0px;">
-                                <button type="button" class="btn btn-default" style="color:#000000;height:60%;margin:20% 0;">New Actor</button>
+                        <div class="form-group row">
+                            <label class="control-label col-sm-3" style="text-align:center;" for="title">Select Targets</label>
+                            <div class="col-sm-9" style="margin:0px;">
+                                <div class="col-sm-9" style="padding:0px;margin:0px;">
+                                    <select multiple class="form-control">
+                                        <option ng-repeat="actor in actors" >{{ actor.stage_name }}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3" style="padding:0px;margin:0px;">
+                                    <button type="button" class="btn btn-default" style="color:#000000;height:60%;margin:0px 10px;">Add new</button>
+                                </div>
                             </div>
                         </div>
                          
                          <div class="form-group row">
-                            <label class="control-label col-sm-2" for="comment">Description:</label>
-                            <div class="col-sm-10" style="margin:0px;">
+                            <label class="control-label col-sm-3" style="text-align:center;" for="comment">Description:</label>
+                            <div class="col-sm-9" style="margin:0px;">
                                 <textarea class="form-control" rows="3" id="comment"></textarea>
                             </div>
                         </div>
                          
                         <div class="form-group row">
-                            <label class="control-label col-sm-2" for="comment">Date:</label>
-                                <input id="date-range13" class="col-sm-9" size="40" value="2015-03-01" style="margin:0 17px;color:#000000">
+                            <label class="control-label col-sm-3" style="text-align:center;" for="comment">Date:</label>
+                            <div class="col-sm-9 row">
+                                <input id="date-range13" class="col-sm-12" value="2015-03-01" style="color:#000000;margin:15px;">
+                            </div>
                         </div>
+                         
+                         
+                        <div class="input_fields_wrap form-group row">
+                            <label class="control-label col-sm-3" style="text-align:center;" for="comment">Highlights:</label>
+                            <div class="col-sm-9 row highlights_title_target">
+                                
+                                <div class="col-sm-12 row">
+                                    <div class="col-sm-9 row" style="padding:0px;margin:0px 15px;">
+                                        <input type="text" name="mytext[]" class="col-sm-12" style="color:#000000;" placeholder="Highlight title.. eg 'Top Lyrics'/'Best Quotes'">
+                                    </div>
+                                    <div class="col-sm-3 row">
+                                        <div class="col-sm-2"></div>
+                                        <button class="highlight_title_add_field_button" class="col-sm-8" style="color:#000000;width:100%;">+</button>
+                                        <div class="col-sm-2"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-sm-12 row" style="padding:0px;margin:5px 0px;" >
+                                    <div class="col-sm-2">
+                                        <span class="glyphicon glyphicon-triangle-right" style="margin:10px;"></span>
+                                    </div>
+                                    <div class="col-sm-7 row highlights_content_target" style="padding:0px;margin:0px 0px 0px 15px;">
+                                        <input type="text" name="mytext[]" class="col-sm-12" style="color:#000000;">
+                                    </div>
+                                    <div class="col-sm-3 row">
+                                        <div class="col-sm-3"></div>
+                                        <button class="highlight_content_add_field_button" class="col-sm-6" style="color:#000000;width:50%;" placeholder="Highlight 1">+</button>
+                                        <div class="col-sm-3"></div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                         
                          
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">

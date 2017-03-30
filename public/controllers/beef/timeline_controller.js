@@ -12,9 +12,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
         
         //hold onto the main agressor for checks later
         var main_aggressor;
-        
-        cosnole.log($routeParams.tagId);
-        
+                
         $http.get("/search_events_by_id/" + $routeParams.tagId).success(function(response_1){
             //validate the url tagId to make sure the event exists
             if(response_1.eventObject != undefined){
