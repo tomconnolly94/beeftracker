@@ -34,7 +34,11 @@
         
         <!-- bespoke javascript files -->
         <script src="/controllers/submit_event/submit_event_app.js"></script>
-        <script src="/controllers/submit_event/submit_get_options.js"></script>
+        <script src="/controllers/submit_event/submit_get_options.js"></script><!--
+        <script src="/js/add_beef_dynams/modify_highlights_textboxes.js"></script>-->
+        <script src="/controllers/submit_event/highlights_controller.js"></script>
+        <script src="/controllers/submit_event/data_sources_controller.js"></script>
+        <script src="/controllers/submit_event/button_links_controller.js"></script>
         
         <!-- bespoke stylesheets -->
         <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css">
@@ -47,39 +51,6 @@
                 $("#bottom_bar").load("/partials/footer.ejs");
             });
             
-            $(document).ready(function() {
-                var max_fields      = 10; //maximum input boxes allowed
-                var highlights_title_wrapper         = $(".highlights_title_target"); //Fields wrapper
-                var highlights_content_wrapper         = $(".highlights_content_target"); //Fields wrapper
-                var highlight_title_add_button      = $(".highlight_title_add_field_button"); //Add button ID
-                var highlight_content_add_button      = $(".highlight_content_add_field_button"); //Add button ID
-
-                var highlight_title_count = 1; //initlal text box count
-                $(highlight_title_add_button).click(function(e){ //on add input button click
-                    e.preventDefault();
-                    if(highlight_title_count < max_fields){ //max input box allowed
-                        highlight_title_count++; //text box increment
-                        $(highlights_title_wrapper).append('<div class="col-sm-12 row"><div class="col-sm-9 row" style="padding:0px;margin:0px 15px;"><input type="text" name="mytext[]" class="col-sm-12" style="color:#000000;" placeholder="Highlight title.. eg \'Top Lyrics\'/\'Best Quotes\'"></div><div class="col-sm-3 row"><div class="col-sm-2"></div><button class="highlight_title_add_field_button" class="col-sm-8" style="color:#000000;width:100%;">+</button><div class="col-sm-2"></div></div></div> <div class="col-sm-12 row" style="padding:0px;margin:5px 0px;" ><div class="col-sm-2"><span class="glyphicon glyphicon-triangle-right" style="margin:10px;"></span></div><div class="col-sm-7 row highlights_content_target" style="padding:0px;margin:0px 0px 0px 15px;"><input type="text" name="mytext[]" class="col-sm-12" style="color:#000000;"></div><div class="col-sm-3 row"><div class="col-sm-3"></div><button class="highlight_content_add_field_button" class="col-sm-6" style="color:#000000;width:50%;" placeholder="Highlight 1">+</button><div class="col-sm-3"></div></div></div>'); //add input box
-                    }
-                });
-                
-                var highlight_content_count = 1; //initlal text box count
-                $(highlight_content_add_button).click(function(e){ //on add input button click
-                    e.preventDefault();
-                    if(x < max_fields){ //max input box allowed
-                        x++; //text box increment
-                        $(wrapper).append('<div><input type="text" name="mytext[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
-                    }
-                });
-
-                $(highlights_title_wrapper).on("click",".remove_field", function(e){ //user click on remove text
-                    e.preventDefault(); $(this).parent('div').remove(); x--;
-                })
-                
-                $(highlights_content_wrapper).on("click",".remove_field", function(e){ //user click on remove text
-                    e.preventDefault(); $(this).parent('div').remove(); x--;
-                })
-            });
             
         </script>
         
@@ -145,7 +116,7 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-3" style="padding:0px;margin:0px;">
-                                    <button type="button" class="btn btn-default" style="color:#000000;height:60%;margin:0px 10px;">Add new</button>
+                                    <button type="button" class="btn btn-default" style="color:#000000;height:60%;margin:0px 10px;top:50%;transform: translate(0%,50%);">Add new</button>
                                 </div>
                             </div>
                         </div>
@@ -159,44 +130,89 @@
                          
                         <div class="form-group row">
                             <label class="control-label col-sm-3" style="text-align:center;" for="comment">Date:</label>
-                            <div class="col-sm-9 row">
-                                <input id="date-range13" class="col-sm-12" value="2015-03-01" style="color:#000000;margin:15px;">
+                            <div class="col-sm-9">
+                                <input id="date-range13" class="col-sm-9" value="2015-03-01" style="color:#000000;padding:15px 0px;height:100%;width:100%;">
                             </div>
                         </div>
                          
                          
-                        <div class="input_fields_wrap form-group row">
-                            <label class="control-label col-sm-3" style="text-align:center;" for="comment">Highlights:</label>
-                            <div class="col-sm-9 row highlights_title_target">
+                        <div class="input_fields_wrap form-group row" ng-controller="highlightsController">
+                            <div class="col-sm-3">
+                                <div class="row">
+                                    <label class="control-label" style="text-align:center;" for="comment">Highlights:</label>
+                                </div>
+                                <div class="row" style="height:15px;"></div>
+                                <div class="row">
+                                    <div class="col-sm-3"></div>
+                                    <button ng-click="add_highlight_event()" class="col-sm-6" style="color:#000000;"><b>+</b></button> 
+                                    <div class="col-sm-3"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3"></div>
+                                    <button ng-click="remove_highlight_event()" class="col-sm-6" style="color:#000000;"><b>-</b></button> 
+                                    <div class="col-sm-3"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-9 row" id="highlights_title_target" style="margin:0px;">
                                 
-                                <div class="col-sm-12 row">
-                                    <div class="col-sm-9 row" style="padding:0px;margin:0px 15px;">
-                                        <input type="text" name="mytext[]" class="col-sm-12" style="color:#000000;" placeholder="Highlight title.. eg 'Top Lyrics'/'Best Quotes'">
-                                    </div>
-                                    <div class="col-sm-3 row">
-                                        <div class="col-sm-2"></div>
-                                        <button class="highlight_title_add_field_button" class="col-sm-8" style="color:#000000;width:100%;">+</button>
-                                        <div class="col-sm-2"></div>
+                                <div ng-repeat="highlight in highlights" class="row" style="margin:0px 0px 10px 0px;">
+                                    <input type="text" placeholder="{{ highlight.placeholder }}" class="col-sm-12" style="color:#000000;margin:5px 0px;padding:5px 0px;" ng-model="highlight.title">
+                                    <div ng-repeat="field in highlight.fields" style="margin:0px;padding:0px 0px 5px 0px;display:block" class="row col-sm-12" >
+                                        <button ng-click="modify_fields(highlight,field,field.add_button)" class="col-sm-2" style="color:#000000;padding:0px 5px;"><b>{{field.symbol}}</b></button>
+                                        <input class="col-sm-10" style="color:#000000;" type="text" placeholder="enter content..." ng-model="field.text">
                                     </div>
                                 </div>
-                                
-                                <div class="col-sm-12 row" style="padding:0px;margin:5px 0px;" >
-                                    <div class="col-sm-2">
-                                        <span class="glyphicon glyphicon-triangle-right" style="margin:10px;"></span>
-                                    </div>
-                                    <div class="col-sm-7 row highlights_content_target" style="padding:0px;margin:0px 0px 0px 15px;">
-                                        <input type="text" name="mytext[]" class="col-sm-12" style="color:#000000;">
-                                    </div>
-                                    <div class="col-sm-3 row">
-                                        <div class="col-sm-3"></div>
-                                        <button class="highlight_content_add_field_button" class="col-sm-6" style="color:#000000;width:50%;" placeholder="Highlight 1">+</button>
-                                        <div class="col-sm-3"></div>
-                                    </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" ng-controller="dataSourcesController">
+                            <div class="col-sm-3">
+                                <div class="row">
+                                    <label class="control-label" style="text-align:center;" for="comment">Data Sources:</label>
                                 </div>
-                                
+                                <div class="row" style="height:15px;"></div>
+                                <div class="row">
+                                    <div class="col-sm-3"></div>
+                                    <button ng-click="add_source()" class="col-sm-6" style="color:#000000;"><b>+</b></button> 
+                                    <div class="col-sm-3"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3"></div>
+                                    <button ng-click="remove_source()" class="col-sm-6" style="color:#000000;"><b>-</b></button> 
+                                    <div class="col-sm-3"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-9" style="margin:0px;">
+                                <div ng-repeat="source in sources" style="margin:0px;padding:0px 0px 5px 0px;display:block" class="row col-sm-12" >
+                                    <input class="col-sm-12" style="color:#000000;" type="text" placeholder="enter source link..." ng-model="source.text">
+                                </div>
                             </div>
                         </div>
                          
+                        <div class="form-group row" ng-controller="buttonLinksController">
+                            <div class="col-sm-3">
+                                <div class="row">
+                                    <label class="control-label" style="text-align:center;" for="comment">Button Links:</label>
+                                </div>
+                                <div class="row" style="height:15px;"></div>
+                                <div class="row">
+                                    <div class="col-sm-3"></div>
+                                    <button ng-click="add_link()" class="col-sm-6" style="color:#000000;"><b>+</b></button> 
+                                    <div class="col-sm-3"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3"></div>
+                                    <button ng-click="remove_link()" class="col-sm-6" style="color:#000000;"><b>-</b></button> 
+                                    <div class="col-sm-3"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-9" style="margin:0px;">
+                                <div ng-repeat="link in links" style="margin:0px;padding:0px 0px 5px 0px;display:block" class="row col-sm-12" >
+                                    <input class="col-sm-12" style="color:#000000;" type="text" placeholder="enter source link..." ng-model="link.text">
+                                    <input class="col-sm-12" style="color:#000000;" type="text" placeholder="enter source link..." ng-model="link.text">
+                                </div>
+                            </div>
+                        </div>
                          
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">

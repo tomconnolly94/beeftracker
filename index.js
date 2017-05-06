@@ -2,7 +2,7 @@
 //
 //  File: index.js
 //  Project: beeftracker
-//  Contributors: Tom Connolly, Dan Kerby, James Langford
+//  Contributors: Tom Connolly
 //  Description: index.js is a file designed to use express to interact with the 
 //                  node server. It defines routes, db search requests and sets 
 //                  directory routes
@@ -59,7 +59,7 @@ app.use('/partials', express.static(__dirname + '/views/partials/')); //route to
 app.get('/', function(request, response) { response.render('pages/dynamic_pages/home.ejs'); }); //home page
 app.get('/beef/:tagId', function(request, response) { response.render('pages/dynamic_pages/beef.ejs'); }); //beef page
 app.get('/artist/:tagId', function(request, response) { response.render('pages/dynamic_pages/artist.ejs'); }); //artist page
-app.get('/submit_event/', function(request, response) { response.render('pages/form_pages/submit_event.ejs'); }); // contact us page
+app.get('/add_beef/', function(request, response) { response.render('pages/form_pages/submit_event.ejs'); }); // contact us page
 app.get('/contact_us/', function(request, response) { response.render('pages/static_pages/contact_us.ejs'); }); // contact us page
 app.get('/about/', function(request, response) { response.render('pages/static_pages/about_us.ejs'); }); // about_us page
 app.get('/terms_of_use/', function(request, response) { response.render('pages/static_pages/terms_of_use.ejs'); }); // about_us page
