@@ -12,11 +12,11 @@
   "dependencies": {
     "angular-route": "^1.4.1",
     "async": "^2.1.4",
-    "body-parser": "1.8",
-    "ejs": "2.4.1",
-    "express": "4.13.3",
+    "body-parser": "1.17",
+    "ejs": "2.5.6",
+    "express": "4.15.2",
     "method-override": "*",
-    "mongodb": "2.2.11",
+    "mongodb": "2.2.26",
     "sitemap": "^1.9.0"
   },
   "keywords": [

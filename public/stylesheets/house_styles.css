@@ -70,16 +70,16 @@ a{
     font-weight:bold;
 }
 #bootstrap-overrides h4{
-    font-size:24px;
+    font-size:28px;
 }
 #bootstrap-overrides h5{
-    font-size:20px;
+    font-size:24px;
 }
 #bootstrap-overrides h6{
-    font-size:16px;
+    font-size:22px;
 }
-#bootstrap-overrides p{
-    font-size:16px;
+#bootstrap-overrides p, #bootstrap-overrides input, #bootstrap-overrides textarea, #bootstrap-overrides label{
+    font-size:20px;
 }
 /* styles for footer */
 #bootstrap-overrides #bottom_bar {

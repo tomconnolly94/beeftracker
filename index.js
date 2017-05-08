@@ -20,6 +20,7 @@ var async = require("async");
 var ObjectID = require('mongodb').ObjectID;
 var BSON = require('bson');
 var sitemap_generator = require('sitemap');
+var nodemailer = require('nodemailer');
 
 // ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({
@@ -59,7 +60,9 @@ app.use('/partials', express.static(__dirname + '/views/partials/')); //route to
 app.get('/', function(request, response) { response.render('pages/dynamic_pages/home.ejs'); }); //home page
 app.get('/beef/:tagId', function(request, response) { response.render('pages/dynamic_pages/beef.ejs'); }); //beef page
 app.get('/artist/:tagId', function(request, response) { response.render('pages/dynamic_pages/artist.ejs'); }); //artist page
-app.get('/add_beef/', function(request, response) { response.render('pages/form_pages/submit_event.ejs'); }); // contact us page
+app.get('/add_beef/', function(request, response) { response.render('pages/form_pages/submit_event.ejs'); }); // submit beefdata page page
+app.get('/raw_add_actor/', function(request, response) { response.render('pages/form_pages/raw_submit_actor.ejs'); }); // submit beefdata page page
+app.get('/add_actor/', function(request, response) { response.render('pages/form_pages/submit_actor.ejs'); }); // submit beefdata page page
 app.get('/contact_us/', function(request, response) { response.render('pages/static_pages/contact_us.ejs'); }); // contact us page
 app.get('/about/', function(request, response) { response.render('pages/static_pages/about_us.ejs'); }); // about_us page
 app.get('/terms_of_use/', function(request, response) { response.render('pages/static_pages/terms_of_use.ejs'); }); // about_us page
@@ -459,7 +462,6 @@ app.get('/search_all_related_events_in_timeline_by_id/:event_id', function(reque
         }
     });
 }); //make multiple database queries to gather all existing events involving both the aggressor and at least one of the targets
-
 app.get('/search_all_artists/', function(request, response) {
 
     var url = process.env.MONGODB_URI;
@@ -469,12 +471,116 @@ app.get('/search_all_artists/', function(request, response) {
         else{
             //standard query to match an event and resolve aggressor and targets references
             db.collection("actor_data_v0_2").find().toArray(function(queryErr, docs) {
-                console.log(docs);
                 response.send({actors : docs});
             });
         }
     });
 }); //search for an event using its _id
+
+// ### Form Handling ###
+app.post('/submit_beefdata/', function(request, response) {
+
+    var url = process.env.MONGODB_URI;
+    
+    var transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: 'beeftracker@gmail.com', // Your email id
+            pass: 'Vietnam13!' // Your password
+        }
+    });
+    
+    var submission_data = request.body;
+    
+    //parse json directly to string with indents
+    var text = JSON.stringify(submission_data, null, 2);
+    console.log(text);
+    
+    //config mail options
+    var mailOptions = {
+        from: 'beeftracker@gmail.com', // sender address
+        to: 'beeftracker@gmail.com', // list of receivers
+        subject: 'New Submission', // Subject line
+        text: text //, // plaintext body
+        // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
+    };
+    
+    //send email notifying beeftracker account new submisson
+    /*transporter.sendMail(mailOptions, function(error, info){
+        if(error){
+            console.log(error);
+            response.json({yo: 'error'});
+        }else{
+            console.log('Message sent: ' + info.response);
+            response.json({yo: info.response});
+        };
+    });*/
+    
+    //format data for db insertion
+    var artist_object = BSON.ObjectID.createFromHexString(submission_data.aggressor);
+    var targets_formatted = new Array();
+    var highlights_formatted = new Array();
+    var data_sources_formatted = new Array();
+    var links_formatted = new Array();
+    
+    //create array of target objectIds
+    for(var i = 0; i < submission_data.targets.length; i++){
+        targets_formatted.push(BSON.ObjectID.createFromHexString(submission_data.targets[i]));
+    }
+    
+    //create array of target objectIds
+    for(var i = 0; i < submission_data.highlights.length; i++){
+        //build array of highlihgt contents
+        var highlight_contents = new Array();
+        for(var j = 0; j < submission_data.highlights[i].length; j++){
+            highlight_contents.push(submission_data.highlights[i].fields[j].text);
+        }
+        var title = submission_data.highlights[i].title;
+        
+        var new_highlight = {
+            title : highlight_contents
+        }
+        
+        highlights_formatted.push(new_highlight);
+    
+    }
+    
+    //create array of target objectIds
+    for(var i = 0; i < submission_data.data_sources.length; i++){
+        data_sources_formatted.push(BSON.ObjectID.createFromHexString(submission_data.data_sources[i].url));
+    }
+    
+    //create array of target objectIds ## unfinished need to deal with images and videos that are not null  and other button links too
+    for(var i = 0; i < submission_data.links.length; i++){
+        links_formatted.push(BSON.ObjectID.createFromHexString(submission_data.button_links[i].url));
+    }
+    
+    var insert_object = {
+        
+        "title" : submission_data.title,
+        "aggressor" : artist_object,
+        "targets" : targets_formatted,
+        "description" : submission_data.description,
+        "date_added" : new Date(),
+        "event_date" : new Date(),
+        "highlights" : highlights_formatted,
+        "data_sources" : data_sources_formatted,
+        "links" : links_formatted       
+    }
+    
+    console.log(insert_object);
+    
+    //store data temporarily untill submission is confirmed
+    MongoClient.connect(url, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            //standard query to match an event and resolve aggressor and targets references
+            //db.collection("pending_event_data_v0_2").insert(submission_data);
+        }
+    });
+    
+}); //submit new beefdata to the database
+
 // ### Serve an error page on unrecognised url path ###
 app.get('/*', function(req, res, next) { res.render("pages/static_pages/error.ejs"); });
 
