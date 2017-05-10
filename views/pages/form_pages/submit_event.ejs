@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="submit_event">
+<html ng-app="submit">
 
     <!--
         Page name: home.ejs
@@ -14,6 +14,14 @@
         <meta name="description" content="Beeftracker is a brand new way to read the news, working from crowd sourced data it aims to put news events back into their context by stringing them together in a timeline. Check it out now!">
         <link rel="shortcut icon" href="/logo/steak.ico"><!-- icon -->
         <meta name="viewport" content="width=device-width, initial-scale=1"><!-- tag for mobile zoom -->
+        <!--
+        <script data-main="/require_scripts/submit_event_main" src="/modules/requirejs/require.js"></script>-->
+        <!--
+        <script>
+            require(['submit_event_main']).function(){
+                alert("all_done!");
+            };
+        </script>-->
         
         <!-- jQuery imports -->
         <script src="/modules/jquery/dist/jquery.min.js"></script>
@@ -22,42 +30,41 @@
         <script src="/modules/angular/angular.min.js"></script>
         <!-- bootstrap imports -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="/modules/bootstrap/bootstrap.min.js" crossorigin="anonymous"></script> 
+        <script src="/modules/bootstrap/dist/js/bootstrap.min.js" crossorigin="anonymous"></script> 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
         <link rel='stylesheet' href='/modules/angular-loading-bar/build/loading-bar.min.css' type='text/css' media='all' />
+        
+        <link rel='stylesheet' href='/modules/ngDatepicker/ngDatepicker.css' type='text/css' media='all' />
+        <script src="/modules/ngDatepicker/ngDatepicker.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment-with-locales.min.js"></script>
+        
+        <script src="/modules/angular-file-upload/dist/angular-file-upload.min.js"></script>
         
         <!-- google analytics -->
         <script src="https://apis.google.com/js/plusone.js"></script>
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC" />
                 
-        <!-- bespoke javascript files -->
-        <script src="/controllers/submit_event/submit_event_app.js"></script>
-        <script src="/controllers/submit_event/form_controller.js"></script>
-        <!-- bespoke javascript files -->
-        <script src="/controllers/submit_actor/submit_actor_app.js"></script>
-        <script src="/controllers/submit_actor/form_controller.js"></script>   
+        <!-- bespoke angular controllers files -->
+        <script src="/controllers/submit_data/submit_app.js"></script>
+        <script src="/directives/submit_directive.js"></script>
+        <script src="/controllers/submit_data/event_form_controller.js"></script>
+        <script src="/controllers/submit_data/actor_form_controller.js"></script>
         
         <!-- bespoke stylesheets -->
         <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css">
         <link rel="stylesheet" type="text/css" href="/stylesheets/header.css">
         
         
-          <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-          <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         
         <script>
             //load header and footer
             $(function(){
                 $("#top_bar").load("/partials/header.ejs");
                 $("#bottom_bar").load("/partials/footer.ejs");
-                $("#actor_modal_content").load("/raw_add_actor");
+                //$("#actor_modal_content").load("/raw_add_actor");
             });
-            
-              $( function() {
-                  $( "#datepicker" ).datepicker();
-              });
-        
             
         </script>
         
@@ -97,8 +104,8 @@
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title" style="color:#000000;">Add new Actor</h4>
                         </div>
-                        <div class="modal-body" id="actor_modal_content" style="background-color:#000000">
-
+                        <div class="modal-body" style="background-color:#000000;">
+                            <div actor-directive></div>
                         </div>
                         <div class="modal-footer" style="background-color:red">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -111,13 +118,15 @@
             <div style="height:100%" class="row">
                 <div class="col-sm-3"></div>
                 <div class="col-sm-6">
-                    <form class="form-horizontal" ng-controller="formController" method="post" enctype="multipart/form-data">
+                    <form name="event_form" class="form-horizontal" ng-controller="eventFormController" method="post" enctype="multipart/form-data">
                          
                         <div class="form-group row">
                             <label class="control-label col-sm-3" style="text-align:center;" for="title">Title:</label>
                             <div class="col-sm-9">
-                                <input type="text" ng-model="title" class="form-control" id="title" placeholder="Enter title">
+                                <input type="email" name="title" ng-model="title" class="form-control" id="title" placeholder="Enter title">
                             </div>
+                            <p>The input's valid state is:</p>
+                            <h1>{{ event_form.title.$valid }}</h1>
                         </div>
                          
                         <div class="form-group row">
@@ -154,11 +163,14 @@
                                 <textarea class="form-control" ng-model="description" rows="3" id="comment" placeholder="Enter a description of the event..."></textarea>
                             </div>
                         </div>
-                         
+                                         
                         <div class="form-group row">
                             <label class="control-label col-sm-3" style="text-align:center;" for="comment">Date:</label>
-                            <div class="col-sm-9">
-                                <input type="date" class="col-sm-9" id="datepicker" ng-model="date" value="2015-03-01" style="color:#000000;padding:15px 0px;height:100%;width:100%;">
+                            <div class="col-sm-9 datepicker" id="">
+                                
+                                <!--<input type="text" class="col-sm-9" ng-change="dateController" id="datepicker" ng-model="date" value="2015-03-01" style="color:#000000;padding:15px 0px;width:100%;">-->
+                                <p>{{datePicker || "00/00/0000"}}</p>
+                                <input type="text" ng-model="datePicker" datepicker />
                             </div>
                         </div>
                          
@@ -182,7 +194,9 @@
                                     <div ng-repeat="field in highlight.fields" style="margin:0px;padding:0px 0px 5px 0px;display:block" class="row col-sm-12" >
                                         <button ng-click="modify_fields(highlight,field,field.add_button)" class="col-sm-2" style="color:#000000;padding:0px 5px;"><b>{{field.symbol}}</b></button>
                                         <!--<input class="col-sm-10" style="color:#000000;" type="text" placeholder="enter content..." ng-model="field.text">-->
-                                        <textarea class="form-control col-sm-10" rows="3" id="comment" placeholder="enter content..." ng-model="field.text"></textarea>
+                                        <div class="col-sm-10" style="padding:0px 0px 0px 5px;">
+                                            <textarea class="form-control" rows="3" id="comment" placeholder="enter content..." ng-model="field.text"></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -221,9 +235,18 @@
                             </div>
                             <div class="col-sm-9" style="margin:0px;">
                                 <div ng-repeat="button_link in button_links" style="margin:0px;padding:0px 0px 5px 0px;display:block" class="row col-sm-12" >
-                                    <input class="col-sm-12" style="color:#000000;" type="text" placeholder="Enter button name..." ng-model="button_link.title">
+                                    <input class="col-sm-12" style="color:#000000;" type="text" placeholder="Enter button name..." value="{{button_link.special_title}}" ng-model="button_link.title">
                                     <input class="col-sm-12" style="color:#000000;" type="text" placeholder="Enter button link..." ng-model="button_link.url">
+                                    
                                 </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                            <label class="control-label col-sm-3" style="text-align:center;" for="comment">Upload Image:</label>
+                            <div class="col-sm-9 row" style="margin:0px;">
+                                <input type="file" file-model="myFile" class="col-sm-9" style="font-size:16px"/>
+                                <button ng-click="uploadFile()" class="col-sm-3" type="button" style="height:100%;color:#000000;border:0px;">Upload</button>
                             </div>
                         </div>
                          

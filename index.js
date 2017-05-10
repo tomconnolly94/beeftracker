@@ -21,6 +21,8 @@ var ObjectID = require('mongodb').ObjectID;
 var BSON = require('bson');
 var sitemap_generator = require('sitemap');
 var nodemailer = require('nodemailer');
+var multer = require('multer');
+var upload = multer({ dest: "public/assets/images/pending/" });
 
 // ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({
@@ -50,7 +52,9 @@ app.use('/event_images', express.static(__dirname + '/public/assets/images/event
 app.use('/background_images', express.static(__dirname + '/public/assets/images/backgrounds/')); //route to reference images
 app.use('/logo', express.static(__dirname + '/public/assets/images/logo/')); //route to reference images
 app.use('/modules', express.static(__dirname + '/node_modules/')); //route to reference libraries like angular
+app.use('/require_scripts', express.static(__dirname + '/public/require_scripts/')); //route to reference libraries like angular
 app.use('/controllers', express.static(__dirname + '/public/controllers/')); //route to reference controller scripts
+app.use('/directives', express.static(__dirname + '/public/directives/')); //route to reference controller scripts
 app.use('/js', express.static(__dirname + '/public/javascript/')); //route to reference controller scripts
 app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //route to reference css scripts
 app.use('/bower_components', express.static(__dirname + '/bower_components/')); //route to reference css scripts
@@ -478,10 +482,11 @@ app.get('/search_all_artists/', function(request, response) {
 }); //search for an event using its _id
 
 // ### Form Handling ###
-app.post('/submit_beefdata/', function(request, response) {
+app.post('/submit_beefdata/', upload.single('attachment'), (request, response) => {
 
+    var file = request.file;
     var url = process.env.MONGODB_URI;
-    
+
     var transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
@@ -490,11 +495,11 @@ app.post('/submit_beefdata/', function(request, response) {
         }
     });
     
-    var submission_data = request.body;
+    var submission_data = JSON.parse(request.body.data);
+    console.log(submission_data);
     
     //parse json directly to string with indents
     var text = JSON.stringify(submission_data, null, 2);
-    console.log(text);
     
     //config mail options
     var mailOptions = {
@@ -518,41 +523,55 @@ app.post('/submit_beefdata/', function(request, response) {
     
     //format data for db insertion
     var artist_object = BSON.ObjectID.createFromHexString(submission_data.aggressor);
+    console.log(submission_data.date);
+    var date = submission_data.date.split('/');
+    console.log(date);
     var targets_formatted = new Array();
     var highlights_formatted = new Array();
     var data_sources_formatted = new Array();
-    var links_formatted = new Array();
+    var links_formatted = {};
     
     //create array of target objectIds
     for(var i = 0; i < submission_data.targets.length; i++){
         targets_formatted.push(BSON.ObjectID.createFromHexString(submission_data.targets[i]));
     }
     
+    console.log(submission_data.highlights[0].fields);
+    
     //create array of target objectIds
     for(var i = 0; i < submission_data.highlights.length; i++){
         //build array of highlihgt contents
         var highlight_contents = new Array();
-        for(var j = 0; j < submission_data.highlights[i].length; j++){
+        for(var j = 0; j < submission_data.highlights[i].fields.length; j++){
             highlight_contents.push(submission_data.highlights[i].fields[j].text);
         }
         var title = submission_data.highlights[i].title;
         
-        var new_highlight = {
-            title : highlight_contents
-        }
+        var new_highlight = {};
+        new_highlight[title] = highlight_contents;
+
+        console.log(new_highlight[title]);
         
         highlights_formatted.push(new_highlight);
     
     }
     
+    console.log(submission_data.data_sources[0].url);
+    
     //create array of target objectIds
     for(var i = 0; i < submission_data.data_sources.length; i++){
-        data_sources_formatted.push(BSON.ObjectID.createFromHexString(submission_data.data_sources[i].url));
+        data_sources_formatted.push(submission_data.data_sources[i].url);
     }
     
+    links_formatted["mf_img_link"] = file.filename;
+
     //create array of target objectIds ## unfinished need to deal with images and videos that are not null  and other button links too
-    for(var i = 0; i < submission_data.links.length; i++){
-        links_formatted.push(BSON.ObjectID.createFromHexString(submission_data.button_links[i].url));
+    for(var i = 0; i < submission_data.button_links.length; i++){
+        if(submission_data.button_links[i].special_title.length > 0){
+            links_formatted[submission_data.button_links[i].special_title] = submission_data.button_links[i].url;
+        }else{
+            links_formatted[submission_data.button_links[i].title] = submission_data.button_links[i].url;
+        }
     }
     
     var insert_object = {
@@ -562,7 +581,7 @@ app.post('/submit_beefdata/', function(request, response) {
         "targets" : targets_formatted,
         "description" : submission_data.description,
         "date_added" : new Date(),
-        "event_date" : new Date(),
+        "event_date" : new Date(date[2],date[1]-1,date[0]),
         "highlights" : highlights_formatted,
         "data_sources" : data_sources_formatted,
         "links" : links_formatted       
@@ -575,7 +594,7 @@ app.post('/submit_beefdata/', function(request, response) {
         if(err){ console.log(err); }
         else{
             //standard query to match an event and resolve aggressor and targets references
-            //db.collection("pending_event_data_v0_2").insert(submission_data);
+            db.collection("pending_event_data_v0_2").insert(insert_object);
         }
     });
     

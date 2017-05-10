@@ -1,15 +1,14 @@
 <html>
 
-    <header>
-         
-    </header>
+    <head>
+    </head>
 
     <body>
     
         <div style="height:100%" class="row">
             <div class="col-sm-3"></div>
             <div class="col-sm-6">
-                <form class="form-horizontal" ng-controller="actorFormController" method="post" enctype="multipart/form-data">
+                <form class="form-horizontal" method="post" ng-controller="actorFormController" enctype="multipart/form-data">
 
                     <div class="form-group row">
                         <label class="control-label col-sm-3" style="text-align:center;" for="title">Stage Name:</label>
@@ -38,18 +37,11 @@
                         </div>
                         <div class="col-sm-9" style="margin:0px;">
                             <div ng-repeat="nickname in nicknames" style="margin:0px;padding:0px 0px 5px 0px;display:block" class="row col-sm-12" >
-                                <input class="col-sm-12" style="color:#000000;" type="text" placeholder="enter source link..." ng-model="nickname.url">
+                                <input class="col-sm-12" style="color:#000000;" type="text" placeholder="enter nickname..." ng-model="nickname.url">
                             </div>
                         </div>
                     </div>
-
-                     <div class="form-group row">
-                        <label class="control-label col-sm-3" style="text-align:center;" for="comment">Description:</label>
-                        <div class="col-sm-9" style="margin:0px;">
-                            <textarea class="form-control" ng-model="description" rows="3" id="comment" placeholder="Enter a description of the event..."></textarea>
-                        </div>
-                    </div>
-
+                    
                     <div class="form-group row">
                         <label class="control-label col-sm-3" style="text-align:center;" for="comment">Date:</label>
                         <div class="col-sm-9">
@@ -57,73 +49,74 @@
                         </div>
                     </div>
 
-
-                    <!--<div class="input_fields_wrap form-group row" ng-controller="highlightsController">-->
-                    <div class="input_fields_wrap form-group row">
-                        <div class="col-sm-3">
-                            <div class="row">
-                                <label class="control-label" style="text-align:center;" for="comment">Highlights:</label>
-                            </div>
-                            <div class="row" style="height:15px;"></div>
-                            <div class="btn-group btn-group-sm">
-                                <button ng-click="add_highlight_event()" class="btn btn-default" type="button" style="color:#000000;border:0px;"><b>+</b></button>
-                                <button ng-click="remove_highlight_event()" class="btn btn-default" type="button" style="color:#000000;border:0px;"><b>-</b></button>
-                            </div><!---->
-                        </div>
-                        <div class="col-sm-9 row" id="highlights_title_target" style="margin:0px;">
-
-                            <div ng-repeat="highlight in highlights" class="row" style="margin:0px 0px 10px 0px;">
-                                <input type="text" placeholder="Enter highlight title" class="col-sm-12" style="color:#000000;margin:5px 0px;padding:5px 0px;" ng-model="highlight.title">
-                                <div ng-repeat="field in highlight.fields" style="margin:0px;padding:0px 0px 5px 0px;display:block" class="row col-sm-12" >
-                                    <button ng-click="modify_fields(highlight,field,field.add_button)" class="col-sm-2" style="color:#000000;padding:0px 5px;"><b>{{field.symbol}}</b></button>
-                                    <!--<input class="col-sm-10" style="color:#000000;" type="text" placeholder="enter content..." ng-model="field.text">-->
-                                    <textarea class="form-control col-sm-10" rows="3" id="comment" placeholder="enter content..." ng-model="field.text"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="form-group row">
                         <div class="col-sm-3">
                             <div class="row">
-                                <label class="control-label" style="text-align:center;" for="comment">Data Sources:</label>
+                                <label class="control-label" style="text-align:center;" for="comment">Occupations:</label>
                             </div>
                             <div class="row" style="height:15px;"></div>
                             <div class="btn-group btn-group-sm">
-                                <button ng-click="add_source()" class="btn btn-default" type="button" style="color:#000000;border:0px;"><b>+</b></button>
-                                <button ng-click="remove_source()" class="btn btn-default" type="button" style="color:#000000;border:0px;"><b>-</b></button>
+                                <button ng-click="add_occupation()" class="btn btn-default" type="button" style="color:#000000;border:0px;"><b>+</b></button>
+                                <button ng-click="remove_occupation()" class="btn btn-default" type="button" style="color:#000000;border:0px;"><b>-</b></button>
                             </div>
                         </div>
                         <div class="col-sm-9" style="margin:0px;">
-                            <div ng-repeat="data_source in data_sources" style="margin:0px;padding:0px 0px 5px 0px;display:block" class="row col-sm-12" >
-                                <input class="col-sm-12" style="color:#000000;" type="text" placeholder="enter source link..." ng-model="data_source.url">
+                            <div ng-repeat="occupation in occupations" style="margin:0px;padding:0px 0px 5px 0px;display:block" class="row col-sm-12" >
+                                <input class="col-sm-12" style="color:#000000;" type="text" placeholder="enter occupation..." ng-model="occupation.url">
                             </div>
                         </div>
                     </div>
-
-                    <!--<div class="form-group row" ng-controller="buttonLinksController">-->
+                    
+                    <div class="form-group row">
+                        <label class="control-label col-sm-3" style="text-align:center;" for="title">Birthplace</label>
+                        <div class="col-sm-9">
+                            <input type="text" ng-model="origin" class="form-control" id="title" placeholder="Enter the City, state/province/country and Country of birth of this artist">
+                        </div>
+                    </div>
+                                        
                     <div class="form-group row">
                         <div class="col-sm-3">
                             <div class="row">
-                                <label class="control-label" style="text-align:center;" for="comment">Button Links:</label>
+                                <label class="control-label" style="text-align:center;" for="comment">Notable Achievements:</label>
                             </div>
                             <div class="row" style="height:15px;"></div>
                             <div class="btn-group btn-group-sm">
-                                <button ng-click="add_link()" class="btn btn-default" type="button" style="color:#000000;border:0px;"><b>+</b></button>
-                                <button ng-click="remove_link()" class="btn btn-default" type="button" style="color:#000000;border:0px;"><b>-</b></button>
+                                <button ng-click="add_achievement()" class="btn btn-default" type="button" style="color:#000000;border:0px;"><b>+</b></button>
+                                <button ng-click="remove_achievement()" class="btn btn-default" type="button" style="color:#000000;border:0px;"><b>-</b></button>
                             </div>
                         </div>
                         <div class="col-sm-9" style="margin:0px;">
-                            <div ng-repeat="button_link in button_links" style="margin:0px;padding:0px 0px 5px 0px;display:block" class="row col-sm-12" >
-                                <input class="col-sm-12" style="color:#000000;" type="text" placeholder="Enter button name..." ng-model="button_link.title">
-                                <input class="col-sm-12" style="color:#000000;" type="text" placeholder="Enter button link..." ng-model="button_link.url">
+                            <div ng-repeat="achievement in achievements" style="margin:0px;padding:0px 0px 5px 0px;display:block" class="row col-sm-12" >
+                                <input class="col-sm-12" style="color:#000000;" type="text" placeholder="enter achievement..." ng-model="achievement.url">
                             </div>
                         </div>
                     </div>
-
+                                        
+                    <div class="form-group row">
+                        <label class="control-label col-sm-3" style="text-align:center;" for="comment">Bio:</label>
+                        <div class="col-sm-9" style="margin:0px;">
+                            <textarea class="form-control" ng-model="bio" rows="3" id="comment" placeholder="Enter a bio for the actor..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <label class="control-label col-sm-3" style="text-align:center;" for="title">Associated Actors</label>
+                        <div class="col-sm-9" style="margin:0px;">
+                            <div class="col-sm-9" style="padding:0px;margin:0px;">
+                                <select ng-model="assoc_actors" multiple class="form-control">
+                                    <option ng-repeat="actor in actors" value="{{actor._id}}">{{ actor.stage_name }}</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3" style="padding:0px;margin:0px;">
+                                <button type="button" class="btn btn-default" style="color:#000000;height:60%;margin:0px 10px;top:50%;transform: translate(0%,50%);" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Add new</button>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" ng-click="process_form()" class="btn btn-default">Submit</button>
+                        <div class="col-sm-offset-2 col-sm-10"><!--
+                            <button type="submit" ng-click="" class="btn btn-default">Submit</button>-->
+                            <button ng-click="process_actor_data()" class="btn btn-default">Submit</button>
                         </div>
                     </div>
                 </form>
