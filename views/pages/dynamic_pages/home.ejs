@@ -47,6 +47,10 @@
                 $("#top_bar").load("/partials/header.ejs");
                 $("#bottom_bar").load("/partials/footer.ejs");
             });
+            
+            $.getJSON('//freegeoip.net/json/?callback=?', function(data) {
+                console.log(JSON.stringify(data, null, 2));
+            });
         </script>
         
         <!-- include google analytics -->
