@@ -22,7 +22,8 @@ var BSON = require('bson');
 var sitemap_generator = require('sitemap');
 var nodemailer = require('nodemailer');
 var multer = require('multer');
-var upload = multer({ dest: "public/assets/images/pending/" });
+var upload_event_img = multer({ dest: "public/assets/images/pending/events" });
+var upload_actor_img = multer({ dest: "public/assets/images/pending/actors" });
 
 // ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({
@@ -65,10 +66,11 @@ app.get('/', function(request, response) { response.render('pages/dynamic_pages/
 app.get('/beef/:tagId', function(request, response) { response.render('pages/dynamic_pages/beef.ejs'); }); //beef page
 app.get('/artist/:tagId', function(request, response) { response.render('pages/dynamic_pages/artist.ejs'); }); //artist page
 app.get('/add_beef/', function(request, response) { response.render('pages/form_pages/submit_event.ejs'); }); // submit beefdata page page
-app.get('/raw_add_actor/', function(request, response) { response.render('pages/form_pages/raw_submit_actor.ejs'); }); // submit beefdata page page
-app.get('/add_actor/', function(request, response) { response.render('pages/form_pages/submit_actor.ejs'); }); // submit beefdata page page
+app.get('/raw_add_actor/', function(request, response) { response.render('pages/form_pages/raw_submit_actor.ejs'); }); // add_actor form abstract
+app.get('/add_actor/', function(request, response) { response.render('pages/form_pages/submit_actor.ejs'); }); // submit actordata page
 app.get('/contact_us/', function(request, response) { response.render('pages/static_pages/contact_us.ejs'); }); // contact us page
 app.get('/about/', function(request, response) { response.render('pages/static_pages/about_us.ejs'); }); // about_us page
+app.get('/submission_confirmation/', function(request, response) { response.render('pages/static_pages/submit_conf.ejs'); }); // about_us page
 app.get('/terms_of_use/', function(request, response) { response.render('pages/static_pages/terms_of_use.ejs'); }); // about_us page
 app.get('/sitemap', function(req, res) {
     sitemap.toXML( function (err, xml) {
@@ -482,7 +484,7 @@ app.get('/search_all_artists/', function(request, response) {
 }); //search for an event using its _id
 
 // ### Form Handling ###
-app.post('/submit_beefdata/', upload.single('attachment'), (request, response) => {
+app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, response) => {
 
     var file = request.file;
     var url = process.env.MONGODB_URI;
@@ -503,29 +505,27 @@ app.post('/submit_beefdata/', upload.single('attachment'), (request, response) =
     
     //config mail options
     var mailOptions = {
-        from: 'beeftracker@gmail.com', // sender address
+        from: 'bf_sys@gmail.com', // sender address
         to: 'beeftracker@gmail.com', // list of receivers
-        subject: 'New Submission', // Subject line
+        subject: 'New Beefdata Submission', // Subject line
         text: text //, // plaintext body
         // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
     };
     
     //send email notifying beeftracker account new submisson
-    /*transporter.sendMail(mailOptions, function(error, info){
+    transporter.sendMail(mailOptions, function(error, info){
         if(error){
             console.log(error);
-            response.json({yo: 'error'});
+            response.json({yo: error});
         }else{
             console.log('Message sent: ' + info.response);
             response.json({yo: info.response});
         };
-    });*/
+    });
     
     //format data for db insertion
     var artist_object = BSON.ObjectID.createFromHexString(submission_data.aggressor);
-    console.log(submission_data.date);
     var date = submission_data.date.split('/');
-    console.log(date);
     var targets_formatted = new Array();
     var highlights_formatted = new Array();
     var data_sources_formatted = new Array();
@@ -535,8 +535,6 @@ app.post('/submit_beefdata/', upload.single('attachment'), (request, response) =
     for(var i = 0; i < submission_data.targets.length; i++){
         targets_formatted.push(BSON.ObjectID.createFromHexString(submission_data.targets[i]));
     }
-    
-    console.log(submission_data.highlights[0].fields);
     
     //create array of target objectIds
     for(var i = 0; i < submission_data.highlights.length; i++){
@@ -549,14 +547,10 @@ app.post('/submit_beefdata/', upload.single('attachment'), (request, response) =
         
         var new_highlight = {};
         new_highlight[title] = highlight_contents;
-
-        console.log(new_highlight[title]);
         
         highlights_formatted.push(new_highlight);
     
     }
-    
-    console.log(submission_data.data_sources[0].url);
     
     //create array of target objectIds
     for(var i = 0; i < submission_data.data_sources.length; i++){
@@ -587,8 +581,6 @@ app.post('/submit_beefdata/', upload.single('attachment'), (request, response) =
         "links" : links_formatted       
     }
     
-    console.log(insert_object);
-    
     //store data temporarily untill submission is confirmed
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
@@ -597,7 +589,116 @@ app.post('/submit_beefdata/', upload.single('attachment'), (request, response) =
             db.collection("pending_event_data_v0_2").insert(insert_object);
         }
     });
+    response.send();
+}); //submit new beefdata to the database
+app.post('/submit_actordata/', upload_actor_img.single('attachment'), (request, response) => {
+
+    var file = request.file;
+    var url = process.env.MONGODB_URI;
+
+    var transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: 'beeftracker@gmail.com', // Your email id
+            pass: 'Vietnam13!' // Your password
+        }
+    });
     
+    var submission_data = JSON.parse(request.body.data);    
+    //parse json directly to string with indents
+    var text = JSON.stringify(submission_data, null, 2);
+    
+    //config mail options
+    var mailOptions = {
+        from: 'bf_sys@gmail.com', // sender address
+        to: 'beeftracker@gmail.com', // list of receivers
+        subject: 'New Actordata Submission', // Subject line
+        text: text //, // plaintext body
+        // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
+    };
+        
+    //send email notifying beeftracker account new submisson
+    transporter.sendMail(mailOptions, function(error, info){
+        if(error){
+            console.log(error);
+            response.json({yo: error});
+        }else{
+            console.log('Message sent: ' + info.response);
+            response.json({yo: info.response});
+        };
+    });
+    
+    //format data for db insertion
+    console.log(submission_data);
+    var date = submission_data.date.split('/');
+    var nicknames_formatted = new Array();
+    var occupations_formatted = new Array();
+    var achievements_formatted = new Array();
+    var data_sources_formatted = new Array();
+    var assoc_actors_formatted = new Array();
+    var links_formatted = {};
+    
+    //create array of target objectIds
+    for(var i = 0; i < submission_data.nicknames.length; i++){
+        nicknames_formatted.push(submission_data.nicknames[i].text);
+    }
+    
+    //create array of target objectIds
+    for(var i = 0; i < submission_data.occupations.length; i++){
+        occupations_formatted.push(submission_data.occupations[i].text);
+    }
+    
+    //create array of target objectIds
+    for(var i = 0; i < submission_data.achievements.length; i++){
+        achievements_formatted.push(submission_data.achievements[i].text);
+    }
+    
+    //create array of target objectIds
+    for(var i = 0; i < submission_data.data_sources.length; i++){
+        data_sources_formatted.push(submission_data.data_sources[i].text);
+    }
+    
+    //create array of target objectIds
+    for(var i = 0; i < submission_data.assoc_actors.length; i++){
+        assoc_actors_formatted.push(BSON.ObjectID.createFromHexString(submission_data.assoc_actors[i]));
+    }
+    
+    links_formatted["mf_img_link"] = file.filename;
+
+    //create array of target objectIds ## unfinished need to deal with images and videos that are not null  and other button links too
+    for(var i = 0; i < submission_data.button_links.length; i++){
+        if(submission_data.button_links[i].special_title.length > 0){
+            links_formatted[submission_data.button_links[i].special_title] = submission_data.button_links[i].url;
+        }else{
+            links_formatted[submission_data.button_links[i].title] = submission_data.button_links[i].url;
+        }
+    }
+    
+    var insert_object = {        
+        "stage_name" : submission_data.stage_name,
+        "birth_name" : submission_data.birth_name,
+        "nicknames" : nicknames_formatted,
+        "d_o_b" : new Date(date[2],date[1]-1,date[0]),
+        "occupations" : occupations_formatted,
+        "origin" : submission_data.origin,
+        "achievements" : submission_data.origin,
+        "data_sources" : data_sources_formatted,
+        "associated_actors" : assoc_actors_formatted,
+        "links" : links_formatted, 
+        "date_added" : new Date()
+    }
+    
+    console.log(insert_object);
+    
+    //store data temporarily untill submission is confirmed
+    MongoClient.connect(url, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            //standard query to match an event and resolve aggressor and targets references
+            db.collection("pending_actor_data_v0_2").insert(insert_object);
+        }
+    });
+    response.send();
 }); //submit new beefdata to the database
 
 // ### Serve an error page on unrecognised url path ###
