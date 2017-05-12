@@ -486,42 +486,10 @@ app.get('/search_all_artists/', function(request, response) {
 // ### Form Handling ###
 app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, response) => {
 
-    var file = request.file;
-    var url = process.env.MONGODB_URI;
-
-    var transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'beeftracker@gmail.com', // Your email id
-            pass: 'Vietnam13!' // Your password
-        }
-    });
-    
-    var submission_data = JSON.parse(request.body.data);
-    console.log(submission_data);
-    
-    //parse json directly to string with indents
-    var text = JSON.stringify(submission_data, null, 2);
-    
-    //config mail options
-    var mailOptions = {
-        from: 'bf_sys@gmail.com', // sender address
-        to: 'beeftracker@gmail.com', // list of receivers
-        subject: 'New Beefdata Submission', // Subject line
-        text: text //, // plaintext body
-        // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
-    };
-    
-    //send email notifying beeftracker account new submisson
-    transporter.sendMail(mailOptions, function(error, info){
-        if(error){
-            console.log(error);
-            response.json({yo: error});
-        }else{
-            console.log('Message sent: ' + info.response);
-            response.json({yo: info.response});
-        };
-    });
+    //extract data for use later
+    var url = process.env.MONGODB_URI; //get db uri
+    var file = request.file; //get submitted image
+    var submission_data = JSON.parse(request.body.data); //get form data
     
     //format data for db insertion
     var artist_object = BSON.ObjectID.createFromHexString(submission_data.aggressor);
@@ -569,7 +537,6 @@ app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, r
     }
     
     var insert_object = {
-        
         "title" : submission_data.title,
         "aggressor" : artist_object,
         "targets" : targets_formatted,
@@ -586,47 +553,53 @@ app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, r
         if(err){ console.log(err); }
         else{
             //standard query to match an event and resolve aggressor and targets references
-            db.collection("pending_event_data_v0_2").insert(insert_object);
+            db.collection("pending_event_data_v0_2").insert(insert_object, function(err, document){
+                
+                //add _id field so object can be found later
+                insert_object._id = document.ops[0]._id;
+
+                //parse json directly to string with indents
+                var text = JSON.stringify(insert_object, null, 2);
+                
+                var transporter = nodemailer.createTransport({
+                    service: 'Gmail',
+                    auth: {
+                        user: 'beeftracker@gmail.com', // Your email id
+                        pass: 'Vietnam13!' // Your password
+                    }
+                });
+
+                //config mail options
+                var mailOptions = {
+                    from: 'bf_sys@gmail.com', // sender address
+                    to: 'beeftracker@gmail.com', // list of receivers
+                    subject: 'New Beefdata Submission', // Subject line
+                    text: text //, // plaintext body
+                    // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
+                };
+
+                //send email notifying beeftracker account new submisson
+                transporter.sendMail(mailOptions, function(error, info){
+                    if(error){
+                        console.log(error);
+                        response.json({yo: error});
+                    }else{
+                        console.log('Message sent: ' + info.response);
+                        response.json({yo: info.response});
+                    };
+                });
+                
+            });
         }
     });
     response.send();
 }); //submit new beefdata to the database
 app.post('/submit_actordata/', upload_actor_img.single('attachment'), (request, response) => {
 
-    var file = request.file;
-    var url = process.env.MONGODB_URI;
-
-    var transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'beeftracker@gmail.com', // Your email id
-            pass: 'Vietnam13!' // Your password
-        }
-    });
-    
-    var submission_data = JSON.parse(request.body.data);    
-    //parse json directly to string with indents
-    var text = JSON.stringify(submission_data, null, 2);
-    
-    //config mail options
-    var mailOptions = {
-        from: 'bf_sys@gmail.com', // sender address
-        to: 'beeftracker@gmail.com', // list of receivers
-        subject: 'New Actordata Submission', // Subject line
-        text: text //, // plaintext body
-        // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
-    };
-        
-    //send email notifying beeftracker account new submisson
-    transporter.sendMail(mailOptions, function(error, info){
-        if(error){
-            console.log(error);
-            response.json({yo: error});
-        }else{
-            console.log('Message sent: ' + info.response);
-            response.json({yo: info.response});
-        };
-    });
+    //extract data for use later
+    var url = process.env.MONGODB_URI; //get db uri
+    var file = request.file; //get submitted image
+    var submission_data = JSON.parse(request.body.data); //get form data
     
     //format data for db insertion
     console.log(submission_data);
@@ -674,6 +647,7 @@ app.post('/submit_actordata/', upload_actor_img.single('attachment'), (request, 
         }
     }
     
+    //format object for insertion into pending db
     var insert_object = {        
         "stage_name" : submission_data.stage_name,
         "birth_name" : submission_data.birth_name,
@@ -688,17 +662,52 @@ app.post('/submit_actordata/', upload_actor_img.single('attachment'), (request, 
         "date_added" : new Date()
     }
     
-    console.log(insert_object);
-    
-    //store data temporarily untill submission is confirmed
+    //store data temporarily until submission is confirmed
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
         else{
             //standard query to match an event and resolve aggressor and targets references
-            db.collection("pending_actor_data_v0_2").insert(insert_object);
+            db.collection("pending_actor_data_v0_2").insert(insert_object, function(err, document){
+                console.log(document);
+                
+                insert_object._id = document.ops[0]._id;
+                
+                var text = JSON.stringify(insert_object, null, 2); //convert form data to json string form for emailing
+
+                //config email transporter object
+                var transporter = nodemailer.createTransport({
+                    service: 'Gmail',
+                    auth: {
+                        user: 'beeftracker@gmail.com', // Your email id
+                        pass: 'Vietnam13!' // Your password
+                    }
+                });
+
+                //config mail options
+                var mailOptions = {
+                    from: 'bf_sys@gmail.com', // sender address
+                    to: 'beeftracker@gmail.com', // list of receivers
+                    subject: 'New Actordata Submission', // Subject line
+                    text: text //, // plaintext body
+                    // html: '<b>Hello world ✔</b>' // example, could send html mail in future versions
+                };
+
+                //send email notifying beeftracker account new submisson
+                transporter.sendMail(mailOptions, function(error, info){
+                    if(error){
+                        console.log(error);
+                        response.json({yo: error});
+                    }else{
+                        console.log('Message sent: ' + info.response);
+                        response.json({yo: info.response});
+                    };
+                });
+            });
         }
     });
-    response.send();
+
+    response.send(); //send ok or error response to client
+    
 }); //submit new beefdata to the database
 
 // ### Serve an error page on unrecognised url path ###
