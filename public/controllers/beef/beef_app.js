@@ -25,7 +25,8 @@ beef_app.config(function($routeProvider, $locationProvider){
     });
 });
 
-beef_app.directive('onFinishRender', function () {
+/*
+beef_app.directive('onFinishRender', function ($timeout) {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -38,6 +39,7 @@ beef_app.directive('onFinishRender', function () {
         }
     }
 });
+*/
 
 beef_app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
     cfpLoadingBarProvider.includeBar = true;

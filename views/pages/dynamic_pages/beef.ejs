@@ -112,9 +112,9 @@
             <div id="top_bar"></div>
                     
             <!-- rest of page -->
-            <div class="row">
+            <div class="row" ng-cloak><!-- style="min-height:1000px;">-->
                 
-                <div class="col-sm-7" ng-controller="timelineController">
+                <div class="col-sm-7" ng-controller="timelineController" style="min-height:763px;">
                     
                     <div class="jumbotron" id="artist_filter_panel" style="display:inline-block;text-align:center;width:100%;margin:30px 0px;background-color:#000000">
                         
@@ -166,10 +166,10 @@
                 
                 <div class="col-sm-5" id="nav_wrapper" ng-controller="currentEventController">
                                     
-                    <div id="nav_fixed" data-spy="affix" data-offset-top="160" data-offset-bottom="160" class="nav nav-pills nav-stacked" style="margin:30px 0px 0px 0px;width:100%;">
+                    <div id="nav_fixed" data-spy="affix" data-offset-top="180" data-offset-bottom="190" class="nav nav-pills nav-stacked" style="margin:30px 0px 0px 0px;width:100%;">
                         <div id="main_feature">                     
                             <div id="videowrapper" class="embed-responsive embed-responsive-16by9">
-                                <iframe style="width:100%;" scrolling="no" ng-src="{{ trustSrc( mf_link) }}" class="embed-responsive-item" allowfullscreen="true"></iframe>
+                                <iframe style="width:100%;" scrolling="no" ng-src="{{ trustSrc( mf_link) }}" class="embed-responsive-item" allowfullscreen="true" noresize="noresize"></iframe>
                             </div>
                         </div>
 
@@ -298,9 +298,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12" style="height:50px;"></div>
             </div>
             <div id="bottom_bar"></div>
         </div>
