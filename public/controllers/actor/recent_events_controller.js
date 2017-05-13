@@ -10,23 +10,31 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-artist_app.controller("recentEventsController", ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
+actor_app.controller("recentEventsController", ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
     
     //wait untill module has been configured before running this
     $scope.$on('$routeChangeSuccess', function() {
            
         //make http request to server for data
-        $http.get("/search_actors_by_id/" + $routeParams.tagId).success(function(response_1){
-            var artist = response_1.artist;
+        //$http.get("/search_actors_by_id/" + $routeParams.tagId).success(function(response_1){
+        $http({
+            method: 'GET',
+            url: "/search_actors_by_id/" + $routeParams.tagId
+        }).then(function(response_1){
+            var artist = response_1.data.artist;
         
                 //make http request to server for data
-                $http.get("/search_events_by_event_aggressor/" + artist._id).success(function(response_2){
+                //$http.get("/search_events_by_event_aggressor/" + artist._id).success(function(response_2){
+                $http({
+                    method: 'GET',
+                    url: "/search_events_by_event_aggressor/" + artist._id
+                }).then(function(response_2){
                     
                     $scope.events = new Array();
                     
-                    for(var i = 0; i < Object.keys(response_2.events).length; i++){
+                    for(var i = 0; i < Object.keys(response_2.data.events).length; i++){
                         
-                        event = response_2.events[i];
+                        event = response_2.data.events[i];
                         console.log(event);
                         var record = {
                                 _id : event._id,

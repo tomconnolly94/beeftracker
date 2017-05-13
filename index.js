@@ -64,10 +64,11 @@ app.use('/partials', express.static(__dirname + '/views/partials/')); //route to
 // ### Permanent page routes ###
 app.get('/', function(request, response) { response.render('pages/dynamic_pages/home.ejs'); }); //home page
 app.get('/beef/:tagId', function(request, response) { response.render('pages/dynamic_pages/beef.ejs'); }); //beef page
-app.get('/artist/:tagId', function(request, response) { response.render('pages/dynamic_pages/artist.ejs'); }); //artist page
+app.get('/actor/:tagId', function(request, response) { response.render('pages/dynamic_pages/actor.ejs'); }); //artist page
 app.get('/add_beef/', function(request, response) { response.render('pages/form_pages/submit_event.ejs'); }); // submit beefdata page page
 app.get('/raw_add_actor/', function(request, response) { response.render('pages/form_pages/raw_submit_actor.ejs'); }); // add_actor form abstract
 app.get('/add_actor/', function(request, response) { response.render('pages/form_pages/submit_actor.ejs'); }); // submit actordata page
+app.get('/subscribe/', function(request, response) { response.render('pages/form_pages/subscribe_to_news.ejs'); }); // submit actordata page
 app.get('/contact_us/', function(request, response) { response.render('pages/static_pages/contact_us.ejs'); }); // contact us page
 app.get('/about/', function(request, response) { response.render('pages/static_pages/about_us.ejs'); }); // about_us page
 app.get('/submission_confirmation/', function(request, response) { response.render('pages/static_pages/submit_conf.ejs'); }); // about_us page
@@ -707,6 +708,58 @@ app.post('/submit_actordata/', upload_actor_img.single('attachment'), (request, 
     });
 
     response.send(); //send ok or error response to client
+    
+}); //submit new beefdata to the database
+app.post('/submit_subscription/',(request, response) => {
+
+    //extract data for use later
+    var url = process.env.MONGODB_URI; //get db uri
+    var submission_data = request.body; //get form data
+    
+    console.log(submission_data);
+    
+    //format data for db insertion
+    var names = submission_data.name.split(" ");
+    var fore_name = names[0];
+    var middle_names = "";
+    var last_name = "";
+    
+    //assign last name if it exists
+    if(names.length > 1){
+        last_name = names[names.length-1];
+    }
+    
+    //build a string of middle names if they exist
+    if(names.length > 2){
+        for(var i = 1; i < names.length-1; i++){
+            if(i != 1){
+                middle_names += " ";
+            }
+            middle_names += names[i];
+        }
+    }
+    
+    //format object for insertion into pending db
+    var insert_object = {        
+        "f_name" : fore_name,
+        "m_names" : middle_names,
+        "l_name" : last_name,
+        "email" : submission_data.email_address,
+        "route_here" : submission_data.routes_here
+    }
+    
+    console.log(insert_object);
+    
+    //store data temporarily until submission is confirmed
+    MongoClient.connect(url, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            //standard query to match an event and resolve aggressor and targets references
+            db.collection("subscriber_details_v0_3").insert(insert_object);
+        }
+    });
+
+    response.end(); //send ok or error response to client
     
 }); //submit new beefdata to the database
 

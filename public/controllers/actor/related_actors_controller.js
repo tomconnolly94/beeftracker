@@ -10,13 +10,18 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-artist_app.controller("relatedActorsController", ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
+actor_app.controller("relatedActorsController", ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
 
         //wait untill module has been configured before running this
     $scope.$on('$routeChangeSuccess', function() {
                 
         //make http request to server for data
-        $http.get("/search_related_actors_by_id/" + $routeParams.tagId).success(function(response){
+        //$http.get("/search_related_actors_by_id/" + $routeParams.tagId).success(function(response){
+        $http({
+            method: 'GET',
+            url: "/search_related_actors_by_id/" + $routeParams.tagId
+        }).then(function(response){
+            response = response.data
             $scope.associated_actors = new Array();
             console.log(response);
             var actors = response.actors;

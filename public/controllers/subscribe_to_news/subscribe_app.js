@@ -7,4 +7,4 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-var home_app = angular.module('home',['ngRoute']);
+var subscribe_app = angular.module('subscribe', ['jkuri.datepicker']);

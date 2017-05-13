@@ -13,9 +13,17 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
         //hold onto the main agressor for checks later
         var main_aggressor;
                 
-        $http.get("/search_events_by_id/" + $routeParams.tagId).success(function(response_1){
+        //$http.get("/search_events_by_id/" + $routeParams.tagId).success(function(response_1){
+        $http({
+            method: 'GET',
+            url: "/search_events_by_id/" + $routeParams.tagId
+        }).then(function(response_1){
             //validate the url tagId to make sure the event exists
-            if(response_1.eventObject != undefined){
+            if(response_1.data.eventObject != undefined){
+                
+                console.log(response_1);
+                
+                response_1 = response_1.data;
                 
                 //get the main event's aggressor
                 $scope.main_aggressor = response_1.eventObject.aggressor_object[0];
@@ -41,13 +49,18 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                 }
                
                 //make http request to server for data
-                $http.get("/search_all_related_events_in_timeline_by_id/" + $routeParams.tagId).success(function(response_2){
+                //$http.get("/search_all_related_events_in_timeline_by_id/" + $routeParams.tagId).success(function(response_2){
+                $http({
+                    method: 'GET',
+                    url: "/search_all_related_events_in_timeline_by_id/" + $routeParams.tagId
+                }).then(function(response_2){
+                    
+                    //extract events array
+                    var events = response_2.data.events;
                     
                     //validate the url tagId to make sure there are events to sort
-                    if(response_2.events != undefined){
+                    if(events != undefined){
                         
-                        //extract events array
-                        var events = response_2.events;
                         //init vars to be used later
                         $scope.events = new Array();
                         var name_colour_map = [];

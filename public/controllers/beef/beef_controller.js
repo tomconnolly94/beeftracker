@@ -22,19 +22,28 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
         console.log($routeParams.tagId);
         
         //make http request to server for data
-        $http.get("/search_events_by_id/" + $routeParams.tagId).success(function(response_1){
+        //$http.get("/search_events_by_id/" + $routeParams.tagId).success(function(response_1){
+        $http({
+            method: 'GET',
+            url: "/search_events_by_id/" + $routeParams.tagId
+        }).then(function(response_1){
             //validate the url tagId to make sure the event exists
-            if(response_1.eventObject != undefined){
+            if(response_1.data.eventObject != undefined){
                 
-                var eventObject = response_1.eventObject;
+                var eventObject = response_1.data.eventObject;
                 console.log(eventObject);
                 
                     //make http request to server for data
-                    $http.get("/search_actors_by_id/" + eventObject.aggressor).success(function(response_2){
+                    //$http.get("/search_actors_by_id/" + eventObject.aggressor).success(function(response_2){
+                $http({
+                    method: 'GET',
+                    url: "/search_actors_by_id/" + eventObject.aggressor
+                }).then(function(response_2){
+                    
+                        var artist = response_2.data.artist;
                         //validate the url tagId to make sure the event exists
-                        if(response_2.artist != undefined){
+                        if(artist != undefined){
                             
-                            var artist = response_2.artist;
 
                             //assign fields to scope
                             $scope.name = artist.stage_name;

@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "angular-file-upload": "2.5.0",
-    "angular-route": "^1.4.1",
+    "angular-route": "^1.6.4",
+    "angular-resource": "^1.6.4",
     "async": "^2.1.4",
     "body-parser": "1.17",
     "bootstrap" : "3.3.7",

@@ -14,13 +14,15 @@ home_app.controller('eventStreamController', ['$scope','$http', function($scope,
         
     var result_limit = 9;
     
-    $http.get("/search_recent_events/" + result_limit).success(function(events_object){
-        
+    //$http.get("/search_recent_events/" + result_limit).success(function(events_object){
+    $http({
+        method: 'GET',
+        url: "/search_recent_events/" + result_limit
+    }).then(function(events_object){
         //validate the url tagId to make sure the event exists                
         if(events_object != undefined){
 
-            
-            var events = events_object.events;
+            var events = events_object.data.events;
             //$scope.event_stream_events = new Array();
             $scope.event_stream_events_col_1 = new Array();
             $scope.event_stream_events_col_2 = new Array();

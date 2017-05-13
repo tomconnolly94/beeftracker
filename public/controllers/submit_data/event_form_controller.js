@@ -22,8 +22,11 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     
     $scope.get_actor_data = function(){
         //request to get artists to fill aggressor and targets option inputs
-        $http.get("/search_all_artists/").success(function(response){
-
+        //$http.get("/search_all_artists/").success(function(response){
+        $http({
+            method: 'GET',
+            url: "/search_all_artists/"
+        }).then(function(response){
             //validate the url tagId to make sure the event exists                
             if(response != undefined){
                 $scope.actors = response.actors;

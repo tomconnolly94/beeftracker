@@ -6,18 +6,18 @@
 //  Description: Creates and configures the angular app for the artist page
 //
 /////////////////////////////////////////////////////////////////////////////////
-var artist_app = angular.module('actor', ['ngRoute', 'angular-loading-bar']);
+var actor_app = angular.module('actor', ['ngRoute', 'angular-loading-bar']);
 
-artist_app.config(function($routeProvider, $locationProvider){
-    $routeProvider.when('/artist/:tagId', {
+actor_app.config(function($routeProvider, $locationProvider){
+    $routeProvider.when('/actor/:tagId', {
         templateUrl: '',    
         controller: 'actorSearchController'
     });
-    $routeProvider.when('/artist/:tagId', {
+    $routeProvider.when('/actor/:tagId', {
         templateUrl: '',    
         controller: 'recentEventsController'
     });
-    $routeProvider.when('/artist/:tagId', {
+    $routeProvider.when('/actor/:tagId', {
         templateUrl: '',    
         controller: 'relatedActorsController'
     });
@@ -28,7 +28,7 @@ artist_app.config(function($routeProvider, $locationProvider){
     });
 });
 
-artist_app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+actor_app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
     cfpLoadingBarProvider.includeBar = true;
     cfpLoadingBarProvider.includeSpinner = false;
     cfpLoadingBarProvider.parentSelector = '#loading-bar-container';

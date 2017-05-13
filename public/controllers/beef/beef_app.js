@@ -6,7 +6,7 @@
 //  Description: Creates and configures the angular app for the beef page
 //
 /////////////////////////////////////////////////////////////////////////////////
-var beef_app = angular.module('beef_app', ['ngRoute', 'angular-loading-bar']);
+var beef_app = angular.module('beef_app', ['ngRoute', "ngResource", 'angular-loading-bar']);
 
 beef_app.config(function($routeProvider, $locationProvider){
     $routeProvider.when('/beef/:tagId', {
@@ -17,24 +17,7 @@ beef_app.config(function($routeProvider, $locationProvider){
         templateUrl: '',    
         controller: 'timelineController'
     });
-    
-    //these route is for development ** should be removed before production **
-    $routeProvider.when('/beef_split/:tagId', {
-        templateUrl: '',    
-        controller: 'currentEventController',
-    });
-    $routeProvider.when('/beef_split/:tagId', {
-        templateUrl: '',    
-        controller: 'timelineController'
-    });
-    $routeProvider.when('/beef_bootstrap_timeline/:tagId', {
-        templateUrl: '',    
-        controller: 'currentEventController',
-    });
-    $routeProvider.when('/beef_bootstrap_timeline/:tagId', {
-        templateUrl: '',    
-        controller: 'timelineController'
-    });
+
     // enable HTML5mode to disable hashbang urls
     $locationProvider.html5Mode({
         enabled:true,
