@@ -156,18 +156,22 @@
                 </div>
             </div>
             
+            <hr>
+                        
             <div class="row" style="overflow:hidden;">
                 <div class="col-sm-4"></div>
                 <div class="col-sm-4">
                     <h5 id="header_heading">
                         <a href="/subscribe" target="_self">
-                            Subscribe to our email alerts now!</a>
+                            <div class="row">
+                                <span class="col-xs-2 glyphicon glyphicon-envelope" style="padding:10px 0px 0px 10px;"></span>
+                                <h5 class="col-xs-10" style="padding:0px;">Subscribe to our email alerts now!</h5>
+                            </div>
+                        </a>
                     </h5>
                 </div>
                 <div class="col-sm-4"></div>
             </div>
-            
-            <hr>
             
             <div class="row" style="overflow:hidden;">
                 <div class="col-sm-4"></div>
@@ -181,7 +185,7 @@
                 <div class="col-sm-4">
                     <ul>
                         <li ng-repeat="event_col_1 in event_stream_events_col_1 track by $index" style="margin:30px 0px;">        
-                            <a ng-href="/beef/{{event_col_1.eventNum}}#{{event_col_1.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;" target="_self">
+                            <a ng-href="/beef/{{event_col_1.eventNum}}#{{event_col_1.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;border-radius: 5px;" target="_self">
 
                                 <div class="row" style="width:100%;margin:0px;text-align:right;">
 
@@ -205,7 +209,7 @@
                 <div class="col-sm-4">
                     <ul>
                         <li ng-repeat="event_col_2 in event_stream_events_col_2 track by $index" style="margin:30px 0px;">        
-                            <a ng-href="/beef/{{event_col_2.eventNum}}#{{event_col_2.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;" target="_self">
+                            <a ng-href="/beef/{{event_col_2.eventNum}}#{{event_col_2.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;border-radius: 5px;" target="_self">
 
                                 <div class="row" style="width:100%;margin:0px;text-align:right;">
 
@@ -229,7 +233,7 @@
                 <div class="col-sm-4">
                      <ul>
                         <li ng-repeat="event_col_3 in event_stream_events_col_3 track by $index" style="margin:30px 0px;">        
-                            <a ng-href="/beef/{{event_col_3.eventNum}}#{{event_col_3.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;" target="_self">
+                            <a ng-href="/beef/{{event_col_3.eventNum}}#{{event_col_3.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;border-radius: 5px;" target="_self">
 
                                 <div class="row" style="width:100%;margin:0px;text-align:right;">
 
