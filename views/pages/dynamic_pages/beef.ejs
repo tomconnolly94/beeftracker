@@ -68,7 +68,10 @@
             ga('send', 'pageview');
             
             //operations to be carried out on scroll
-            $(window).scroll( function(){ $('#nav_wrapper .affix').width($('#nav_wrapper').width()); });
+            $(window).scroll( function(){
+                $('#nav_wrapper .affix').width($('#nav_wrapper').width()); 
+                $('#nav_wrapper .affix').height($('#nav_wrapper').height()); 
+            });
             //operations to be carried out on window resize
             $(window).resize( function(){ 
                 $('#nav_wrapper .affix').width($('#nav_wrapper').width());
@@ -78,6 +81,10 @@
             
             //check if details panel should be affixed or not
             function check_side_bar_affix(){
+                
+                var affixElement = $("nav_fixed");
+                affixElement.width($affixElement.parent().width());
+                
                 if ($(window).innerWidth() <= 768){
                     //$(window).off('.affix');
                     $("#nav_fixed").removeClass("affix affix-top affix-bottom");
@@ -87,8 +94,7 @@
                 }
             }
             
-            var x = check_side_bar_affix();
-            
+            check_side_bar_affix();
             /*
             // function to move the page down to the selected event. Can't find a reliable way to trigger the jump() call after angular has loaded and rendered all beef events.
             function jump(){
@@ -166,16 +172,16 @@
                 
                 <div class="col-sm-5" id="nav_wrapper" ng-controller="currentEventController">
                                     
-                    <div id="nav_fixed" data-spy="affix" data-offset-top="180" data-offset-bottom="190" class="nav nav-pills nav-stacked" style="margin:30px 0px 0px 0px;width:100%;">
+                    <div id="nav_fixed" data-spy="affix" data-offset-top="180" data-offset-bottom="190" class="nav nav-pills nav-stacked" style="margin:30px 0px 0px 0px;" ng-cloak style="resize:none;">
                         <div id="main_feature">                     
                             <div id="videowrapper" class="embed-responsive embed-responsive-16by9">
-                                <iframe style="width:100%;" scrolling="no" ng-src="{{ trustSrc( mf_link) }}" class="embed-responsive-item" allowfullscreen="true" noresize="noresize"></iframe>
+                                <iframe scrolling="no" ng-src="{{ trustSrc( mf_link) }}" class="embed-responsive-item" allowfullscreen="true"></iframe>
                             </div>
                         </div>
 
                         <h2>{{ title }}</h2>
                         
-                        <div class="a2a_kit a2a_kit_size_32 a2a_default_style row">
+                        <div class="a2a_kit a2a_kit_size_32 a2a_default_style row" style="margin:10px;">
                             <div class="col-sm-2"></div>
                             <a class="a2a_button_facebook col-sm-2"></a>
                             <a class="a2a_button_twitter col-sm-2"></a>
