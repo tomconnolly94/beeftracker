@@ -19,9 +19,13 @@ home_app.controller('searchController', ['$scope','$http', function($scope, $htt
         
         if ($scope.search_term.length > 1 && $scope.search_term !=" ") {
             //make http request to server for data
-            $http.get("/search_all/" + $scope.search_term).success(function(response){
+            //$http.get("/search_all/" + $scope.search_term).success(function(response){
+            $http({
+                method: 'GET',
+                url: "/search_all/" + $scope.search_term
+            }).then(function(response){
                 
-                var objects = response.objects;
+                var objects = response.data.objects;
                 console.log(response);
                 
                 //validate the url tagId to make sure the event exists                

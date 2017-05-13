@@ -8,6 +8,12 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
         first_run = true;
     });
     
+    $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
+        //you also get the actual event object
+        //do stuff, execute functions -- whatever...
+        jump();
+    });
+    
     $scope.handle_change = function(){ //function created to allow recall without page reload
         
         //hold onto the main agressor for checks later
@@ -192,9 +198,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                 });
             }
         });
-             
     }
-    
 }]);
 
 function custom_sort(event_1, event_2) {

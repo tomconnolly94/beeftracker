@@ -29,7 +29,8 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
         }).then(function(response){
             //validate the url tagId to make sure the event exists                
             if(response != undefined){
-                $scope.actors = response.actors;
+                console.log(response);
+                $scope.actors = response.data.actors;
             }
             else{
                 //error msg
@@ -178,11 +179,10 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
                 //prevents serializing payload.  don't do it.
                 transformRequest: angular.identity
             })
-            .success(function (data, status, headers, config) {
+            .then(function (success) {
                 console.log("Upload succeeded.");
                 $window.location.href = '/submission_confirmation';
-            })
-            .error(function (data, status, headers, config) {
+            }, function (error) {
                 console.log("Upload failed.");
             });
         }

@@ -181,6 +181,7 @@ app.get('/search_all/:search_term', function(request, response) {
                             for(var i = 0; i < events.length;i++){
                                 all_objects.push(events[i]);                                
                             }
+                            console.log(all_objects);
                             response.send( { objects : all_objects } );
                         }
                     });
@@ -709,7 +710,7 @@ app.post('/submit_actordata/', upload_actor_img.single('attachment'), (request, 
 
     response.send(); //send ok or error response to client
     
-}); //submit new beefdata to the database
+}); //submit new actordata to the database
 app.post('/submit_subscription/',(request, response) => {
 
     //extract data for use later
@@ -761,7 +762,7 @@ app.post('/submit_subscription/',(request, response) => {
 
     response.end(); //send ok or error response to client
     
-}); //submit new beefdata to the database
+}); //submit new subscriber's details to the database
 
 // ### Serve an error page on unrecognised url path ###
 app.get('/*', function(req, res, next) { res.render("pages/static_pages/error.ejs"); });

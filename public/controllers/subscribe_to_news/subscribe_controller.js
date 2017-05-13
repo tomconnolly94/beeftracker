@@ -40,8 +40,7 @@ subscribe_app.controller('subscribeFormController', ['$scope','$http', '$window'
             .then(function(){
                 console.log("Upload succeeded.");
                 $window.location.href = '/submission_confirmation';
-            },
-            function () {
+            }, function () {
                 console.log("Upload failed.");
             });
         }

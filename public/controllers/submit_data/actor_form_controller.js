@@ -196,7 +196,7 @@ submit_app.controller('actorFormController', ['$scope','$http', 'fileService', '
                 //prevents serializing payload.  don't do it.
                 transformRequest: angular.identity
             })
-            .success(function (data, status, headers, config) {
+            .then(function (success) {
                 console.log("Upload succeeded.");
                 var url_arr = $location.absUrl().split('/');
                 
@@ -207,8 +207,7 @@ submit_app.controller('actorFormController', ['$scope','$http', 'fileService', '
                     angular.element(document.getElementById('event_form')).scope().get_actor_data();
                     $('#myModal').modal('hide');
                 }
-            })
-            .error(function (data, status, headers, config) {
+            }, function (error) {
                 console.log("Upload failed.");
             });
         }

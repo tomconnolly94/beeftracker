@@ -25,6 +25,19 @@ beef_app.config(function($routeProvider, $locationProvider){
     });
 });
 
+beef_app.directive('onFinishRender', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            //if (scope.$last === true) {
+            if (scope.$last === true) {
+                $timeout(function () {
+                    scope.$emit(attr.onFinishRender);
+                });
+            }
+        }
+    }
+});
 
 beef_app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
     cfpLoadingBarProvider.includeBar = true;
