@@ -61,6 +61,7 @@
         <!-- Bespoke css files -->
         <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css"/>
         <link rel="stylesheet" type="text/css" href="/stylesheets/header.css"/>
+        <link rel="stylesheet" type="text/css" href="/stylesheets/forms.css"/>
          
         <script>
             //load header and footer
@@ -138,7 +139,7 @@
                         <div class="form-group row">
                             <label class="control-label col-sm-3" style="text-align:center;" for="title">* Title:</label>
                             <div class="col-sm-9 row" style="margin:0px;">
-                                <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Write a title for this event, to describe, very briefly what happened. If it is an artifact like a tweet or a song, enter its title." style="padding:10px 0px 0px 0px;display:inline;" aria-hidden="true"></span>
+                                <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Write a title for this event, to describe, very briefly what happened. If it is an artifact like a tweet or a song, enter its title." aria-hidden="true"></span>
                                 <div class="col-sm-11" style="padding:0px;">
                                     <input id="title" class="form-control col-sm-11" name="title" type="text" placeholder="" ng-model="title" ng-Trim="false">
                                 </div>
@@ -151,7 +152,7 @@
                         <div class="form-group row">
                             <label class="control-label col-sm-3" style="text-align:center;" for="title">* Select Actor</label>
                             <div class="col-sm-9" style="margin:0px;">
-                                <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Please select the instigator/aggressor of this event, if they are not in the list, click 'Add new' and submit a new actor to our records." style="padding:10px 0px 0px 0px;display:inline;" aria-hidden="true"></span>
+                                <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Please select the instigator/aggressor of this event, if they are not in the list, click 'Add new' and submit a new actor to our records." aria-hidden="true"></span>
                                 <div class="col-sm-8" style="padding:0px;margin:0px;">
                                     <select ng-model="aggressor" class="form-control" name="aggressor" placeholder="">
                                         <option ng-repeat="actor in actors" value="{{actor._id}}"><p>{{ actor.stage_name }}</p></option>
@@ -168,7 +169,7 @@
                         <div class="form-group row">
                             <label class="control-label col-sm-3" style="text-align:center;" for="title">* Select Target(s)</label>
                             <div class="col-sm-9" style="margin:0px;">
-                                <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Please select any actors that were targeted with this event in any way." style="padding:10px 0px 0px 0px;display:inline;" aria-hidden="true"></span>
+                                <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Please select any actors that were targeted with this event in any way." aria-hidden="true"></span>
                                 <div class="col-sm-8" style="padding:0px;margin:0px;">
                                     <select name="targets" ng-model="targets" multiple class="form-control">
                                         <option ng-repeat="actor in actors" value="{{actor._id}}">{{ actor.stage_name }}</option>
@@ -185,7 +186,7 @@
                         <div class="form-group row">
                             <label class="control-label col-sm-3" style="text-align:center;" for="comment">* Upload Image:</label>
                             <div class="col-sm-9 row" style="margin:0px;">
-                                <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Add a url or a reference here that you learned this information from. We want to keep the data clean from fake news so it's important you back this info up with proof. A documentary, website, book, song etc... These will be verified before the data is made accessible." style="padding:10px 0px 0px 0px;display:inline;" aria-hidden="true"></span>
+                                <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Add a url or a reference here that you learned this information from. We want to keep the data clean from fake news so it's important you back this info up with proof. A documentary, website, book, song etc... These will be verified before the data is made accessible." aria-hidden="true"></span>
                                 <input type="file" file-model="myFile" class="col-sm-9" style="padding:0px;font-size:18px;"/>
                                 <!--<button ng-click="uploadFile()" class="col-sm-3" type="button" style="height:100%;color:#000000;border:0px;">Upload</button>-->
                             </div>
@@ -196,7 +197,7 @@
                         <div class="form-group row">
                             <label class="control-label col-sm-3" style="text-align:center;" for="comment">* Description:</label>
                             <div class="col-sm-9 row" style="margin:0px;">
-                                <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Sum up what happened with this event mentioning how each actor was targeted. Try not to add your own point of view because it will be filtered out during the moderation process." style="padding:10px 0px 0px 0px;display:inline;" aria-hidden="true"></span>
+                                <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Sum up what happened with this event mentioning how each actor was targeted. Try not to add your own point of view because it will be filtered out during the moderation process." aria-hidden="true"></span>
                                 <div class="col-sm-11" style="padding:0px;">
                                     <textarea class="form-control" name="description" type="text" ng-model="description" rows="3" id="comment" placeholder="" style="resize: vertical;"></textarea>
                                 </div>
@@ -208,7 +209,7 @@
                         <div class="form-group row">
                             <label class="control-label col-sm-3" style="text-align:center;" for="comment">* Date:</label>
                             <div class="col-sm-9 datepicker row" style="margin:0px;">
-                                <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Enter the date on which this event occurred." style="padding:10px 0px 0px 0px;display:inline;" aria-hidden="true"></span>
+                                <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Enter the date on which this event occurred." aria-hidden="true"></span>
                                 <input class="col-sm-11" type="text" name="datepicker" ng-model="datePicker" datepicker style="color:#000000;" value="{{datePicker || '00/00/0000'}}" />
                             </div>
                         </div>
@@ -231,11 +232,11 @@
                             <div class="col-sm-9 row" id="highlights_title_target" style="margin:0px;">
                                 
                                 <div ng-repeat="highlight in highlights" class="row" style="margin:0px 0px 10px 0px;">
-                                    <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="This is a space to comment on the highlights (if there were any) in the event, for example, with a song you could post the top five best lyrics etc... Please enter the title in this box, e.g. 'Top Lyrics'." style="padding:15px 0px 0px 0px;margin:5px 0px;display:inline;" aria-hidden="true"></span>
+                                    <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="This is a space to comment on the highlights (if there were any) in the event, for example, with a song you could post the top five best lyrics etc... Please enter the title in this box, e.g. 'Top Lyrics'." aria-hidden="true"></span>
                                     <input type="text" placeholder="" class="col-sm-11" style="color:#000000;margin:5px 0px;padding:5px 0px;" ng-model="highlight.title">
                                     <div ng-repeat="field in highlight.fields" style="margin:0px;padding:0px 0px 5px 0px;display:block" class="row col-sm-12" >
                                         <div class="col-sm-2 row" style="color:#000000;padding:0px;margin:0px;">
-                                            <span class="col-sm-6 glyphicon glyphicon-info-sign"  title="This is a space to comment on the highlights (if there were any) in the event, for example, with a song you could post the top five best lyrics etc... Please enter the content of the highlight. Add or remove boxes depending on what you need." style="padding:0px 0px 0px 0px;display:inline;color:#FFFFFF;" aria-hidden="true"></span>
+                                            <span class="col-sm-6 glyphicon glyphicon-info-sign"  title="This is a space to comment on the highlights (if there were any) in the event, for example, with a song you could post the top five best lyrics etc... Please enter the content of the highlight. Add or remove boxes depending on what you need." aria-hidden="true"></span>
                                             <button ng-click="modify_fields(highlight,field,field.add_button)" class="col-sm-6" style="color:#000000;padding:0px;"><b>{{field.symbol}}</b></button>
                                         </div>
                                         <div class="col-sm-10" style="padding:0px 0px 0px 5px;">
@@ -261,7 +262,7 @@
                             </div>
                             <div class="col-sm-9" style="margin:0px;">
                                 <div ng-repeat="data_source in data_sources" style="margin:0px;padding:0px 0px 5px 0px;display:block" class="row col-sm-12" >
-                                    <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="We hate fake news at beeftracker, so if you submit information we need to know where you learned it from. Add a URL, documentary title or other kind of reference here:  A documentary, website, book, song etc... These will be verified before the data is made accessible." style="padding:10px 0px 0px 0px;display:inline;" aria-hidden="true"></span>
+                                    <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="We hate fake news at beeftracker, so if you submit information we need to know where you learned it from. Add a URL, documentary title or other kind of reference here:  A documentary, website, book, song etc... These will be verified before the data is made accessible." aria-hidden="true"></span>
                                     <input class="col-sm-11" style="color:#000000;" type="text" placeholder="" ng-model="data_source.url">
                                 </div>
                             </div>
@@ -282,9 +283,9 @@
                             </div>
                             <div class="col-sm-9" style="margin:0px;">
                                 <div ng-repeat="button_link in button_links" name="button_links" style="margin:0px;padding:0px 0px 5px 0px;display:block" class="row col-sm-12" >
-                                    <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="You may have seen that we like to provide button links to other places where you can get more information. This is much less formal than the data sources entry so a wikipedia article, or link to a tweet is perfect. Add the title of the button here. e.g. Wiki page, Tweet etc..." style="padding:5px 0px 0px 0px;display:inline;" aria-hidden="true"></span>
+                                    <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="You may have seen that we like to provide button links to other places where you can get more information. This is much less formal than the data sources entry so a wikipedia article, or link to a tweet is perfect. Add the title of the button here. e.g. Wiki page, Tweet etc..." aria-hidden="true"></span>
                                     <input class="col-sm-11" type="text" style="color:#000000;" type="text" placeholder="" value="{{button_link.special_title}}" ng-model="button_link.title">
-                                    <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="You may have seen that we like to provide button links to other places where you can get more information. This is much less formal than the data sources entry so a wikipedia article, or link to a tweet is perfect. Add the link to the resource here." style="padding:5px 0px 0px 0px;display:inline;" aria-hidden="true"></span>
+                                    <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="You may have seen that we like to provide button links to other places where you can get more information. This is much less formal than the data sources entry so a wikipedia article, or link to a tweet is perfect. Add the link to the resource here." aria-hidden="true"></span>
                                     <input class="col-sm-11" type="url" style="color:#000000;" type="text" placeholder="" ng-model="button_link.url">
                                     
                                 </div>
