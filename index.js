@@ -642,7 +642,7 @@ app.post('/submit_actordata/', upload_actor_img.single('attachment'), (request, 
 
     //create array of target objectIds ## unfinished need to deal with images and videos that are not null  and other button links too
     for(var i = 0; i < submission_data.button_links.length; i++){
-        if(submission_data.button_links[i].special_title.length > 0){
+        if(submission_data.button_links[i].special_title != undefined && submission_data.button_links[i].special_title.length > 0){
             links_formatted[submission_data.button_links[i].special_title] = submission_data.button_links[i].url;
         }else{
             links_formatted[submission_data.button_links[i].title] = submission_data.button_links[i].url;
@@ -658,11 +658,14 @@ app.post('/submit_actordata/', upload_actor_img.single('attachment'), (request, 
         "occupations" : occupations_formatted,
         "origin" : submission_data.origin,
         "achievements" : submission_data.origin,
+        "bio" : submission_data.bio,
         "data_sources" : data_sources_formatted,
         "associated_actors" : assoc_actors_formatted,
         "links" : links_formatted, 
         "date_added" : new Date()
     }
+    
+    console.log(insert_object);
     
     //store data temporarily until submission is confirmed
     MongoClient.connect(url, function(err, db) {

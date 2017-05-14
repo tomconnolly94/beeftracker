@@ -99,7 +99,7 @@
             
             <!-- spacer bar -->
             <div class="row">
-                <div class="col-xs-12" style="min-height:20px;"></div>
+                <div class="col-xs-12" style="min-height:0px;"></div>
             </div>
             
             <!-- Modal -->
@@ -127,7 +127,7 @@
                     <form id="event_form" name="event_form" class="form-horizontal" ng-controller="eventFormController" method="post" enctype="multipart/form-data">
             
                         <div class="row">
-                            <div class="col-xs-12" ng-model="error_message"><h3 style="color:red">{{error_message}}</h3></div>
+                            <div class="col-xs-12" ng-model="error_message"><h4 style="color:red;margin:0px;">{{error_message}}</h4></div>
                         </div>
                         
                         <div class="row">
@@ -293,8 +293,12 @@
                         </div>
                         
                         <hr>
+                        
+                        <div class="row">
+                            <div class="col-xs-12" ng-model="error_message"><h4 style="color:red;">{{error_message}}</h4></div>
+                        </div>
                                                  
-                        <div class="form-group">
+                        <div class="form-group" style="margin:20px;">
                             <div class="col-sm-3"></div>
                             <div class="col-sm-6">
                                 <button type="submit" ng-click="process_form()" class="btn btn-default"><p style="color:#000000;margin:0px;padding:0px;">Submit</p></button>

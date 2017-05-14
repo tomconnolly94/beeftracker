@@ -30,10 +30,10 @@
                         <label class="control-label col-sm-3" style="text-align:center;" for="title">* Stage Name:</label>
                         <div class="col-sm-9 row" style="margin:0px;">
                             <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Enter the name this person is most famous for, e.g. Snoop Dogg, Oprah..." aria-hidden="true"></span>
-                            <div class="col-sm-8" style="margin:0px;padding:0px">
+                            <div class="col-sm-7" style="margin:0px;padding:0px">
                                 <input name="stage_name" type="text" ng-model="stage_name" class="form-control" id="title" placeholder="">
                             </div>
-                            <div class="col-sm-3" style="padding:0px;margin:0px;">
+                            <div class="col-sm-4" style="padding:0px;margin:0px;">
                                 <button type="button" class="btn btn-default" style="color:#000000;height:60%;margin:0px 10px;" class="btn btn-info btn-lg" ng-click="stage_name = birth_name">Same as above</button>
                             </div>
                         </div>
@@ -147,7 +147,7 @@
                         <div class="col-sm-9 row" style="margin:0px;">
                             <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Write a short paragraph about this person, Include a brief description of their history and any major events they have been involved in. Write as much as you can." aria-hidden="true"></span>
                             <div class="col-sm-11" style="margin:0px;padding:0px">
-                                <textarea name="bio" class="form-control" ng-model="bio" rows="3" id="comment" placeholder=""></textarea>
+                                <textarea name="bio" class="form-control" ng-model="bio" rows="3" id="comment" placeholder="" style="resize:vertical;"></textarea>
                             </div>
                         </div>
                     </div>

@@ -22,7 +22,6 @@ submit_app.controller('actorFormController', ['$scope','$http', 'fileService', '
     $scope.assoc_actors = [];
     
     //request to get actors to fill aggressor and targets option inputs
-    //$http.get("/search_all_artists/").success(function(response){
     $http({
         method: 'GET',
         url: "/search_all_artists/"
@@ -30,7 +29,7 @@ submit_app.controller('actorFormController', ['$scope','$http', 'fileService', '
         
         //validate the url tagId to make sure the event exists                
         if(response != undefined){
-            $scope.actors = response.actors;
+            $scope.actors = response.data.actors;
         }
         else{
             //error msg
