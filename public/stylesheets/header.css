@@ -1,13 +1,12 @@
 #header_heading {
     text-align:center;
-    font-size:60px;
     color:#FFFFFF;
-    margin-top:10px;
+    margin:20px 0px 10px 0px;
 }
 
 #header_image {
-    width:60px;
-    height:60px;
+    width:75px;
+    height:75px;
 }
 
 #header_hr {

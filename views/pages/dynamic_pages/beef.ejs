@@ -15,9 +15,12 @@
         <link rel="shortcut icon" href="/logo/steak.ico"><!-- icon -->
         <meta name="viewport" content="width=device-width, initial-scale=1"><!-- tag for mobile zoom -->
         
-        <!-- Root scripts -->
+        <!-- JQuery -->
         <script src="/modules/jquery/dist/jquery.min.js"></script>
-        <script src="/js/script_loaders.js"></script>
+        
+        <!-- Font Scripts -->
+        <link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css?family=Josefin+Slab" rel="stylesheet"> 
         <link rel="stylesheet" type="text/css" href="/stylesheets/amatic_font.css" />
         
         <!-- Core angular scripts -->
@@ -43,7 +46,6 @@
         <link rel="stylesheet" type="text/css" href="/stylesheets/header.css"/>
         <link rel="stylesheet" type="text/css" href="/stylesheets/beef.css"/>
         <link rel="stylesheet" type="text/css" href="/stylesheets/timeline_styles.css"/>
-        
         
         <script>
                         
@@ -124,9 +126,11 @@
                     <div class="jumbotron" id="artist_filter_panel" style="display:inline-block;text-align:center;width:100%;margin:30px 0px;background-color:#000000">
                         
                         <div class="col-sm-5">
-                            <h3 ng-model="main_name"><div id="main_aggressor" class="black_font"> {{ main_aggressor.stage_name }} </div></h3>
+                            <a ng-href="/actor/{{main_aggressor._id}}" target="_self">
+                                <h3 ng-model="main_name"><div id="main_aggressor" class="black_font"> {{ main_aggressor.stage_name }} </div></h3>
+                            </a>
                         </div>
-
+                        
                         <div class="col-sm-2"><h3 class="black_font">vs</h3></div>
 
                         <div class="col-sm-5" ng-app>
@@ -152,7 +156,7 @@
                                         
                                         <div class="row"> 
 
-                                            <div class="timeline-body col-sm-7">
+                                            <div class="timeline-body col-sm-7" style="margin:20px 0px;">
 
                                                 <h6 style="margin:5px;">{{ event.name }}</h6>
                                                 <h6 style="margin:5px;">{{ event.date }}</h6>
@@ -178,7 +182,9 @@
                             </div>
                         </div>
 
-                        <h2>{{ title }}</h2>
+                        <h2 style="margin:35px 0px 25px 0px;">{{ title }}</h2>
+                        
+                        <hr>
                         
                         <div class="a2a_kit a2a_kit_size_32 a2a_default_style row" style="margin:10px;">
                             <div class="col-sm-2"></div>
@@ -191,7 +197,9 @@
                         <script async src="https://static.addtoany.com/menu/page.js"></script>
                         
                         
-                        <div id="scroll_panel" style="max-height:50vh;">
+                        <hr>
+
+                        <div id="scroll_panel" style="max-height:50vh;padding:0px 10px 0px 0px;">
                             <a ng-href="/actor/{{artist_id}}" target="_self">
                                 <h3>{{ name }}</h3>
                             </a>
@@ -214,9 +222,9 @@
                                 <div class="row" ng-repeat="triples in links">
                                     <div class="col-sm-1"></div>
                                     <div ng-repeat="record in triples" class="jumbotron col-sm-3" style="padding:0px;height:60%;margin:5px;">
-                                        <h4 style="margin:10px;text-align:center"><a ng-href="{{ record.url }}" target="_blank">
+                                        <h5 style="margin:10px;text-align:center"><a ng-href="{{ record.url }}" target="_blank">
                                             <b>{{ record.button_name }}</b></a>
-                                        </h4>
+                                        </h5>
                                     </div>
                                     <div class="col-sm-1"></div>
                                 </div>

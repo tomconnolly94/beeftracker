@@ -4,7 +4,7 @@ html, body {
 }
 /* apply to all tags */
  bootstrap-overrides *, * {
-	font-family: "Amatic SC";
+	font-family: "Josefin Slab", "Amatic SC" ,"Abel", sans-serif;
     padding:0px;
 }
 /* default font colour */
@@ -33,15 +33,14 @@ body {
     background-color: #FFFFFF;
     background-attachment: fixed !important;
         
-    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.7) 100%), url(bg.png) no-repeat 0 0, url(/background_images/the-blueprint.jpg) repeat 0 0;
+    /*background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.7) 100%), url(bg.png) no-repeat 0 0, url(/background_images/the-blueprint.jpg) repeat 0 0;*/
     background: -moz-linear-gradient(top, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.7) 100%), url(/background_images/the-blueprint.jpg) no-repeat 0 0;
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0.7)), color-stop(100%,rgba(255,255,255,0.7))), url(/background_images/the-blueprint.jpg) no-repeat 0 0;
+    /*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0.7)), color-stop(100%,rgba(255,255,255,0.7))), url(/background_images/the-blueprint.jpg) no-repeat 0 0;
     background: -webkit-linear-gradient(top, rgba(255,255,255,0.7) 0%,rgba(255,255,255,0.7) 100%), url(/background_images/the-blueprint.jpg) no-repeat 0 0;
     background: -o-linear-gradient(top, rgba(255,255,255,0.7) 0%,rgba(255,255,255,0.7) 100%), url(/background_images/the-blueprint.jpg) no-repeat 0 0;
     background: -ms-linear-gradient(top, rgba(255,255,255,0.7) 0%,rgba(255,255,255,0.7) 100%), url(/background_images/the-blueprint.jpg) no-repeat 0 0;
-    background: linear-gradient(to bottom, rgba(255,255,255,0.7) 0%,rgba(255,255,255,0.7) 100%), url(/background_images/the-blueprint.jpg) no-repeat 0 0;
-    /*background: linear-gradient(to bottom, rgba(255,255,255,0.7) 0%,rgba(255,255,255,0.7) 100%), url(/background_images/tupac.jpg) no-repeat 0 0;
-    */
+    background: linear-gradient(to bottom, rgba(255,255,255,0.7) 0%,rgba(255,255,255,0.7) 100%), url(/background_images/the-blueprint.jpg) no-repeat 0 0;*/
+
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -58,8 +57,35 @@ a{
 /*#bootstrap-overrides select, #bootstrap-overrides .black_font, #bootstrap-overrides input{
     color:#000000;    
 }*/
-/* override font sizes */
+
+/* override font sizes (for Josefin slab font)*/
 #bootstrap-overrides h1{
+    font-size:50px;
+}
+#bootstrap-overrides h2{
+    font-size:40px;
+}
+#bootstrap-overrides h3{
+    font-size:32px;
+    font-weight:bold;
+}
+#bootstrap-overrides h4{
+    font-size:24px;
+}
+#bootstrap-overrides h5{
+    font-size:16px;
+}
+#bootstrap-overrides h6{
+    font-size:14px;
+}
+#bootstrap-overrides p, #bootstrap-overrides input, #bootstrap-overrides textarea, #bootstrap-overrides label{
+    font-size:12px;
+     text-align: justify;
+}
+
+
+/* override font sizes (for Amatic font)*/
+/*#bootstrap-overrides h1{
     font-size:60px;
 }
 #bootstrap-overrides h2{
@@ -80,7 +106,32 @@ a{
 }
 #bootstrap-overrides p, #bootstrap-overrides input, #bootstrap-overrides textarea, #bootstrap-overrides label{
     font-size:20px;
+     text-align: justify;
+}*/
+
+/* override font sizes (for Abel font)*/
+/*#bootstrap-overrides h1{
+    font-size:56px;
 }
+#bootstrap-overrides h2{
+    font-size:38px;
+}
+#bootstrap-overrides h3{
+    font-size:24px;
+    font-weight:bold;
+}
+#bootstrap-overrides h4{
+    font-size:20px;
+}
+#bootstrap-overrides h5{
+    font-size:16px;
+}
+#bootstrap-overrides h6{
+    font-size:14px;
+}
+#bootstrap-overrides p, #bootstrap-overrides input, #bootstrap-overrides textarea, #bootstrap-overrides label{
+    font-size:14px;
+}*/
 /* styles for footer */
 #bootstrap-overrides #bottom_bar {
     /*position:absolute;*/

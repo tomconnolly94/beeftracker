@@ -15,9 +15,13 @@
         <link rel="shortcut icon" href="/logo/steak.ico"><!-- icon -->
         <meta name="viewport" content="width=device-width, initial-scale=1"><!-- tag for mobile zoom -->
         
-        <!-- Root scripts -->
+        <!-- JQuery -->
         <script src="/modules/jquery/dist/jquery.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="/stylesheets/amatic_font.css"/>
+        
+        <!-- Font Scripts -->
+        <link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css?family=Josefin+Slab" rel="stylesheet"> 
+        <link rel="stylesheet" type="text/css" href="/stylesheets/amatic_font.css" />
         
         <!-- Core angular scripts -->
         <script src="/modules/angular/angular.min.js"></script>
@@ -36,8 +40,7 @@
         <script src="/controllers/home/search_box_controller.js"></script>
         <script src="/controllers/home/event_stream_controller.js"></script>
         <script src="/js/beef_tracker_colour_bank.js"></script>
-        <script src=""></script>
-        
+                
         <!-- Bespoke css files -->
         <link rel="stylesheet" href="/stylesheets/house_styles.css"/>
         <link rel="stylesheet" href="/stylesheets/header.css"/>
@@ -84,7 +87,7 @@
             //load header and footer
             $(function(){
                 $("#top_bar").load("/partials/header.ejs");
-                $("#bottom_bar").load("/partials/footer.ejs");
+                $("#bottom_bar").load("/partials/footer.ejs");      
             });
             
             //get client ip address - not in use
@@ -119,7 +122,7 @@
                         <div class="row">
                             <span class="col-xs-1 glyphicon glyphicon-search" style="width:40px;height:40px;padding:10px 0px 10px 10px;"></span>
                             <div  class="col-xs-10" style="padding:0px;">
-                                <input type="text" ng-model="search_term" ng-change="submit()" style="width:100%;height:40px;font-size:25px;color:#000000" placeholder="Search for an Event" id="search_box">
+                                <input type="text" ng-model="search_term" ng-change="submit()" style="width:100%;height:40px;font-size:16px;color:#000000" placeholder="Search for an Event..." id="search_box">
                             </div>
                         </div>
                     </div>
@@ -161,24 +164,23 @@
             <div class="row" style="overflow:hidden;">
                 <div class="col-sm-4"></div>
                 <div class="col-sm-4">
-                    <h5 id="header_heading">
-                        <a href="/subscribe" target="_self">
-                            <div class="row">
-                                <span class="col-xs-2 glyphicon glyphicon-envelope" style="padding:10px 0px 0px 10px;"></span>
-                                <h5 class="col-xs-10" style="padding:0px;">Subscribe to our email alerts now!</h5>
-                            </div>
-                        </a>
-                    </h5>
+                    <a href="/subscribe" target="_self">
+                        <div class="row">
+                            <div class="col-sm-1"></div>
+                            <span class="col-sm-1 glyphicon glyphicon-envelope" style="padding:10px 0px 0px 0px;margin:0px 10px;font-size:20px;text-align:center"></span>
+                            <h5 class="col-sm-9" style="padding:0px;">Subscribe to our email alerts now!</h5>
+                        </div>
+                    </a>
                 </div>
                 <div class="col-sm-4"></div>
             </div>
             
             <div class="row" style="overflow:hidden;">
-                <div class="col-sm-4"></div>
-                <div class="col-sm-4">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
                     <h2 style="text-align:center;font-weight:bold;">Recent Events:</h2>
                 </div>
-                <div class="col-sm-4"></div>
+                <div class="col-sm-3"></div>
             </div>
             
             <div class="row" style="padding:0px 75px;" ng-controller="eventStreamController">
@@ -187,12 +189,12 @@
                         <li ng-repeat="event_col_1 in event_stream_events_col_1 track by $index" style="margin:30px 0px;">        
                             <a ng-href="/beef/{{event_col_1.eventNum}}#{{event_col_1.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;border-radius: 5px;" target="_self">
 
-                                <div class="row" style="width:100%;margin:0px;text-align:right;">
+                                <div class="row" style="padding:5px;width:100%;margin:0px;text-align:right;">
 
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2" style="padding:10px;">
                                         <img  ng-src="/event_images/{{ event_col_1.img_link }}" class="img-circle" style="position:relative;margin:10px;padding:0px;float:left;" height="100" width="100">
                                     </div>
-                                    <div class="col-sm-8" style="position:relative;float:right;">
+                                    <div class="col-sm-10" style="position:relative;float:right;">
 
                                         <h4 style="margin:5px;font-weight:bold;"> {{ event_col_1.title }}</h4>
 
@@ -211,12 +213,12 @@
                         <li ng-repeat="event_col_2 in event_stream_events_col_2 track by $index" style="margin:30px 0px;">        
                             <a ng-href="/beef/{{event_col_2.eventNum}}#{{event_col_2.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;border-radius: 5px;" target="_self">
 
-                                <div class="row" style="width:100%;margin:0px;text-align:right;">
+                                <div class="row" style="padding:5px;width:100%;margin:0px;text-align:right;">
 
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2" style="padding:10px;">
                                         <img  ng-src="/event_images/{{ event_col_2.img_link }}" class="img-circle" style="position:relative;margin:10px;padding:0px;float:left;" height="100" width="100">
                                     </div>
-                                    <div class="col-sm-8" style="position:relative;float:right;">
+                                    <div class="col-sm-10" style="position:relative;float:right;">
 
                                         <h4 style="margin:5px;font-weight:bold;"> {{ event_col_2.title }}</h4>
 
@@ -235,12 +237,12 @@
                         <li ng-repeat="event_col_3 in event_stream_events_col_3 track by $index" style="margin:30px 0px;">        
                             <a ng-href="/beef/{{event_col_3.eventNum}}#{{event_col_3.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;border-radius: 5px;" target="_self">
 
-                                <div class="row" style="width:100%;margin:0px;text-align:right;">
+                                <div class="row" style="padding:15px;width:100%;margin:0px;text-align:right;">
 
-                                    <div class="col-sm-3">
-                                        <img  ng-src="/event_images/{{ event_col_3.img_link }}" class="img-circle" style="position:relative;margin:10px;padding:0px;float:left;" height="100" width="100">
+                                    <div class="col-sm-2" style="padding:10px;">
+                                        <img  ng-src="/event_images/{{ event_col_3.img_link }}" class="img-circle" style="position:relative;margin:0px;padding:0px;float:left;" height="100" width="100">
                                     </div>
-                                    <div class="col-sm-8" style="position:relative;float:right;">
+                                    <div class="col-sm-10" style="position:relative;float:right;">
 
                                         <h4 style="margin:5px;font-weight:bold;"> {{ event_col_3.title }}</h4>
 
