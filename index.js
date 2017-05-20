@@ -22,8 +22,26 @@ var BSON = require('bson');
 var sitemap_generator = require('sitemap');
 var nodemailer = require('nodemailer');
 var multer = require('multer');
-var upload_event_img = multer({ dest: "public/assets/images/pending/events" });
-var upload_actor_img = multer({ dest: "public/assets/images/pending/actors" });
+var mime = require('mime-types');
+var storage_event = multer.diskStorage({
+  destination: function (req, file, cb) {
+      console.log(file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    cb(null, "public/assets/images/pending/events/")
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+}); //multer config options
+var storage_actor = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/assets/images/pending/actors/")
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+}); //multer config options
+var upload_event_img = multer({storage: storage_event}); //build upload handlers
+var upload_actor_img = multer({storage: storage_actor}); //build upload handlers
 
 // ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({
@@ -31,7 +49,7 @@ sitemap = sitemap_generator.createSitemap ({
     cacheTime: 600000,        // 600 sec - cache purge period 
     urls: [
         { url: '/home/', changefreq: 'weekly', priority: 0.9 },
-        { url: '/artist/{{%20trustSrc(url)%20}}', changefreq: 'weekly',  priority: 0.7 },
+        { url: '/actor/{{%20trustSrc(url)%20}}', changefreq: 'weekly',  priority: 0.7 },
         { url: '/beef/{{%20trustSrc(url)%20}}', changefreq: 'weekly',  priority: 0.9 },
         { url: '/about_us/', changefreq: 'weekly',  priority: 0.5 },
         { url: '/contact_us/', changefreq: 'weekly',  priority: 0.5 },
@@ -48,7 +66,7 @@ app.use(bodyParser.json());
 app.use(methodOverride());
 
 // ### Directory routes ### 
-app.use('/artist_images', express.static(__dirname + '/public/assets/images/artists/')); //route to reference images
+app.use('/actor_images', express.static(__dirname + '/public/assets/images/actors/')); //route to reference images
 app.use('/event_images', express.static(__dirname + '/public/assets/images/events/')); //route to reference images
 app.use('/background_images', express.static(__dirname + '/public/assets/images/backgrounds/')); //route to reference images
 app.use('/logo', express.static(__dirname + '/public/assets/images/logo/')); //route to reference images
@@ -64,7 +82,7 @@ app.use('/partials', express.static(__dirname + '/views/partials/')); //route to
 // ### Permanent page routes ###
 app.get('/', function(request, response) { response.render('pages/dynamic_pages/home.ejs'); }); //home page
 app.get('/beef/:tagId', function(request, response) { response.render('pages/dynamic_pages/beef.ejs'); }); //beef page
-app.get('/actor/:tagId', function(request, response) { response.render('pages/dynamic_pages/actor.ejs'); }); //artist page
+app.get('/actor/:tagId', function(request, response) { response.render('pages/dynamic_pages/actor.ejs'); }); //actor page
 app.get('/add_beef/', function(request, response) { response.render('pages/form_pages/submit_event.ejs'); }); // submit beefdata page page
 app.get('/raw_add_actor/', function(request, response) { response.render('pages/form_pages/raw_submit_actor.ejs'); }); // add_actor form abstract
 app.get('/add_actor/', function(request, response) { response.render('pages/form_pages/submit_actor.ejs'); }); // submit actordata page
@@ -195,11 +213,11 @@ app.get('/search_all/:search_term', function(request, response) {
             
         }
     });
-}); //search for any events matching a to_string consisting of concatenated artist_id and event title
-app.get('/search_actors_by_id/:artist_id', function(request, response) {
+}); //search for any events matching a to_string consisting of concatenated actor_id and event title
+app.get('/search_actors_by_id/:actor_id', function(request, response) {
     
     var url = process.env.MONGODB_URI;
-    var identifier = request.params.artist_id;
+    var identifier = request.params.actor_id;
 
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
@@ -217,16 +235,16 @@ app.get('/search_actors_by_id/:artist_id', function(request, response) {
                                                        ]).toArray(function(queryErr, docs) {
                 if(queryErr){ console.log(queryErr); }
                 else{
-                    response.send( { artist : docs[0] } );
+                    response.send( { actor : docs[0] } );
                 }
             });
         }
     });
-}); //search for an artist using its _id
-app.get('/search_artists_by_stage_name/:artist_name', function(request, response) {
+}); //search for an actor using its _id
+app.get('/search_actors_by_stage_name/:actor_name', function(request, response) {
     
     var url = process.env.MONGODB_URI;
-    var identifier = request.params.artist_name;
+    var identifier = request.params.actor_name;
 
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
@@ -251,11 +269,11 @@ app.get('/search_artists_by_stage_name/:artist_name', function(request, response
             });            
         }
     });
-}); //search for an artist using their stage name
-app.get('/search_related_actors_by_id/:artist_id', function(request, response) {
+}); //search for an actor using their stage name
+app.get('/search_related_actors_by_id/:actor_id', function(request, response) {
     
     var url = process.env.MONGODB_URI;
-    var identifier = request.params.artist_id;
+    var identifier = request.params.actor_id;
 
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
@@ -301,11 +319,11 @@ app.get('/search_related_actors_by_id/:artist_id', function(request, response) {
             });
         }        
     });
-}); //search for any artists that share an event with the _id
-app.get('/search_events_by_event_aggressor/:artist_id', function(request, response) {
+}); //search for any actors that share an event with the _id
+app.get('/search_events_by_event_aggressor/:actor_id', function(request, response) {
     
     var url = process.env.MONGODB_URI;
-    var identifier = request.params.artist_id;
+    var identifier = request.params.actor_id;
 
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
@@ -326,7 +344,7 @@ app.get('/search_events_by_event_aggressor/:artist_id', function(request, respon
         }
     });
     
-}); //search for any events using the stage name of an artist
+}); //search for any events using the stage name of an actor
 app.get('/search_recent_events/:num_of_events', function(request, response) {
     
     //get necessary fields for use later
@@ -397,17 +415,17 @@ app.get('/search_all_related_events_in_timeline_by_id/:event_id', function(reque
                 },
                 function(main_event, callback){ //gather all the targets' responses
                      
-                    var artists = new Array();
-                    artists.push(main_event.aggressor_object[0]._id);
+                    var actors = new Array();
+                    actors.push(main_event.aggressor_object[0]._id);
                     
                     for(var i = 0; i < main_event.targets.length; i++){
-                        artists.push(main_event.targets[i][0]._id);
+                        actors.push(main_event.targets[i][0]._id);
                     }
                     
                     var all_events = new Array();
                     
                     //standard query to match an event and resolve aggressor and targets references
-                    db.collection("event_data_v0_2").aggregate([{ $match: { aggressor : { $in : artists }} },
+                    db.collection("event_data_v0_2").aggregate([{ $match: { aggressor : { $in : actors }} },
                                                                 { $unwind : "$targets"}, 
                                                                 { $lookup : { 
                                                                     from: "actor_data_v0_2", 
@@ -445,7 +463,7 @@ app.get('/search_all_related_events_in_timeline_by_id/:event_id', function(reque
                                     }
                                     else{
 
-                                        //loop through targets to check that one of them is orig_artist_name
+                                        //loop through targets to check that one of them is orig_actor_name
                                         for(var sub_target_num = 0; sub_target_num < event.targets.length; sub_target_num++){
 
                                             var target = event.targets[sub_target_num][0];
@@ -470,7 +488,7 @@ app.get('/search_all_related_events_in_timeline_by_id/:event_id', function(reque
         }
     });
 }); //make multiple database queries to gather all existing events involving both the aggressor and at least one of the targets
-app.get('/search_all_artists/', function(request, response) {
+app.get('/search_all_actors/', function(request, response) {
 
     var url = process.env.MONGODB_URI;
     
@@ -484,6 +502,20 @@ app.get('/search_all_artists/', function(request, response) {
         }
     });
 }); //search for an event using its _id
+app.get('/get_event_categories/', function(request, response) {
+
+    var url = process.env.MONGODB_URI;
+    
+    MongoClient.connect(url, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            //standard query to match an event and resolve aggressor and targets references
+            db.collection("event_categories").find().toArray(function(queryErr, docs) {
+                response.send({categories : docs});
+            });
+        }
+    });
+}); //search for an event using its _id
 
 // ### Form Handling ###
 app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, response) => {
@@ -493,13 +525,16 @@ app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, r
     var file = request.file; //get submitted image
     var submission_data = JSON.parse(request.body.data); //get form data
     
+    console.log(submission_data);
+    
     //format data for db insertion
-    var artist_object = BSON.ObjectID.createFromHexString(submission_data.aggressor);
+    var actor_object = BSON.ObjectID.createFromHexString(submission_data.aggressor);
     var date = submission_data.date.split('/');
     var targets_formatted = new Array();
     var highlights_formatted = new Array();
     var data_sources_formatted = new Array();
     var links_formatted = {};
+    
     
     //create array of target objectIds
     for(var i = 0; i < submission_data.targets.length; i++){
@@ -528,10 +563,11 @@ app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, r
     }
     
     links_formatted["mf_img_link"] = file.filename;
+    console.log(file);
 
     //create array of target objectIds ## unfinished need to deal with images and videos that are not null  and other button links too
     for(var i = 0; i < submission_data.button_links.length; i++){
-        if(submission_data.button_links[i].special_title.length > 0){
+        if(submission_data.button_links[i].special_title != undefined && submission_data.button_links[i].special_title.length > 0){
             links_formatted[submission_data.button_links[i].special_title] = submission_data.button_links[i].url;
         }else{
             links_formatted[submission_data.button_links[i].title] = submission_data.button_links[i].url;
@@ -540,14 +576,15 @@ app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, r
     
     var insert_object = {
         "title" : submission_data.title,
-        "aggressor" : artist_object,
+        "aggressor" : actor_object,
         "targets" : targets_formatted,
         "description" : submission_data.description,
         "date_added" : new Date(),
         "event_date" : new Date(date[2],date[1]-1,date[0]),
         "highlights" : highlights_formatted,
         "data_sources" : data_sources_formatted,
-        "links" : links_formatted       
+        "links" : links_formatted,
+        "selected_categories" : submission_data.selected_categories
     }
     
     //store data temporarily untill submission is confirmed
@@ -591,10 +628,11 @@ app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, r
                     };
                 });
                 
+                response.send();
+                
             });
         }
     });
-    response.send();
 }); //submit new beefdata to the database
 app.post('/submit_actordata/', upload_actor_img.single('attachment'), (request, response) => {
 

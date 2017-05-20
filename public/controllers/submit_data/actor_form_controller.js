@@ -20,6 +20,7 @@ submit_app.controller('actorFormController', ['$scope','$http', 'fileService', '
     $scope.occupations = [];
     $scope.achievements = [];
     $scope.assoc_actors = [];
+    $scope.show_birth_name = true;
     
     //request to get actors to fill aggressor and targets option inputs
     $http({
@@ -57,14 +58,14 @@ submit_app.controller('actorFormController', ['$scope','$http', 'fileService', '
         }
         
         //test if birth_name is empty
-        if($scope.actor_form.birth_name.$untouched || $scope.actor_form.birth_name.length > 0){
+        /*if($scope.actor_form.birth_name.$untouched || $scope.actor_form.birth_name.length > 0){
             $scope.error_message = base_err + "Birth name is empty.";
             return false;
         }
         else if($scope.actor_form.birth_name.$invalid){
             $scope.error_message = base_err + "Birth name is not valid.";
             return false;
-        }
+        }*/
 
         //test if file is empty
         if(fileService[0] == undefined){
@@ -126,6 +127,33 @@ submit_app.controller('actorFormController', ['$scope','$http', 'fileService', '
         
         return true;
     };
+    
+    //function to reconfigure parts of the form to make the fields appropriate for either a solo artist of a group
+    $scope.config_solo_group = function(radio_button_type){
+        
+        console.log(radio_button_type);
+        
+        //reconfigure menu for either solo or group actor
+        if(!radio_button_type){
+            
+            document.getElementById("name").innerHTML = "* Stage Name:";
+            document.getElementById("nicknames").innerHTML = "* Nicknames:";
+            document.getElementById("d_o_b").innerHTML = "* Date of Birth:";
+            $scope.show_birth_name = true;
+            
+        }
+        else{
+            
+            document.getElementById("name").innerHTML = "* Group Name:";
+            document.getElementById("nicknames").innerHTML = "* Members:";
+            document.getElementById("d_o_b").innerHTML = "* Date Formed:";
+            $scope.show_birth_name = false;
+            $scope.birth_name = "n/a";
+            $scope.actor_form.birth_name.$untouched = false;
+            $scope.actor_form.birth_name = "n/a";
+        }
+        
+    }
         
     //function to process, format and send all form data to servers
     $scope.process_form = function() {

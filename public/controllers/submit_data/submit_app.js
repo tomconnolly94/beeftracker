@@ -7,7 +7,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-var submit_app = angular.module('submit', ['jkuri.datepicker']);
+var submit_app = angular.module('submit', ['jkuri.datepicker','toggle-switch']);
 /*submit_app.config(function($routeProvider, $locationProvider){
     $routeProvider.when('/raw_add_actor',
         {

@@ -3,3 +3,7 @@ span{
     display:inline;
     color:#FFFFFF;
 }
+
+.ui-datepicker-year, .ui-datepicker-month{
+    color:#000000;
+}

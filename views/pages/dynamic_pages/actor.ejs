@@ -80,14 +80,14 @@
             <div id="top_bar"></div>
             
             <!-- rest of page -->
-            <div class="row" id="artist_details">
+            <div class="row" id="actor_details">
                 <div class="col-sm-1"></div>
                 
                 <div class="col-sm-10 row" ng-controller="actorSearchController">
                     
                     <div class="col-sm-12 row">
                         <div class="col-sm-4" style="height:100%">
-                            <img class="img-circle" src="/artist_images/{{ loc_img_link }}" class="img-circle" height="100%" width="100%">
+                            <img class="img-circle" src="/actor_images/{{ loc_img_link }}" class="img-circle" height="100%" width="100%">
                         </div>
 
                         <div class="col-sm-8">
@@ -161,24 +161,22 @@
                     
                 <div class="col-sm-2"></div>
                 <div class="col-sm-4" ng-controller="relatedActorsController">
-                    <h2>Related Artists:</h2>        
+                    <h2>Related actors:</h2>        
                         <div ng-repeat="actor in associated_actors"  class="selectable_event" style="background-color:#9C0505;font-weight:bold;padding:15px;margin:0px;border-color:#000000;border-width:10px;border-radius: 5px;float:left;" target="_self">
-                            <a ng-href="/artist/{{ actor._id }}" target="_self" style="padding:0px;">
+                            <a ng-href="/actor/{{ actor._id }}" target="_self" style="padding:0px;">
                                 <img class="img-circle" ng-src="/event_images/{{ actor.loc_img_link }}" style="margin:0px auto;" height="50px" width="50px">
                                 <h5>{{ actor.stage_name }}</h5>
                             </a>
                         </div>
                 </div>
-
+                
                 <div class="col-sm-4" ng-controller="recentEventsController">
-                    <h2>Recent Events:</h2>
-                        <div ng-repeat="event in events" style="margin:0px 0px 0px 5px;float:left;">
-                            <a ng-href="/beef/{{event._id}}" class="selectable_event" style="background-color:#9C0505;font-weight:bold;padding:15px;margin:0px;border-color:#000000;border-width:10px;border-radius: 5px;" target="_self">
-                                <img class="img-circle" ng-src="/event_images/{{event.loc_img_link}}" style="margin:0px auto;" height="50px" width="50px">
-
-
+                    <h2>Recent Events:</h2>        
+                        <div ng-repeat="event in events"  class="selectable_event" style="background-color:#9C0505;font-weight:bold;padding:15px;margin:10px;border-color:#000000;border-width:10px;border-radius: 5px;float:left;" target="_self">
+                            <a ng-href="/beef/{{event._id}}" target="_self" style="padding:0px;">
+                                <img class="img-circle" ng-src="/event_images/{{event.loc_img_link}}" height="50px" width="50px">
                                 <h5>{{ event.title }}</h5>
-                                Artists included: 
+                                actors included: 
                                 <ul>
                                     <li ng-repeat="target in event.targets">
 
@@ -186,30 +184,30 @@
 
                                     </li>
                                 </ul>
-
                             </a>
-                            <!--
-                            <a ng-href="/beef/{{event_col_2.eventNum}}#{{event_col_2.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;border-radius: 5px;" target="_self">
-
-                                <div class="row" style="width:100%;margin:0px;text-align:right;">
-
-                                    <div class="col-sm-3">
-                                        <img  ng-src="/event_images/{{ event_col_2.img_link }}" class="img-circle" style="position:relative;margin:10px;padding:0px;float:left;" height="100" width="100">
-                                    </div>
-                                    <div class="col-sm-8" style="position:relative;float:right;">
-
-                                        <h4 style="margin:5px;font-weight:bold;"> {{ event_col_2.title }}</h4>
-
-                                        <h6 style="margin:5px;">{{ event_col_2.name }}</h6>
-
-                                        <h6 style="margin:5px;">{{ event_col_2.date }}</h6>
-                                    </div>
-
-                                </div>
-                            </a>
-                            -->
                         </div>
                 </div>
+
+                <!--<div class="col-sm-4" ng-controller="recentEventsController">
+                    <h2>Recent Events:</h2>
+                    <div ng-repeat="event in events" style="margin:0px 0px 0px 5px;float:left;">
+                        <a ng-href="/beef/{{event._id}}" class="selectable_event" style="background-color:#9C0505;font-weight:bold;padding:15px;margin:0px;border-color:#000000;border-width:10px;border-radius: 5px;" target="_self">
+                            <img class="img-circle" ng-src="/event_images/{{event.loc_img_link}}" style="margin:0px auto;" height="50px" width="50px">
+
+
+                            <h5>{{ event.title }}</h5>
+                            actors included: 
+                            <ul>
+                                <li ng-repeat="target in event.targets">
+
+                                    <p>{{ target.stage_name }}</p>
+
+                                </li>
+                            </ul>
+
+                        </a>
+                    </div>
+                </div>-->
                 <div class="col-sm-2"></div>
             </div>
             <div id="bottom_bar" class="row" style="margin:50px 0px"></div>

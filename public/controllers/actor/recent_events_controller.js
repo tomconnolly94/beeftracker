@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
-//  File: artist_controller.js
+//  File: actor_controller.js
 //  Project: beeftracker
 //  Contributors: Tom Connolly
 //  Description: Sends a HTTP request to the node server to extract data from the
@@ -21,13 +21,13 @@ actor_app.controller("recentEventsController", ['$scope','$http', '$routeParams'
             method: 'GET',
             url: "/search_actors_by_id/" + $routeParams.tagId
         }).then(function(response_1){
-            var artist = response_1.data.artist;
+            var actor = response_1.data.actor;
         
                 //make http request to server for data
-                //$http.get("/search_events_by_event_aggressor/" + artist._id).success(function(response_2){
+                //$http.get("/search_events_by_event_aggressor/" + actor._id).success(function(response_2){
                 $http({
                     method: 'GET',
-                    url: "/search_events_by_event_aggressor/" + artist._id
+                    url: "/search_events_by_event_aggressor/" + actor._id
                 }).then(function(response_2){
                     
                     $scope.events = new Array();
@@ -49,12 +49,12 @@ actor_app.controller("recentEventsController", ['$scope','$http', '$routeParams'
                 }, 
                 function(response_2) {
                     //failed http request
-                    console.log("The client http get request has failed. artist_controller.js:39");
+                    console.log("The client http get request has failed. actor_controller.js:39");
                 });
             }, 
         function(response_1) {
             //failed http request
-            console.log("The client http get request has failed. artist_controller.js:39");
+            console.log("The client http get request has failed. actor_controller.js:39");
         });
     });
 }]);

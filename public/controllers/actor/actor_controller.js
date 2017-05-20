@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
-//  File: artist_controller.js
+//  File: actor_controller.js
 //  Project: beeftracker
 //  Contributors: Tom Connolly
 //  Description: Sends a HTTP request to the node server to extract data from the
@@ -24,7 +24,7 @@ actor_app.controller("actorSearchController", ['$scope','$http', '$routeParams',
             //validate the url tagId to make sure the event exists
             if(response_1.data != undefined){
                 
-                var actor_object = response_1.data.artist;
+                var actor_object = response_1.data.actor;
                 
                 if(actor_object != undefined){
                     
@@ -68,19 +68,19 @@ actor_app.controller("actorSearchController", ['$scope','$http', '$routeParams',
                     //code to deal with associated actors data, not in current version
                     $scope.associated_actors = new Array();
                     
-                    for(var i = 0; i < artist_object.associated_actor_objects.length; i++){
-                        $scope.associated_actors.push(artist_object.associated_actor_objects[i]);
+                    for(var i = 0; i < actor_object.associated_actor_objects.length; i++){
+                        $scope.associated_actors.push(actor_object.associated_actor_objects[i]);
                     }*/
                 }
             }
             else{
                 //error msg
-                console.log("An incorrect artist_id has been used. please check the url. artist_controller.js:44")
+                console.log("An incorrect actor_id has been used. please check the url. actor_controller.js:44")
             }
         }, 
         function(response_1) {
             //failed http request
-            console.log("The client http get request has failed. artist_controller.js:33");
+            console.log("The client http get request has failed. actor_controller.js:33");
         });
     });
 }]);

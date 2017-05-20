@@ -17,6 +17,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     $scope.data_sources = [];
     //create array to hold highlights
     $scope.highlights = [];
+    $scope.categories = [];
     $scope.datepicker = "00/00/0000";
     $scope.error_message = "";
     
@@ -31,6 +32,29 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
             if(response != undefined){
                 console.log(response);
                 $scope.actors = response.data.actors;
+            }
+            else{
+                //error msg
+                console.log("No events found in database");
+            }
+        }, function(response) {
+            //failed http request
+            console.log("Error in HTTP request in search_controller.js:searchController");
+        });
+    }
+    
+    $scope.get_category_data = function(){
+        //request to get artists to fill aggressor and targets option inputs
+        //$http.get("/search_all_artists/").success(function(response){
+        $http({
+            method: 'GET',
+            url: "/get_event_categories/"
+        }).then(function(response){
+            //validate the url tagId to make sure the event exists                
+            if(response != undefined){
+                console.log(response);
+                
+                $scope.categories = response.data.categories;
             }
             else{
                 //error msg
@@ -116,7 +140,9 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     //function to process, format and send all form data to servers
     $scope.process_form = function() {
         
-        if($scope.validate_input()){
+        console.log($scope.event_form);
+        
+        if($scope.event_form.$valid && $scope.validate_input()){
 
             var form = new FormData();
             
@@ -128,6 +154,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
             $scope.form_data.highlights = $scope.highlights;
             $scope.form_data.data_sources = $scope.data_sources;
             $scope.form_data.button_links = $scope.button_links;
+            $scope.form_data.selected_categories = $scope.selected_categories;
             
             for(var i = 0; i < $scope.highlights.length; i++){
                 if(!$scope.highlights[i].title.length > 0){
@@ -261,6 +288,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     
     //call methods to init text boxes on page load
     $scope.get_actor_data();
+    $scope.get_category_data();
     $scope.add_source();
     $scope.add_link("Video Link","mf_video_link");
     //$scope.add_link("Image Upload");

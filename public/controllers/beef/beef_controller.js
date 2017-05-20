@@ -40,14 +40,14 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
                     url: "/search_actors_by_id/" + eventObject.aggressor
                 }).then(function(response_2){
                     
-                        var artist = response_2.data.artist;
+                        var actor = response_2.data.actor;
                         //validate the url tagId to make sure the event exists
-                        if(artist != undefined){
+                        if(actor != undefined){
                             
 
                             //assign fields to scope
-                            $scope.name = artist.stage_name;
-                            $scope.artist_id = artist._id;
+                            $scope.name = actor.stage_name;
+                            $scope.actor_id = actor._id;
                             $scope.title = eventObject.title;
                             $scope.date = eventObject.event_date.slice(0, 10);
                             $scope.description = eventObject.description;
@@ -56,7 +56,7 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
                             $scope.event_id = eventObject._id;
                             
                             //if record has no video link, use the image link instead
-                            if(eventObject.links.mf_video_link.length > 0){
+                            if(eventObject.links.mf_video_link != undefined && eventObject.links.mf_video_link.length > 0){
                                $scope.mf_link = eventObject.links.mf_video_link; 
                             }
                             else{

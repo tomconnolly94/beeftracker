@@ -84,7 +84,7 @@
             function check_side_bar_affix(){
                 
                 var affixElement = $("nav_fixed");
-                affixElement.width($affixElement.parent().width());
+                affixElement.width(affixElement.parent().width());
                 
                 if ($(window).innerWidth() <= 768){
                     //$(window).off('.affix');
@@ -123,7 +123,7 @@
                 
                 <div class="col-sm-7" ng-controller="timelineController" style="min-height:763px;">
                     
-                    <div class="jumbotron" id="artist_filter_panel" style="display:inline-block;text-align:center;width:100%;margin:30px 0px;background-color:#000000">
+                    <div class="jumbotron" id="actor_filter_panel" style="display:inline-block;text-align:center;width:100%;margin:30px 0px;background-color:#000000">
                         
                         <div class="col-sm-5">
                             <a ng-href="/actor/{{main_aggressor._id}}" target="_self">
@@ -175,8 +175,8 @@
                 
                 <div class="col-sm-5" id="nav_wrapper" ng-controller="currentEventController">
                                     
-                    <div id="nav_fixed" data-spy="affix" data-offset-top="180" data-offset-bottom="190" class="nav nav-pills nav-stacked" style="margin:30px 0px 0px 0px;" ng-cloak style="resize:none;">
-                        <div id="main_feature">                     
+                    <div id="nav_fixed" data-spy="affix" data-offset-top="180" data-offset-bottom="100" class="nav nav-pills nav-stacked" style="margin:30px 0px 0px 0px;" ng-cloak style="resize:none;">
+                        <div id="main_feature" class="img-circle" ng-style="{'background-image':'url(mf_link)', 'background-repeat': 'no-repeat'}">
                             <div id="videowrapper" class="embed-responsive embed-responsive-16by9">
                                 <iframe scrolling="no" ng-src="{{ trustSrc( mf_link) }}" class="embed-responsive-item" allowfullscreen="true"></iframe>
                             </div>
@@ -196,16 +196,16 @@
                         </div>
                         <script async src="https://static.addtoany.com/menu/page.js"></script>
                         
-                        
                         <hr>
-
+                        
                         <div id="scroll_panel" style="max-height:50vh;padding:0px 10px 0px 0px;">
-                            <a ng-href="/actor/{{artist_id}}" target="_self">
+                            <a ng-href="/actor/{{actor_id}}" target="_self">
                                 <h3>{{ name }}</h3>
                             </a>
 
                             <h4>{{ date }}</h4>
 
+                            <hr>
                             <h3>Description</h3>
 
                             <p>{{ description }}</p>
@@ -218,6 +218,8 @@
                                 <div class="col-sm-1"></div>
                             </div>-->
                             
+                            <hr>
+                        
                             <div id="link_area">
                                 <div class="row" ng-repeat="triples in links">
                                     <div class="col-sm-1"></div>
@@ -227,6 +229,8 @@
                                         </h5>
                                     </div>
                                     <div class="col-sm-1"></div>
+                                    <hr>
+
                                 </div>
                             </div>
                                 
@@ -238,9 +242,11 @@
                                             <p> "{{ val }}" </p>
                                         </li>
                                     </ul>
+                                    <hr>
+                        
                                 </li>
                             </ul>
-                                
+                                                        
                             <h3>Data Sources</h3>
                             <ul>
                                 <li ng-repeat="source in data_sources" style="margin:5px;">
@@ -284,19 +290,19 @@
                             -->
                                                         
                             <!--<div class="row">
-                                <a class="col-sm-4" href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]=https://www.facebook.com/sharer/sharer.php?u=beeftracker.herokuapp.com/beef/{{ artist_id }}" target="_blank" onclick="window.open(this.href,'targetWindow','toolbar=no,location=0,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=250'); return false" target="_self">
+                                <a class="col-sm-4" href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]=https://www.facebook.com/sharer/sharer.php?u=beeftracker.herokuapp.com/beef/{{ actor_id }}" target="_blank" onclick="window.open(this.href,'targetWindow','toolbar=no,location=0,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=250'); return false" target="_self">
                                     <button style="width:100%;padding:0px; margin-top:10px;background-color:#3b5999" type="button" class="btn btn-facebook btn-lg">
                                         <i class="fa fa-facebook fa-2"></i> 
                                         <h6 style="max-width:100%;"> Share on FB </h6>
                                     </button>
                                 </a>
-                                <a class="twitter-share-button col-sm-4" href="https://twitter.com/intent/tweet?text=Just%20viewed%20some%20beef%20at%20beeftracker.herokuapp.com/beef/{{artist_id}}%20%23beeftracker%20%40beeftracker" target="_self">
+                                <a class="twitter-share-button col-sm-4" href="https://twitter.com/intent/tweet?text=Just%20viewed%20some%20beef%20at%20beeftracker.herokuapp.com/beef/{{actor_id}}%20%23beeftracker%20%40beeftracker" target="_self">
                                     <button style="width:100%;padding:0px; margin-top:10px;background-color:#4099FF" type="button" class="btn btn-twitter btn-lg">
                                         <i class="fa fa-twitter fa-2"></i> 
                                         <h6 style="max-width:100%;"> Tweet </h6>
                                     </button>
                                 </a>
-                                <a class="twitter-share-button col-sm-4" href="https://plus.google.com/share?url=Just%20viewed%20some%20beef%20at%20beeftracker.herokuapp.com/beef/{{artist_id}}%20%23beeftracker" target="_self">
+                                <a class="twitter-share-button col-sm-4" href="https://plus.google.com/share?url=Just%20viewed%20some%20beef%20at%20beeftracker.herokuapp.com/beef/{{actor_id}}%20%23beeftracker" target="_self">
                                     <button style="width:100%;padding:0px; margin-top:10px;background-color:#dd4b39" type="button" class="btn btn-facebook btn-lg">
                                         <i class="fa fa-google fa-2"></i> 
                                         <h6 style="max-width:100%;"> Share on G+ </h6>
