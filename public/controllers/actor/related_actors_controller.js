@@ -39,7 +39,7 @@ actor_app.controller("relatedActorsController", ['$scope','$http', '$routeParams
         }, 
         function(response_2) {
             //failed http request
-            console.log("The client http get request has failed. artist_controller.js:39");
+            console.log("The client http get request has failed. actor_controller.js");
         });
     });
 }]);

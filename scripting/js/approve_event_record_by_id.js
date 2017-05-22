@@ -10,10 +10,11 @@ MongoClient.connect(url, function(err, db) {
     if(err){ console.log(err); }
     else{
         //standard query to match an event and resolve aggressor and targets references
-        db.collection("pending_event_data_v0_2").find().toArray(function(queryErr, docs) {
+        db.collection("pending_event_data_v0_2").find({}).toArray(function(queryErr, docs) {
             
             
             //while(true){
+            console.log(docs);
             
                 var id = readline.question("Enter the _id youd like to approve:");
 

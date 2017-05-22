@@ -289,7 +289,9 @@ app.get('/search_related_actors_by_id/:actor_id', function(request, response) {
                     db.collection("actor_data_v0_2").find( { _id : object }).toArray(function(queryErr, response) {
                         if(queryErr){ console.log(queryErr); }
                         else{
-                            callback(null,response[0].associated_actors);
+                            if(response != undefined){
+                                callback(null,response[0].associated_actors);
+                            }
                         }
                     });
 
@@ -496,7 +498,7 @@ app.get('/search_all_actors/', function(request, response) {
         if(err){ console.log(err); }
         else{
             //standard query to match an event and resolve aggressor and targets references
-            db.collection("actor_data_v0_2").find().toArray(function(queryErr, docs) {
+            db.collection("actor_data_v0_2").find().sort({"stage_name" : 1}).toArray(function(queryErr, docs) {
                 response.send({actors : docs});
             });
         }

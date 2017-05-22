@@ -26,7 +26,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
         //$http.get("/search_all_artists/").success(function(response){
         $http({
             method: 'GET',
-            url: "/search_all_artists/"
+            url: "/search_all_actors/"
         }).then(function(response){
             //validate the url tagId to make sure the event exists                
             if(response != undefined){
@@ -138,8 +138,8 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     };
     
     //function to process, format and send all form data to servers
-    $scope.process_form = function() {
-        
+    $scope.process_form = function(button) {
+        button.disabled = true;
         console.log($scope.event_form);
         
         if($scope.event_form.$valid && $scope.validate_input()){

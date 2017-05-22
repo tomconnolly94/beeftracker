@@ -52,7 +52,7 @@ home_app.controller('searchController', ['$scope','$http', function($scope, $htt
                         else{//object is an artists
                             title = objects[objectId].stage_name;
                             type_path = "/actor/";
-                            img_path = "/artist_images/";
+                            img_path = "/actor_images/";
                         }
                         
                                                 
