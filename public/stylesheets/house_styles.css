@@ -188,3 +188,7 @@ a:active {
 .container {
     width:1020px;
 }}
+
+hr { 
+    display: block;
+}

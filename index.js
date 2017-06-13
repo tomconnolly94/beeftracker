@@ -86,6 +86,7 @@ app.get('/actor/:tagId', function(request, response) { response.render('pages/dy
 app.get('/add_beef/', function(request, response) { response.render('pages/form_pages/submit_event.ejs'); }); // submit beefdata page page
 app.get('/raw_add_actor/', function(request, response) { response.render('pages/form_pages/raw_submit_actor.ejs'); }); // add_actor form abstract
 app.get('/add_actor/', function(request, response) { response.render('pages/form_pages/submit_actor.ejs'); }); // submit actordata page
+app.get('/list/:tagId', function(request, response) { response.render('pages/dynamic_pages/list.ejs'); }); // submit actordata page
 app.get('/subscribe/', function(request, response) { response.render('pages/form_pages/subscribe_to_news.ejs'); }); // submit actordata page
 app.get('/contact_us/', function(request, response) { response.render('pages/static_pages/contact_us.ejs'); }); // contact us page
 app.get('/about/', function(request, response) { response.render('pages/static_pages/about_us.ejs'); }); // about_us page
@@ -117,7 +118,6 @@ app.get('/search_events_by_id/:event_id', function(request, response) {
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
         else{
-            console.log(identifier);
             var object = BSON.ObjectID.createFromHexString(identifier);
             
             //standard query to match an event and resolve aggressor and targets references
@@ -149,7 +149,6 @@ app.get('/search_events_by_id/:event_id', function(request, response) {
                                                             targets : { "$addToSet": "$target_objects" }
                                                         }} //resolve each of the targets fields
                                                        ]).toArray(function(queryErr, docs) {
-                console.log(docs);
                 response.send({eventObject : docs[0]});
             });
         }
@@ -199,7 +198,6 @@ app.get('/search_all/:search_term', function(request, response) {
                             for(var i = 0; i < events.length;i++){
                                 all_objects.push(events[i]);                                
                             }
-                            console.log(all_objects);
                             response.send( { objects : all_objects } );
                         }
                     });
@@ -223,7 +221,6 @@ app.get('/search_actors_by_id/:actor_id', function(request, response) {
         if(err){ console.log(err); }
         else{
             var object = BSON.ObjectID.createFromHexString(identifier);
-            console.log(identifier);
                         
             db.collection("actor_data_v0_2").aggregate([{ $match: { _id : object } }/*, 
                                                         { $unwind : "$associated_actors"},
@@ -301,14 +298,14 @@ app.get('/search_related_actors_by_id/:actor_id', function(request, response) {
                     
                     assoc_act_arr = new Array();
                     
-                    for(var i = 0; i < Object.keys(associated_actors).length; i++){
-                        assoc_act_arr.push(associated_actors[i]);
+                    if(associated_actors != undefined){
+                        for(var i = 0; i < Object.keys(associated_actors).length; i++){
+                            assoc_act_arr.push(associated_actors[i]);
+                        }
                     }
-                    
                     db.collection("actor_data_v0_2").find({ _id : { $in : assoc_act_arr }}).toArray(function(queryErr, actors) {
                         if(err){ console.log(queryErr); }
                         else{
-                            console.log(actors);
                             response.send( { actors : actors } );
                         }
                     });
@@ -339,7 +336,7 @@ app.get('/search_events_by_event_aggressor/:actor_id', function(request, respons
                                                         { $lookup : { from: "actor_data_v0_2", localField: "targets", foreignField: "_id", as: "targets" }}
                                                        ]).toArray(function(queryErr, docs) {
             //db.collection("event_data_v0_2").find(JSON.parse(qry)).sort({"date_added" : -1}).limit(6).toArray(function(queryErr, docs) {
-                console.log(docs);
+                
                 response.send( { events : docs } );
             });
             
@@ -427,7 +424,7 @@ app.get('/search_all_related_events_in_timeline_by_id/:event_id', function(reque
                     var all_events = new Array();
                     
                     //standard query to match an event and resolve aggressor and targets references
-                    db.collection("event_data_v0_2").aggregate([{ $match: { aggressor : { $in : actors }} },
+                    db.collection("event_data_v0_2").aggregate([{ $match: { $or : [{ aggressor : { $in : actors }},{ targets : { $in : actors }} ]}},
                                                                 { $unwind : "$targets"}, 
                                                                 { $lookup : { 
                                                                     from: "actor_data_v0_2", 
@@ -464,9 +461,11 @@ app.get('/search_all_related_events_in_timeline_by_id/:event_id', function(reque
                                         all_events.push(event);
                                     }
                                     else{
+                                        
+                                        all_events.push(event);
 
                                         //loop through targets to check that one of them is orig_actor_name
-                                        for(var sub_target_num = 0; sub_target_num < event.targets.length; sub_target_num++){
+                                       /* for(var sub_target_num = 0; sub_target_num < event.targets.length; sub_target_num++){
 
                                             var target = event.targets[sub_target_num][0];
 
@@ -474,9 +473,10 @@ app.get('/search_all_related_events_in_timeline_by_id/:event_id', function(reque
                                             if(target._id.toString() === main_event.aggressor_object[0]._id.toString()){
                                                     all_events.push(event);
                                             }
-                                        }
+                                        }*/
                                     }
                             });
+                            console.log(all_events);
                             response.send( { events : all_events } );
                         }
                     });
@@ -499,11 +499,51 @@ app.get('/search_all_actors/', function(request, response) {
         else{
             //standard query to match an event and resolve aggressor and targets references
             db.collection("actor_data_v0_2").find().sort({"stage_name" : 1}).toArray(function(queryErr, docs) {
-                response.send({actors : docs});
+                response.send({items : docs});
             });
         }
     });
-}); //search for an event using its _id
+}); //get all actors
+app.get('/search_all_events/', function(request, response) {
+
+    var url = process.env.MONGODB_URI;
+    
+    MongoClient.connect(url, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            //standard query to match an event and resolve aggressor and targets references
+            db.collection("event_data_v0_2").aggregate([{ $match: { } },
+                                                                { $lookup : { 
+                                                                    from: "actor_data_v0_2",
+                                                                    localField: "aggressor",
+                                                                    foreignField: "_id",
+                                                                    as: "aggressor_object" }},
+                                                                { $unwind : "$targets"},
+                                                                { $lookup : { 
+                                                                    from: "actor_data_v0_2",
+                                                                    localField: "targets",
+                                                                    foreignField: "_id",
+                                                                    as: "target_objects" }},
+                                                                { $group: {
+                                                                    _id : "$_id",
+                                                                    title : { "$max" : "$title"},
+                                                                    aggressor_object : { "$max" : "$aggressor_object"},
+                                                                    aggressor : { "$max" : "$aggressor"},
+                                                                    description : { "$max" : "$description"},
+                                                                    date_added : { "$max" : "$date_added"},
+                                                                    event_date : { "$max" : "$event_date"},
+                                                                    highlights : { "$max" : "$highlights"},
+                                                                    data_sources : { "$max" : "$data_sources"},
+                                                                    links : { "$max" : "$links"},
+                                                                    targets : { "$addToSet": "$target_objects" }
+                                                                }}
+                                                               ]).sort({"title" : 1}).toArray(function(queryErr, docs) {
+                console.log(docs);
+                response.send({items : docs});
+            });
+        }
+    });
+}); //get all events
 app.get('/get_event_categories/', function(request, response) {
 
     var url = process.env.MONGODB_URI;
@@ -533,7 +573,7 @@ app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, r
     var actor_object = BSON.ObjectID.createFromHexString(submission_data.aggressor);
     var date = submission_data.date.split('/');
     var targets_formatted = new Array();
-    var highlights_formatted = new Array();
+    var highlights_formatted = {};
     var data_sources_formatted = new Array();
     var links_formatted = {};
     
@@ -553,10 +593,8 @@ app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, r
         var title = submission_data.highlights[i].title;
         
         var new_highlight = {};
-        new_highlight[title] = highlight_contents;
-        
-        highlights_formatted.push(new_highlight);
-    
+        highlights_formatted[title] = highlight_contents;
+            
     }
     
     //create array of target objectIds
@@ -712,7 +750,7 @@ app.post('/submit_actordata/', upload_actor_img.single('attachment'), (request, 
         if(err){ console.log(err); }
         else{
             //standard query to match an event and resolve aggressor and targets references
-            db.collection("pending_actor_data_v0_2").insert(insert_object, function(err, document){
+            db.collection("actor_data_v0_2").insert(insert_object, function(err, document){
                 console.log(document);
                 
                 insert_object._id = document.ops[0]._id;

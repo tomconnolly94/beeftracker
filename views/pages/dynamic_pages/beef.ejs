@@ -224,15 +224,16 @@
                                 <div class="row" ng-repeat="triples in links">
                                     <div class="col-sm-1"></div>
                                     <div ng-repeat="record in triples" class="jumbotron col-sm-3" style="padding:0px;height:60%;margin:5px;">
-                                        <h5 style="margin:10px;text-align:center"><a ng-href="{{ record.url }}" target="_blank">
+                                        <h6 style="margin:10px;text-align:center"><a ng-href="{{ record.url }}" target="_blank">
                                             <b>{{ record.button_name }}</b></a>
-                                        </h5>
+                                        </h6>
                                     </div>
                                     <div class="col-sm-1"></div>
-                                    <hr>
 
                                 </div>
                             </div>
+                            
+                            <hr>
                                 
                             <ul>
                                 <li ng-repeat="(key, highlight_group) in highlights" style="margin:0px;">

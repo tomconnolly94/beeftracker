@@ -30,7 +30,7 @@ submit_app.controller('actorFormController', ['$scope','$http', 'fileService', '
         
         //validate the url tagId to make sure the event exists                
         if(response != undefined){
-            $scope.actors = response.data.actors;
+            $scope.actors = response.data.items;
         }
         else{
             //error msg

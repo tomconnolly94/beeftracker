@@ -31,7 +31,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
             //validate the url tagId to make sure the event exists                
             if(response != undefined){
                 console.log(response);
-                $scope.actors = response.data.actors;
+                $scope.actors = response.data.items;
             }
             else{
                 //error msg

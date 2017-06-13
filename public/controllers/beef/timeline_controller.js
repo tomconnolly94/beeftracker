@@ -27,14 +27,10 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
             //validate the url tagId to make sure the event exists
             if(response_1.data.eventObject != undefined){
                 
-                console.log(response_1);
-                
                 response_1 = response_1.data;
                 
                 //get the main event's aggressor
                 $scope.main_aggressor = response_1.eventObject.aggressor_object[0];
-                
-                console.log(first_run);
                 
                 //if its the first time this function is called, init arrays
                 if(first_run){
@@ -49,9 +45,8 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                         $scope.filter_options.push(response_1.eventObject.targets[i][0].stage_name);
                     }
                     
+                    
                     $scope.filter_options.push("None");
-                    //set this flag so the above code is only run once
-                    first_run = false;
                 }
                
                 //make http request to server for data
@@ -63,7 +58,23 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                     
                     //extract events array
                     var events = response_2.data.events;
+                    console.log(events);
                     
+                    //if its the first time this function is called, init arrays
+                    if(first_run){
+
+                        //add targets of main event to filter so theyre all shown on the timeline by default
+                        for(var i = 0; i < events.length; i++){
+                            if($.inArray(events[i].aggressor_object[0].stage_name, $scope.selected_targets) == -1 && events[i].aggressor_object[0].stage_name != $scope.main_aggressor.stage_name){//make sure aggressor is not already in array and also is not the main event aggressor
+                                $scope.selected_targets.push(events[i].aggressor_object[0].stage_name);
+                                $scope.filter_options.push(events[i].aggressor_object[0].stage_name);
+                            }
+                        }
+
+                        //set this flag so the above code is only run once
+                        first_run = false;
+                    }
+                                        
                     //validate the url tagId to make sure there are events to sort
                     if(events != undefined){
                         
@@ -114,7 +125,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 //make sure at least one of the targets, is in the filter
                                 for(var i = 0; i < eventObject.targets.length; i++){ //loop through the targets
                                     for(var j = 0; j < $scope.selected_targets.length; j++){ //loop through the filter options
-                                        console.log($scope.selected_targets[j]);
+                                        
                                         if(eventObject.targets[i][0].stage_name == $scope.selected_targets[j] || $scope.selected_targets[j] == "None"){
                                             include_event = true;
                                             break outerloop;
@@ -137,7 +148,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                             }else{
                                 // make sure the aggressor is in the filter
                                 for(var j = 0; j < $scope.selected_targets.length; j++){ //loop through the filter options
-                                    if(eventObject.aggressor_object[0].stage_name == $scope.selected_targets[j]){
+                                    if(eventObject.aggressor_object[0].stage_name == $scope.selected_targets[j] || eventObject.aggressor_object[0].stage_name == "Unknown"){
                                         include_event = true;
                                     }
                                 }
