@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html ng-app='list_app' lang='en'>
+    <head>
+        
+        <!--
+        Page name: home.ejs
+        Project: Beeftracker
+        Author: Tom Connolly
+        Date: 8/11/16
+        -->
+        
+        <title>Beeftracker</title> <!-- page tab title -->
+        <meta name="description" content="Beeftracker is a brand new way to read the news, working from crowd sourced data it aims to put news events back into their context by stringing them together in a timeline. Check it out now!">
+        <meta charset="utf-8"><!-- encoding version -->
+        <link rel="shortcut icon" href="/logo/steak.ico"><!-- icon -->
+        <meta name="viewport" content="width=device-width, initial-scale=1"><!-- tag for mobile zoom -->
+        
+        <!-- JQuery -->
+        <script src="/modules/jquery/dist/jquery.min.js"></script>
+        
+        <!-- Font Scripts -->
+        <link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css?family=Josefin+Slab" rel="stylesheet"> 
+        <link rel="stylesheet" type="text/css" href="/stylesheets/amatic_font.css" />
+        
+        <!-- Core angular scripts -->
+        <script src="/modules/angular/angular.min.js"></script>
+        <script src="/modules/angular-resource/angular-resource.min.js"></script>
+        <script src="/modules/angular-route/angular-route.min.js"></script>
+        <script src="/modules/angular-loading-bar/build/loading-bar.min.js"></script>
+        <script src="/modules/bootstrap/dist/js/bootstrap.min.js"></script>
+        
+        <!-- Core angular css files -->
+        <link rel="stylesheet" type="text/css" href="/modules/bootstrap/dist/css/bootstrap.css" media="all"/>
+        <link rel="stylesheet" type="text/css" href="/modules/bootstrap/dist/css/bootstrap-theme.css" media="all"/>
+        <link rel="stylesheet" type="text/css" href="/modules/angular-loading-bar/build/loading-bar.css" media="all"/>
+        
+        <!-- Bespoke angular scripts -->
+        <script src="/controllers/list/list_app.js"></script>
+        <script src="/controllers/list/list_controller.js"></script>
+        <script src="/js/beef_tracker_colour_bank.js"></script>
+        
+        <!-- Bespoke css files -->
+        <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css"/>
+        <link rel="stylesheet" type="text/css" href="/stylesheets/header.css"/>
+        <link rel="stylesheet" type="text/css" href="/stylesheets/beef.css"/>
+        <link rel="stylesheet" type="text/css" href="/stylesheets/timeline_styles.css"/>
+        
+        <script>
+                        
+            //load header and footer
+            $(function(){
+                $("#top_bar").load("/partials/header.ejs");
+                $("#bottom_bar").load("/partials/footer.ejs");
+            });
+            
+            //get client ip address - not in use
+            /*$.getJSON('//freegeoip.net/json/?callback=?', function(data) {
+                console.log(JSON.stringify(data, null, 2));
+            });*/
+            
+            //google analytics code
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-92664606-1', 'auto');
+            ga('send', 'pageview');
+            
+            //operations to be carried out on scroll
+            $(window).scroll( function(){
+                $('#nav_wrapper .affix').width($('#nav_wrapper').width());
+            });
+            //operations to be carried out on window resize
+            $(window).resize( function(){ 
+                $('#nav_wrapper .affix').width($('#nav_wrapper').width());
+                check_side_bar_affix();
+            });
+            // functions
+            
+            //check if details panel should be affixed or not
+            function check_side_bar_affix(){
+                
+                var affixElement = $("nav_fixed");
+                affixElement.width(affixElement.parent().width());
+                
+                if ($(window).innerWidth() <= 768){
+                    //$(window).off('.affix');
+                    $("#nav_fixed").removeClass("affix affix-top affix-bottom");
+                }
+                else{
+                    $("#nav_fixed").addClass("affix-bottom");
+                }
+            }
+            
+            check_side_bar_affix();
+            /*
+            // function to move the page down to the selected event. Can't find a reliable way to trigger the jump() call after angular has loaded and rendered all beef events.
+            function jump(){
+                var hash = location.hash;
+                hash = hash.substr(1);
+                console.log(hash);
+                console.log(document.getElementById(hash));
+                var top = document.getElementById(hash).offsetTop; //Getting Y of target element
+                window.scrollTo(0, top);  
+            }*/
+            
+        </script>
+        
+	</head>
+	<body id="bootstrap-overrides">
+        <div class="container">
+            
+            <!-- loading bar -->
+            <div id="loading-bar-container"></div>
+            <div id="header"></div>
+            <div id="top_bar"></div>
+                    
+            <!-- rest of page -->
+            <div class="row" ng-cloak ng-controller="listController">
+
+                <div style="height:100%" class="row">
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4">
+                        <hr>
+
+                        <div ng-repeat="item in items" style="text-align:center">
+                            <a href="{{item.link}}" target="_self">
+                                <h4>{{ item.stage_name }}</h4>
+                                <h4>{{ item.title }} - {{ item.aggressor_object[0].stage_name }}</h4>
+                            </a>
+                            <hr>
+                        </div>
+                        
+                    </div>
+                    <div class="col-sm-4"></div>
+                
+            </div>
+            <div id="bottom_bar"></div>
+        </div>
+        
+        </div>
+	</body>
+</html>
