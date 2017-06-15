@@ -1,0 +1,1 @@
+db.event_data_v0_2.update({ "_id" : { $exists : true } }, { $set : { "date_added" : new Date(2017, Math.round(Math.random() * 5), Math.round(Math.random() * 15))  } }, true, true);
