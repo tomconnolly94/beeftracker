@@ -26,7 +26,7 @@ var mime = require('mime-types');
 var storage_event = multer.diskStorage({
   destination: function (req, file, cb) {
       console.log(file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    cb(null, "public/assets/images/pending/events/")
+    cb(null, "public/assets/images/events/")
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
