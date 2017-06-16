@@ -632,7 +632,7 @@ app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, r
         if(err){ console.log(err); }
         else{
             //standard query to match an event and resolve aggressor and targets references
-            db.collection("pending_event_data_v0_2").insert(insert_object, function(err, document){
+            db.collection("event_data_v0_2").insert(insert_object, function(err, document){
                 
                 //add _id field so object can be found later
                 insert_object._id = document.ops[0]._id;
