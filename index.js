@@ -34,7 +34,7 @@ var storage_event = multer.diskStorage({
 }); //multer config options
 var storage_actor = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/assets/images/pending/actors/")
+    cb(null, "public/assets/images/actors/")
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
