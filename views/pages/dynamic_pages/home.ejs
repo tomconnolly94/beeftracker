@@ -39,6 +39,7 @@
         <script src="/controllers/home/home_app.js"></script>
         <script src="/controllers/home/search_box_controller.js"></script>
         <script src="/controllers/home/event_stream_controller.js"></script>
+        <script src="/controllers/home/hall_of_fame_controller.js"></script>
         <script src="/js/beef_tracker_colour_bank.js"></script>
                 
         <!-- Bespoke css files -->
@@ -161,7 +162,7 @@
             
             <hr>
                         
-            <div class="row" style="overflow:hidden;">
+            <!--<div class="row" style="overflow:hidden;">
                 <div class="col-sm-4"></div>
                 <div class="col-sm-4">
                     <a href="/subscribe" target="_self">
@@ -173,7 +174,7 @@
                     </a>
                 </div>
                 <div class="col-sm-4"></div>
-            </div>
+            </div>-->
             
             <div class="row" style="overflow:hidden;">
                 <div class="col-sm-3"></div>
@@ -258,6 +259,92 @@
                 </div>
                 <div class="col-sm-3"></div>
             </div>
+            
+            
+            <div class="row" style="overflow:hidden;">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <h2 style="text-align:center;font-weight:bold;">Hall of Fame:</h2>
+                </div>
+                <div class="col-sm-3"></div>
+            </div>
+            
+            <div class="row" style="padding:0px 75px;" ng-controller="hofController">
+                <div class="col-sm-4">
+                    <ul>
+                        <li ng-repeat="event_col_1 in event_stream_events_col_1 track by $index" style="margin:30px 0px;">        
+                            <a ng-href="/beef/{{event_col_1.eventNum}}#{{event_col_1.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;border-radius: 5px;" target="_self">
+
+                                <div class="row" style="padding:5px;width:100%;margin:0px;text-align:right;">
+
+                                    <div class="col-sm-2" style="padding:10px;">
+                                        <img  ng-src="/event_images/{{ event_col_1.img_link }}" class="img-circle" style="position:relative;margin:10px;padding:0px;float:left;" height="100" width="100">
+                                    </div>
+                                    <div class="col-sm-10" style="position:relative;float:right;">
+
+                                        <h4 style="margin:5px;font-weight:bold;"> {{ event_col_1.title }}</h4>
+
+                                        <h6 style="margin:5px;">{{ event_col_1.name }}</h6>
+
+                                        <h6 style="margin:5px;">{{ event_col_1.date }}</h6>
+                                    </div>
+
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-4">
+                    <ul>
+                        <li ng-repeat="event_col_2 in event_stream_events_col_2 track by $index" style="margin:30px 0px;">        
+                            <a ng-href="/beef/{{event_col_2.eventNum}}#{{event_col_2.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;border-radius: 5px;" target="_self">
+
+                                <div class="row" style="padding:5px;width:100%;margin:0px;text-align:right;">
+
+                                    <div class="col-sm-2" style="padding:10px;">
+                                        <img  ng-src="/event_images/{{ event_col_2.img_link }}" class="img-circle" style="position:relative;margin:10px;padding:0px;float:left;" height="100" width="100">
+                                    </div>
+                                    <div class="col-sm-10" style="position:relative;float:right;">
+
+                                        <h4 style="margin:5px;font-weight:bold;"> {{ event_col_2.title }}</h4>
+
+                                        <h6 style="margin:5px;">{{ event_col_2.name }}</h6>
+
+                                        <h6 style="margin:5px;">{{ event_col_2.date }}</h6>
+                                    </div>
+
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-4">
+                     <ul>
+                        <li ng-repeat="event_col_3 in event_stream_events_col_3 track by $index" style="margin:30px 0px;">        
+                            <a ng-href="/beef/{{event_col_3.eventNum}}#{{event_col_3.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;border-radius: 5px;" target="_self">
+
+                                <div class="row" style="padding:15px;width:100%;margin:0px;text-align:right;">
+
+                                    <div class="col-sm-2" style="padding:10px;">
+                                        <img  ng-src="/event_images/{{ event_col_3.img_link }}" class="img-circle" style="position:relative;margin:0px;padding:0px;float:left;" height="100" width="100">
+                                    </div>
+                                    <div class="col-sm-10" style="position:relative;float:right;">
+
+                                        <h4 style="margin:5px;font-weight:bold;"> {{ event_col_3.title }}</h4>
+
+                                        <h6 style="margin:5px;">{{ event_col_3.name }}</h6>
+
+                                        <h6 style="margin:5px;">{{ event_col_3.date }}</h6>
+                                    </div>
+
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-3"></div>
+            </div>
+            
             <div id="bottom_bar" class="row" style="margin:50px 0px"></div>
         </div>
     </body>

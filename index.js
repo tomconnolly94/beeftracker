@@ -149,6 +149,7 @@ app.get('/search_events_by_id/:event_id', function(request, response) {
                                                             targets : { "$addToSet": "$target_objects" }
                                                         }} //resolve each of the targets fields
                                                        ]).toArray(function(queryErr, docs) {
+                db.collection("event_data_v0_2").update({ _id: object },{$inc: {'hit_count': 0.5}}, { multi : true });
                 response.send({eventObject : docs[0]});
             });
         }
@@ -554,6 +555,23 @@ app.get('/get_event_categories/', function(request, response) {
             //standard query to match an event and resolve aggressor and targets references
             db.collection("event_categories").find().toArray(function(queryErr, docs) {
                 response.send({categories : docs});
+            });
+        }
+    });
+}); //search for an event using its _id
+app.get('/search_popular_events/:num_of_events', function(request, response) {
+
+    //get necessary fields for use later
+    var url = process.env.MONGODB_URI;
+    var limit = parseInt(request.params.num_of_events);
+    
+    MongoClient.connect(url, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            var field_name = 'aggressor';
+            
+            db.collection("event_data_v0_2").aggregate( [ { $lookup : { from: "actor_data_v0_2", localField: "aggressor", foreignField: "_id", as: "aggressor_object" }}]).sort({"hit_count" : -1}).limit(limit).toArray(function(queryErr, docs) {
+                response.send( { events : docs } );
             });
         }
     });

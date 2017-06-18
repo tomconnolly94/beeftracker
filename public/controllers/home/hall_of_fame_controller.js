@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-home_app.controller('eventStreamController', ['$scope','$http', function($scope, $http) {
+home_app.controller('hofController', ['$scope','$http', function($scope, $http) {
         
     //number of recent events to be displayed make sure its a multiple of three for symmetry
     var result_limit = 6;
@@ -18,12 +18,15 @@ home_app.controller('eventStreamController', ['$scope','$http', function($scope,
     //$http.get("/search_recent_events/" + result_limit).success(function(events_object){
     $http({
         method: 'GET',
-        url: "/search_recent_events/" + result_limit
+        url: "/search_popular_events/" + result_limit
     }).then(function(events_object){
         //validate the url tagId to make sure the event exists                
         if(events_object != undefined){
 
             var events = events_object.data.events;
+            
+            console.log(events);
+            
             //$scope.event_stream_events = new Array();
             $scope.event_stream_events_col_1 = new Array();
             $scope.event_stream_events_col_2 = new Array();
