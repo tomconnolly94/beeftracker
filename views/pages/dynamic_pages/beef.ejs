@@ -46,6 +46,7 @@
         <link rel="stylesheet" type="text/css" href="/stylesheets/header.css"/>
         <link rel="stylesheet" type="text/css" href="/stylesheets/beef.css"/>
         <link rel="stylesheet" type="text/css" href="/stylesheets/timeline_styles.css"/>
+        <link rel="stylesheet" href="/stylesheets/event_box_styles_beef.css"/>
         
         <script>
                         
@@ -141,6 +142,34 @@
 
                     <div id="timeline" timeline>
                         <ul class="timeline">
+                            <li class="{{event.timeline_event_class}} event_li_wrapper" ng-repeat="event in events">
+                                
+                                <div class="timeline-badge" style="background-color:#FFFFFF;">
+                                    <span class="{{event.glyphicon}}" style="color:#000000"></span>
+                                </div>
+                                
+                                <a name="{{event.event_num}}" target="_self" id="{{event.event_num}}" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" class="selectable_event timeline-panel event_anchor" style="background-color:{{event.colour}};border-width:{{event.border_width}};border-color:{{event.border_colour}};">
+                                        
+                                    <div class="row event_title_container">
+                                        <h5 class="col-sm-12 event_title">{{ event.title }}</h5>
+                                    </div>
+
+                                    <div class="row event_text_img_wrapper"> 
+
+                                        <div class="timeline-body col-sm-7 event_text_container">
+
+                                            <h6 class="event_aggressor">{{ event.name }}</h6>
+                                            <h6 class="event_date">{{ event.date }}</h6>
+
+                                        </div>
+                                        <img ng-src="/event_images/{{ event.loc_img_link }}" class="img-circle col-sm-4 event_img">
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>   
+                    </div> 
+                    <!--<div id="timeline" timeline>
+                        <ul class="timeline">
                             <li class="{{event.timeline_event_class}}" ng-repeat="event in events">
                                 
                                 <div class="timeline-badge" style="background-color:#FFFFFF;">
@@ -162,7 +191,7 @@
                                                 <h6 style="margin:5px;">{{ event.date }}</h6>
 
                                             </div>
-                                            <img ng-src="/event_images/{{ event.loc_img_link }}" class="img-circle col-sm-4" style="<!--position:relative;-->margin:5px;padding:0px;<!--float:left;-->" height="75" width="75">
+                                            <img ng-src="/event_images/{{ event.loc_img_link }}" class="img-circle col-sm-4" style="margin:5px;padding:0px;" height="75" width="75">
                                         </div>
                                         
                                         
@@ -170,7 +199,7 @@
                                 </a>
                             </li>
                         </ul>   
-                    </div>                    
+                    </div> -->
                 </div>
                 
                 <div class="col-sm-5" id="nav_wrapper" ng-controller="currentEventController">
