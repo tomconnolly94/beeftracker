@@ -29,12 +29,13 @@ ul {
 }
 /* apply faded background image (support of multiple browsers) */
 body {
-    background-image: url(/background_images/the-blueprint.jpg);
     background-color: #FFFFFF;
     background-attachment: fixed !important;
+    
+    background-image: url(/background_images/mmlp.jpg);
+    background: -moz-linear-gradient(top, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.1) 100%), url(/background_images/mmlp.jpg) no-repeat 0 0;
         
     /*background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.7) 100%), url(bg.png) no-repeat 0 0, url(/background_images/the-blueprint.jpg) repeat 0 0;*/
-    background: -moz-linear-gradient(top, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.7) 100%), url(/background_images/the-blueprint.jpg) no-repeat 0 0;
     /*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0.7)), color-stop(100%,rgba(255,255,255,0.7))), url(/background_images/the-blueprint.jpg) no-repeat 0 0;
     background: -webkit-linear-gradient(top, rgba(255,255,255,0.7) 0%,rgba(255,255,255,0.7) 100%), url(/background_images/the-blueprint.jpg) no-repeat 0 0;
     background: -o-linear-gradient(top, rgba(255,255,255,0.7) 0%,rgba(255,255,255,0.7) 100%), url(/background_images/the-blueprint.jpg) no-repeat 0 0;
