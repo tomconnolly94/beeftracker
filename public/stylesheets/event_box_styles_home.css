@@ -46,14 +46,14 @@
 
 /* if screen is smaller than 768px (mobile phone) apply these styles */
 @media (max-width: 768px) {
-    #column_container {
+    .column_container {
         margin:0px;
         padding:0px;
     }
 }
 
 @media (min-width: 768px) {
-    #column_container {
+    .column_container {
         margin:0px;
         padding:0px 75px;
     }
