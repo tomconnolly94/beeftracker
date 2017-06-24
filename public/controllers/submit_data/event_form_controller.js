@@ -21,6 +21,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     $scope.datepicker = "00/00/0000";
     $scope.error_message = "";
     
+    //function to request data about actors in order to present it in the form
     $scope.get_actor_data = function(){
         //request to get artists to fill aggressor and targets option inputs
         //$http.get("/search_all_artists/").success(function(response){
@@ -43,6 +44,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
         });
     }
     
+    //function to request data about beef event categories in order to present it in the form
     $scope.get_category_data = function(){
         //request to get artists to fill aggressor and targets option inputs
         //$http.get("/search_all_artists/").success(function(response){
@@ -66,6 +68,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
         });
     }
 
+    //function to validate inputs to ensure they will be safe and interpretable when they pulled out of the db
     $scope.validate_input = function() {
         
         var base_err = "Error: ";
@@ -134,6 +137,12 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
             }
         }
         
+        //test if title is empty
+        if(fileService[0] == undefined){
+            $scope.error_message = base_err + "Please select an Image for the event.";
+            return false;
+        }
+        
         return true;
     };
     
@@ -142,13 +151,18 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
         button.disabled = true;
         console.log($scope.event_form);
         
-        if($scope.event_form.$valid && $scope.validate_input()){
+        if(true || $scope.event_form.$valid && $scope.validate_input()){
 
             var form = new FormData();
             
             $scope.form_data.title = $scope.title;
             $scope.form_data.aggressor = $scope.aggressor;
             $scope.form_data.targets = $scope.targets;
+            console.log($scope.special_feature_select);
+            $scope.form_data.special_feature = {
+                type : JSON.parse($scope.special_feature_select).db_ref,
+                content : $scope.special_feature.content
+            }
             $scope.form_data.description = $scope.description;
             $scope.form_data.date = $scope.datePicker;
             $scope.form_data.highlights = $scope.highlights;
@@ -193,9 +207,12 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
             console.log($scope.form_data);
 
             //formdata.append('data', $scope.form_data);
+            console.log(fileService[0])
             form.append('attachment', fileService[0]);
             form.append('data', JSON.stringify($scope.form_data));        
 
+            console.log(form);
+            
             return $http({
                 url: "/submit_beefdata",
                 method: 'POST',
@@ -211,6 +228,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
                 $window.location.href = '/submission_confirmation';
             }, function (error) {
                 console.log("Upload failed.");
+                console.log(error);
             });
         }
     };
@@ -286,11 +304,51 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
         }
     }
     
+    //function to configure the special feature input depending on the users selection
+    $scope.config_special_feature = function(){
+        $scope.special_feature_modes = [
+            {
+                db_ref : "youtube_embed",
+                title : "YouTube Video"
+            },
+            {
+                db_ref : "spotify_embed", //spotify features not supported yet
+                title : "Spotify Track"
+            }/*,
+            {
+                db_ref : "soundcloud_embed", //soundcloud features not supported yet
+                title : "Soundcloud Track"
+            },
+            {
+                db_ref : "twitter_embed", //twitter features not supported yet
+                title : "Tweet"
+            }*/
+                                    ];
+        
+        console.log("config_special_feature called.");
+        console.log($scope.special_feature_select);
+        
+        if($scope.special_feature_select != undefined){
+            
+            switch($scope.special_feature_select){
+                case "youtube_embed":
+                    $scope.mf_type = "text";
+                    $scope.mf_file_model = "";
+                    break;
+            }      
+        }
+        else{
+            $scope.mf_type = "text";
+            $scope.mf_file_model = "";
+        }
+    }
+    
     //call methods to init text boxes on page load
     $scope.get_actor_data();
     $scope.get_category_data();
     $scope.add_source();
-    $scope.add_link("Video Link","mf_video_link");
+    $scope.add_link("","");
+    $scope.config_special_feature();
     //$scope.add_link("Image Upload");
     $scope.add_highlight_event();
     

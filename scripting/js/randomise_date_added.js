@@ -9,9 +9,7 @@ var url = "mongodb://tom:tom@ds141937.mlab.com:41937/heroku_w63fjrg6";
 MongoClient.connect(url, function(err, db) {
 	if(err){ console.log(err); }
 	else{
-		db.collection("event_data_v0_2").find({}, {_id:1}).forEach(function(result){
-
-			console.log(result._id);
+		db.collection("event_data_v0_3").find({}, {_id:1}).forEach(function(result){
 
 			var type = typeof result._id
 
@@ -21,7 +19,9 @@ MongoClient.connect(url, function(err, db) {
 
 			console.log(object);
 
-       			db.collection("event_data_v0_2").update({ _id : object }, { $set : { date_added : new Date(2017, Math.round(Math.random() * 5), Math.round(Math.random() * 15))  } }, true, true);
+       			//db.collection("event_data_v0_2").update({ _id : object }, { $set : { date_added : new Date(2017, Math.round(Math.random() * 5), Math.round(Math.random() * 15))  } }, true, true);
+
+            db.collection("event_data_v0_3").update({ "_id" : object }, { $set : { "date_added" : new Date(2017, Math.round(Math.random() * 5), Math.round(Math.random() * 15))  } }, true, true);
 
 		});
 

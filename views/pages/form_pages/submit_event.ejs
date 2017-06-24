@@ -158,7 +158,8 @@
                                 <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Please select the instigator/aggressor of this event, if they are not in the list, click 'Add new' and submit a new actor to our records." aria-hidden="true"></span>
                                 <div class="col-sm-8" style="padding:0px;margin:0px;">
                                     <select ng-model="aggressor" class="form-control" name="aggressor" placeholder="" required>
-                                        <option ng-repeat="actor in actors" value="{{actor._id}}"><p>{{ actor.stage_name }}</p></option>
+                                        <option value="" disabled selected style="display: none;" style="margin:3px;" style="margin:3px;"> Select Actor </option>
+                                        <option ng-repeat="actor in actors" value="{{actor._id}}" style="margin:3px;"><p>{{ actor.stage_name }}</p></option>
                                     </select>
                                 </div>
                                 <div class="col-sm-3" style="padding:0px;margin:0px;">
@@ -170,12 +171,12 @@
                         <hr>
                                                  
                         <div class="form-group row">
-                            <label class="control-label col-sm-3" style="text-align:center;" for="title">* Select Target(s)</label>
+                            <label class="control-label col-sm-3" style="text-align:center;" for="title">* Select Target(s)<div style="display:block;font-size:10px;margin:10px">Hold 'ctrl' to select more than one</div></label>
                             <div class="col-sm-9" style="margin:0px;">
                                 <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Please select any actors that were targeted with this event in any way." aria-hidden="true"></span>
                                 <div class="col-sm-8" style="padding:0px;margin:0px;">
-                                    <select name="targets" ng-model="targets" multiple class="form-control" required>
-                                        <option ng-repeat="actor in actors" value="{{actor._id}}">{{ actor.stage_name }}</option>
+                                    <select name="targets" ng-model="targets" multiple class="form-control" style="height:200px" required>
+                                        <option ng-repeat="actor in actors" value="{{actor._id}}" style="margin:3px;">{{ actor.stage_name }}</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-3" style="padding:0px;margin:0px;">
@@ -191,10 +192,28 @@
                             <div class="col-sm-9 row" style="margin:0px;">
                                 <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Add a url or a reference here that you learned this information from. We want to keep the data clean from fake news so it's important you back this info up with proof. A documentary, website, book, song etc... These will be verified before the data is made accessible." aria-hidden="true"></span>
                                 <input type="file" file-model="myFile" class="col-sm-9" style="padding:0px;font-size:18px;" required/>
-                                <!--<button ng-click="uploadFile()" class="col-sm-3" type="button" style="height:100%;color:#000000;border:0px;">Upload</button>-->
+                                
                             </div>
                         </div>
                         
+                        <hr>
+                        
+                        <div class="form-group row">
+                            <label class="control-label col-sm-3" style="text-align:center;" for="title">Special Feature</label>
+                            <div class="col-sm-9" style="margin:0px;">
+                                <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="This is space to add a YouTube video or track from Spotify to be displayed by the event, it does always apply but events like songs or speeches work really well with this." aria-hidden="true"></span>
+                                <div class="col-sm-11" style="padding:0px;margin:10px 0px;">
+                                    <select ng-model="special_feature_select" class="form-control" name="aggressor" ng-change="config_special_feature()" style="color:#000000;" required>
+                                        <option value="" disabled selected style="display: none;" style="margin:3px;"> Select Feature Type </option>
+                                        <!--<option selected hidden disabled><p>Select feature type</p></option>-->
+                                        <option ng-repeat="mode in special_feature_modes" value="{{ mode }}" style="margin:3px;"><p>{{ mode.title }}</p></option>
+                                    </select>
+                                </div>
+                                <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Enter the URL of the YouTube video, or the link to the Spotify track which can be obtained by right clicking on the song and then clicking 'Copy Song Link'." aria-hidden="true"></span>
+                                <input class="col-sm-11" ng-file-model="{{ mf_file_model }}" style="color:#000000;padding:0px;font-size:18px;" type="{{ mf_type }}" placeholder="" ng-model="special_feature.content" required>
+                            </div>
+                        </div>
+                                             
                         <hr>
                          
                         <div class="form-group row">
@@ -303,7 +322,7 @@
                                 <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Please select any actors that were targeted with this event in any way." aria-hidden="true"></span>
                                 <div class="col-sm-11" style="padding:0px;margin:0px;">
                                     <select name="targets" ng-model="selected_categories" multiple class="form-control" required>
-                                        <option ng-repeat="category in categories" value="{{category.cat_id}}">{{ category.name }}</option>
+                                        <option ng-repeat="category in categories" value="{{category.cat_id}}" style="margin:3px;">{{ category.name }}</option>
                                     </select>
                                 </div>
                             </div>

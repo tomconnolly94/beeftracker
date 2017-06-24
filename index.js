@@ -42,6 +42,8 @@ var storage_actor = multer.diskStorage({
 }); //multer config options
 var upload_event_img = multer({storage: storage_event}); //build upload handlers
 var upload_actor_img = multer({storage: storage_actor}); //build upload handlers
+var current_event_table = "event_data_v0_3";
+var current_actor_table = "actor_data_v0_3";
 
 // ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({
@@ -121,16 +123,16 @@ app.get('/search_events_by_id/:event_id', function(request, response) {
             var object = BSON.ObjectID.createFromHexString(identifier);
             
             //standard query to match an event and resolve aggressor and targets references
-            db.collection("event_data_v0_2").aggregate([{ $match: { _id : object } }, //query 
+            db.collection(current_event_table).aggregate([{ $match: { _id : object } }, //query 
                                                         { $unwind : "$targets" }, //allows the $lookup with each field in $targets
                                                         { $lookup : { 
-                                                            from: "actor_data_v0_2", 
+                                                            from: current_actor_table, 
                                                             localField: "aggressor", 
                                                             foreignField: "_id", 
                                                             as: "aggressor_object" 
                                                         }}, //resolve the 'aggressor' field
                                                         { $lookup : { 
-                                                            from: "actor_data_v0_2", 
+                                                            from: current_actor_table, 
                                                             localField: "targets", 
                                                             foreignField: "_id", 
                                                             as: "target_objects" 
@@ -146,10 +148,12 @@ app.get('/search_events_by_id/:event_id', function(request, response) {
                                                             highlights : { "$max" : "$highlights"},
                                                             data_sources : { "$max" : "$data_sources"},
                                                             links : { "$max" : "$links"},
-                                                            targets : { "$addToSet": "$target_objects" }
+                                                            targets : { "$addToSet": "$target_objects" },
+                                                            img_title : { "$max" : "$img_title"},
+                                                            special_feature : { "$max" : "$special_feature"}
                                                         }} //resolve each of the targets fields
                                                        ]).toArray(function(queryErr, docs) {
-                db.collection("event_data_v0_2").update({ _id: object },{$inc: {'hit_count': 0.5}}, { multi : true });
+                db.collection(current_event_table).update({ _id: object },{$inc: {'hit_count': 0.5}}, { multi : true });
                 response.send({eventObject : docs[0]});
             });
         }
@@ -170,9 +174,9 @@ app.get('/search_all/:search_term', function(request, response) {
                     //var object = BSON.ObjectID.createFromHexString(identifier);
             
                     //standard query to match an event and resolve aggressor and targets references
-                    db.collection("event_data_v0_2").aggregate([{ $match: { title : { $regex : identifier, $options : "i"} } },
+                    db.collection(current_event_table).aggregate([{ $match: { title : { $regex : identifier, $options : "i"} } },
                                                                 { $lookup : { 
-                                                                    from: "actor_data_v0_2",
+                                                                    from: current_actor_table,
                                                                     localField: "aggressor",
                                                                     foreignField: "_id",
                                                                     as: "aggressor_object" } }
@@ -187,9 +191,9 @@ app.get('/search_all/:search_term', function(request, response) {
                 },
                 function(callback){ 
                     //standard query to match an event and resolve aggressor and targets references
-                    db.collection("actor_data_v0_2").aggregate([{ $match: { stage_name : { $regex : identifier, $options : "i"} } },
+                    db.collection(current_actor_table).aggregate([{ $match: { stage_name : { $regex : identifier, $options : "i"} } },
                                                                 { $lookup : { 
-                                                                    from: "actor_data_v0_2",
+                                                                    from: current_actor_table,
                                                                     localField: "_id",
                                                                     foreignField: "_id",
                                                                     as: "aggressor_object" } }
@@ -223,10 +227,10 @@ app.get('/search_actors_by_id/:actor_id', function(request, response) {
         else{
             var object = BSON.ObjectID.createFromHexString(identifier);
                         
-            db.collection("actor_data_v0_2").aggregate([{ $match: { _id : object } }/*, 
+            db.collection(current_actor_table).aggregate([{ $match: { _id : object } }/*, 
                                                         { $unwind : "$associated_actors"},
                                                         { $lookup : { 
-                                                            from: "actor_data_v0_2",
+                                                            from: current_actor_table,
                                                                      localField: "associated_actors",
                                                                      foreignField: "_id",
                                                                      as: "associated_actor_objects" }}*/
@@ -252,10 +256,10 @@ app.get('/search_actors_by_stage_name/:actor_name', function(request, response) 
             //code to create a qry string that matches NEAR to query string
             var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
             var qry = "{ \"" + field_name + "\" : " + end + " }";
-            db.collection("actor_data_v0_2").aggregate([{ $match: { _id : object } },
+            db.collection(current_actor_table).aggregate([{ $match: { _id : object } },
                                                         { $unwind : "$associated_actors"},
                                                         { $lookup : { 
-                                                            from: "actor_data_v0_2",
+                                                            from: current_actor_table,
                                                             localField: "associated_actors",
                                                             foreignField: "_id",
                                                             as: "associated_actors" }} 
@@ -284,7 +288,7 @@ app.get('/search_related_actors_by_id/:actor_id', function(request, response) {
                     var object = BSON.ObjectID.createFromHexString(identifier);
             
                     //standard query to match an event and resolve aggressor and targets references
-                    db.collection("actor_data_v0_2").find( { _id : object }).toArray(function(queryErr, response) {
+                    db.collection(current_actor_table).find( { _id : object }).toArray(function(queryErr, response) {
                         if(queryErr){ console.log(queryErr); }
                         else{
                             if(response != undefined){
@@ -304,7 +308,7 @@ app.get('/search_related_actors_by_id/:actor_id', function(request, response) {
                             assoc_act_arr.push(associated_actors[i]);
                         }
                     }
-                    db.collection("actor_data_v0_2").find({ _id : { $in : assoc_act_arr }}).toArray(function(queryErr, actors) {
+                    db.collection(current_actor_table).find({ _id : { $in : assoc_act_arr }}).toArray(function(queryErr, actors) {
                         if(err){ console.log(queryErr); }
                         else{
                             response.send( { actors : actors } );
@@ -331,12 +335,12 @@ app.get('/search_events_by_event_aggressor/:actor_id', function(request, respons
             
             var object = BSON.ObjectID.createFromHexString(identifier);
             
-            db.collection("event_data_v0_2").aggregate([{ $match: { aggressor : object } },
+            db.collection(current_event_table).aggregate([{ $match: { aggressor : object } },
                                                         { $unwind : "$targets"}, 
-                                                        { $lookup : { from: "actor_data_v0_2", localField: "aggressor", foreignField: "_id", as: "aggressor_object" }}, 
-                                                        { $lookup : { from: "actor_data_v0_2", localField: "targets", foreignField: "_id", as: "targets" }}
+                                                        { $lookup : { from: current_actor_table, localField: "aggressor", foreignField: "_id", as: "aggressor_object" }}, 
+                                                        { $lookup : { from: current_actor_table, localField: "targets", foreignField: "_id", as: "targets" }}
                                                        ]).toArray(function(queryErr, docs) {
-            //db.collection("event_data_v0_2").find(JSON.parse(qry)).sort({"date_added" : -1}).limit(6).toArray(function(queryErr, docs) {
+            //db.collection(current_event_table).find(JSON.parse(qry)).sort({"date_added" : -1}).limit(6).toArray(function(queryErr, docs) {
                 
                 response.send( { events : docs } );
             });
@@ -357,11 +361,17 @@ app.get('/search_recent_events/:num_of_events', function(request, response) {
         else{
             var field_name = 'aggressor';
             
-            db.collection("event_data_v0_2").aggregate( [ { $lookup : { from: "actor_data_v0_2", localField: "aggressor", foreignField: "_id", as: "aggressor_object" }}]).sort({"date_added" : -1}).limit(limit).toArray(function(queryErr, docs) {
+            db.collection(current_event_table).aggregate( [ { 
+                $lookup : { 
+                    from: current_actor_table, 
+                    localField: "aggressor", 
+                    foreignField: "_id", 
+                    as: "aggressor_object" 
+                }}]).sort({"date_added" : -1}).limit(limit).toArray(function(queryErr, docs) {
+                if(queryErr){console.log(queryErr);}
+                console.log(docs);
                 response.send( { events : docs } );
-            });
-
-            
+            });            
         }
     });
     
@@ -380,15 +390,15 @@ app.get('/search_all_related_events_in_timeline_by_id/:event_id', function(reque
                     var object = BSON.ObjectID.createFromHexString(identifier);
             
                     //standard query to match an event and resolve aggressor and targets references
-                    db.collection("event_data_v0_2").aggregate([{ $match: { _id : object } },
+                    db.collection(current_event_table).aggregate([{ $match: { _id : object } },
                                                                 { $lookup : { 
-                                                                    from: "actor_data_v0_2",
+                                                                    from: current_actor_table,
                                                                     localField: "aggressor",
                                                                     foreignField: "_id",
                                                                     as: "aggressor_object" }},
                                                                 { $unwind : "$targets"},
                                                                 { $lookup : { 
-                                                                    from: "actor_data_v0_2",
+                                                                    from: current_actor_table,
                                                                     localField: "targets",
                                                                     foreignField: "_id",
                                                                     as: "target_objects" }},
@@ -403,11 +413,14 @@ app.get('/search_all_related_events_in_timeline_by_id/:event_id', function(reque
                                                                     highlights : { "$max" : "$highlights"},
                                                                     data_sources : { "$max" : "$data_sources"},
                                                                     links : { "$max" : "$links"},
-                                                                    targets : { "$addToSet": "$target_objects" }
+                                                                    targets : { "$addToSet": "$target_objects" },
+                                                                    img_title : { "$max" : "$img_title"},
+                                                                    special_feature : { "$max" : "$special_feature"}
                                                                 }}
                                                                ]).toArray(function(queryErr, main_event) {
                         if(queryErr){ console.log(queryErr); }
                         else{
+                            console.log(main_event[0])
                             callback(null,main_event[0]);
                         }
                     });
@@ -425,15 +438,15 @@ app.get('/search_all_related_events_in_timeline_by_id/:event_id', function(reque
                     var all_events = new Array();
                     
                     //standard query to match an event and resolve aggressor and targets references
-                    db.collection("event_data_v0_2").aggregate([{ $match: { $or : [{ aggressor : { $in : actors }},{ targets : { $in : actors }} ]}},
+                    db.collection(current_event_table).aggregate([{ $match: { $or : [{ aggressor : { $in : actors }},{ targets : { $in : actors }} ]}},
                                                                 { $unwind : "$targets"}, 
                                                                 { $lookup : { 
-                                                                    from: "actor_data_v0_2", 
+                                                                    from: current_actor_table, 
                                                                     localField: "aggressor", 
                                                                     foreignField: "_id", 
                                                                     as: "aggressor_object" }}, 
                                                                 { $lookup : { 
-                                                                    from: "actor_data_v0_2", 
+                                                                    from: current_actor_table, 
                                                                     localField: "targets", 
                                                                     foreignField: "_id", 
                                                                     as: "target_objects" }},
@@ -448,7 +461,9 @@ app.get('/search_all_related_events_in_timeline_by_id/:event_id', function(reque
                                                                     highlights : { "$max" : "$highlights"},
                                                                     data_sources : { "$max" : "$data_sources"},
                                                                     links : { "$max" : "$links"},
-                                                                    targets : { "$addToSet": "$target_objects" }
+                                                                    targets : { "$addToSet": "$target_objects" },
+                                                                    img_title : { "$max" : "$img_title"},
+                                                                    special_feature : { "$max" : "$special_feature"}
                                                                 }}
                                                                ]).toArray(function(queryErr, events) {
                         if(err){ console.log(queryErr); }
@@ -499,7 +514,7 @@ app.get('/search_all_actors/', function(request, response) {
         if(err){ console.log(err); }
         else{
             //standard query to match an event and resolve aggressor and targets references
-            db.collection("actor_data_v0_2").find().sort({"stage_name" : 1}).toArray(function(queryErr, docs) {
+            db.collection(current_actor_table).find().sort({"stage_name" : 1}).toArray(function(queryErr, docs) {
                 response.send({items : docs});
             });
         }
@@ -513,15 +528,15 @@ app.get('/search_all_events/', function(request, response) {
         if(err){ console.log(err); }
         else{
             //standard query to match an event and resolve aggressor and targets references
-            db.collection("event_data_v0_2").aggregate([{ $match: { } },
+            db.collection(current_event_table).aggregate([{ $match: { } },
                                                                 { $lookup : { 
-                                                                    from: "actor_data_v0_2",
+                                                                    from: current_actor_table,
                                                                     localField: "aggressor",
                                                                     foreignField: "_id",
                                                                     as: "aggressor_object" }},
                                                                 { $unwind : "$targets"},
                                                                 { $lookup : { 
-                                                                    from: "actor_data_v0_2",
+                                                                    from: current_actor_table,
                                                                     localField: "targets",
                                                                     foreignField: "_id",
                                                                     as: "target_objects" }},
@@ -536,7 +551,9 @@ app.get('/search_all_events/', function(request, response) {
                                                                     highlights : { "$max" : "$highlights"},
                                                                     data_sources : { "$max" : "$data_sources"},
                                                                     links : { "$max" : "$links"},
-                                                                    targets : { "$addToSet": "$target_objects" }
+                                                                    targets : { "$addToSet": "$target_objects" },
+                                                                    img_title : { "$max" : "$img_title"},
+                                                                    special_feature : { "$max" : "$special_feature"}
                                                                 }}
                                                                ]).sort({"title" : 1}).toArray(function(queryErr, docs) {
                 console.log(docs);
@@ -570,7 +587,7 @@ app.get('/search_popular_events/:num_of_events', function(request, response) {
         else{
             var field_name = 'aggressor';
             
-            db.collection("event_data_v0_2").aggregate( [ { $lookup : { from: "actor_data_v0_2", localField: "aggressor", foreignField: "_id", as: "aggressor_object" }}]).sort({"hit_count" : -1}).limit(limit).toArray(function(queryErr, docs) {
+            db.collection(current_event_table).aggregate( [ { $lookup : { from: current_actor_table, localField: "aggressor", foreignField: "_id", as: "aggressor_object" }}]).sort({"hit_count" : -1}).limit(limit).toArray(function(queryErr, docs) {
                 response.send( { events : docs } );
             });
         }
@@ -620,7 +637,6 @@ app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, r
         data_sources_formatted.push(submission_data.data_sources[i].url);
     }
     
-    links_formatted["mf_img_link"] = file.filename;
     console.log(file);
 
     //create array of target objectIds ## unfinished need to deal with images and videos that are not null  and other button links too
@@ -630,6 +646,26 @@ app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, r
         }else{
             links_formatted[submission_data.button_links[i].title] = submission_data.button_links[i].url;
         }
+    }
+    
+    var formatted_special_feature_content = "";
+    
+    //format special feature for storage
+    if(submission_data.special_feature.type == "youtube_embed"){
+    
+        var video_id = submission_data.special_feature.content.split('v=')[1];
+        var ampersandPosition = video_id.indexOf('&');
+        if(ampersandPosition != -1) {
+            video_id = video_id.substring(0, ampersandPosition);
+        }
+        
+        formatted_special_feature_content = "https://www.youtube.com/embed/" + video_id;
+    }
+    else if(submission_data.special_feature.type == "spotify_embed"){
+        
+        var video_id = submission_data.special_feature.content.split('track/')[1];
+        
+        formatted_special_feature_content = "https://embed.spotify.com/?uri=spotify%3Atrack%3A" + video_id;
     }
     
     var insert_object = {
@@ -642,15 +678,22 @@ app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, r
         "highlights" : highlights_formatted,
         "data_sources" : data_sources_formatted,
         "links" : links_formatted,
-        "selected_categories" : submission_data.selected_categories
+        "selected_categories" : submission_data.selected_categories,
+        "img_title" : file.filename,
+        "special_feature" : {
+            type : submission_data.special_feature.type,
+            content : formatted_special_feature_content
+        }
     }
+    
+    console.log(insert_object);
     
     //store data temporarily untill submission is confirmed
     MongoClient.connect(url, function(err, db) {
         if(err){ console.log(err); }
         else{
             //standard query to match an event and resolve aggressor and targets references
-            db.collection("event_data_v0_2").insert(insert_object, function(err, document){
+            db.collection(current_event_table).insert(insert_object, function(err, document){
                 
                 //add _id field so object can be found later
                 insert_object._id = document.ops[0]._id;
@@ -662,7 +705,7 @@ app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, r
                     service: 'Gmail',
                     auth: {
                         user: 'beeftracker@gmail.com', // Your email id
-                        pass: 'Vietnam13!' // Your password
+                        pass: '6YdmYtA+dH7LHBg4+Dn0EyUPYSKsjxz5fmvVuxSmKbW/rGH8QH+96JiY33e0tBw7' // Your password
                     }
                 });
 
@@ -679,7 +722,6 @@ app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, r
                 transporter.sendMail(mailOptions, function(error, info){
                     if(error){
                         console.log(error);
-                        response.json({yo: error});
                     }else{
                         console.log('Message sent: ' + info.response);
                         response.json({yo: info.response});
@@ -768,7 +810,7 @@ app.post('/submit_actordata/', upload_actor_img.single('attachment'), (request, 
         if(err){ console.log(err); }
         else{
             //standard query to match an event and resolve aggressor and targets references
-            db.collection("actor_data_v0_2").insert(insert_object, function(err, document){
+            db.collection(current_actor_table).insert(insert_object, function(err, document){
                 console.log(document);
                 
                 insert_object._id = document.ops[0]._id;

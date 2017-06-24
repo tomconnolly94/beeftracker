@@ -60,7 +60,7 @@ home_app.controller('searchController', ['$scope','$http', function($scope, $htt
                         var record = {
                             name : name,
                             title : title,
-                            img_link : objects[objectId].links.mf_img_link,
+                            img_link : objects[objectId].img_title,
                             eventNum : objects[objectId]._id,
                             type_path : type_path,
                             img_path : img_path

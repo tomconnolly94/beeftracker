@@ -46,7 +46,7 @@ home_app.controller('hofController', ['$scope','$http', function($scope, $http) 
                     title : events[eventId].title,
                     description : events[eventId].description,
                     date : events[eventId].event_date.slice(0,10),
-                    img_link : events[eventId].links.mf_img_link,
+                    img_link : events[eventId].img_title,
                     top_lyrics : best_lyrics,
                     eventNum : events[eventId]._id
                 };

@@ -205,9 +205,11 @@
                 <div class="col-sm-5" id="nav_wrapper" ng-controller="currentEventController">
                                     
                     <div id="nav_fixed" data-spy="affix" data-offset-top="180" data-offset-bottom="100" class="nav nav-pills nav-stacked" style="margin:30px 0px 0px 0px;" ng-cloak style="resize:none;">
-                        <div id="main_feature" class="img-circle" ng-style="{'background-image':'url(mf_link)', 'background-repeat': 'no-repeat'}">
+                        <div id="main_feature" class="img-circle" ng-style="{'background-image':'url(loc_img_link)', 'background-repeat': 'no-repeat'}">
                             <div id="videowrapper" class="embed-responsive embed-responsive-16by9">
-                                <iframe scrolling="no" ng-src="{{ trustSrc( mf_link) }}" class="embed-responsive-item" allowfullscreen="true"></iframe>
+                                <iframe scrolling="no" ng-src="{{ trustSrc( special_feature.content ) }}" class="embed-responsive-item" allowfullscreen="true" ng-if="special_feature.type == 'youtube_embed'"></iframe><!-- youtube embed -->
+                                <iframe scrolling="no" ng-src="{{ trustSrc( special_feature.content ) }}" class="embed-responsive-item" frameborder="0" allowtransparency="true" ng-if="special_feature.type == 'spotify_embed'" style="margin: auto;"></iframe><!-- spotify embed -->
+                                <img ng-src="{{special_feature.content}}" ng-if="special_feature.type == 'img'" style="width:100%;"/><!-- image -->
                             </div>
                         </div>
 

@@ -56,15 +56,27 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
                             $scope.event_id = eventObject._id;
                             
                             //if record has no video link, use the image link instead
-                            if(eventObject.links.mf_video_link != undefined && eventObject.links.mf_video_link.length > 0){
+                            /*if(eventObject.links.mf_video_link != undefined && eventObject.links.mf_video_link.length > 0){
                                $scope.mf_link = eventObject.links.mf_video_link; 
                             }
                             else{
-                                $scope.mf_link = "/event_images/" + eventObject.links.mf_img_link; 
+                                $scope.mf_link = "/event_images/" + eventObject.img_title; 
+                            }*/ //DEPRECATED
+                            
+                            //code to build special feature embed
+                            
+                            $scope.special_feature = eventObject.special_feature;
+                            
+                            //handle empty or non-existent special feature by using the image instead
+                            if(eventObject.special_feature == undefined || eventObject.special_feature.type == ""){
+                                $scope.special_feature = {};
+                                $scope.special_feature.type = "img";
+                                $scope.special_feature.content = "/event_images/" + eventObject.img_title;
                             }
-                            $scope.loc_img_link = eventObject.links.mf_img_link;
-                            delete eventObject.links["mf_video_link"];
-                            delete eventObject.links["mf_img_link"];
+                    
+                            //$scope.loc_img_link = "/event_images/" + eventObject.img_title;
+                            /*delete eventObject.links["mf_video_link"];
+                            delete eventObject.links["mf_img_link"];*///DEPRECATED
                             $scope.links = [];
 
                             var triple;
