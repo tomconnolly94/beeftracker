@@ -185,7 +185,7 @@
                 <div class="col-sm-3"></div>
             </div>
             
-            <div class="column_container" class="row" ng-controller="eventStreamController">
+            <div class="column_container" class="row" ng-controller="eventStreamController" style="overflow:hidden;">
                 <div class="col-sm-4">
                     <ul>
                         <li class="event_li_wrapper" ng-repeat="event_col_1 in event_stream_events_col_1 track by $index">        
@@ -279,11 +279,10 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-sm-3"></div>
             </div>
             
             
-            <div class="row" style="overflow:hidden;">
+            <div class="row" style="overflow:hidden;display:block;">
                 <div class="col-sm-3"></div>
                 <div class="col-sm-6">
                     <h2 style="text-align:center;font-weight:bold;">Hall of Fame:</h2>
@@ -364,10 +363,9 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-sm-3"></div>
             </div>
             
-            <div id="bottom_bar" class="row" style="margin:50px 0px"></div>
+            <div id="bottom_bar" class="row" style="margin:50px 0px;overflow:hidden;"></div>
         </div>
     </body>
 </html>
