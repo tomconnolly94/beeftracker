@@ -650,8 +650,13 @@ app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, r
     
     var formatted_special_feature_content = "";
     
+    if(submission_data.special_feature == undefined){
+        submission_data.special_feature = {};
+        submission_data.special_feature.type = "";
+        formatted_special_feature_content = "";
+    }
     //format special feature for storage
-    if(submission_data.special_feature.type == "youtube_embed"){
+    else if(submission_data.special_feature.type == "youtube_embed"){
     
         var video_id = submission_data.special_feature.content.split('v=')[1];
         var ampersandPosition = video_id.indexOf('&');
@@ -705,7 +710,7 @@ app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, r
                     service: 'Gmail',
                     auth: {
                         user: 'beeftracker@gmail.com', // Your email id
-                        pass: '6YdmYtA+dH7LHBg4+Dn0EyUPYSKsjxz5fmvVuxSmKbW/rGH8QH+96JiY33e0tBw7' // Your password
+                        pass: 'UoNYtG4gDsabqtpMtx7tryQWKi8Nlm49HXKn3YqqDslZKb6AbAcTy57k/ZGfTSY0' // Your password
                     }
                 });
 

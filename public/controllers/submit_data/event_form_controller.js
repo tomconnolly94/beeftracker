@@ -159,9 +159,11 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
             $scope.form_data.aggressor = $scope.aggressor;
             $scope.form_data.targets = $scope.targets;
             console.log($scope.special_feature_select);
-            $scope.form_data.special_feature = {
-                type : JSON.parse($scope.special_feature_select).db_ref,
-                content : $scope.special_feature.content
+            if($scope.special_feature_select != undefined){
+                $scope.form_data.special_feature = {
+                    type : JSON.parse($scope.special_feature_select).db_ref,
+                    content : $scope.special_feature.content
+                }
             }
             $scope.form_data.description = $scope.description;
             $scope.form_data.date = $scope.datePicker;

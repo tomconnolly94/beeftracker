@@ -203,14 +203,14 @@
                             <div class="col-sm-9" style="margin:0px;">
                                 <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="This is space to add a YouTube video or track from Spotify to be displayed by the event, it does always apply but events like songs or speeches work really well with this." aria-hidden="true"></span>
                                 <div class="col-sm-11" style="padding:0px;margin:10px 0px;">
-                                    <select ng-model="special_feature_select" class="form-control" name="aggressor" ng-change="config_special_feature()" style="color:#000000;" required>
+                                    <select ng-model="special_feature_select" class="form-control" name="aggressor" ng-change="config_special_feature()" style="color:#000000;">
                                         <option value="" disabled selected style="display: none;" style="margin:3px;"> Select Feature Type </option>
                                         <!--<option selected hidden disabled><p>Select feature type</p></option>-->
                                         <option ng-repeat="mode in special_feature_modes" value="{{ mode }}" style="margin:3px;"><p>{{ mode.title }}</p></option>
                                     </select>
                                 </div>
                                 <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Enter the URL of the YouTube video, or the link to the Spotify track which can be obtained by right clicking on the song and then clicking 'Copy Song Link'." aria-hidden="true"></span>
-                                <input class="col-sm-11" ng-file-model="{{ mf_file_model }}" style="color:#000000;padding:0px;font-size:18px;" type="{{ mf_type }}" placeholder="" ng-model="special_feature.content" required>
+                                <input class="col-sm-11" ng-file-model="{{ mf_file_model }}" style="color:#000000;padding:0px;font-size:18px;" type="{{ mf_type }}" placeholder="" ng-model="special_feature.content">
                             </div>
                         </div>
                                              
