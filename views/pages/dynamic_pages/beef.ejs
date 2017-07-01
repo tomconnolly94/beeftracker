@@ -118,22 +118,11 @@
                     nav_visible = false;
                 }
                 else{
-                    document.getElementById("mySidenav").style.width = "250px";
+                    document.getElementById("mySidenav").style.width = "300px";
                     document.getElementById("mob_timeline_toggle_button").innerHTML = "Close Timeline";
                     nav_visible = true;
                 }
-                
             }
-            
-            function openNav() {
-                document.getElementById("mySidenav").style.width = "250px";
-            }
-
-            /* Set the width of the side navigation to 0 */
-            function closeNav() {
-                document.getElementById("mySidenav").style.width = "0";
-            }
-            
 
         </script>
         
@@ -166,6 +155,10 @@
                             <h6 class="col-sm-12 event_title" style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">{{ event.title }}</h6>
                             <p class="col-sm-12 event_title">{{ event.name }}</p>
                         </a>
+                        <div style="margin:40px;">
+                            <!-- Use any element to open the sidenav -->
+                            <button id="mob_timeline_toggle_button" class=" hidden-sm hidden-md hidden-lg" style="border:0px;padding:10px;background-color:black;" onclick="toggleNav()">Close Timeline</button>
+                        </div>
                     </div>
 
                     <div class="col-sm-7 hidden-xs" style="min-height:869px;">
