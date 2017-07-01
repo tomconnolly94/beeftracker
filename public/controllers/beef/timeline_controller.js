@@ -5,7 +5,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
     //wait untill module has been configured before running this
     $scope.$on('$routeChangeSuccess', function() {
         $scope.handle_change();
-        first_run = true;
+        //first_run = true;
     });
     
     $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
@@ -95,7 +95,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                         }
                         
                         $scope.visible_events = [];
-                        var selected_actors_wrapper = [$scope.lh_selected_actors, $scope.rh_selected_actors];
+                        //var selected_actors_wrapper = [$scope.lh_selected_actors, $scope.rh_selected_actors];
                         
                         //choose which artists should be selected based on initial event
                         for(var event_index = 0; event_index < $scope.event_chain.length; event_index++){
