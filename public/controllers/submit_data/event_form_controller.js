@@ -151,7 +151,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
         button.disabled = true;
         console.log($scope.event_form);
         
-        if(true || $scope.event_form.$valid && $scope.validate_input()){
+        if($scope.event_form.$valid && ($scope.validate_input() || true)){
 
             var form = new FormData();
             
@@ -316,6 +316,10 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
             {
                 db_ref : "spotify_embed", //spotify features not supported yet
                 title : "Spotify Track"
+            },
+            {
+                db_ref : "video_embed", //spotify features not supported yet
+                title : "Embedded Video Link"
             }/*,
             {
                 db_ref : "soundcloud_embed", //soundcloud features not supported yet

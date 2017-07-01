@@ -672,6 +672,10 @@ app.post('/submit_beefdata/', upload_event_img.single('attachment'), (request, r
         
         formatted_special_feature_content = "https://embed.spotify.com/?uri=spotify%3Atrack%3A" + video_id;
     }
+    else if(submission_data.special_feature.type == "video_embed"){
+        
+        formatted_special_feature_content = submission_data.special_feature.content;
+    }
     
     var insert_object = {
         "title" : submission_data.title,
@@ -827,7 +831,7 @@ app.post('/submit_actordata/', upload_actor_img.single('attachment'), (request, 
                     service: 'Gmail',
                     auth: {
                         user: 'beeftracker@gmail.com', // Your email id
-                        pass: 'Vietnam13!' // Your password
+                        pass: 'UoNYtG4gDsabqtpMtx7tryQWKi8Nlm49HXKn3YqqDslZKb6AbAcTy57k/ZGfTSY0' // Your password
                     }
                 });
 
