@@ -107,7 +107,24 @@
                 var top = document.getElementById(hash).offsetTop; //Getting Y of target element
                 window.scrollTo(0, top);  
             }*/
-            /* Set the width of the side navigation to 250px */
+            
+            var nav_visible = false;
+            
+            function toggleNav(){
+                
+                if(nav_visible){
+                    document.getElementById("mySidenav").style.width = "0";
+                    document.getElementById("mob_timeline_toggle_button").innerHTML = "View Timeline";
+                    nav_visible = false;
+                }
+                else{
+                    document.getElementById("mySidenav").style.width = "250px";
+                    document.getElementById("mob_timeline_toggle_button").innerHTML = "Close Timeline";
+                    nav_visible = true;
+                }
+                
+            }
+            
             function openNav() {
                 document.getElementById("mySidenav").style.width = "250px";
             }
@@ -136,14 +153,14 @@
                     <div class="col-xs-5"></div>
                     <div class="col-fixed-2">
                         <!-- Use any element to open the sidenav -->
-                        <button class=" hidden-sm hidden-md hidden-lg" style="border:0px;padding:10px;background-color:red;" onclick="openNav()">View Timeline</button>
+                        <button id="mob_timeline_toggle_button" class=" hidden-sm hidden-md hidden-lg" style="border:0px;padding:10px;background-color:red;" onclick="toggleNav()">View Timeline</button>
                     </div>
                     <div class="col-xs-5"></div>
                 </div>
                 
                 <div ng-controller="timelineController" style="min-height:969px;">
                     <div id="mySidenav" class="sidenav">
-                        <a href="javascript:void(0)" style="height:15px;width:15px;" class="closebtn" onclick="closeNav()">&times;</a>
+                        <a href="javascript:void(0)" style="height:15px;width:15px;" class="closebtn" onclick="toggleNav()">&times;</a>
                         <h4 style="padding:15px;"> Beef Timeline </h4>
                         <a name="{{event.event_num}}" id="{{event.event_num}}"  ng-repeat="event in visible_events" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" style="background-color:{{event.colour}};border-width:{{event.border_width}};border-color:{{event.border_colour}};margin:5px 0px;padding:10px; display:block;height:60px;">
                             <h6 class="col-sm-12 event_title" style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">{{ event.title }}</h6>
