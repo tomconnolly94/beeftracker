@@ -107,20 +107,7 @@
                 var top = document.getElementById(hash).offsetTop; //Getting Y of target element
                 window.scrollTo(0, top);  
             }*/
-            /* Set the width of the side navigation to 250px */
-            function openNav() {
-                document.getElementById("mySidenav").style.width = "250px";
-            }
-
-            /* Set the width of the side navigation to 0 */
-            function closeNav() {
-                document.getElementById("mySidenav").style.width = "0";
-            }
             
-            $(".container").on("swipe",function(){
-              openNav();
-            });
-
         </script>
         
 	</head>
@@ -133,100 +120,84 @@
             <div id="top_bar"></div>
                     
             <!-- rest of page -->
-            <div class="row" id="main" ng-cloak><!-- style="min-height:1000px;">-->
-                            
-                <!-- Use any element to open the sidenav -->
-                <button class=" hidden-sm hidden-md hidden-lg" style="border:0px;padding:10px;background-color:red;" onclick="openNav()">View Timeline</button>
+            <div class="row" ng-cloak><!-- style="min-height:1000px;">-->
                 
-                <div ng-controller="timelineController">
-                    <div id="mySidenav" class="sidenav">
-                        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="height:15px;width:15px;">&times;</a>
-                        <h4 style="padding:15px;"> Beef Timeline </h4>
-                        <a name="{{event.event_num}}" id="{{event.event_num}}"  ng-repeat="event in events" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" style="background-color:{{event.colour}};border-width:{{event.border_width}};border-color:{{event.border_colour}};padding:10px; display:block;height:40px;">
-                            <h6 class="col-sm-12 event_title" style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">{{ event.title }}</h6>
-                            <p class="col-sm-12 event_title">{{ event.aggressor_object[0].stage_name }}</p>
-                        </a>
-                    </div>
-
-                    <div class="col-sm-7 hidden-xs" style="min-height:763px;">
-
-                        <div class="jumbotron" id="actor_filter_panel" style="display:inline-block;text-align:center;width:100%;margin:30px 0px;background-color:#000000">
-
-                            <div class="col-sm-5">
-                                <a ng-href="/actor/{{main_aggressor._id}}" target="_self">
-                                    <h3 ng-model="main_name"><div id="main_aggressor" class="black_font"> {{ main_aggressor.stage_name }} </div></h3>
-                                </a>
-                            </div>
-
-                            <div class="col-sm-2"><h3 class="black_font">vs</h3></div>
-
-                            <div class="col-sm-5" ng-app>
-                                <select multiple class="form-control" ng-change="handle_change(selected_targets)" ng-model="selected_targets" ng-options="target for target in filter_options" style="height:90px;"></select>
-                            </div>
-
+                <div class="col-sm-7" ng-controller="timelineController" style="min-height:763px;">
+                    
+                    <div class="jumbotron" id="actor_filter_panel" style="display:inline-block;text-align:center;width:100%;margin:30px 0px;padding:30px;background-color:#000000">
+                        
+                        <div class="col-sm-5" ng-app>
+                            <select multiple class="form-control" ng-change="handle_change(lh_selected_actors)" ng-model="lh_selected_actors" ng-options="lh_actor.stage_name for lh_actor in lh_actors" style="height:90px;"></select>
                         </div>
+                        
+                        <div class="col-sm-2"><h3 class="black_font">vs</h3></div>
 
-                        <div id="timeline" timeline>
-                            <ul class="timeline">
-                                <li class="{{event.timeline_event_class}} event_li_wrapper" ng-repeat="event in events">
-
-                                    <div class="timeline-badge" style="background-color:#FFFFFF;">
-                                        <span class="{{event.glyphicon}}" style="color:#000000"></span>
-                                    </div>
-
-                                    <a name="{{event.event_num}}" target="_self" id="{{event.event_num}}" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" class="selectable_event timeline-panel event_anchor" style="background-color:{{event.colour}};border-width:{{event.border_width}};border-color:{{event.border_colour}};">
-
-                                        <div class="row event_title_container">
-                                            <h5 class="col-sm-12 event_title">{{ event.title }}</h5>
-                                        </div>
-
-                                        <div class="row event_text_img_wrapper"> 
-
-                                            <div class="timeline-body col-sm-7 event_text_container">
-
-                                                <h6 class="event_aggressor">{{ event.name }}</h6>
-                                                <h6 class="event_date">{{ event.date }}</h6>
-
-                                            </div>
-                                            <img ng-src="/event_images/{{ event.loc_img_link }}" class="img-circle col-sm-4 event_img">
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>   
-                        </div> 
-                        <!--<div id="timeline" timeline>
-                            <ul class="timeline">
-                                <li class="{{event.timeline_event_class}}" ng-repeat="event in events">
-
-                                    <div class="timeline-badge" style="background-color:#FFFFFF;">
-                                        <span class="{{event.glyphicon}}" style="color:#000000"></span>
-                                    </div>
-
-                                    <a name="{{event.event_num}}" target="_self" id="{{event.event_num}}" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" class="selectable_event timeline-panel" style="background-color:{{event.colour}};padding:0px;border-width:{{event.border_width}};border-color:{{event.border_colour}};border-radius: 5px;">                                        
-                                        <div style="padding:15px;" on-finish-render="ngRepeatFinished">
-
-                                            <div class="row" style="width:100%;position:relative;">
-                                                <h5 class="col-sm-12" style="margin:5px;font-weight:bold;">{{ event.title }}</h5>
-                                            </div>
-
-                                            <div class="row"> 
-
-                                                <div class="timeline-body col-sm-7" style="margin:20px 0px;">
-
-                                                    <h6 style="margin:5px;">{{ event.name }}</h6>
-                                                    <h6 style="margin:5px;">{{ event.date }}</h6>
-
-                                                </div>
-                                                <img ng-src="/event_images/{{ event.loc_img_link }}" class="img-circle col-sm-4" style="margin:5px;padding:0px;" height="75" width="75">
-                                            </div>
-
-
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>   
-                        </div> -->
+                        <div class="col-sm-5" ng-app>
+                            <select multiple class="form-control" ng-change="handle_change(rh_selected_actors)" ng-model="rh_selected_actors" ng-options="rh_actor.stage_name for rh_actor in rh_actors" style="height:90px;"></select>
+                        </div>
+                        
                     </div>
+
+                    <div id="timeline" timeline>
+                        <ul class="timeline">
+                            <li class="{{event.timeline_event_class}} event_li_wrapper" ng-repeat="event in visible_events">
+                                
+                                <div class="timeline-badge" style="background-color:#FFFFFF;">
+                                    <span class="{{event.glyphicon}}" style="color:#000000"></span>
+                                </div>
+                                
+                                <a name="{{event.event_num}}" target="_self" id="{{event.event_num}}" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" class="selectable_event timeline-panel event_anchor" style="background-color:{{event.colour}};border-width:{{event.border_width}};border-color:{{event.border_colour}};">
+                                        
+                                    <div class="row event_title_container">
+                                        <h5 class="col-sm-12 event_title">{{ event.title }}</h5>
+                                    </div>
+
+                                    <div class="row event_text_img_wrapper"> 
+
+                                        <div class="timeline-body col-sm-7 event_text_container">
+
+                                            <h6 class="event_aggressor">{{ event.name }}</h6>
+                                            <h6 class="event_date">{{ event.date }}</h6>
+
+                                        </div>
+                                        <img ng-src="/event_images/{{ event.loc_img_link }}" class="img-circle col-sm-4 event_img">
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>   
+                    </div> 
+                    <!--<div id="timeline" timeline>
+                        <ul class="timeline">
+                            <li class="{{event.timeline_event_class}}" ng-repeat="event in events">
+                                
+                                <div class="timeline-badge" style="background-color:#FFFFFF;">
+                                    <span class="{{event.glyphicon}}" style="color:#000000"></span>
+                                </div>
+                                
+                                <a name="{{event.event_num}}" target="_self" id="{{event.event_num}}" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" class="selectable_event timeline-panel" style="background-color:{{event.colour}};padding:0px;border-width:{{event.border_width}};border-color:{{event.border_colour}};border-radius: 5px;">                                        
+                                    <div style="padding:15px;" on-finish-render="ngRepeatFinished">
+                                        
+                                        <div class="row" style="width:100%;position:relative;">
+                                            <h5 class="col-sm-12" style="margin:5px;font-weight:bold;">{{ event.title }}</h5>
+                                        </div>
+                                        
+                                        <div class="row"> 
+
+                                            <div class="timeline-body col-sm-7" style="margin:20px 0px;">
+
+                                                <h6 style="margin:5px;">{{ event.name }}</h6>
+                                                <h6 style="margin:5px;">{{ event.date }}</h6>
+
+                                            </div>
+                                            <img ng-src="/event_images/{{ event.loc_img_link }}" class="img-circle col-sm-4" style="margin:5px;padding:0px;" height="75" width="75">
+                                        </div>
+                                        
+                                        
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>   
+                    </div> -->
                 </div>
                 
                 <div class="col-sm-5" id="nav_wrapper" ng-controller="currentEventController">
@@ -246,15 +217,14 @@
                         <hr style="margin:10px;">
                         
                         <div class="a2a_kit a2a_kit_size_32 a2a_default_style row">
-                            <div class="col-xs-3"></div>
-                            <a class="a2a_button_facebook col-xs-2"></a>
-                            <a class="a2a_button_twitter col-xs-2"></a>
-                            <a class="a2a_button_google_plus col-xs-2"></a>
-                            <a class="a2a_button_copy_link col-xs-2"></a>
-                           <!-- <div class="col-xs-2"></div>-->
+                            <div class="col-sm-2"></div>
+                            <a class="a2a_button_facebook col-sm-2"></a>
+                            <a class="a2a_button_twitter col-sm-2"></a>
+                            <a class="a2a_button_google_plus col-sm-2"></a>
+                            <a class="a2a_button_copy_link col-sm-2"></a>
+                            <div class="col-sm-2"></div>
                         </div>
                         <script async src="https://static.addtoany.com/menu/page.js"></script>
-                        
                         
                         <hr style="margin:10px;">
                         

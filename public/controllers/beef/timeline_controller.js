@@ -14,6 +14,17 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
         jump();
     });
     
+    //init arrays for both sides of the filter
+    $scope.lh_actors = [];
+    $scope.rh_actors = [];
+    $scope.lh_selected_actors = [];
+    $scope.rh_selected_actors = [];
+    $scope.visible_events = new Array();
+    var name_colour_map = [];
+    
+    var actors_wrapper = [$scope.lh_actors, $scope.rh_actors];
+    var selected_actors_wrapper = [$scope.lh_selected_actors, $scope.rh_selected_actors];
+    
     $scope.handle_change = function(){ //function created to allow recall without page reload
         
         //hold onto the main agressor for checks later
@@ -23,188 +34,118 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
             method: 'GET',
             url: "/search_events_by_id/" + $routeParams.tagId
         }).then(function(response_1){
-            //validate the url tagId to make sure the event exists
+            
+            //validate the response to make sure something is returned
             if(response_1.data.eventObject != undefined){
                 
-                response_1 = response_1.data;
-                
-                //get the main event's aggressor
-                $scope.main_aggressor = response_1.eventObject.aggressor_object[0];
-                
-                //if its the first time this function is called, init arrays
-                if(first_run){
-                    
-                    //targets selected in filter
-                    $scope.selected_targets = new Array();
-                    $scope.filter_options = new Array();
-                    
-                    //add targets of main event to filter so theyre all shown on the timeline by default
-                    for(var i = 0; i < response_1.eventObject.targets.length; i++){
-                        $scope.selected_targets.push(response_1.eventObject.targets[i][0].stage_name);
-                        $scope.filter_options.push(response_1.eventObject.targets[i][0].stage_name);
-                    }
-                    
-                    
-                    $scope.filter_options.push("None");
-                }
-               
                 //make http request to server for data
-                //$http.get("/search_all_related_events_in_timeline_by_id/" + $routeParams.tagId).success(function(response_2){
                 $http({
                     method: 'GET',
                     url: "/search_all_related_events_in_timeline_by_id/" + $routeParams.tagId
                 }).then(function(response_2){
                     
-                    //extract events array
-                    var events = response_2.data.events;
-                    console.log(events);
+                    //ensure the server returns some events
+                    if(response_2.data.events != undefined){
                     
-                    //if its the first time this function is called, init arrays
-                    if(first_run){
-
-                        //add targets of main event to filter so theyre all shown on the timeline by default
-                        for(var i = 0; i < events.length; i++){
-                            if($.inArray(events[i].aggressor_object[0].stage_name, $scope.selected_targets) == -1 && events[i].aggressor_object[0].stage_name != $scope.main_aggressor.stage_name){//make sure aggressor is not already in array and also is not the main event aggressor
-                                $scope.selected_targets.push(events[i].aggressor_object[0].stage_name);
-                                $scope.filter_options.push(events[i].aggressor_object[0].stage_name);
-                            }
-                        }
-
-                        //set this flag so the above code is only run once
-                        first_run = false;
-                    }
-                                        
-                    //validate the url tagId to make sure there are events to sort
-                    if(events != undefined){
-                        
-                        //init vars to be used later
-                        $scope.events = new Array();
-                        var name_colour_map = [];
-                        var colour_index = 0;
-                        
+                        //extract the event chain from the http response
+                        $scope.event_chain = response_2.data.events;
                         //sort the events by date
-                        events.sort(custom_sort);
+                        $scope.event_chain.sort(custom_sort);
                         
-                        //add main aggressor to make sure the left hand side of the timeline is selected
-                        //$scope.selected_targets.push(main_aggressor.stage_name);
-                        
-                        //if the 'none' option is selected clear all targets and display only the main aggressors tracks
-                        /*if($scope.selected_targets[0] == "None"){
-                            $scope.selected_targets = new Array();
-                            $scope.selected_targets.push($scope.main_aggressor.stage_name);
-                        }*/
-                        
-                        //loop through the list of events
-                        for(var event_index = 0; event_index < events.length; event_index++){
+                        if(first_run){
                             
-                            //extract event
-                            var eventObject = events[event_index];
-                            var filter_found = false;
+                            main_event_object = response_1.data.eventObject; //extract main_event
+                            actors_wrapper[0].push(main_event_object.aggressor_object[0]); //add the main events aggressor to the left hand actors array
+                                            
+                            for(var event_index = 0; event_index < $scope.event_chain.length; event_index++){
 
-                            //extract an appropriate colour from the colour bank
-                            if(name_colour_map[eventObject.aggressor] == undefined){
-                                name_colour_map[eventObject.aggressor] = getNextColor(colour_index);
-                                colour_index++;
-                            }
+                                //extract the current event
+                                var event = $scope.event_chain[event_index];
 
-                            var left;
-                            var right;
-                            //turn on/off beef_split dev events for diffrerent margin sizes
-                            var beef_split_dev = false;
-                            var beef_bootstrap_timeline_dev = true;
-                            var timeline_event;
-                            var event_glyphicon = "glyphicon ";
-                            var include_event = false;
-                            
-                            //check if object has same aggressor as main_event, different treatment required if so
-                            if(eventObject.aggressor_object[0]._id.toString() == $scope.main_aggressor._id.toString()){
-                                
-                                //check if event should be included
-                                outerloop:
-                                //make sure at least one of the targets, is in the filter
-                                for(var i = 0; i < eventObject.targets.length; i++){ //loop through the targets
-                                    for(var j = 0; j < $scope.selected_targets.length; j++){ //loop through the filter options
-                                        
-                                        if(eventObject.targets[i][0].stage_name == $scope.selected_targets[j] || $scope.selected_targets[j] == "None"){
-                                            include_event = true;
-                                            break outerloop;
+                                for(var wrapper_index = 0; wrapper_index < actors_wrapper.length; wrapper_index++){
+
+                                    //extract collection (either $scope.lh_actors or $scope.rh_actors)
+                                    var collection = actors_wrapper[wrapper_index];
+
+                                    //loop through $scope.lh_actors or $scope.rh_actors
+                                    for(var collection_index = 0; collection_index < collection.length; collection_index++){
+
+                                        //search for event aggressor in each list
+                                        if(event.aggressor == collection[collection_index]._id){
+
+                                            //if the event aggressor is in one of the lists already, add all their targets to the opposite list
+                                            for(var target_index = 0; target_index < event.targets.length; target_index++){
+                                                if(wrapper_index == 0){
+                                                    //add the actor to the $scope.rh_actors list if it doesnt already exist
+                                                    actors_wrapper[1].findIndex(i => i._id === event.targets[target_index][0]._id) === -1 ? actors_wrapper[1].push(event.targets[target_index][0]) : console.log();
+                                                }
+                                                else if(wrapper_index == 1){
+                                                    //add the actor to the $scope.lh_actors list if it doesnt already exist
+                                                    actors_wrapper[0].findIndex(i => i._id === event.targets[target_index][0]._id) === -1 ? actors_wrapper[0].push(event.targets[target_index][0]) : console.log();
+                                                }
+                                            }
                                         }
                                     }
                                 }
-                                
-                                if(beef_split_dev){
-                                    left = "0px";
-                                    right = "60%";
-                                }
-                                else if(beef_bootstrap_timeline_dev){
-                                    timeline_event = "";
-                                    event_glyphicon += "glyphicon-chevron-left";
-                                }
-                                else{
-                                    left = 0;
-                                    right = 50;
-                                }
-                            }else{
-                                // make sure the aggressor is in the filter
-                                for(var j = 0; j < $scope.selected_targets.length; j++){ //loop through the filter options
-                                    if(eventObject.aggressor_object[0].stage_name == $scope.selected_targets[j] || eventObject.aggressor_object[0].stage_name == "Unknown"){
-                                        include_event = true;
+                            }
+                            
+                            $scope.lh_selected_actors.push(main_event_object.aggressor_object[0]);
+                            $scope.rh_selected_actors.push(extract_actor_name_array(main_event_object.targets)[0]);
+                            first_run = false;
+                        }
+                        
+                        $scope.visible_events = [];
+                        var selected_actors_wrapper = [$scope.lh_selected_actors, $scope.rh_selected_actors];
+                        
+                        //choose which artists should be selected based on initial event
+                        for(var event_index = 0; event_index < $scope.event_chain.length; event_index++){
+
+                            //extract the current event
+                            var event = $scope.event_chain[event_index];
+
+                            for(var wrapper_index = 0; wrapper_index < selected_actors_wrapper.length; wrapper_index++){
+
+                                //extract collection (either $scope.lh_actors or $scope.rh_actors)
+                                var collection = selected_actors_wrapper[wrapper_index];
+
+                                //loop through $scope.lh_actors, if 
+                                for(var collection_index = 0; collection_index < collection.length; collection_index++){
+
+                                    //search for event aggressor in each list
+                                    if(event.aggressor == collection[collection_index]._id){
+                                        
+                                        for(var target_index = 0; target_index < event.targets.length; target_index++){
+                                        
+                                            var target = event.targets[target_index][0];
+                                            
+                                            //find opposite list index
+                                            var opposite_index = 0;
+                                            if(wrapper_index == 0){ opposite_index++;}
+                                            
+                                            if(selected_actors_wrapper[opposite_index].findIndex(i => i._id === target._id) != -1){
+                                            
+                                                //if the event.aggressor is in collection 0 built the event and add itto the event chain
+                                                if(wrapper_index == 0){
+                                                       $scope.visible_events.findIndex(i => i._id === event._id) === -1 ? $scope.visible_events.push(build_event(event, true, main_event_object, name_colour_map)) : console.log();
+                                                }
+                                                else if(wrapper_index == 1){
+                                                    $scope.visible_events.findIndex(i => i._id === event._id) === -1 ? $scope.visible_events.push(build_event(event, false, main_event_object, name_colour_map)) : console.log();
+                                                }
+                                            }
+                                        }
                                     }
                                 }
-                                
-                                if(beef_split_dev){
-                                    left = "60%";
-                                    right = "0px";
-                                }
-                                else if(beef_bootstrap_timeline_dev){
-                                    timeline_event = "timeline-inverted";
-                                    event_glyphicon += "glyphicon-chevron-right";
-                                }
-                                else{
-                                    left = 50;
-                                    right = 0;
-                                }
-                            }
-                            console.log(include_event);
-
-                            if(include_event){
-                                var border_colour = "#000000";
-                                var border_width = "1px";
-
-                                if(response_1.eventObject.title == eventObject.title){
-                                    border_colour = "#FFFFFF";
-                                    border_width = "5px";
-                                    border_width = "5px";
-                                }
-
-                                //create data record
-                                var record = {
-                                    name : eventObject.aggressor_object[0].stage_name,
-                                    title : eventObject.title,
-                                    date : eventObject.event_date.slice(0,10),
-                                    loc_img_link : eventObject.img_title,
-                                    event_num : eventObject._id,
-                                    colour : name_colour_map[eventObject.aggressor],
-                                    left_margin : left,
-                                    right_margin : right,
-                                    timeline_event_class : timeline_event,
-                                    glyphicon : event_glyphicon,
-                                    border_colour : border_colour,
-                                    border_width : border_width
-                                };
-
-                                $scope.events.push(record);
                             }
                         }
                     }
                     else{
                         //error msg
-                        console.log("An incorrect event_id has been used. please check the url")
+                        console.log("An incorrect event_id has been used. please check the url.");
                     }
                 }, 
                 function(response_2) {
                     //failed http request
-                    console.log("Something went wrong");
+                    console.log("Something went wrong, event chain could not be accessed.");
                 });
             }
         });
@@ -213,4 +154,60 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
 
 function custom_sort(event_1, event_2) {
     return new Date(event_2.event_date).getTime() - new Date(event_1.event_date).getTime();
+}
+
+function extract_actor_name_array(actor_object_array){
+    
+    var names = new Array();
+    
+    for(var i = 0; i < actor_object_array.length;i++){
+        names.push(actor_object_array[i][0]);
+    }
+    return names;
+}
+        
+function build_event(event, lh_side, main_event, name_colour_map){
+                  
+    var timeline_event;
+    var event_glyphicon;
+    
+    if(lh_side){
+        timeline_event = "";
+        event_glyphicon += "glyphicon-chevron-left";
+    }
+    else{
+        timeline_event = "timeline-inverted";
+        event_glyphicon += "glyphicon-chevron-right";
+    }
+    
+    
+    var border_colour = "#000000";
+    var border_width = "1px";
+
+    if(event.title == main_event.title){
+        border_colour = "#FFFFFF";
+        border_width = "5px";
+    }
+    
+    //extract an appropriate colour from the colour bank
+    if(name_colour_map[event.aggressor] == undefined){
+        name_colour_map[event.aggressor] = getNextColor(colour_index);
+        colour_index++;
+    }
+
+    //create event data record
+    var record = {
+        name : event.aggressor_object[0].stage_name,
+        title : event.title,
+        date : event.event_date.slice(0,10),
+        loc_img_link : event.img_title,
+        event_num : event._id,
+        colour : name_colour_map[event.aggressor],
+        timeline_event_class : timeline_event,
+        glyphicon : event_glyphicon,
+        border_colour : border_colour,
+        border_width : border_width
+    };
+
+    return record;
 }
