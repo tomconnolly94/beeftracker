@@ -137,6 +137,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                                 }
                             }
                         }
+                        console.log($scope.visible_events);
                     }
                     else{
                         //error msg
