@@ -1,11 +1,8 @@
 beef_app.controller('timelineController', ['$scope','$http', '$routeParams', function($scope,$http,$routeParams) {
-    
-    var first_run = true;
-    
+        
     //wait untill module has been configured before running this
     $scope.$on('$routeChangeSuccess', function() {
-        $scope.handle_change();
-        //first_run = true;
+        $scope.handle_change(true);
     });
     
     $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
@@ -25,7 +22,96 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
     var actors_wrapper = [$scope.lh_actors, $scope.rh_actors];
     var selected_actors_wrapper = [$scope.lh_selected_actors, $scope.rh_selected_actors];
     
-    $scope.handle_change = function(){ //function created to allow recall without page reload
+    $scope.configure_filter = function(main_event_object){
+        
+       
+        actors_wrapper[0].push(main_event_object.aggressor_object[0]); //add the main events aggressor to the left hand actors array
+
+        for(var event_index = 0; event_index < $scope.event_chain.length; event_index++){
+
+            //extract the current event
+            var event = $scope.event_chain[event_index];
+
+            for(var wrapper_index = 0; wrapper_index < actors_wrapper.length; wrapper_index++){
+
+                //extract collection (either $scope.lh_actors or $scope.rh_actors)
+                var collection = actors_wrapper[wrapper_index];
+
+                //loop through $scope.lh_actors or $scope.rh_actors
+                for(var collection_index = 0; collection_index < collection.length; collection_index++){
+
+                    //search for event aggressor in each list
+                    if(event.aggressor == collection[collection_index]._id){
+
+                        //if the event aggressor is in one of the lists already, add all their targets to the opposite list
+                        for(var target_index = 0; target_index < event.targets.length; target_index++){
+                            if(wrapper_index == 0){
+                                //add the actor to the $scope.rh_actors list if it doesnt already exist
+                                actors_wrapper[1].findIndex(i => i._id === event.targets[target_index][0]._id) === -1 ? actors_wrapper[1].push(event.targets[target_index][0]) : console.log();
+                            }
+                            else if(wrapper_index == 1){
+                                //add the actor to the $scope.lh_actors list if it doesnt already exist
+                                actors_wrapper[0].findIndex(i => i._id === event.targets[target_index][0]._id) === -1 ? actors_wrapper[0].push(event.targets[target_index][0]) : console.log();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $scope.lh_selected_actors.push(main_event_object.aggressor_object[0]);
+        $scope.rh_selected_actors.push(extract_actor_name_array(main_event_object.targets)[0]);
+                
+    }
+    
+    $scope.configure_visible_events = function(){
+        $scope.visible_events = [];
+        var selected_actors_wrapper = [$scope.lh_selected_actors, $scope.rh_selected_actors];
+
+        //choose which artists should be selected based on initial event
+        for(var event_index = 0; event_index < $scope.event_chain.length; event_index++){
+
+            //extract the current event
+            var event = $scope.event_chain[event_index];
+
+            for(var wrapper_index = 0; wrapper_index < selected_actors_wrapper.length; wrapper_index++){
+
+                //extract collection (either $scope.lh_actors or $scope.rh_actors)
+                var collection = selected_actors_wrapper[wrapper_index];
+
+                //loop through $scope.lh_actors, if 
+                for(var collection_index = 0; collection_index < collection.length; collection_index++){
+
+                    //search for event aggressor in each list
+                    if(event.aggressor == collection[collection_index]._id){
+
+                        for(var target_index = 0; target_index < event.targets.length; target_index++){
+
+                            var target = event.targets[target_index][0];
+
+                            //find opposite list index
+                            var opposite_index = 0;
+                            if(wrapper_index == 0){ opposite_index++;}
+
+                            if(selected_actors_wrapper[opposite_index].findIndex(i => i._id === target._id) != -1){
+
+                                //if the event.aggressor is in collection 0 built the event and add itto the event chain
+                                if(wrapper_index == 0){
+                                       $scope.visible_events.findIndex(i => i._id === event._id) === -1 ? $scope.visible_events.push(build_event(event, true, main_event_object, name_colour_map)) : console.log();
+                                }
+                                else if(wrapper_index == 1){
+                                    $scope.visible_events.findIndex(i => i._id === event._id) === -1 ? $scope.visible_events.push(build_event(event, false, main_event_object, name_colour_map)) : console.log();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    $scope.handle_change = function(reconfig_actors){ //function created to allow recall without page reload
         
         //hold onto the main agressor for checks later
         var main_aggressor;
@@ -52,98 +138,18 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                         //sort the events by date
                         $scope.event_chain.sort(custom_sort);
                         
-                        if(first_run){
                             
-                            main_event_object = response_1.data.eventObject; //extract main_event
-                            actors_wrapper[0].push(main_event_object.aggressor_object[0]); //add the main events aggressor to the left hand actors array
-                                            
-                            for(var event_index = 0; event_index < $scope.event_chain.length; event_index++){
-
-                                //extract the current event
-                                var event = $scope.event_chain[event_index];
-
-                                for(var wrapper_index = 0; wrapper_index < actors_wrapper.length; wrapper_index++){
-
-                                    //extract collection (either $scope.lh_actors or $scope.rh_actors)
-                                    var collection = actors_wrapper[wrapper_index];
-
-                                    //loop through $scope.lh_actors or $scope.rh_actors
-                                    for(var collection_index = 0; collection_index < collection.length; collection_index++){
-
-                                        //search for event aggressor in each list
-                                        if(event.aggressor == collection[collection_index]._id){
-
-                                            //if the event aggressor is in one of the lists already, add all their targets to the opposite list
-                                            for(var target_index = 0; target_index < event.targets.length; target_index++){
-                                                if(wrapper_index == 0){
-                                                    //add the actor to the $scope.rh_actors list if it doesnt already exist
-                                                    actors_wrapper[1].findIndex(i => i._id === event.targets[target_index][0]._id) === -1 ? actors_wrapper[1].push(event.targets[target_index][0]) : console.log();
-                                                }
-                                                else if(wrapper_index == 1){
-                                                    //add the actor to the $scope.lh_actors list if it doesnt already exist
-                                                    actors_wrapper[0].findIndex(i => i._id === event.targets[target_index][0]._id) === -1 ? actors_wrapper[0].push(event.targets[target_index][0]) : console.log();
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                        main_event_object = response_1.data.eventObject; //extract main_event
+                        $scope.configure_filter(main_event_object);
                             
-                            $scope.lh_selected_actors.push(main_event_object.aggressor_object[0]);
-                            $scope.rh_selected_actors.push(extract_actor_name_array(main_event_object.targets)[0]);
-                            first_run = false;
-                        }
-                        
-                        $scope.visible_events = [];
-                        //var selected_actors_wrapper = [$scope.lh_selected_actors, $scope.rh_selected_actors];
-                        
-                        //choose which artists should be selected based on initial event
-                        for(var event_index = 0; event_index < $scope.event_chain.length; event_index++){
-
-                            //extract the current event
-                            var event = $scope.event_chain[event_index];
-
-                            for(var wrapper_index = 0; wrapper_index < selected_actors_wrapper.length; wrapper_index++){
-
-                                //extract collection (either $scope.lh_actors or $scope.rh_actors)
-                                var collection = selected_actors_wrapper[wrapper_index];
-
-                                //loop through $scope.lh_actors, if 
-                                for(var collection_index = 0; collection_index < collection.length; collection_index++){
-
-                                    //search for event aggressor in each list
-                                    if(event.aggressor == collection[collection_index]._id){
-                                        
-                                        for(var target_index = 0; target_index < event.targets.length; target_index++){
-                                        
-                                            var target = event.targets[target_index][0];
-                                            
-                                            //find opposite list index
-                                            var opposite_index = 0;
-                                            if(wrapper_index == 0){ opposite_index++;}
-                                            
-                                            if(selected_actors_wrapper[opposite_index].findIndex(i => i._id === target._id) != -1){
-                                            
-                                                //if the event.aggressor is in collection 0 built the event and add itto the event chain
-                                                if(wrapper_index == 0){
-                                                       $scope.visible_events.findIndex(i => i._id === event._id) === -1 ? $scope.visible_events.push(build_event(event, true, main_event_object, name_colour_map)) : console.log();
-                                                }
-                                                else if(wrapper_index == 1){
-                                                    $scope.visible_events.findIndex(i => i._id === event._id) === -1 ? $scope.visible_events.push(build_event(event, false, main_event_object, name_colour_map)) : console.log();
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        $scope.configure_visible_events();
                         console.log($scope.visible_events);
                     }
                     else{
                         //error msg
                         console.log("An incorrect event_id has been used. please check the url.");
                     }
-                }, 
+                },
                 function(response_2) {
                     //failed http request
                     console.log("Something went wrong, event chain could not be accessed.");
@@ -171,14 +177,18 @@ function build_event(event, lh_side, main_event, name_colour_map){
                   
     var timeline_event;
     var event_glyphicon;
+    var width = 150;
+    var side_panel_indent;
     
     if(lh_side){
         timeline_event = "";
         event_glyphicon += "glyphicon-chevron-left";
+        side_panel_indent = 0;
     }
     else{
         timeline_event = "timeline-inverted";
         event_glyphicon += "glyphicon-chevron-right";
+        side_panel_indent = 150;
     }
     
     
@@ -207,7 +217,9 @@ function build_event(event, lh_side, main_event, name_colour_map){
         timeline_event_class : timeline_event,
         glyphicon : event_glyphicon,
         border_colour : border_colour,
-        border_width : border_width
+        border_width : border_width,
+        width : width,
+        side_panel_indent : side_panel_indent
     };
 
     return record;

@@ -123,6 +123,12 @@
                     nav_visible = true;
                 }
             }
+            
+            function closeNav(){
+                document.getElementById("mySidenav").style.width = "0";
+                document.getElementById("mob_timeline_toggle_button").innerHTML = "View Timeline";
+                nav_visible = false;
+            }
 
         </script>
         
@@ -151,9 +157,9 @@
                     <div id="mySidenav" class="sidenav">
                         <a href="javascript:void(0)" style="height:15px;width:15px;" class="closebtn" onclick="toggleNav()">&times;</a>
                         <h4 style="padding:15px;"> Beef Timeline </h4>
-                        <a name="{{event.event_num}}" id="{{event.event_num}}"  ng-repeat="event in visible_events" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" style="background-color:{{event.colour}};border-width:{{event.border_width}};border-color:{{event.border_colour}};margin:5px 0px;padding:10px; display:block;height:60px;">
+                        <a name="{{event.event_num}}" id="{{event.event_num}}" onclick="closeNav()" ng-repeat="event in visible_events" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" style="background-color:{{event.colour}};border-width:{{event.border_width}};border-color:{{event.border_colour}};padding:10px; display:block;height:60px;width:{{event.width}}px;margin:5px 0px 5px {{event.side_panel_indent}}px;">
                             <h6 class="col-sm-12 event_title" style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">{{ event.title }}</h6>
-                            <p class="col-sm-12 event_title">{{ event.name }}</p>
+                            <p class="col-sm-12 event_title" style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">{{ event.name }}</p>
                         </a>
                         <div style="margin:40px;">
                             <!-- Use any element to open the sidenav -->
@@ -166,13 +172,13 @@
                         <div class="jumbotron" id="actor_filter_panel" style="display:inline-block;text-align:center;width:100%;margin:30px 0px;padding:30px;background-color:#000000">
 
                             <div class="col-sm-5" ng-app>
-                                <select multiple class="form-control" ng-change="handle_change(lh_selected_actors)" ng-model="lh_selected_actors" ng-options="lh_actor.stage_name for lh_actor in lh_actors" style="height:90px;"></select>
+                                <select multiple class="form-control" ng-change="configure_visible_events(true)" ng-model="lh_selected_actors" ng-options="lh_actor.stage_name for lh_actor in lh_actors" style="height:90px;"></select>
                             </div>
 
                             <div class="col-sm-2"><h3 class="black_font">vs</h3></div>
 
                             <div class="col-sm-5" ng-app>
-                                <select multiple class="form-control" ng-change="handle_change(rh_selected_actors)" ng-model="rh_selected_actors" ng-options="rh_actor.stage_name for rh_actor in rh_actors" style="height:90px;"></select>
+                                <select multiple class="form-control" ng-change="configure_visible_events(true)" ng-model="rh_selected_actors" ng-options="rh_actor.stage_name for rh_actor in rh_actors" style="height:90px;"></select>
                             </div>
 
                         </div>
