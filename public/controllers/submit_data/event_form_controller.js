@@ -24,7 +24,6 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     //function to request data about actors in order to present it in the form
     $scope.get_actor_data = function(){
         //request to get artists to fill aggressor and targets option inputs
-        //$http.get("/search_all_artists/").success(function(response){
         $http({
             method: 'GET',
             url: "/search_all_actors/"
