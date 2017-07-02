@@ -41,11 +41,13 @@ actor_app.controller("recentEventsController", ['$scope','$http', '$routeParams'
                                 title : event.title,
                                 aggressor : event.aggressor_object[0].stage_name,
                                 targets : event.targets,
-                                loc_img_link : event.links.mf_img_link
+                                loc_img_link : event.img_title
                             };
                         
                         $scope.events[i] = record;
                     }
+                    $scope.events = $scope.events.slice(0,4);
+                        console.log(event);
                 }, 
                 function(response_2) {
                     //failed http request

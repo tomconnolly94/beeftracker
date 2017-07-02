@@ -29,7 +29,7 @@ actor_app.controller("relatedActorsController", ['$scope','$http', '$routeParams
             for(var i = 0; i < actors.length; i++){
                 var actor = {
                     _id : actors[i]._id,
-                    loc_img_link : actors[i].links.mf_img_link,
+                    loc_img_link : actors[i].img_title,
                     stage_name : actors[i].stage_name
                 };
                 console.log(actor);

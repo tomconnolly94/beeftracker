@@ -2,7 +2,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
         
     //wait untill module has been configured before running this
     $scope.$on('$routeChangeSuccess', function() {
-        $scope.handle_change(true);
+        $scope.init_timeline(true);
     });
     
     $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
@@ -22,6 +22,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
     var actors_wrapper = [$scope.lh_actors, $scope.rh_actors];
     var selected_actors_wrapper = [$scope.lh_selected_actors, $scope.rh_selected_actors];
     
+    //function to take the events returned from the server and ascertain how the filter should be configured
     $scope.configure_filter = function(main_event_object){
         
        
@@ -64,6 +65,7 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                 
     }
     
+    //function to analyse the filter and ascertain which events should currently be visible
     $scope.configure_visible_events = function(){
         $scope.visible_events = [];
         var selected_actors_wrapper = [$scope.lh_selected_actors, $scope.rh_selected_actors];
@@ -110,8 +112,8 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
         }
     }
     
-    
-    $scope.handle_change = function(reconfig_actors){ //function created to allow recall without page reload
+    //function to request data from server and configure both the filter and the timeline
+    $scope.init_timeline = function(reconfig_actors){ 
         
         //hold onto the main agressor for checks later
         var main_aggressor;
@@ -133,16 +135,17 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                     //ensure the server returns some events
                     if(response_2.data.events != undefined){
                     
-                        //extract the event chain from the http response
-                        $scope.event_chain = response_2.data.events;
-                        //sort the events by date
-                        $scope.event_chain.sort(custom_sort);
                         
-                            
+                        $scope.event_chain = response_2.data.events;//extract the event chain from the http response
+                        
+                        $scope.event_chain.sort(custom_sort);//sort the events by date
+                        
                         main_event_object = response_1.data.eventObject; //extract main_event
-                        $scope.configure_filter(main_event_object);
+                        
+                        $scope.configure_filter(main_event_object);//run function to scan aggressors and configure the filter
                             
-                        $scope.configure_visible_events();
+                        $scope.configure_visible_events();//run function to analyse the filter and select which events should be visible
+                        
                         console.log($scope.visible_events);
                     }
                     else{
@@ -152,10 +155,15 @@ beef_app.controller('timelineController', ['$scope','$http', '$routeParams', fun
                 },
                 function(response_2) {
                     //failed http request
-                    console.log("Something went wrong, event chain could not be accessed.");
+                    console.log("Event Chain not available from server.");
                 });
             }
-        });
+        },
+        function(response_2) {
+            //failed http request
+            console.log("Main Event not available from server.");
+        }
+        );
     }
 }]);
 
