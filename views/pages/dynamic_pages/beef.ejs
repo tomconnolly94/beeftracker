@@ -1,66 +1,66 @@
 <!DOCTYPE html>
 <html ng-app='beef_app' lang='en'>
     <head>
-        
+
         <!--
         Page name: home.ejs
         Project: Beeftracker
         Author: Tom Connolly
         Date: 8/11/16
         -->
-        
+
         <title>Beeftracker</title> <!-- page tab title -->
         <meta name="description" content="Beeftracker is a brand new way to read the news, working from crowd sourced data it aims to put news events back into their context by stringing them together in a timeline. Check it out now!">
         <meta charset="utf-8"><!-- encoding version -->
         <link rel="shortcut icon" href="/logo/steak.ico"><!-- icon -->
         <meta name="viewport" content="width=device-width, initial-scale=1"><!-- tag for mobile zoom -->
-        
+
         <!-- JQuery -->
         <script src="/modules/jquery/dist/jquery.min.js"></script>
-        
+
         <!-- Font Scripts -->
-        <link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet"> 
-        <link href="https://fonts.googleapis.com/css?family=Josefin+Slab" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Josefin+Slab" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="/stylesheets/amatic_font.css" />
-        
+
         <!-- Core angular scripts -->
         <script src="/modules/angular/angular.min.js"></script>
         <script src="/modules/angular-resource/angular-resource.min.js"></script>
         <script src="/modules/angular-route/angular-route.min.js"></script>
         <script src="/modules/angular-loading-bar/build/loading-bar.min.js"></script>
         <script src="/modules/bootstrap/dist/js/bootstrap.min.js"></script>
-        
+
         <!-- Core angular css files -->
         <link rel="stylesheet" type="text/css" href="/modules/bootstrap/dist/css/bootstrap.css" media="all"/>
         <link rel="stylesheet" type="text/css" href="/modules/bootstrap/dist/css/bootstrap-theme.css" media="all"/>
         <link rel="stylesheet" type="text/css" href="/modules/angular-loading-bar/build/loading-bar.css" media="all"/>
-        
+
         <!-- Bespoke angular scripts -->
         <script src="/controllers/beef/beef_app.js"></script>
         <script src="/controllers/beef/beef_controller.js"></script>
         <script src="/controllers/beef/timeline_controller.js"></script>
         <script src="/js/beef_tracker_colour_bank.js"></script>
-        
+
         <!-- Bespoke css files -->
         <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css"/>
         <link rel="stylesheet" type="text/css" href="/stylesheets/header.css"/>
         <link rel="stylesheet" type="text/css" href="/stylesheets/beef.css"/>
         <link rel="stylesheet" type="text/css" href="/stylesheets/timeline_styles.css"/>
         <link rel="stylesheet" href="/stylesheets/event_box_styles_beef.css"/>
-        
+
         <script>
-                        
+
             //load header and footer
             $(function(){
                 $("#top_bar").load("/partials/header.ejs");
                 $("#bottom_bar").load("/partials/footer.ejs");
             });
-            
+
             //get client ip address - not in use
             /*$.getJSON('//freegeoip.net/json/?callback=?', function(data) {
                 console.log(JSON.stringify(data, null, 2));
             });*/
-            
+
             //google analytics code
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -69,24 +69,24 @@
 
             ga('create', 'UA-92664606-1', 'auto');
             ga('send', 'pageview');
-            
+
             //operations to be carried out on scroll
             $(window).scroll( function(){
                 $('#nav_wrapper .affix').width($('#nav_wrapper').width());
             });
             //operations to be carried out on window resize
-            $(window).resize( function(){ 
+            $(window).resize( function(){
                 $('#nav_wrapper .affix').width($('#nav_wrapper').width());
                 check_side_bar_affix();
             });
             // functions
-            
+
             //check if details panel should be affixed or not
             function check_side_bar_affix(){
-                
+
                 var affixElement = $("nav_fixed");
                 affixElement.width(affixElement.parent().width());
-                
+
                 if ($(window).innerWidth() <= 768){
                     //$(window).off('.affix');
                     $("#nav_fixed").removeClass("affix affix-top affix-bottom");
@@ -95,7 +95,7 @@
                     $("#nav_fixed").addClass("affix-bottom");
                 }
             }
-            
+
             check_side_bar_affix();
             /*
             // function to move the page down to the selected event. Can't find a reliable way to trigger the jump() call after angular has loaded and rendered all beef events.
@@ -105,13 +105,13 @@
                 console.log(hash);
                 console.log(document.getElementById(hash));
                 var top = document.getElementById(hash).offsetTop; //Getting Y of target element
-                window.scrollTo(0, top);  
+                window.scrollTo(0, top);
             }*/
-            
+
             var nav_visible = false;
-            
+
             function toggleNav(){
-                
+
                 if(nav_visible){
                     document.getElementById("mySidenav").style.width = "0";
                     document.getElementById("mob_timeline_toggle_button").innerHTML = "View Timeline";
@@ -123,7 +123,7 @@
                     nav_visible = true;
                 }
             }
-            
+
             function closeNav(){
                 document.getElementById("mySidenav").style.width = "0";
                 document.getElementById("mob_timeline_toggle_button").innerHTML = "View Timeline";
@@ -131,19 +131,19 @@
             }
 
         </script>
-        
+
 	</head>
 	<body id="bootstrap-overrides">
         <div class="container">
-            
+
             <!-- loading bar -->
             <div id="loading-bar-container"></div>
             <div id="header"></div>
             <div id="top_bar"></div>
-                    
+
             <!-- rest of page -->
             <div class="row" ng-cloak><!-- style="min-height:1000px;">-->
-                
+
                 <div class="row">
                     <div class="col-xs-5"></div>
                     <div class="col-fixed-2">
@@ -152,7 +152,7 @@
                     </div>
                     <div class="col-xs-5"></div>
                 </div>
-                
+
                 <div ng-controller="timelineController" style="min-height:969px;">
                     <div id="mySidenav" class="sidenav">
                         <a href="javascript:void(0)" style="height:15px;width:15px;" class="closebtn" onclick="toggleNav()">&times;</a>
@@ -168,7 +168,7 @@
                     </div>
 
                     <div class="col-sm-7 hidden-xs" style="min-height:869px;">
-                    
+
                         <div class="jumbotron" id="actor_filter_panel" style="display:inline-block;text-align:center;width:100%;margin:30px 0px;padding:30px;background-color:#000000">
 
                             <div class="col-sm-5" ng-app>
@@ -197,7 +197,7 @@
                                             <h5 class="col-sm-12 event_title">{{ event.title }}</h5>
                                         </div>
 
-                                        <div class="row event_text_img_wrapper"> 
+                                        <div class="row event_text_img_wrapper">
 
                                             <div class="timeline-body col-sm-7 event_text_container">
 
@@ -209,8 +209,8 @@
                                         </div>
                                     </a>
                                 </li>
-                            </ul>   
-                        </div> 
+                            </ul>
+                        </div>
                         <!--<div id="timeline" timeline>
                             <ul class="timeline">
                                 <li class="{{event.timeline_event_class}}" ng-repeat="event in events">
@@ -219,14 +219,14 @@
                                         <span class="{{event.glyphicon}}" style="color:#000000"></span>
                                     </div>
 
-                                    <a name="{{event.event_num}}" target="_self" id="{{event.event_num}}" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" class="selectable_event timeline-panel" style="background-color:{{event.colour}};padding:0px;border-width:{{event.border_width}};border-color:{{event.border_colour}};border-radius: 5px;">                                        
+                                    <a name="{{event.event_num}}" target="_self" id="{{event.event_num}}" ng-href="/beef/{{event.event_num}}#{{event.event_num}}" class="selectable_event timeline-panel" style="background-color:{{event.colour}};padding:0px;border-width:{{event.border_width}};border-color:{{event.border_colour}};border-radius: 5px;">
                                         <div style="padding:15px;" on-finish-render="ngRepeatFinished">
 
                                             <div class="row" style="width:100%;position:relative;">
                                                 <h5 class="col-sm-12" style="margin:5px;font-weight:bold;">{{ event.title }}</h5>
                                             </div>
 
-                                            <div class="row"> 
+                                            <div class="row">
 
                                                 <div class="timeline-body col-sm-7" style="margin:20px 0px;">
 
@@ -241,12 +241,12 @@
                                         </div>
                                     </a>
                                 </li>
-                            </ul>   
+                            </ul>
                         </div> -->
                     </div>
-                
+
                 <div class="col-sm-5" id="nav_wrapper" ng-controller="currentEventController">
-                                    
+
                     <div id="nav_fixed" data-spy="affix" data-offset-top="180" data-offset-bottom="100" class="nav nav-pills nav-stacked" style="margin:30px 0px 0px 0px;" ng-cloak style="resize:none;">
                         <div id="main_feature" class="img-circle" ng-style="{'background-image':'url(loc_img_link)', 'background-repeat': 'no-repeat'}">
                             <div id="videowrapper" class="embed-responsive embed-responsive-16by9">
@@ -258,9 +258,9 @@
                         </div>
 
                         <h2 style="margin:35px 0px 25px 0px;">{{ title }}</h2>
-                        
+
                         <hr style="margin:10px;">
-                        
+
                         <div class="a2a_kit a2a_kit_size_32 a2a_default_style row">
                             <div class="col-xs-3"></div>
                             <a class="a2a_button_facebook col-xs-2"></a>
@@ -270,9 +270,9 @@
                            <!-- <div class="col-xs-2"></div>-->
                         </div>
                         <script async src="https://static.addtoany.com/menu/page.js"></script>
-                        
+
                         <hr style="margin:10px;">
-                        
+
                         <div id="scroll_panel" style="max-height:50vh;padding:0px 10px 0px 0px;">
                             <a ng-href="/actor/{{actor_id}}" target="_self">
                                 <u><h3>{{ name }}</h3></u>
@@ -284,7 +284,7 @@
                             <h3>Description</h3>
 
                             <p>{{ description }}</p>
-                            
+
                             <!--<div class="row" style="text-align:center;padding:10px;">
                                 <div class="col-sm-1"></div>
                                 <div class="jumbotron col-sm-3" style="padding:0px;height:60%;margin:5px;"><h4 style="margin:10px;"><a ng-href="{{ spotify_link }}" target="_blank">Spotify</a></h4></div>
@@ -292,9 +292,9 @@
                                 <div class="jumbotron col-sm-3" style="padding:0px;height:60%;margin:5px;"><h4 style="margin:10px;"><a ng-href="{{ wikipedia_link }}" target="_blank">Wikipedia</a></h4></div>
                                 <div class="col-sm-1"></div>
                             </div>-->
-                            
+
                             <hr>
-                        
+
                             <div id="link_area">
                                 <div class="row" ng-repeat="triples in links">
                                     <div class="col-sm-1"></div>
@@ -307,9 +307,9 @@
 
                                 </div>
                             </div>
-                            
+
                             <hr>
-                                
+
                             <ul>
                                 <li ng-repeat="(key, highlight_group) in highlights" style="margin:0px;">
                                     <h3>{{ key }}</h3>
@@ -319,10 +319,10 @@
                                         </li>
                                     </ul>
                                     <hr>
-                        
+
                                 </li>
                             </ul>
-                                                        
+
                             <h3>Data Sources</h3>
                             <ul>
                                 <li ng-repeat="source in data_sources" style="margin:5px;">
@@ -336,7 +336,7 @@
                             <!-- unfished genius embedding, first my attempt to draw data from database, not working, i think due to html being computed way before the angular returns with the data so the blockquotes cannot transform to iframe tags
                             <ul>
                                 <li ng-repeat="lyric_item in top_lyrics">
-                            
+
                                     <blockquote class='rg_standalone_container' ng-data-src='{{ lyric_item.data_src_href }}'>
                                         <a ng-href='{{ lyric_item.href_1 }}'>
                                             {{ lyric_item.lyric }}
@@ -346,9 +346,9 @@
                                             &#8213; {{ lyric_item.title }}
                                         </a>
                                     </blockquote>
-                                    
+
                                     <script async crossorigin src='//genius.com/annotations/load_standalone_embeds.js'></script>
-                                    
+
                                 </li>
                             </ul>
 
@@ -360,34 +360,34 @@
                                 <a href='https://genius.com/Chip-duppy-riddim-lyrics'>
                                     &#8213; Chip – Duppy Riddim
                                 </a>
-                            </blockquote>                            
+                            </blockquote>
                             <script async crossorigin src='//genius.com/annotations/load_standalone_embeds.js'></script>
 
                             -->
-                                                        
+
                             <!--<div class="row">
                                 <a class="col-sm-4" href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]=https://www.facebook.com/sharer/sharer.php?u=beeftracker.herokuapp.com/beef/{{ actor_id }}" target="_blank" onclick="window.open(this.href,'targetWindow','toolbar=no,location=0,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=250'); return false" target="_self">
                                     <button style="width:100%;padding:0px; margin-top:10px;background-color:#3b5999" type="button" class="btn btn-facebook btn-lg">
-                                        <i class="fa fa-facebook fa-2"></i> 
+                                        <i class="fa fa-facebook fa-2"></i>
                                         <h6 style="max-width:100%;"> Share on FB </h6>
                                     </button>
                                 </a>
                                 <a class="twitter-share-button col-sm-4" href="https://twitter.com/intent/tweet?text=Just%20viewed%20some%20beef%20at%20beeftracker.herokuapp.com/beef/{{actor_id}}%20%23beeftracker%20%40beeftracker" target="_self">
                                     <button style="width:100%;padding:0px; margin-top:10px;background-color:#4099FF" type="button" class="btn btn-twitter btn-lg">
-                                        <i class="fa fa-twitter fa-2"></i> 
+                                        <i class="fa fa-twitter fa-2"></i>
                                         <h6 style="max-width:100%;"> Tweet </h6>
                                     </button>
                                 </a>
                                 <a class="twitter-share-button col-sm-4" href="https://plus.google.com/share?url=Just%20viewed%20some%20beef%20at%20beeftracker.herokuapp.com/beef/{{actor_id}}%20%23beeftracker" target="_self">
                                     <button style="width:100%;padding:0px; margin-top:10px;background-color:#dd4b39" type="button" class="btn btn-facebook btn-lg">
-                                        <i class="fa fa-google fa-2"></i> 
+                                        <i class="fa fa-google fa-2"></i>
                                         <h6 style="max-width:100%;"> Share on G+ </h6>
                                     </button>
                                 </a>
                             </div>-->
-                            
+
                             <!-- AddToAny BEGIN -->
-                            
+
 
 
                         </div>
@@ -396,7 +396,7 @@
             </div>
             <div id="bottom_bar"></div>
         </div>
-        
+
         <!-- Share buttons script, to edit -> www.addthis.com/dashboard -->
         <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59173f11fee5ebc6"></script>
 
