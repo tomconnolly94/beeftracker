@@ -1,21 +1,21 @@
 <html>
-    
+
     <head>
-        
+
     </head>
-    
+
     <body>
             <div class="row">
                 <div class="col-sm-12" style="background-color:#FFFFFF;text-align:center;">
                     <a href="https://tom701.typeform.com/to/fGFVKk" onclick="window.open(this.href, '','toolbar=0, location=0, directories=0, status=0, menubar=0, scrollbars=1, resizable=1, width=1024, height=768'); return false;">
-                        <h4 style="color:#000000;font-weight:bold;margin:0px;padding:5px;">When you have had a look around, please answer 10 questions to help us improve</h4>
+                        <h4 style="color:#000000;font-weight:bold;margin:0px;padding:5px;">When you have had a look around, please answer 10 quick questions to help us improve</h4>
                     </a>
                 </div>
             </div>
                     <!--<h3 style="color:#000000;font-weight:bold;">This is a limited, minimal first version of the product, have a look round and <a  href="https://www.facebook.com/Beeftracker-1360868620601624/?ref=bookmarks" style="display: inline;color:#BBBBBB">follow us on Facebook</a> to stay updated as we add lots more data!</h3>-->
                 <!--<div class="col-sm-4"></div>
             </div>-->
-        <div class="row">     
+        <div class="row">
             <div class="col-sm-4"> </div>
             <div class="col-fixed-308">
                 <a href="/" target="_self">
@@ -23,10 +23,25 @@
                         <img id="header_image" src="/logo/steak.png"><div style="display:inline;">eeftracker</div>
                     </h1>
                 </a>
-            </div>     
-            <div class="col-sm-4 row"> </div>         
+            </div>
+            <div class="col-sm-4 row"> </div>
         </div>
-        
-        <hr id="header_hr">
+
+        <div>
+            <div class="btn-group row col-xs-6" style="margin:0px;">
+                <button type="button" onclick="window.location.href = '/';" class="btn btn-default col-xs-3" style="border-radius: 0;background-color:white;">Home</button>
+                <button type="button" onclick="window.location.href = '/add_beef'" class="btn btn-default col-xs-3" style="border-radius: 0;background-color:white;">Add Beef</button>
+                <button type="button" onclick="window.location.href = '/contact'" class="btn btn-default col-xs-3" style="border-radius: 0;background-color:white;">Contact</button>
+                
+            </div>
+            <div class="row col-xs-6">
+                <div class="col-xs-5"></div>
+                <span class="col-xs-1 glyphicon glyphicon-search" style="width:40px;height:40px;padding:10px 0px 10px 10px;"></span>
+                <div  class="col-xs-5" style="padding:0px;display:inline;">
+                    <input type="text" ng-model="search_term" ng-change="submit()" style="width:100%;height:40px;font-size:16px;color:#000000" placeholder="Search for an Event..." id="search_box">
+                </div>
+            
+            </div>
+        </div>
     </body>
 </html>

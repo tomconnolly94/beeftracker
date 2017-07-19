@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "An index of arguments occuring in the music industry.",
   "engines": {
-    "node": "7.4.0"
+    "node": "7.10.0"
   },
   "main": "index.js",
   "scripts": {
