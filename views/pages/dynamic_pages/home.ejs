@@ -29,6 +29,7 @@
         <link rel="stylesheet" href="/stylesheets/house_styles.css"/>
         <link rel="stylesheet" href="/stylesheets/header.css"/>
         <link rel="stylesheet" href="/stylesheets/event_box_styles_home.css"/>
+        <link rel="stylesheet" href="/stylesheets/home/splash_zone_styles.css"/>
         
     </head>
 
@@ -36,26 +37,9 @@
         <div class="container" ng-cloak>
             <div id="loading-bar-container"></div>
             <div id="top_bar"></div>
-        
+        <!--
             <div id="search_area" ng-controller="searchController">
-    
-                <!--<div id="search_box" class="row form-group form-group-lg" style="margin:0px;">
-                    <div class="col-sm-4" style="text-align:center;">
-                        <a href="/add_beef"><h3 style="margin:15px 0px;">Add new Beef</h3></a>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="row">
-                            <span class="col-xs-1 glyphicon glyphicon-search" style="width:40px;height:40px;padding:10px 0px 10px 10px;"></span>
-                            <div  class="col-xs-10" style="padding:0px;">
-                                <input type="text" ng-model="search_term" ng-change="submit()" style="width:100%;height:40px;font-size:16px;color:#000000" placeholder="Search for an Event..." id="search_box">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4" style="text-align:center;">
-                        <a href="/add_actor"><h3 style="margin:15px 0px;">Add new Person</h3></a>
-                    </div>
-                </div>-->
-
+                    
                 <div id="search_results" class="row" style="padding:0px;">
                     <div class="col-sm-3"></div>
                     <div class="col-sm-6">
@@ -82,7 +66,7 @@
                     </div>
                     <div class="col-sm-3"></div>
                 </div>
-            </div>
+            </div>-->
             
             <hr>
                         
@@ -101,34 +85,7 @@
                 <div class="col-sm-4"></div>
             </div>-->
             
-            <!-- Carousel code
-            <div id="myCarousel" class="carousel slide" data-ride="carousel" ng-controller="eventStreamController" >
-                
-                <ol class="carousel-indicators">
-                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                    <li data-target="#myCarousel" data-slide-to="1"></li>
-                    <li data-target="#myCarousel" data-slide-to="2"></li>
-                </ol>
-
-                <div class="carousel-inner">
-                    <div class="item active">
-                        <img src="/logo/steak.png" width="100px" height="100px">
-                    </div>
-                    <div class="item" ng-repeat="event_col_1 in event_stream_events_col_1 track by $index" ng-href="/beef/{{event_col_1.eventNum}}#{{event_col_1.eventNum}}" target="_self">
-                        <img ng-src="/event_images/{{ event_col_1.img_link }}" width="100px" height="100px">
-                    </div>
-                </div>
-
-                
-                <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-                    <span class="glyphicon glyphicon-chevron-left"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="right carousel-control" href="#myCarousel" data-slide="next">
-                    <span class="glyphicon glyphicon-chevron-right"></span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </div>-->
+            <div id="splash_zone"></div>
             
             <div class="row" style="overflow:hidden;">
                 <div class="col-sm-3"></div>
@@ -161,27 +118,6 @@
                                 </div>
                             </a>
                         </li>
-                        <!--backup copy
-                        <li class="event_li_wrapper" ng-repeat="event_col_1 in event_stream_events_col_1 track by $index" style="margin:30px 0px;">        
-                            <a class="selectable_event event_anchor" ng-href="/beef/{{event_col_1.eventNum}}#{{event_col_1.eventNum}}" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;border-radius: 5px;" target="_self">
-
-                                <div class="row event_container" style="padding:5px;width:100%;margin:0px;text-align:right;">
-
-                                    <div class="col-sm-2 event_img_container" style="padding:10px;">
-                                        <img  ng-src="/event_images/{{ event_col_1.img_link }}" class="img-circle event_img" style="position:relative;margin:10px;padding:0px;float:left;" height="100" width="100">
-                                    </div>
-                                    <div class="col-sm-10 event_text_container" style="position:relative;float:right;">
-
-                                        <h4 class="event_title" style="margin:5px;font-weight:bold;"> {{ event_col_1.title }}</h4>
-
-                                        <h6 class="event_aggressor" style="margin:5px;">{{ event_col_1.name }}</h6>
-
-                                        <h6 class="event_date" style="margin:5px;">{{ event_col_1.date }}</h6>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </li>-->
                     </ul>
                 </div>
                 <div class="col-sm-4">
@@ -380,7 +316,8 @@
             //load header and footer
             $(function(){
                 $("#top_bar").load("/partials/header.ejs");
-                $("#bottom_bar").load("/partials/footer.ejs");      
+                $("#bottom_bar").load("/partials/footer.ejs");
+                $("#splash_zone").load("/partials/home/splash_zone.ejs");
             });
             
             //get client ip address - not in use

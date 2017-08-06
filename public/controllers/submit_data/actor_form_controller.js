@@ -227,10 +227,12 @@ submit_app.controller('actorFormController', ['$scope','$http', 'fileService', '
                 console.log("Upload succeeded.");
                 var url_arr = $location.absUrl().split('/');
                 
-                if(url_arr[url_arr.length-1] == "add_actor"){
+                var view_name = url_arr[url_arr.length-1].split('?')[0];
+                
+                if(view_name == "add_actor"){
                     $window.location.href = '/submission_confirmation';
                 }
-                else if(url_arr[url_arr.length-1] == "add_beef"){
+                else if(view_name == "add_beef"){
                     angular.element(document.getElementById('event_form')).scope().get_actor_data();
                     $('#myModal').modal('hide');
                 }

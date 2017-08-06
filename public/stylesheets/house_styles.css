@@ -15,10 +15,15 @@ p, h1, h2, h3, h4, h5, h6, div, a {
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
 }
+
+#top_bar {
+    background-color: rgba(0,0,0,1);
+}
+
 /* style the bootstrap container object */
 .container{
-    background-color: rgba(0,0,0,0.75);
-    background-color: rgba(0,0,0,1);
+    /*background-color: rgba(0,0,0,0.75);
+    background-color: rgba(0,0,0,1);*/
     padding:0px 40px;
     min-height:130%;
     position:relative;

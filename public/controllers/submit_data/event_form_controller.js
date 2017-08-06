@@ -20,6 +20,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     $scope.categories = [];
     $scope.datepicker = "00/00/0000";
     $scope.error_message = "";
+    var test_mode = true;
     
     //function to request data about actors in order to present it in the form
     $scope.get_actor_data = function(){
@@ -150,14 +151,13 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
         button.disabled = true;
         console.log($scope.event_form);
         
-        if($scope.event_form.$valid && ($scope.validate_input() || true)){
+        if($scope.event_form.$valid && ($scope.validate_input() || test_mode)){
 
             var form = new FormData();
             
             $scope.form_data.title = $scope.title;
             $scope.form_data.aggressor = $scope.aggressor;
             $scope.form_data.targets = $scope.targets;
-            console.log($scope.special_feature_select);
             if($scope.special_feature_select != undefined){
                 $scope.form_data.special_feature = {
                     type : JSON.parse($scope.special_feature_select).db_ref,
@@ -356,5 +356,26 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     $scope.config_special_feature();
     //$scope.add_link("Image Upload");
     $scope.add_highlight_event();
+    
+    if(test_mode){
+        //preload data from url for testing
+        var hashParams = window.location.href.split('?')[1].split('&');
+        
+        for(var i = 0; i < hashParams.length; i++){
+            var p = hashParams[i].split('=');
+
+            console.log(p[0]);
+            console.log(p[1]);
+
+            if(p[1].indexOf(',') >= 0){
+                $scope[p[0]] = p[1].split(",");
+            }
+            else{
+                $scope[p[0]] = p[1];//decodeURIComponent(p[1]);
+            }
+        }
+        console.log($scope);
+        
+    }
     
 }]);
