@@ -24,7 +24,6 @@ module.exports = {
                         as: "aggressor_object" 
                     }}]).sort({"date_added" : -1}).limit(limit).toArray(function(queryErr, docs) {
                     if(queryErr){console.log(queryErr);}
-                    console.log(docs);
                     response.send( { events : docs } );
                 });            
             }

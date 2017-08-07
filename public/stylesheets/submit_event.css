@@ -1,3 +1,8 @@
 #bootstrap-overrides label { 
-    color:#FFFFFF;
+    color:#000000;
+}
+
+hr {
+    background-color:#000000;
+    border-top-color:#000000 !important;
 }

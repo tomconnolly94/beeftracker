@@ -20,7 +20,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     $scope.categories = [];
     $scope.datepicker = "00/00/0000";
     $scope.error_message = "";
-    var test_mode = true;
+    var test_mode = false;
     
     //function to request data about actors in order to present it in the form
     $scope.get_actor_data = function(){
@@ -359,22 +359,27 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     
     if(test_mode){
         //preload data from url for testing
-        var hashParams = window.location.href.split('?')[1].split('&');
+        var hashParams = window.location.href.split('?');
         
-        for(var i = 0; i < hashParams.length; i++){
-            var p = hashParams[i].split('=');
+        if(hashParams.length > 0){
+            
+            hashParams = hashParams[1].split('&');
+        
+            for(var i = 0; i < hashParams.length; i++){
+                var p = hashParams[i].split('=');
 
-            console.log(p[0]);
-            console.log(p[1]);
+                console.log(p[0]);
+                console.log(p[1]);
 
-            if(p[1].indexOf(',') >= 0){
-                $scope[p[0]] = p[1].split(",");
+                if(p[1].indexOf(',') >= 0){
+                    $scope[p[0]] = p[1].split(",");
+                }
+                else{
+                    $scope[p[0]] = p[1];//decodeURIComponent(p[1]);
+                }
             }
-            else{
-                $scope[p[0]] = p[1];//decodeURIComponent(p[1]);
-            }
+            console.log($scope);
         }
-        console.log($scope);
         
     }
     

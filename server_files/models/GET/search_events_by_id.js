@@ -48,10 +48,7 @@ module.exports = {
                                                            ]).toArray(function(err, docs) {
                     //handle error
                     if(err) { console.log(err);}
-                    else{
-                    
-                        console.log(docs);
-                        
+                    else{    
                         db.collection(db_ref.get_current_event_table()).update({ _id: object },{$inc: {'hit_count': 0.5}}, { multi : true });
                         response.send({eventObject : docs[0]});
                     }

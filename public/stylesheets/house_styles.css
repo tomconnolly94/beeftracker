@@ -10,6 +10,7 @@ html, body {
 /* default font colour */
 p, h1, h2, h3, h4, h5, h6, div, a {
     color:#FFFFFF;
+    color:#000000;
 }
 /* css code to hide elements until page is loaded */
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
