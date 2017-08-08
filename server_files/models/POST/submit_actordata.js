@@ -115,7 +115,6 @@ module.exports = {
                         transporter.sendMail(mailOptions, function(error, info){
                             if(error){
                                 console.log(error);
-                                response.json({yo: error});
                             }else{
                                 console.log('Message sent: ' + info.response);
                                 response.json({yo: info.response});

@@ -10,7 +10,6 @@ module.exports = {
     
     execute : function(request, response) {
 
-        
         //extract data for use later
         var url = process.env.MONGODB_URI; //get db uri
         var file = request.file; //get submitted image
