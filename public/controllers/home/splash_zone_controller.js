@@ -21,20 +21,35 @@ home_app.controller('splashZoneController', ['$scope','$http', function($scope, 
         if(events_object != undefined){
 
             var events = events_object.data.events;
+                        
+            var event = events[0].resolved_event;
             
-            $scope.splash_zone_events = new Array();
+            var event_data = {
+                _id : event._id,
+                title : event.title,
+                aggressor : event.aggressor_object[0].stage_name,
+                date : event.event_date,
+                img_title : event.img_title
+            };
             
-            for(var i = 0; i > events.length;i++){
+            $scope.main_splash_zone_event = event_data;
+            events.shift();
+            
+            $scope.alt_splash_zone_events = new Array();
+            
+            for(var i = 0; i < events.length;i++){
                 
                 var event = events[i].resolved_event;
                 
                 var event_data = {
+                    _id : event._id,
                     title : event.title,
-                    aggressor : event.aggressor_object.stage_name,
-                    event_date : event.event_date
+                    aggressor : event.aggressor_object[0].stage_name,
+                    date : event.event_date,
+                    img_title : event.img_title
                 };
                 
-                $scope.splash_zone_events.push(event_data);
+                $scope.alt_splash_zone_events.push(event_data);
             }
         }
         else{

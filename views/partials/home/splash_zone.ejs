@@ -1,40 +1,31 @@
 <html>
     <head>
-    
-    
     </head>
     <body>
         
-        <div class="splash_zone row" style="height:60%;">
-            <div class="col-xs-9 image"><!-- style="height:100%;">-->
-                <img src="/event_images/attachment-1501071166865.jpeg" style="height:100%;width:100%;"/>
-                <div id="img_caption">
-                    <h4>Image Title</h4>
-                    <h4>Kung Fu Panda</h4>
-                </div>
+        <div class="splash_zone row" style="height:60%;" ng-controller="splashZoneController">
+            
+            <div class="col-xs-9 image" style="height:100%;">
+                <a ng-href="/beef/{{ main_splash_zone_event._id }}">
+                    <img id="main_image" src="/event_images/{{main_splash_zone_event.img_title}}"><!-- style="height:100%;width:50%;"/>-->
+                    <div class="img_caption">
+                        <h4 class="img_caption_text">{{main_splash_zone_event.title}}</h4>
+                        <h4 class="img_caption_text">{{main_splash_zone_event.aggressor}}</h4>
+                    </div>
+                </a>
             </div>
 
             <div class="col-xs-3">
 
-                <div class="row" style="margin-top:15px;" ng-repeat="splash_zone_event in splash_zone_events">
+                <div class="row" style="margin-bottom:15px;" ng-repeat="splash_zone_event in alt_splash_zone_events">
                     <div class="col-sm-12">
-                        <img src="/event_images/attachment-1501071166865.jpeg" style="height:100%;width:100%;"/>
-                        <div id="img_caption">
-                            <h6>{{splash_zone_event.title}}</h6>
-                            <h6>{{splash_zone_event.aggressor}}</h6>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row" style="margin-top:15px;">
-                    <div class="col-sm-12">
-                        <img src="/event_images/attachment-1501071166865.jpeg" style="height:100%;width:100%;"/>
-                    </div>
-                </div>
-
-                <div class="row" style="margin-top:15px;">
-                    <div class="col-sm-12">
-                        <img src="/event_images/attachment-1501071166865.jpeg" style="height:100%;width:100%;"/>
+                        <a ng-href="/beef/{{ splash_zone_event._id }}">
+                            <img ng-src="/event_images/{{ splash_zone_event.img_title }}" style="height:100%;width:100%;"/>
+                            <div class="img_caption">
+                                <h6 class="img_caption_text">{{splash_zone_event.title}}</h6>
+                                <h6 class="img_caption_text">{{splash_zone_event.aggressor}}</h6>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>

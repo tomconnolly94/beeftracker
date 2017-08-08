@@ -2,6 +2,7 @@
 var router = require('express').Router();
 
 router.get('/', function(request, response) { response.render('pages/dynamic_pages/home.ejs'); }); //home page
+router.get('/splash_zone_html/', function(request, response) { response.render('partials/home/splash_zone.ejs'); }); // add_actor form abstract
 router.get('/beef/:tagId', function(request, response) { response.render('pages/dynamic_pages/beef.ejs'); }); //beef page
 router.get('/actor/:tagId', function(request, response) { response.render('pages/dynamic_pages/actor.ejs'); }); //actor page
 router.get('/add_beef/', function(request, response) { response.render('pages/form_pages/submit_event.ejs'); }); // submit beefdata page page

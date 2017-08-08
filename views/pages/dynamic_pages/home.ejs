@@ -85,7 +85,7 @@
                 <div class="col-sm-4"></div>
             </div>-->
             
-            <div id="splash_zone" ng-controller="splashZoneController"></div>
+            <div splash-zone-directive></div>
             
             <div class="row" style="overflow:hidden;">
                 <div class="col-sm-3"></div>
@@ -269,6 +269,7 @@
         
         <!-- Bespoke angular scripts -->
         <script src="/controllers/home/home_app.js"></script>
+        <script src="/directives/splash_zone_directive.js"></script>
         <script src="/controllers/home/search_box_controller.js"></script>
         <script src="/controllers/home/event_stream_controller.js"></script>
         <script src="/controllers/home/hall_of_fame_controller.js"></script>
@@ -318,7 +319,6 @@
             $(function(){
                 $("#top_bar").load("/partials/header.ejs");
                 $("#bottom_bar").load("/partials/footer.ejs");
-                $("#splash_zone").load("/partials/home/splash_zone.ejs");
             });
             
             //get client ip address - not in use
