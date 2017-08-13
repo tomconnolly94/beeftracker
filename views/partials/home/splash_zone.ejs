@@ -3,19 +3,24 @@
     </head>
     <body>
         
-        <div class="splash_zone row" style="height:60%;" ng-controller="splashZoneController">
+        <div class="splash_zone row" style="height:500px;" ng-controller="splashZoneController">
             
-            <div class="col-xs-9 image" style="height:100%;">
-                <a ng-href="/beef/{{ main_splash_zone_event._id }}">
-                    <img id="main_image" src="/event_images/{{main_splash_zone_event.img_title}}"><!-- style="height:100%;width:50%;"/>-->
+            <div class="col-xs-9 image" style="height:100%;overflow: hidden;">
+                
+                <a id="main_image" ng-href="/beef/{{ main_splash_zone_event._id }}" style='background-image: url("/event_images/{{main_splash_zone_event.img_title}}")'>
+                    <!--<div class="image">
+                        <img id="main_image" src="/event_images/{{main_splash_zone_event.img_title}}">
+                    </div>-->
                     <div class="img_caption">
                         <h4 class="img_caption_text">{{main_splash_zone_event.title}}</h4>
                         <h4 class="img_caption_text">{{main_splash_zone_event.aggressor}}</h4>
                     </div>
+                    
                 </a>
+                
             </div>
 
-            <div class="col-xs-3">
+           <!-- <div class="col-xs-3" style="height:100%;">
 
                 <div class="row" style="margin-bottom:15px;" ng-repeat="splash_zone_event in alt_splash_zone_events">
                     <div class="col-sm-12">
@@ -28,7 +33,7 @@
                         </a>
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
 
     </body>

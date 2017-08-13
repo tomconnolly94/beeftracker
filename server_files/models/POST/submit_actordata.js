@@ -89,7 +89,7 @@ module.exports = {
 
                     if(document != null && document.ops != null){
 
-                        insert_object._id = document.ops[0]._id;
+                        //insert_object._id = document.ops[0]._id;
 
                         var text = JSON.stringify(insert_object, null, 2); //convert form data to json string form for emailing
 

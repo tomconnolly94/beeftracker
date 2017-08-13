@@ -1,4 +1,4 @@
-var readline = require('readline-sync');
+//var readline = require('readline-sync');
 var MongoClient = require('mongodb').MongoClient;
 var BSON = require('bson');
 var bodyParser = require('body-parser');
@@ -10,7 +10,7 @@ MongoClient.connect(url, function(err, db) {
     if(err){ console.log(err); }
     else{
         //standard query to match an event and resolve aggressor and targets references
-        db.collection("event_data_v0_3").find().forEach(function(doc) {
+        db.collection("actor_data_v0_3").find().forEach(function(doc) {
             
             
             /*if(doc.links.mf_video_link != undefined){
@@ -21,17 +21,17 @@ MongoClient.connect(url, function(err, db) {
                 
             }*/
             
-            //db.collection("event_data_v0_3").update({_id : doc._id}, { $set : { img_title : doc.links.mf_img_link }
+            //db.collection("actor_data_v0_3").update({_id : doc._id}, { $set : { img_title : doc.links.mf_img_link }
             //                                                          });
                 
             
-            db.collection("event_data_v0_3").update({_id : doc._id}, { $unset : { "mf_img_link" : 1}}, {multi:true}
+            db.collection("event_data_v0_3").update({_id : doc._id}, { $unset : { "links.mf_img_link" : 1}}, {multi:true}
                                                                       );
             
             
             console.log(doc);
             
-            process.exit(0);
+            //process.exit(0);
         });
     }
 });

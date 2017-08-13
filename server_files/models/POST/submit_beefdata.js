@@ -96,7 +96,7 @@ module.exports = {
             "targets" : targets_formatted,
             "description" : submission_data.description,
             "date_added" : new Date(),
-            "event_date" : new Date(date[2],date[1]-1,date[0]),
+            "event_date" : new Date(date[2],date[1]-1,date[0]+1),
             "highlights" : highlights_formatted,
             "data_sources" : data_sources_formatted,
             "links" : links_formatted,

@@ -6,6 +6,10 @@
     margin-right:15px;
     padding:0px 10px;
     max-width:100%;
+    object-fit: scale-down; /* Do not scale the image */
+  object-position: center; /* Center the image within the element */
+  /*width: 100%;*/
+  max-height: 100%;
 }
 
 .img_caption_text{
@@ -14,7 +18,13 @@
 
 #main_image{
   object-fit: cover; /* Do not scale the image */
-  /*object-position: center;*/ /* Center the image within the element */
+  object-position: center; /* Center the image within the element */
   /*width: 100%;*/
-  max-height: 100%;
+  /*max-height: 100%;*/
+}
+
+.image {
+  float: left;
+  margin: 0 30px 20px 0;
+  
 }
