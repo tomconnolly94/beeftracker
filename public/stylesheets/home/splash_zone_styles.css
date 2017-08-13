@@ -1,30 +1,98 @@
+#splash_zone{
+    margin:50px 0px;
+}
+
+
 .img_caption { 
     position: absolute; 
     bottom:0px;
-    right: 0px; 
+    right: -15px; 
     background-color: rgba(0,0,0,0.75);
-    margin-right:15px;
+    margin-right:30px;
     padding:0px 10px;
     max-width:100%;
-    object-fit: scale-down; /* Do not scale the image */
-  object-position: center; /* Center the image within the element */
-  /*width: 100%;*/
-  max-height: 100%;
+    max-height: 100%;
+    font-size:10em;
 }
 
 .img_caption_text{
     color:#FFFFFF;
 }
 
-#main_image{
-  object-fit: cover; /* Do not scale the image */
-  object-position: center; /* Center the image within the element */
-  /*width: 100%;*/
-  /*max-height: 100%;*/
-}
-
 .image {
   float: left;
   margin: 0 30px 20px 0;
   
+}
+
+#main_image_container{
+    height:100%;
+    background-size:100% 100%;
+    object-fit:cover;
+    background-origin: content-box;
+    background-repeat:no-repeat;
+}
+
+.alt_image_container_1{
+    height:33.333%; /*
+    padding-top:15px;
+    padding-bottom:15px;*/
+}
+
+.alt_image_container_2{
+    height:100%;
+    /*margin:0px 15px;*/
+    background-size:100% 100%;
+    object-fit:cover;
+    background-origin: content-box;
+    background-repeat:no-repeat;
+}
+
+.alt_images_container{
+    height:100%;
+    background-size:100% 100%;
+    object-fit:cover;
+    background-origin: content-box;
+    background-repeat:no-repeat;
+    /*margin:15px 0px;*/
+}
+
+/*handle spacing between alt_images */
+div.alt_image_container_1:nth-child(1) {
+    padding-bottom:7px;
+}
+
+div.alt_image_container_1:nth-child(2) {
+    padding:7px 0px;
+}
+
+div.alt_image_container_1:nth-child(3) {
+    padding-top:7px;
+}
+
+/*handle image resizing */
+@media (max-width: 425px) {
+    #splash_zone{
+        height:200px;
+    }
+}
+@media (min-width: 425px) {
+    #splash_zone{
+        height:275px;
+    }
+}
+@media (min-width: 600px) {
+    #splash_zone{
+        height:350px;
+    }
+}
+@media (min-width: 768px) {
+    #splash_zone{
+        height:425px;
+    }
+}
+@media (min-width: 768px) {
+    #splash_zone{
+        height:500px;
+    }
 }

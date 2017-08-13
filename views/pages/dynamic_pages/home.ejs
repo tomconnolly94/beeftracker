@@ -30,6 +30,7 @@
         <link rel="stylesheet" href="/stylesheets/header.css"/>
         <link rel="stylesheet" href="/stylesheets/event_box_styles_home.css"/>
         <link rel="stylesheet" href="/stylesheets/home/splash_zone_styles.css"/>
+        <link rel="stylesheet" href="/stylesheets/home/top_events_styles.css"/>
         
     </head>
 
@@ -87,172 +88,7 @@
             
             <div splash-zone-directive></div>
             
-            <div class="row" style="overflow:hidden;">
-                <div class="col-sm-3"></div>
-                <div class="col-sm-6">
-                    <h2 style="text-align:center;font-weight:bold;">Recently Added Events:</h2>
-                </div>
-                <div class="col-sm-3"></div>
-            </div>
-            
-            <div class="column_container" class="row" ng-controller="eventStreamController" style="overflow:hidden;">
-                <div class="col-sm-4">
-                    <ul>
-                        <li class="event_li_wrapper" ng-repeat="event_col_1 in event_stream_events_col_1 track by $index" style="background-image: url(/event_images/{{ event_col_1.img_link }});">        
-                            <a class="selectable_event event_anchor" ng-href="/beef/{{event_col_1.eventNum}}#{{event_col_1.eventNum}}" target="_self">
-
-                                <div class="row event_container">
-
-                                    <div class="col-sm-2 event_img_container">
-                                        <img ng-src="/event_images/{{ event_col_1.img_link }}" class="img-circle event_img" height="100" width="100">
-                                    </div>
-                                    <div class="col-sm-10 event_text_container">
-
-                                        <h4 class="event_title"> {{ event_col_1.title }}</h4>
-
-                                        <h6 class="event_aggressor" style="margin:5px;">{{ event_col_1.name }}</h6>
-
-                                        <h6 class="event_date" style="margin:5px;">{{ event_col_1.date }}</h6>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-sm-4">
-                    <ul>
-                        <li ng-repeat="event_col_2 in event_stream_events_col_2 track by $index" class="event_li_wrapper">        
-                            <a ng-href="/beef/{{event_col_2.eventNum}}#{{event_col_2.eventNum}}" class="selectable_event event_anchor" target="_self">
-
-                                <div class="row event_container">
-
-                                    <div class="col-sm-2 event_img_container">
-                                        <img  ng-src="/event_images/{{ event_col_2.img_link }}" class="img-circle event_img" height="100" width="100">
-                                    </div>
-                                    <div class="col-sm-10 event_text_container">
-
-                                        <h4 class="event_title"> {{ event_col_2.title }}</h4>
-
-                                        <h6 class="event_aggressor">{{ event_col_2.name }}</h6>
-
-                                        <h6 class="event_date">{{ event_col_2.date }}</h6>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-sm-4">
-                     <ul>
-                        <li ng-repeat="event_col_3 in event_stream_events_col_3 track by $index" class="event_li_wrapper">        
-                            <a ng-href="/beef/{{event_col_3.eventNum}}#{{event_col_3.eventNum}}" class="selectable_event event_anchor" target="_self">
-
-                                <div class="row event_container">
-
-                                    <div class="col-sm-2 event_img_container">
-                                        <img  ng-src="/event_images/{{ event_col_3.img_link }}" class="img-circle event_img" height="100" width="100">
-                                    </div>
-                                    <div class="col-sm-10 event_text_container">
-
-                                        <h4 class="event_title"> {{ event_col_3.title }}</h4>
-
-                                        <h6 class="event_aggressor">{{ event_col_3.name }}</h6>
-
-                                        <h6 class="event_date">{{ event_col_3.date }}</h6>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            
-            
-            <div class="row" style="overflow:hidden;display:block;">
-                <div class="col-sm-3"></div>
-                <div class="col-sm-6">
-                    <h2 style="text-align:center;font-weight:bold;">Hall of Fame:</h2>
-                </div>
-                <div class="col-sm-3"></div>
-            </div>
-            
-            <div class="column_container" class="row" ng-controller="hofController">
-                <div class="col-sm-4">
-                    <ul>
-                        <li ng-repeat="event_col_1 in event_stream_events_col_1 track by $index" style="margin:30px 0px;">        
-                            <a ng-href="/beef/{{event_col_1.eventNum}}#{{event_col_1.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;border-radius: 5px;" target="_self">
-
-                                <div class="row" style="padding:5px;width:100%;margin:0px;text-align:right;">
-
-                                    <div class="col-sm-2" style="padding:10px;">
-                                        <img  ng-src="/event_images/{{ event_col_1.img_link }}" class="img-circle" style="position:relative;margin:10px;padding:0px;float:left;" height="100" width="100">
-                                    </div>
-                                    <div class="col-sm-10" style="position:relative;float:right;">
-
-                                        <h4 style="margin:5px;font-weight:bold;"> {{ event_col_1.title }}</h4>
-
-                                        <h6 style="margin:5px;">{{ event_col_1.name }}</h6>
-
-                                        <h6 style="margin:5px;">{{ event_col_1.date }}</h6>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-sm-4">
-                    <ul>
-                        <li ng-repeat="event_col_2 in event_stream_events_col_2 track by $index" style="margin:30px 0px;">        
-                            <a ng-href="/beef/{{event_col_2.eventNum}}#{{event_col_2.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;border-radius: 5px;" target="_self">
-
-                                <div class="row" style="padding:5px;width:100%;margin:0px;text-align:right;">
-
-                                    <div class="col-sm-2" style="padding:10px;">
-                                        <img  ng-src="/event_images/{{ event_col_2.img_link }}" class="img-circle" style="position:relative;margin:10px;padding:0px;float:left;" height="100" width="100">
-                                    </div>
-                                    <div class="col-sm-10" style="position:relative;float:right;">
-
-                                        <h4 style="margin:5px;font-weight:bold;"> {{ event_col_2.title }}</h4>
-
-                                        <h6 style="margin:5px;">{{ event_col_2.name }}</h6>
-
-                                        <h6 style="margin:5px;">{{ event_col_2.date }}</h6>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-sm-4">
-                     <ul>
-                        <li ng-repeat="event_col_3 in event_stream_events_col_3 track by $index" style="margin:30px 0px;">        
-                            <a ng-href="/beef/{{event_col_3.eventNum}}#{{event_col_3.eventNum}}" class="selectable_event" style="min-height:120px;background-color:#9C0505;font-weight:bold;padding:0px;border-color:#000000;border-width:10px;border-radius: 5px;" target="_self">
-
-                                <div class="row" style="padding:15px;width:100%;margin:0px;text-align:right;">
-
-                                    <div class="col-sm-2" style="padding:10px;">
-                                        <img  ng-src="/event_images/{{ event_col_3.img_link }}" class="img-circle" style="position:relative;margin:0px;padding:0px;float:left;" height="100" width="100">
-                                    </div>
-                                    <div class="col-sm-10" style="position:relative;float:right;">
-
-                                        <h4 style="margin:5px;font-weight:bold;"> {{ event_col_3.title }}</h4>
-
-                                        <h6 style="margin:5px;">{{ event_col_3.name }}</h6>
-
-                                        <h6 style="margin:5px;">{{ event_col_3.date }}</h6>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+            <div top-events-directive></div>
             
             <div id="bottom_bar" class="row" style="margin:50px 0px;overflow:hidden;"></div>
         </div>
@@ -269,12 +105,15 @@
         
         <!-- Bespoke angular scripts -->
         <script src="/controllers/home/home_app.js"></script>
-        <script src="/directives/splash_zone_directive.js"></script>
         <script src="/controllers/home/search_box_controller.js"></script>
         <script src="/controllers/home/event_stream_controller.js"></script>
         <script src="/controllers/home/hall_of_fame_controller.js"></script>
         <script src="/controllers/home/splash_zone_controller.js"></script>
+        <script src="/controllers/home/top_events_controller.js"></script>
         <script src="/js/beef_tracker_colour_bank.js"></script>
+        
+        <script src="/directives/home/splash_zone_directive.js"></script>
+        <script src="/directives/home/top_events_directive.js"></script>
         
         <script>
             //script loading, abandoned due to time constrictions, could not make dependencies load in order reliably, sometimes would be fine, sometimes controllers could not be found

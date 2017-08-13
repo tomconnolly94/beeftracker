@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
-//  File: splash_zone_controller.js
+//  File: event_stream_controller.js
 //  Project: beeftracker
 //  Contributors: Tom Connolly
 //  Description: Sends a HTTP request to the node server to extract data from the
@@ -10,48 +10,38 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-home_app.controller('splashZoneController', ['$scope','$http', function($scope, $http) {
-
+home_app.controller('topEventsController', ['$scope','$http', function($scope, $http) {
+        
+    //number of recent events to be displayed make sure its a multiple of three for symmetry
+    var result_limit = 10;
+    
     //$http.get("/search_recent_events/" + result_limit).success(function(events_object){
     $http({
         method: 'GET',
-        url: "/get_splash_zone_data/"
+        url: "/search_popular_events/" + result_limit
     }).then(function(events_object){
         //validate the url tagId to make sure the event exists                
         if(events_object != undefined){
 
             var events = events_object.data.events;
-                        
-            var event = events[0].resolved_event;
             
-            var event_data = {
-                _id : event._id,
-                title : event.title,
-                aggressor : event.aggressor_object[0].stage_name,
-                date : event.event_date,
-                img_title : event.img_title
-            };
+            console.log(events);
             
-            $scope.main_splash_zone_event = event_data;
-            events.shift();
+            $scope.events = new Array();
             
-            $scope.alt_splash_zone_events = new Array();
-            
-            for(var i = 0; i < events.length;i++){
+            for(var i = 0; i < events.length; i++){
                 
-                var event = events[i].resolved_event;
-                var middle_image_class = "";
-                                
-                var event_data = {
-                    _id : event._id,
+                event = events[i]
+                
+                $scope.events[i] = {
+                    id : i + 1,
                     title : event.title,
                     aggressor : event.aggressor_object[0].stage_name,
-                    date : event.event_date,
                     img_title : event.img_title
-                };
+                }
                 
-                $scope.alt_splash_zone_events.push(event_data);
             }
+            
         }
         else{
             //error msg
@@ -60,6 +50,6 @@ home_app.controller('splashZoneController', ['$scope','$http', function($scope, 
     }, 
     function(response) {
         //failed http request
-        console.log("Error in HTTP request in search_controller.js:splashZoneController");
+        console.log("Error in HTTP request in search_controller.js:searchController");
     });
 }]);

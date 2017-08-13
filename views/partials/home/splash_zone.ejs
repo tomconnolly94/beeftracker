@@ -3,37 +3,37 @@
     </head>
     <body>
         
-        <div class="splash_zone row" style="height:500px;" ng-controller="splashZoneController">
+        <div id="splash_zone" class="row" ng-controller="splashZoneController">
             
-            <div class="col-xs-9 image" style="height:100%;overflow: hidden;">
+            <div id="main_image_container" class="col-xs-9" style='background-image: url("/event_images/{{main_splash_zone_event.img_title}}")'>
                 
-                <a id="main_image" ng-href="/beef/{{ main_splash_zone_event._id }}" style='background-image: url("/event_images/{{main_splash_zone_event.img_title}}")'>
+                <a ng-href="/beef/{{ main_splash_zone_event._id }}">
                     <!--<div class="image">
                         <img id="main_image" src="/event_images/{{main_splash_zone_event.img_title}}">
                     </div>-->
                     <div class="img_caption">
                         <h4 class="img_caption_text">{{main_splash_zone_event.title}}</h4>
-                        <h4 class="img_caption_text">{{main_splash_zone_event.aggressor}}</h4>
+                        <h6 class="img_caption_text">{{main_splash_zone_event.aggressor}}</h6>
                     </div>
                     
                 </a>
                 
             </div>
 
-           <!-- <div class="col-xs-3" style="height:100%;">
+            <div id="alt_images_container" class="col-xs-3" style="height:100%;">
 
-                <div class="row" style="margin-bottom:15px;" ng-repeat="splash_zone_event in alt_splash_zone_events">
-                    <div class="col-sm-12">
+                <div class="row alt_image_container_1" ng-class="{{splash_zone_event.middle_image_class}}" ng-repeat="splash_zone_event in alt_splash_zone_events">
+                    <div class="col-sm-12 alt_image_container_2" style='background-image: url("/event_images/{{splash_zone_event.img_title}}")'>
                         <a ng-href="/beef/{{ splash_zone_event._id }}">
-                            <img ng-src="/event_images/{{ splash_zone_event.img_title }}" style="height:100%;width:100%;"/>
+                            <!--<img ng-src="/event_images/{{ splash_zone_event.img_title }}" style="height:100%;width:100%;"/>-->
                             <div class="img_caption">
                                 <h6 class="img_caption_text">{{splash_zone_event.title}}</h6>
-                                <h6 class="img_caption_text">{{splash_zone_event.aggressor}}</h6>
+                                <p class="img_caption_text">{{splash_zone_event.aggressor}}</p>
                             </div>
                         </a>
                     </div>
                 </div>
-            </div>-->
+            </div>
         </div>
 
     </body>
