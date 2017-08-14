@@ -5,23 +5,48 @@
         
         <div id="top_events_zone" class="row" ng-controller="topEventsController">
             
-            <div id="top_events_container" class="col-xs-12" style="height:100%;">
-
-                <div class="row top_event_container_1" ng-class="{{splash_zone_event.middle_image_class}}" ng-repeat="event in events">
-                    
-                    <div class="col-sm-12 top_event_container_2" style='background-image: url("/event_images/{{event.img_title}}")'>
-                        
-                        <a ng-href="/beef/{{ event._id }}">
-                            <!--<img ng-src="/event_images/{{ splash_zone_event.img_title }}" style="height:100%;width:100%;"/>-->
-                            <div class="img_caption">
-                                <h6 class="img_caption_text">{{event.title}}</h6>
-                                <p class="img_caption_text">{{event.aggressor}}</p>
-                            </div>
-                        </a>
-                        
-                    </div>
-                    
+            <hr style="height:5px;">
+            
+            <div id="top_events_title_area" class="row">
+            
+                <div class="col-sm-1"></div>
+                <div class="col-sm-4">
+                    <h3><b>Top Events</b></h3>
                 </div>
+            
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div id="top_events_container" class="col-sm-10">
+
+                    <div class="row top_event_container_1" ng-class="{{splash_zone_event.middle_image_class}}" ng-repeat="event in events">
+                        <hr>
+
+                            <a class="row" ng-href="/beef/{{ event._id }}">
+
+                                <div id="index_container" class="col-sm-1">
+                                    <h3>{{$index}}</h3>
+                                </div>
+
+                                <div class="col-sm-8 row">
+                                    <div class="col-sm-7">
+                                        <h4 class="">{{event.title}}</h4>
+                                        <h5 class="">{{event.aggressor}}</h5>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <h4>{{event.date}}</h4>
+                                    </div>
+                                </div>
+                                <div  class="col-sm-1" ></div>
+                                <div  class="col-sm-2" style="height:80%;">
+                                    <img ng-src="/event_images/{{ event.img_title }}" style="height:100%;width:100%;"/>
+                                </div>
+                            </a>
+
+                    </div>
+                </div>
+                <div class="col-sm-1"></div>
             </div>
         </div>
     </body>
