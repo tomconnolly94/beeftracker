@@ -1,7 +1,7 @@
 
 .top_event_container_1{
-    height:120px; 
-    padding-top:15px;
+    /*height:120px;*/ 
+    /*padding-top:15px;*/
     /*padding-bottom:15px;*/
 }
 
@@ -25,10 +25,6 @@
 
 h3, h4, h5{
     color: #000000;
-}
-
-hr{
-    background-color:#000000;
 }
 
 /*handle zone resizing */

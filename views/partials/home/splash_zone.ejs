@@ -5,6 +5,16 @@
         
         <div id="splash_zone" class="row" ng-controller="splashZoneController">
             
+            <hr class="divider_hr">
+            
+            <div id="splash_zone_title_area" class="row">
+            
+                <div class="col-sm-4">
+                    <h5><b>Featured</b></h5>
+                </div>
+            
+            </div>
+            
             <div id="main_image_container" class="col-xs-9" style='background-image: url("/event_images/{{main_splash_zone_event.img_title}}")'>
                 
                 <a ng-href="/beef/{{ main_splash_zone_event._id }}">
@@ -20,7 +30,7 @@
                 
             </div>
 
-            <div id="alt_images_container" class="col-xs-3" style="height:100%;">
+            <div id="alt_images_container" class="col-xs-3">
 
                 <div class="row alt_image_container_1" ng-class="{{splash_zone_event.middle_image_class}}" ng-repeat="splash_zone_event in alt_splash_zone_events">
                     <div class="col-sm-12 alt_image_container_2" style='background-image: url("/event_images/{{splash_zone_event.img_title}}")'>

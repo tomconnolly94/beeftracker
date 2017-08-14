@@ -1,7 +1,6 @@
 #splash_zone{
-    margin:50px 0px;
+    margin:20px 0px;
 }
-
 
 .img_caption { 
     position: absolute; 
@@ -26,11 +25,15 @@
 }
 
 #main_image_container{
-    height:100%;
+    height:90%;
     background-size:100% 100%;
     object-fit:cover;
     background-origin: content-box;
     background-repeat:no-repeat;
+}
+
+#alt_images_container{
+    height:90%;
 }
 
 .alt_image_container_1{
@@ -48,14 +51,15 @@
     background-repeat:no-repeat;
 }
 
-.alt_images_container{
-    height:100%;
+/*.alt_images_container{
+    height:90%;
     background-size:100% 100%;
     object-fit:cover;
     background-origin: content-box;
     background-repeat:no-repeat;
-    /*margin:15px 0px;*/
-}
+    margin:15px 0px;
+}*/
+
 
 /*handle spacing between alt_images */
 div.alt_image_container_1:nth-child(1) {
