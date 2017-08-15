@@ -77,26 +77,26 @@ div.alt_image_container_1:nth-child(3) {
 /*handle image resizing */
 @media (max-width: 425px) {
     #splash_zone{
-        height:200px;
+        height:240px;
     }
 }
 @media (min-width: 425px) {
     #splash_zone{
-        height:275px;
+        height:315px;
     }
 }
 @media (min-width: 600px) {
     #splash_zone{
-        height:350px;
+        height:390px;
     }
 }
 @media (min-width: 768px) {
     #splash_zone{
-        height:425px;
+        height:465px;
     }
 }
 @media (min-width: 768px) {
     #splash_zone{
-        height:500px;
+        height:550px;
     }
 }
