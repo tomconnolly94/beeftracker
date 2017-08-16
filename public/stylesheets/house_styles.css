@@ -61,7 +61,7 @@ a{
     font-weight:bold;
 }
 #bootstrap-overrides h4{
-    font-size:24px;
+    font-size:22px;
 }
 #bootstrap-overrides h5{
     font-size:16px;
@@ -135,9 +135,9 @@ a{
     margin:0px;
 }
 /* unvisited link */
-/*a:link {
-    color: #FFFFFF;
-}*/
+a:link {
+    color: #000000;
+}
 /* visited link */
 a:visited {
     color: #CCCCCC;
@@ -187,4 +187,5 @@ hr {
 .divider_hr{
     background-color:#000000;
     height:5px;
+    margin-bottom:3px;
 }
