@@ -22,5 +22,9 @@ module.exports = {
     
     get_splash_zone_table: function(){
         return "splash_zone_refs";
+    },
+    
+    get_scraped_events_dump: function(){
+        return "scraped_training_events_dump_v0_1";
     }
 }

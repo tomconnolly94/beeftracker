@@ -15,6 +15,7 @@ router.get('/contact_us/', function(request, response) { response.render('pages/
 router.get('/about/', function(request, response) { response.render('pages/static_pages/about_us.ejs'); }); // about_us page
 router.get('/submission_confirmation/', function(request, response) { response.render('pages/static_pages/submit_conf.ejs'); }); // about_us page
 router.get('/terms_of_use/', function(request, response) { response.render('pages/static_pages/terms_of_use.ejs'); }); // about_us page
+router.get('/scraping_dump/', function(request, response) { response.render('pages/admin_pages/scraping_dump_viewer.ejs'); }); // about_us page
 router.get('/sitemap', function(req, res) {
     sitemap.toXML( function (err, xml) {
         if (err) {
