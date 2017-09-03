@@ -100,3 +100,15 @@ div.alt_image_container_1:nth-child(3) {
         height:550px;
     }
 }
+
+.image{
+   /* -webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));*/
+    margin:0px;
+    background: -owg-linear-gradient(to bottom,rgba(0,0,0,.2) 0,#000 100%);
+    background: -webkit-linear-gradient(to bottom,rgba(0,0,0,.2) 0,#000 100%);
+    background: -moz-linear-gradient(to bottom,rgba(0,0,0,.2) 0,#000 100%);
+    background: -o-linear-gradient(to bottom,rgba(0,0,0,.2) 0,#000 100%);
+    background: linear-gradient(to bottom,rgba(0,0,0,.2) 0,#000 100%);
+    
+    content: '';
+}

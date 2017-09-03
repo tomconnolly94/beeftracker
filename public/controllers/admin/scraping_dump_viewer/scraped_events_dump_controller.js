@@ -18,7 +18,10 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             method: 'GET',
             url: "/get_scraped_events_dump/"
         }).then(function(response_1){
-            console.log(response_1);
+            console.log(response_1.data.events);
+            
+            $scope.events = response_1.data.events;
+            
         
         }, 
         function(response_1) {
