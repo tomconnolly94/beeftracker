@@ -1,3 +1,7 @@
+#top_events_zone{
+    margin:20px 0px;
+}
+
 .top_event_container_1{
     /*height:120px;*/ 
     /*padding-top:15px;*/
@@ -20,6 +24,10 @@
     background-origin: content-box;
     background-repeat:no-repeat;
     /*margin:15px 0px;*/
+}
+
+#alt_images_container{
+    margin:0px 0px 0px 30px;
 }
 
 h3, h4, h5{

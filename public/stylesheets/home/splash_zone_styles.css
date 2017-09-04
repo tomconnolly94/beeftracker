@@ -30,6 +30,7 @@
     object-fit:cover;
     background-origin: content-box;
     background-repeat:no-repeat;
+    margin:0px -15px;
 }
 
 #alt_images_container{
