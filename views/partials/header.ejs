@@ -50,16 +50,16 @@
                         <li id="button_3"><a href="/contact_us" target="_self"><b>Contact</b></a></li>
                     </ul>
                 
-                    <form class="navbar-form navbar-right">
+                    <div class="navbar-form navbar-right" ng-controller="searchController">
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Search">
                             <div class="input-group-btn">
-                                <button class="btn btn-default" type="submit" style="height:34px;">
+                                <button class="btn btn-default" type="submit" ng-click="submit()" style="height:34px;">
                                 <i class="glyphicon glyphicon-search"></i>
                                 </button>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </nav>

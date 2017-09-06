@@ -17,7 +17,7 @@
             
             <div id="main_image_container" class="col-xs-9 image" style='background-image: url("/event_images/{{main_splash_zone_event.img_title}}")'>
                 
-                <a ng-href="/beef/{{ main_splash_zone_event._id }}">
+                <a class="image_anchor" ng-href="/beef/{{ main_splash_zone_event._id }}">
                     <!--<div class="image">
                         <img id="main_image" src="/event_images/{{main_splash_zone_event.img_title}}">
                     </div>-->
@@ -34,7 +34,7 @@
 
                 <div class="row alt_image_container_1" ng-class="{{splash_zone_event.middle_image_class}}" ng-repeat="splash_zone_event in alt_splash_zone_events">
                     <div class="col-xs-12 alt_image_container_2 image" style='background-image: url("/event_images/{{splash_zone_event.img_title}}");background-size: 100% 100%;'>
-                        <a ng-href="/beef/{{ splash_zone_event._id }}">
+                        <a class="image_anchor" ng-href="/beef/{{ splash_zone_event._id }}">
                             <!--<img ng-src="/event_images/{{ splash_zone_event.img_title }}" style="height:100%;width:100%;"/>-->
                             <div class="img_caption">
                                 <h6 class="img_caption_text">{{splash_zone_event.title}}</h6>
