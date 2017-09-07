@@ -1,6 +1,6 @@
 {
   "name": "beeftracker",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "An index of arguments occuring in the music industry.",
   "engines": {
     "node": "7.10.0"

@@ -35,3 +35,13 @@ list_app.directive('headerDirective', function($compile, $http){
         }
     }
 });
+
+list_app.directive('footerDirective', function($compile, $http){
+    return {
+        link: function(scope, element, attrs) {
+            $http.get('/footer_html').then(function (result) {
+                element.replaceWith($compile(result.data)(scope));
+            });
+        }
+    }
+});

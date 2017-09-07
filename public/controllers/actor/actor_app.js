@@ -43,3 +43,13 @@ actor_app.directive('headerDirective', function($compile, $http){
         }
     }
 });
+
+actor_app.directive('footerDirective', function($compile, $http){
+    return {
+        link: function(scope, element, attrs) {
+            $http.get('/footer_html').then(function (result) {
+                element.replaceWith($compile(result.data)(scope));
+            });
+        }
+    }
+});

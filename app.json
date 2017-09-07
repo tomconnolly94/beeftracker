@@ -1,8 +1,8 @@
 {
-  "name": "Start on Heroku: Node.js",
-  "description": "A barebones Node.js app using Express 4",
-  "repository": "https://github.com/heroku/node-js-getting-started",
-  "logo": "http://node-js-sample.herokuapp.com/node.svg",
+  "name": "Beeftracker",
+  "description": "Beeftracker website project. A news media site based around conflict.",
+  "repository": "https://github.com/heroku/bf-dev.git,
+  "logo": "public/assets/images/logo/v2/beeftracker_new_logo_cropped_small.ico",
   "keywords": ["node", "express", "static"],
-  "image": "heroku/nodejs"
+  "image": "public/assets/images/logo/v2/beeftracker_new_logo_cropped.png"
 }

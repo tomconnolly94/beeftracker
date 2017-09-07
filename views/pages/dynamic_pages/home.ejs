@@ -91,7 +91,8 @@
             
             <div top-events-directive></div>
             
-            <div id="bottom_bar" class="row" style="margin:50px 0px;overflow:hidden;"></div>
+            <!--<div id="bottom_bar" class="row" style="margin:50px 0px;overflow:hidden;"></div>-->
+            <div footer-directive></div>
         </div>
         
         <!-- JQuery -->
@@ -117,55 +118,6 @@
         <script src="/directives/home/top_events_directive.js"></script>
         
         <script>
-            //script loading, abandoned due to time constrictions, could not make dependencies load in order reliably, sometimes would be fine, sometimes controllers could not be found
-            /*
-            //client css dependencies
-            var js_files = [
-                "/modules/angular/angular.min.js", //load angular
-                "/modules/angular-resource/angular-resource.min.js", //load angular-resource
-                "/modules/angular-route/angular-route.min.js", //load angular-route
-                "/modules/angular-loading-Bar/build/loading-bar.min.js", //load angular loading bar
-                "/modules/bootstrap/dist/js/bootstrap.min.js", //load bootstrap
-                
-                //load bespoke angular files
-                "/controllers/home/home_app.js",
-                "/controllers/home/search_box_controller.js",
-                "/controllers/home/event_stream_controller.js",
-                "/js/beef_tracker_colour_bank.js"
-            ];
-            
-            //loop through css_files creating link tags and appending to the <head>
-            for(var i = 0; i < js_files.length; i++){
-                loadJSFile(js_files[i]); //function to load css file held in /public/javascript
-            }
-            
-            //client css dependencies
-            var css_files = [
-                "/modules/angular-loading-bar/build/loading-bar.min.css", //angular loading bar
-                "/modules/bootstrap/dist/css/bootstrap.min.css", //bootstrap
-                "/modules/bootstrap/dist/css/bootstrap-theme.min.css", //bootstrap-theme
-                
-                //load bespoke css files
-                "/stylesheets/house_styles.css",
-                "/stylesheets/header.css"
-            ]
-            
-            //loop through css_files creating link tags and appending to the <head>
-            for(var i = 0; i < css_files.length; i++){
-                loadCSSFile(css_files[i]); //function to load css file held in /public/javascript
-            }
-            */
-            //load header and footer
-            $(function(){
-                $("#top_bar").load("/partials/header.ejs");
-                $("#bottom_bar").load("/partials/footer.ejs");
-            });
-            
-            //get client ip address - not in use
-            /*$.getJSON('//freegeoip.net/json/?callback=?', function(data) {
-                console.log(JSON.stringify(data, null, 2));
-            });*/
-            
             //google analytics code
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

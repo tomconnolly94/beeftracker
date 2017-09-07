@@ -34,7 +34,8 @@
     <body id="bootstrap-overrides">
         <div class="container" ng-cloak>
             <div id="loading-bar-container"></div>
-            <div id="top_bar"></div>
+            
+            <div header-directive></div>
             
             <div id="scraped_events_container" class="row" ng-controller="scrapedEventsDumpController">
                     <div class="col-sm-1"></div>
@@ -108,8 +109,7 @@
                     </div>
                     <div class="col-sm-1"></div>
             </div>
-            
-            <div id="bottom_bar" class="row" style="margin:50px 0px;overflow:hidden;"></div>
+            <div footer-directive></div>
         </div>
         
         <!-- JQuery -->
@@ -127,17 +127,6 @@
         <script src="/controllers/admin/scraping_dump_viewer/scraped_events_dump_controller.js"></script>
         
         <script>
-            //load header and footer
-            $(function(){
-                $("#top_bar").load("/partials/header.ejs");
-                $("#bottom_bar").load("/partials/footer.ejs");
-            });
-            
-            //get client ip address - not in use
-            /*$.getJSON('//freegeoip.net/json/?callback=?', function(data) {
-                console.log(JSON.stringify(data, null, 2));
-            });*/
-            
             //google analytics code
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
