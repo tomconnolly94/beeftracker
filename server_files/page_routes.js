@@ -2,8 +2,9 @@
 var router = require('express').Router();
 
 router.get('/', function(request, response) { response.render('pages/dynamic_pages/home.ejs'); }); //home page
-router.get('/splash_zone_html/', function(request, response) { response.render('partials/home/splash_zone.ejs'); }); // add_actor form abstract
-router.get('/top_events_html/', function(request, response) { response.render('partials/home/top_events_zone.ejs'); }); // add_actor form abstract
+router.get('/splash_zone_html/', function(request, response) { response.render('partials/home/splash_zone.ejs'); }); // splash zone directive html
+router.get('/top_events_html/', function(request, response) { response.render('partials/home/top_events_zone.ejs'); }); // top events directive html
+router.get('/header_html/', function(request, response) { response.render('partials/header.ejs'); }); // header directive html
 router.get('/beef/:tagId', function(request, response) { response.render('pages/dynamic_pages/beef.ejs'); }); //beef page
 router.get('/actor/:tagId', function(request, response) { response.render('pages/dynamic_pages/actor.ejs'); }); //actor page
 router.get('/add_beef/', function(request, response) { response.render('pages/form_pages/submit_event.ejs'); }); // submit beefdata page page

@@ -46,3 +46,13 @@ beef_app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
     cfpLoadingBarProvider.includeSpinner = false;
     cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
 }]);
+
+beef_app.directive('headerDirective', function($compile, $http){
+    return {
+        link: function(scope, element, attrs) {
+            $http.get('/header_html').then(function (result) {
+                element.replaceWith($compile(result.data)(scope));
+            });
+        }
+    }
+});

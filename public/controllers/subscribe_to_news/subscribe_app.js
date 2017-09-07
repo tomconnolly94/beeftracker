@@ -8,3 +8,13 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 var subscribe_app = angular.module('subscribe', ['jkuri.datepicker']);
+
+subscribe_app.directive('headerDirective', function($compile, $http){
+    return {
+        link: function(scope, element, attrs) {
+            $http.get('/header_html').then(function (result) {
+                element.replaceWith($compile(result.data)(scope));
+            });
+        }
+    }
+});

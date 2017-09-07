@@ -15,3 +15,13 @@ var submit_app = angular.module('submit', ['jkuri.datepicker','toggle-switch']);
             templateUrl: '/raw_add_actor'
         });
 });*/
+
+submit_app.directive('headerDirective', function($compile, $http){
+    return {
+        link: function(scope, element, attrs) {
+            $http.get('/header_html').then(function (result) {
+                element.replaceWith($compile(result.data)(scope));
+            });
+        }
+    }
+});

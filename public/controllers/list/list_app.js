@@ -24,4 +24,14 @@ list_app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
     cfpLoadingBarProvider.includeBar = true;
     cfpLoadingBarProvider.includeSpinner = false;
     cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
-  }])
+  }]);
+
+list_app.directive('headerDirective', function($compile, $http){
+    return {
+        link: function(scope, element, attrs) {
+            $http.get('/header_html').then(function (result) {
+                element.replaceWith($compile(result.data)(scope));
+            });
+        }
+    }
+});
