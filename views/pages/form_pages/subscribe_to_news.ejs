@@ -15,60 +15,26 @@
         <link rel="shortcut icon" href="/logo/v2/beeftracker_new_logo_cropped_small.ico"><!-- icon -->
         <meta name="viewport" content="width=device-width, initial-scale=1"><!-- tag for mobile zoom -->
 
-        <!-- JQuery -->
-        <script src="/modules/jquery/dist/jquery.min.js"></script>
-        
         <!-- Font Scripts -->
         <link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet"> 
         <link href="https://fonts.googleapis.com/css?family=Josefin+Slab" rel="stylesheet"> 
         <link rel="stylesheet" type="text/css" href="/stylesheets/amatic_font.css" />
-        
-        <!-- Core angular scripts -->
-        <script src="/modules/angular/angular.min.js"></script>
-        <script src="/modules/angular-resource/angular-resource.min.js"></script>
-        <script src="/modules/angular-route/angular-route.min.js"></script>
-        <script src="/modules/angular-loading-bar/build/loading-bar.min.js"></script>
-        <script src="/modules/bootstrap/dist/js/bootstrap.min.js"></script>
         
         <!-- Core angular css files -->
         <link rel="stylesheet" type="text/css" href="/modules/bootstrap/dist/css/bootstrap.css" media="all"/>
         <link rel="stylesheet" type="text/css" href="/modules/bootstrap/dist/css/bootstrap-theme.css" media="all"/>
         <link rel="stylesheet" type="text/css" href="/modules/angular-loading-bar/build/loading-bar.css" media="all"/>
         
-        <!-- Extra JQuery scripts -->
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        
         <!-- Extra JQuery css files -->
         <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         
-        <!-- Datepicker scripts -->
-        <script src="/modules/ng-datepicker/src/js/ngDatepicker.min.js"></script>
-        <script src="/modules/moment/moment.js"></script>
-        
         <!-- Datepicker css files -->
         <link rel="stylesheet" type="text/css" href="/modules/ng-datepicker/src/css/ngDatepicker.css">
-                        
-        <!-- File upload scripts -->
-        <script src="/modules/angular-file-upload/dist/angular-file-upload.min.js"></script>
-        
-        <!-- Bespoke angular scripts -->
-        <script src="/controllers/subscribe_to_news/subscribe_app.js"></script>
-        <script src="/controllers/subscribe_to_news/subscribe_controller.js"></script>
-        
+
         <!-- Bespoke css files -->
         <link rel="stylesheet" type="text/css" href="/stylesheets/house_styles.css"/>
         <link rel="stylesheet" type="text/css" href="/stylesheets/header.css"/>
          
-        <script>            
-            //google analytics code
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-            ga('create', 'UA-92664606-1', 'auto');
-            ga('send', 'pageview');
-        </script>
     </head>
 
     <body id="bootstrap-overrides">
@@ -149,5 +115,40 @@
             </div>
             <div footer-directive></div>
         </div>
+        
+        <!-- JQuery -->
+        <script src="/modules/jquery/dist/jquery.min.js"></script>
+        <!-- Extra JQuery scripts -->
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+                
+        <!-- Datepicker scripts -->
+        <script src="/modules/ng-datepicker/src/js/ngDatepicker.min.js"></script>
+        <script src="/modules/moment/moment.js"></script>
+        
+        <!-- Core angular scripts -->
+        <script src="/modules/angular/angular.min.js"></script>
+        <script src="/modules/angular-resource/angular-resource.min.js"></script>
+        <script src="/modules/angular-route/angular-route.min.js"></script>
+        <script src="/modules/angular-loading-bar/build/loading-bar.min.js"></script>
+        <script src="/modules/bootstrap/dist/js/bootstrap.min.js"></script>
+                 
+        <!-- File upload scripts -->
+        <script src="/modules/angular-file-upload/dist/angular-file-upload.min.js"></script>
+        
+        <!-- Bespoke angular scripts -->
+        <script src="/controllers/search_box_controller.js"></script>
+        <script src="/controllers/subscribe_to_news/subscribe_app.js"></script>
+        <script src="/controllers/subscribe_to_news/subscribe_controller.js"></script>
+        
+        <script>            
+            //google analytics code
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-92664606-1', 'auto');
+            ga('send', 'pageview');
+        </script>
     </body>
 </html>

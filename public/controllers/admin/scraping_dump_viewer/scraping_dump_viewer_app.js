@@ -66,3 +66,5 @@ scraping_dump_viewer_app.directive('footerDirective', function($compile, $http){
         }
     }
 });
+
+scraping_dump_viewer_app.controller('searchController', ['$scope','$http', SearchBoxReusableController()]);

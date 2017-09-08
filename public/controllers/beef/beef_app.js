@@ -29,6 +29,8 @@ beef_app.directive('footerDirective', function($compile, $http){
     }
 });
 
+beef_app.controller('searchController', ['$scope','$http', SearchBoxReusableController()]);
+
 beef_app.config(function($routeProvider, $locationProvider){
     $routeProvider.when('/beef/:tagId', {
         templateUrl: '',    

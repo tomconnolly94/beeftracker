@@ -1,5 +1,6 @@
 //model dependencies
 var db_ref = require("../../db_config.js"); //get database reference object
+var async = require("async");
 
 module.exports = {
     

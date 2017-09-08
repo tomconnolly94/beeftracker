@@ -15,18 +15,10 @@
         <link rel="shortcut icon" href="/logo/v2/beeftracker_new_logo_cropped_small.ico"><!-- icon -->
         <meta name="viewport" content="width=device-width, initial-scale=1"><!-- tag for mobile zoom -->
         
-        <!-- JQuery -->
-        <script src="/modules/jquery/dist/jquery.min.js"></script>
-        
         <!-- Font Scripts -->
         <link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet"> 
         <link href="https://fonts.googleapis.com/css?family=Josefin+Slab" rel="stylesheet"> 
         <link rel="stylesheet" type="text/css" href="/stylesheets/amatic_font.css" />
-        
-        <!-- Core angular scripts -->
-        <script src="/modules/angular/angular.min.js"></script>
-        <script src="/modules/angular-loading-bar/build/loading-bar.min.js"></script>
-        <script src="/modules/bootstrap/dist/js/bootstrap.min.js"></script>
         
         <!-- Core angular css files -->
         <link rel="stylesheet" href="/modules/bootstrap/dist/css/bootstrap.min.css"/>
@@ -36,6 +28,36 @@
         <!-- Bespoke css files -->
         <link rel="stylesheet" href="/stylesheets/house_styles.css"/>
         <link rel="stylesheet" href="/stylesheets/header.css"/>
+        
+    </head>
+
+    <body id="bootstrap-overrides">
+        <div class="container" style="text-align:center">
+            <div id="top_bar"></div>
+            
+            <div>
+                <h1> Thanks for the information! </h1>
+                <a href="/">
+                    <h3>Click here to return to the home page</h3>
+                    <img src="/logo/steak_black.png" height="150px" width="150px;"/>
+                </a>
+            </div>
+            
+            
+            <div id="bottom_bar"></div>
+        </div>
+        
+        <!-- JQuery -->
+        <script src="/modules/jquery/dist/jquery.min.js"></script>
+        
+        <!-- Core angular scripts -->
+        <script src="/modules/angular/angular.min.js"></script>
+        <script src="/modules/angular-loading-bar/build/loading-bar.min.js"></script>
+        <script src="/modules/bootstrap/dist/js/bootstrap.min.js"></script>
+        
+        <!-- Bespoke angular scripts -->
+        <script src="/controllers/search_box_controller.js"></script>
+        <script src="/controllers/static_pages/submit_conf_app.js"></script>
         
         <script>    
             //load header and footer
@@ -58,22 +80,5 @@
             ga('create', 'UA-92664606-1', 'auto');
             ga('send', 'pageview');
         </script>
-    </head>
-
-    <body id="bootstrap-overrides">
-        <div class="container" style="text-align:center">
-            <div id="top_bar"></div>
-            
-            <div>
-                <h1> Thanks for the information! </h1>
-                <a href="/">
-                    <h3>Click here to return to the home page</h3>
-                    <img src="/logo/steak_black.png" height="150px" width="150px;"/>
-                </a>
-            </div>
-            
-            
-            <div id="bottom_bar"></div>
-        </div>
     </body>
 </html>

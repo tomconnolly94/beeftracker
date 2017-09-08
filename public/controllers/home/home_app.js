@@ -27,3 +27,5 @@ home_app.directive('footerDirective', function($compile, $http){
         }
     }
 });
+
+home_app.controller('searchController', ['$scope','$http', SearchBoxReusableController()]);

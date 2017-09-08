@@ -28,3 +28,5 @@ subscribe_app.directive('footerDirective', function($compile, $http){
         }
     }
 });
+
+subscribe_app.controller('searchController', ['$scope','$http', SearchBoxReusableController()]);

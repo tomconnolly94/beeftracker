@@ -53,3 +53,5 @@ actor_app.directive('footerDirective', function($compile, $http){
         }
     }
 });
+
+actor_app.controller('searchController', ['$scope','$http', SearchBoxReusableController()]);

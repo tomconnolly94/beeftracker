@@ -35,3 +35,5 @@ submit_app.directive('footerDirective', function($compile, $http){
         }
     }
 });
+
+submit_app.controller('searchController', ['$scope','$http', SearchBoxReusableController()]);

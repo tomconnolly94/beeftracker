@@ -45,3 +45,5 @@ list_app.directive('footerDirective', function($compile, $http){
         }
     }
 });
+
+list_app.controller('searchController', ['$scope','$http', SearchBoxReusableController()]);
