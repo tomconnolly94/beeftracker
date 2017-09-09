@@ -74,6 +74,9 @@ a{
     text-align: justify;
 }
 
+.hidden{
+    display:none;
+}
 
 /* override font sizes (for Amatic font)*/
 /*#bootstrap-overrides h1{

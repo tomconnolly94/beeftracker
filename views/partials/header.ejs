@@ -52,12 +52,16 @@
                 
                     <div class="navbar-form navbar-right" ng-controller="searchController">
                         <div class="input-group">
-                            <input type="text" class="form-control" ng-model="search_term" placeholder="Search">
+                            <input type="text" class="form-control" ng-model="search_term" ng-change="submit()" placeholder="Search">
                             <div class="input-group-btn">
-                                <button class="btn btn-default" type="submit" ng-click="submit()" style="height:34px;">
+                                <button class="btn btn-default" type="submit" ng-click="" style="height:34px;">
                                 <i class="glyphicon glyphicon-search"></i>
                                 </button>
                             </div>
+                        </div>
+                        <div ng-show="show_results" style="color:white;">
+                            <h3>hellio</h3>
+                        
                         </div>
                     </div>
                 </div>
