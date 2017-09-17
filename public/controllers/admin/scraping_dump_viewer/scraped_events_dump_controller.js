@@ -29,7 +29,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         
     }
     
-    $scope.remove_record = function(id){
+    $scope.remove_record = function(id, form_data){
         
         var event;
         
