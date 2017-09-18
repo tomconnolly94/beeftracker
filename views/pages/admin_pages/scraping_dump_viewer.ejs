@@ -52,7 +52,7 @@
                                     </div>
 
                                     <div class="col-sm-10" >
-                                        <input type="text" ng-model=form_data[event._id].title ng-value=event.title style="font-size:22px;width:600px;">
+                                        <input type="text" ng-model=form_data[event._id].title style="font-size:22px;width:600px;">
                                     </div>
 
                                     <a id="index_container" class="col-sm-1" data-toggle="collapse" data-parent="#accordion" href="#collapse{{$index}}" >
@@ -139,7 +139,8 @@
                                             
                                             <h4>Highlights</h4>
                                             <div ng-repeat="highlight in event.highlights track by $index">
-                                                <input class="col-xs-2" type="checkbox" ng-model=form_data[event._id].highlights[$index]><input class="col-xs-10" ng-value=highlight style="margin:0px;">
+                                                <input class="col-xs-2" type="checkbox" ng-model=form_data[event._id].highlights_selection[$index] style="margin:0px;">
+                                                <input class="col-xs-10" ng-model=form_data[event._id].highlights[$index] ng-value=highlight style="margin:0px;">
                                             </div>
                                         </div>
                                     </div>
