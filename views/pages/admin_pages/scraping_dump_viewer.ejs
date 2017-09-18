@@ -41,25 +41,25 @@
                     <div class="col-sm-1"></div>
                     <div id="top_events_container accordion" class="col-sm-10 panel-group">
 
-                        <div class="row top_event_container_1 panel panel-default" ng-repeat="event in events">
+                        <div class="row top_event_container_1 panel panel-default" ng-repeat="event in events track by $index" style="padding:15px;">
                             
                             <form class="form-horizontal" method="post" enctype="multipart/form-data">
                                 
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{$index}}" class="top_event_title panel_title" style="margin:20px;">
+                                <div class="top_event_title panel_title" style="margin:10px;">
 
                                     <div id="index_container" class="col-sm-1">
                                         <h4>{{$index+1}}</h4>
                                     </div>
 
                                     <div class="col-sm-10" >
-                                        <h4>{{event.title}}</h4>
+                                        <input type="text" ng-model=form_data[event._id].title ng-value=event.title style="font-size:22px;width:600px;">
                                     </div>
 
-                                    <div id="index_container" class="col-sm-1">
+                                    <a id="index_container" class="col-sm-1" data-toggle="collapse" data-parent="#accordion" href="#collapse{{$index}}" >
                                         <span class="glyphicon glyphicon-chevron-down"></span>
-                                    </div>
+                                    </a>
 
-                                </a>
+                                </div>
                                 
                                 <div id="collapse{{$index}}" class="row panel-collapse collapse" style="margin:0px;">
                                     
@@ -71,7 +71,7 @@
                                                 
                                                 <h4>Aggressor</h4>
                                                 
-                                                <div ng-repeat="actor in event.relevant_actors" style="margin:0px;">
+                                                <div ng-repeat="actor in event.relevant_actors track by $index" style="margin:0px;">
                                                     <label><input type="radio" value={{actor}} ng-model=form_data[event._id].aggressor>{{actor}}</label>
                                                 </div>
                                                 
@@ -81,7 +81,7 @@
                                             
                                                 <h4>Targets</h4>
                                                 
-                                                <div ng-repeat="actor in event.relevant_actors" style="margin:0px;">
+                                                <div ng-repeat="actor in event.relevant_actors track by $index" style="margin:0px;">
                                                     <!--<label><input type="checkbox" ng-model=form_data[event._id].targets.$index ng-true-value="{{actor}}" ng-false-value="">{{form_data[event._id]}}</label>
                                                     <label><input type="checkbox" ng-model=form_data[event._id].targets.$index ng-true-value="{{actor}}" ng-false-value="">{{form_data[event._id].targets}}</label>
                                                     <label><input type="checkbox" ng-model=form_data[event._id].targets.$index ng-true-value="{{actor}}" ng-false-value="">{{$index}}</label>-->
@@ -92,9 +92,7 @@
                                             </div>
                                         </div>
                                         
-                                        <div  class="col-sm-2"></div>
-                                        
-                                        <div  class="col-sm-2" style="height:80%;">
+                                        <div  class="col-sm-3" style="height:80%;margin:20px 0px;">
                                             <img ng-src="{{ event.img_title }}" style="height:100px;width:100%;"/>
                                         </div>
                                         
@@ -103,7 +101,7 @@
                                     <div class="row" style="padding:20px;">
                                         
                                         <div class="col-sm-12">
-                                            <textarea style="width:100%;height:200px;resize:none;color:black;padding:5px;" ng-model=form_data[event._id].description></textarea>
+                                            <textarea style="width:100%;height:200px;resize:none;color:black;padding:5px;font-size:15px;" ng-model=form_data[event._id].description></textarea>
                                         </div>
                                         
                                     </div>
@@ -120,7 +118,7 @@
                                         <div  class="col-sm-6" style="height:80%;">
                                             
                                             <h4>Categories</h4>
-                                            <h5 ng-repeat="category in event.selected_categories" style="margin:0px;">
+                                            <h5 ng-repeat="category in event.selected_categories track by $index" style="margin:0px;">
                                                 {{category}}
                                             </h5>
                                             
@@ -131,19 +129,18 @@
                                         
                                         <div class="col-sm-6 row">
                                             
-                                            <h4>Data Sources </h4>
-                                            <h5 ng-repeat="data_source in event.data_sources" style="margin:0px;">
-                                                {{data_source}}
+                                            <h4 style="padding:15px;">Data Sources</h4>
+                                            <h5 style="margin:0px;">
+                                                {{event.data_source}}
                                             </h5>
                                             
                                         </div>
-                                        <div  class="col-sm-6" style="height:80%;">
+                                        <div  class="col-sm-6 row" style="height:80%;">
                                             
                                             <h4>Highlights</h4>
-                                            <h5 ng-repeat="highlight in event.highlights" style="margin:0px;">
-                                                {{highlight}}
-                                            </h5>
-                                            
+                                            <div ng-repeat="highlight in event.highlights track by $index">
+                                                <input class="col-xs-2" type="checkbox" ng-model=form_data[event._id].highlights[$index]><input class="col-xs-10" ng-value=highlight style="margin:0px;">
+                                            </div>
                                         </div>
                                     </div>
                                     

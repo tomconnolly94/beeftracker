@@ -52,7 +52,6 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         
         var form = new FormData();
 
-        $scope.form_data[id].title = event.title;
         $scope.form_data[id].date = event.event_date;
         $scope.form_data[id].data_sources = event.data_sources;
         $scope.form_data[id].img_link = event.img_link;
