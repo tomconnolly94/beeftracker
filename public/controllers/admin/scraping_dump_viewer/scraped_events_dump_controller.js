@@ -18,6 +18,14 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         url: "/get_scraped_events_dump/"
     }).then(function(response_1){
         $scope.events = response_1.data.events;
+        
+        $scope.form_data = {};
+        
+        for(var i = 0; i < $scope.events.length; i++){
+            $scope.form_data[$scope.events[i]._id] = {};
+            $scope.form_data[$scope.events[i]._id].targets = {};
+            $scope.form_data[$scope.events[i]._id].description = $scope.events[i].description;
+        }
     }, 
     function(response_1) {
         //failed http request
@@ -44,7 +52,13 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         
         var form = new FormData();
 
-        $scope.form_data.title = event.title;
+        $scope.form_data[id].title = event.title;
+        $scope.form_data[id].date = event.event_date;
+        $scope.form_data[id].data_sources = event.data_sources;
+        $scope.form_data[id].img_link = event.img_link;
+        $scope.form_data[id].media_link = event.media_link;
+        
+        /*
         $scope.form_data.aggressor = $scope.aggressor;
         $scope.form_data.targets = $scope.targets;
         if($scope.special_feature_select != undefined){
@@ -101,7 +115,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         form.append('attachment', fileService[0]);
         form.append('data', JSON.stringify($scope.form_data));        
 
-        console.log(form);
+        console.log(form);*/
         /*
         return $http({
             url: "/submit_beefdata",

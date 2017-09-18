@@ -154,6 +154,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
         if($scope.event_form.$valid && ($scope.validate_input() || test_mode)){
 
             var form = new FormData();
+            $scope.form_data = {};
             
             $scope.form_data.title = $scope.title;
             $scope.form_data.aggressor = $scope.aggressor;
