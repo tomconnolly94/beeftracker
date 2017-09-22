@@ -23,6 +23,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         
         for(var i = 0; i < $scope.events.length; i++){
             $scope.form_data[$scope.events[i]._id] = {};
+            $scope.form_data[$scope.events[i]._id].title = $scope.events[i].title;
             $scope.form_data[$scope.events[i]._id].targets = {};
             $scope.form_data[$scope.events[i]._id].description = $scope.events[i].description;
         }
@@ -74,63 +75,39 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         
         var form = new FormData();
 
-        $scope.form_data[id].date = event.event_date;
         $scope.form_data[id].data_sources = event.data_sources;
-        $scope.form_data[id].img_link = event.img_link;
+        $scope.form_data[id].img_link = event.img_title;
         $scope.form_data[id].media_link = event.media_link;
+        $scope.form_data[id].highlights = [];
         
-        /*
-        $scope.form_data.aggressor = $scope.aggressor;
-        $scope.form_data.targets = $scope.targets;
-        if($scope.special_feature_select != undefined){
-            $scope.form_data.special_feature = {
-                type : JSON.parse($scope.special_feature_select).db_ref,
-                content : $scope.special_feature.content
-            }
+        //handle highlight selection
+        for(var i = 0; i < Object.keys($scope.form_data[id].highlights_selection).length; i++){
+            var highlight_index = Object.keys($scope.form_data[id].highlights_selection)[i];
+            
+            $scope.form_data[id].highlights.push(event.highlights[highlight_index]);
         }
-        $scope.form_data.description = $scope.description;
-        $scope.form_data.date = $scope.datePicker;
-        $scope.form_data.highlights = $scope.highlights;
-        $scope.form_data.data_sources = $scope.data_sources;
-        $scope.form_data.button_links = $scope.button_links;
-        $scope.form_data.selected_categories = $scope.selected_categories;
+        delete $scope.form_data[id].highlights_selection;
+        
+        //handle date
+        
+        if(event.event_date.indexOf(" ")  > 0){
+            var months = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
 
-        for(var i = 0; i < $scope.highlights.length; i++){
-            if(!$scope.highlights[i].title.length > 0){
-                $scope.highlights.splice(i, 1);
-                i--;
-                continue;
-            }
+            var date_split = event.event_date.split(" ");
 
-            if($scope.highlights[i].fields.length > 0){
-                //remove empty highlight content fields
-                for(var j = 0; j < $scope.highlights[i].fields.length; j++){
-                    if(!$scope.highlights[i].fields[j].text.length > 0){
-                        $scope.highlights[i].fields.splice(j, 1);
-                        j--;
-                    }
+            if(date_split.length > 0){
+
+                //handle situations where month is a string
+                if(typeof date_split[1] === 'string'){
+                    date_split[1] = months.indexOf(date_split[1].toLowerCase());
                 }
             }
-            else{
-                $scope.highlights.splice(i, 1);
-                i--;
-            }
+            $scope.form_data[id].date = date_split[0] + "/" + date_split[1] + "/" + date_split[2];
         }
-
-        for(var i = 0; i < $scope.data_sources.length; i++){
-            if(!$scope.data_sources[i].url.length > 0){
-                $scope.data_sources.splice(i, 1);
-            }
-        }
-
-        for(var i = 0; i < $scope.button_links.length; i++){
-            if(!$scope.button_links[i].url.length > 0 || !$scope.button_links[i].title.length > 0 ){
-                $scope.button_links.splice(i, 1);
-            }
-        }
-
-        console.log($scope.form_data);
-
+        
+        console.log($scope.form_data[id]);
+        
+        /*
         //formdata.append('data', $scope.form_data);
         console.log(fileService[0])
         form.append('attachment', fileService[0]);
