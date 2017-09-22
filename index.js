@@ -103,6 +103,7 @@ app.get('/search_popular_events/:num_of_events', require('./server_files/models/
 app.get('/search_recent_events/:num_of_events', require('./server_files/models/GET/search_recent_events.js').execute); //retrieve the provided number of events based on which have been added most recently
 app.get('/search_related_actors_by_id/:actor_id', require('./server_files/models/GET/search_related_actors_by_id.js').execute); //retrieve actors related to a provided actor
 app.get('/get_scraped_events_dump/', require('./server_files/models/GET/admin/get_scraped_events_dump.js').execute); //retrieve actors related to a provided actor
+app.get('/scrape_actor/:actor_name', require('./server_files/models/GET/admin/scrape_and_return_actor_data.js').execute); //retrieve actors related to a provided actor
 
 // ### Search engine information/verification files ###
 app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/verification_files/google3fc5d5a06ad26a53.html'); }); //google verification

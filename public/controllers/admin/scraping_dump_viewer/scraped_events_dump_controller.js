@@ -37,6 +37,28 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         
     }
     
+    $scope.scrape_actor = function(id, form_data){
+        
+        var actor = "Dwayne Johnson";
+        var actor = "Jon Richardson (comedian)";
+        
+        //load events from scraping dump db table
+        $http({
+            method: 'GET',
+            url: "/scrape_actor/" + actor
+        }).then(function(response_1){
+            var data_scrape = response_1.data.results;
+
+            
+            console.log(data_scrape);
+        }, 
+        function(response_1) {
+            //failed http request
+            console.log("HTTP request failed (scrapedEventsDumpController)");
+        });
+        
+    }
+    
     $scope.remove_record = function(id, form_data){
         
         var event;
