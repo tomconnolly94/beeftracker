@@ -12,55 +12,33 @@
 
 scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$http', function($scope,$http) {
     
-    //load events from scraping dump db table
-    $http({
-        method: 'GET',
-        url: "/get_scraped_events_dump/"
-    }).then(function(response_1){
-        $scope.events = response_1.data.events;
-        
-        $scope.form_data = {};
-        
-        for(var i = 0; i < $scope.events.length; i++){
-            $scope.form_data[$scope.events[i]._id] = {};
-            $scope.form_data[$scope.events[i]._id].title = $scope.events[i].title;
-            $scope.form_data[$scope.events[i]._id].targets = {};
-            $scope.form_data[$scope.events[i]._id].description = $scope.events[i].description;
-        }
-    }, 
-    function(response_1) {
-        //failed http request
-        console.log("HTTP request failed (scrapedEventsDumpController)");
-    });
     
-    $scope.approve_record = function(){
-        
-        
-    }
-    
-    $scope.scrape_actor = function(id, form_data){
-        
-        var actor = "Dwayne Johnson";
-        var actor = "Jon Richardson (comedian)";
-        
+    $scope.load_scraped_events = function(){
         //load events from scraping dump db table
         $http({
             method: 'GET',
-            url: "/scrape_actor/" + actor
+            url: "/get_scraped_events_dump/"
         }).then(function(response_1){
-            var data_scrape = response_1.data.results;
+            $scope.events = response_1.data.events;
 
-            
-            console.log(data_scrape);
+            $scope.form_data = {};
+
+            for(var i = 0; i < $scope.events.length; i++){
+                $scope.form_data[$scope.events[i]._id] = {};
+                $scope.form_data[$scope.events[i]._id].title = $scope.events[i].title;
+                $scope.form_data[$scope.events[i]._id].targets = {};
+                $scope.form_data[$scope.events[i]._id].description = $scope.events[i].description;
+            }
         }, 
         function(response_1) {
             //failed http request
             console.log("HTTP request failed (scrapedEventsDumpController)");
         });
-        
     }
     
-    $scope.remove_record = function(id, form_data){
+    $scope.load_scraped_events();
+    
+    $scope.approve_record = function(){
         
         var event;
         
@@ -132,5 +110,41 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             console.log("Upload failed.");
             console.log(error);
         });*/
+    }
+    
+    $scope.scrape_actor = function(actor){
+        
+        //load events from scraping dump db table
+        $http({
+            method: 'GET',
+            url: "/scrape_actor/" + actor
+        }).then(function(response_1){
+            var data_scrape = response_1.data.results;
+
+            
+            console.log(data_scrape);
+        }, 
+        function(response_1) {
+            //failed http request
+            console.log("HTTP request failed (scrapedEventsDumpController)");
+        });
+        
+    }
+    
+    $scope.remove_record = function(id){
+        
+        $http({
+            method: 'GET',
+            url: "/discard_scraped_beef_event/" + id
+        }).then(function(response_1){
+            
+            $scope.load_scraped_events();
+        }, 
+        function(response_1) {
+            //failed http request
+            console.log("HTTP request failed (scrapedEventsDumpController)");
+        });
+        
+        
     }
 }]);
