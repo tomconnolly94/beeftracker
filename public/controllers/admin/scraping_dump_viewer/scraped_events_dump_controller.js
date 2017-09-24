@@ -122,7 +122,21 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             var data_scrape = response_1.data.results;
 
             
-            console.log(data_scrape);
+            if(typeof data_scrape == "string"){ //actor has not been found
+                
+                console.log("string");
+                
+            }
+            else if(typeof data_scrape == "object"){ //actor has been found and data returned fully
+                
+                console.log("object");
+                
+            }
+            else{ //actor has been found with multiple options and requires selection and then scraping
+             
+                console.log("array");
+                
+            }            
         }, 
         function(response_1) {
             //failed http request
@@ -143,8 +157,6 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         function(response_1) {
             //failed http request
             console.log("HTTP request failed (scrapedEventsDumpController)");
-        });
-        
-        
+        });        
     }
 }]);
