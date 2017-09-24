@@ -31,12 +31,14 @@ module.exports = {
             };
         }
 
-        PythonShell.run('scrape_actor.py', options, function (err, results) {
+        PythonShell.run('scrape_actor.py', options, function (err, result) {
             if (err) throw err;
             
-            var results = JSON.parse(results);
+            var result = JSON.parse(result[1]);
             
-            response.send( { results : results } );
+            console.log(result);
+            
+            response.send( { result : result } );
         });
     }
 }

@@ -119,24 +119,46 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             method: 'GET',
             url: "/scrape_actor/" + actor
         }).then(function(response_1){
-            var data_scrape = response_1.data.results;
+            var data_scrape = response_1.data.result;
 
+            console.log(data_scrape);
+            console.log(data_scrape.length);
             
             if(typeof data_scrape == "string"){ //actor has not been found
-                
+                                
                 console.log("string");
+                alert("name cannot be scraped")
                 
             }
-            else if(typeof data_scrape == "object"){ //actor has been found and data returned fully
+            else if(typeof data_scrape == "object"){ //actor has been found and either data is returned or request needs more info
                 
-                console.log("object");
+                $scope.scrape_result_type = "";
                 
+                if(data_scrape.length){ //array further options
+                
+                    $scope.scrape_result_type = "options";
+                    $scope.scraping_options = data_scrape;
+                    $scope.url_clarification_string = "";
+                }
+                else{ //data object
+                    
+                    $scope.scrape_result_type = "data";
+                    
+                    
+                }
+                
+                
+                $("#myModal").modal({
+                    show:true
+                });
             }
-            else{ //actor has been found with multiple options and requires selection and then scraping
+            else{ //un-recognised field
              
-                console.log("array");
-                
-            }            
+                console.log(data_scrape);
+            }        
+            
+            
+            
         }, 
         function(response_1) {
             //failed http request
