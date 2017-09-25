@@ -167,7 +167,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
     
     $scope.approve_actor = function(actor){
         //approve actor
-        var form = {};
+        var form = new FormData();
         
         form.stage_name = $scope.scrape_result.stage_name;
         form.birth_name = $scope.scrape_result.birth_name;
@@ -182,9 +182,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         form.img_title = $scope.scrape_result.img_title;
         form.links = $scope.scrape_result.links;
         
-        console.log(form);
-        
-        form = JSON.stringify({data: form});
+        form.append('data', JSON.stringify(form));
         
         console.log(form);
         
@@ -192,11 +190,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             url: "/submit_actordata",
             method: 'POST',
             data: form,
-            //assign content-type as undefined, the browser
-            //will assign the correct boundary for us
-            headers: { 'Content-Type': undefined},
-            //prevents serializing payload.  don't do it.
-            transformRequest: angular.identity
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         })
         .then(function (success) {
             console.log("Upload succeeded.");
