@@ -13,10 +13,11 @@ module.exports = {
         //extract data for use later
         var url = process.env.MONGODB_URI; //get db uri
         var file = request.file; //get submitted image
+        console.log(request.body);
         var submission_data = JSON.parse(request.body.data); //get form data
 
         //format data for db insertion
-        console.log(submission_data);
+        //console.log(submission_data);
         var date = submission_data.date.split('/');
         var nicknames_formatted = new Array();
         var occupations_formatted = new Array();
@@ -121,7 +122,7 @@ module.exports = {
                             };
                         });
 
-                        response.send(); //send ok or error response to client
+                        response.send({id: document.ops[0]._id}); //send ok or error response to client
                     }
                 });
             }

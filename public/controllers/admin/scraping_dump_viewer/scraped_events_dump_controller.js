@@ -120,9 +120,6 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             url: "/scrape_actor/" + actor
         }).then(function(response_1){
             var data_scrape = response_1.data.result;
-
-            console.log(data_scrape);
-            console.log(data_scrape.length);
             
             if(typeof data_scrape == "string"){ //actor has not been found
                                 
@@ -145,7 +142,6 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                     $scope.scrape_result_type = "data";
                     $scope.scrape_result = JSON.parse(data_scrape.actor_object);
                     $scope.data_dump = data_scrape.field_data_dump;
-                    console.log($scope.scrape_result);
                     
                 }
                 
@@ -171,6 +167,45 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
     
     $scope.approve_actor = function(actor){
         //approve actor
+        var form = {};
+        
+        form.stage_name = $scope.scrape_result.stage_name;
+        form.birth_name = $scope.scrape_result.birth_name;
+        form.nicknames = $scope.scrape_result.nicknames;
+        form.d_o_b = $scope.scrape_result.d_o_b;
+        form.occupations = $scope.scrape_result.occupations;
+        form.bio = $scope.scrape_result.bio;
+        form.achievements = $scope.scrape_result.achievements;
+        form.origin = $scope.scrape_result.origin;
+        form.associated_actors = $scope.scrape_result.associated_actors;
+        form.data_sources = $scope.scrape_result.data_sources;
+        form.img_title = $scope.scrape_result.img_title;
+        form.links = $scope.scrape_result.links;
+        
+        console.log(form);
+        
+        form = JSON.stringify({data: form});
+        
+        console.log(form);
+        
+        return $http({
+            url: "/submit_actordata",
+            method: 'POST',
+            data: form,
+            //assign content-type as undefined, the browser
+            //will assign the correct boundary for us
+            headers: { 'Content-Type': undefined},
+            //prevents serializing payload.  don't do it.
+            transformRequest: angular.identity
+        })
+        .then(function (success) {
+            console.log("Upload succeeded.");
+            //$window.location.href = '/submission_confirmation';
+            console.log(success);
+        }, function (error) {
+            console.log("Upload failed.");
+            console.log(error);
+        });
     }
     
     $scope.remove_record = function(id){
