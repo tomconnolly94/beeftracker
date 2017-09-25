@@ -143,7 +143,9 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                 else{ //data object
                     
                     $scope.scrape_result_type = "data";
-                    
+                    $scope.scrape_result = JSON.parse(data_scrape.actor_object);
+                    $scope.data_dump = data_scrape.field_data_dump;
+                    console.log($scope.scrape_result);
                     
                 }
                 
@@ -165,6 +167,10 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             console.log("HTTP request failed (scrapedEventsDumpController)");
         });
         
+    }
+    
+    $scope.approve_actor = function(actor){
+        //approve actor
     }
     
     $scope.remove_record = function(id){

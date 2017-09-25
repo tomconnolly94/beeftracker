@@ -47,7 +47,7 @@
                             <h4 class="modal-title" style="color:#000000;">Scraped Data</h4>
                         </div>
                         
-                        <div class="modal-body" style="background-color:#000000;">
+                        <div class="modal-body" style="background-color:#000000;color:#FFFFFF;">
                             
                             
                             <div id="scraping_options" ng-show="scrape_result_type == 'options'">
@@ -57,12 +57,102 @@
                                 </div>
                             
                             </div>
-                            
-                            <div id="data_form" ng-show="scrape_result_type == 'options'">
-                            
+                            <div class="row">
+                                <h2 style="margin:0px 40px;"> Interpretation </h2>
                                 
+                                <div class="col-xs-2"></div>
                                 
+                                <div id="data_form" class="col-xs-8" ng-show="scrape_result_type == 'data'">
+
+                                    <div id="stage_name" class="row">
+                                        <label class="col-xs-4"> Stage Name </label>
+                                        <input type="text" class="col-xs-8" ng-model="scrape_result.stage_name"/>
+                                    </div>
+
+                                    <div id="birth_name" class="row">
+                                        <label class="col-xs-4"> Birth Name </label>
+                                        <input type="text" class="col-xs-8" ng-model="scrape_result.birth_name"/>
+                                    </div>
+
+                                    <div id="nicknames" class="row">
+                                        <label class="col-xs-4"> Nicknames </label>
+                                        <input type="text" class="col-xs-8" ng-model="scrape_result.nicknames"/>
+                                    </div>
+
+                                    <div id="d_o_b" class="row">
+                                        <label class="col-xs-4"> Date of Birth </label>
+                                        <input type="text" class="col-xs-8" ng-model="scrape_result.d_o_b"/>
+                                    </div>
+
+                                    <div id="occupations" class="row">
+                                        <label class="col-xs-4"> Occupations </label>
+                                        <input type="text" class="col-xs-8" ng-model="scrape_result.occupations"/>
+                                    </div>
+
+                                    <div id="bio" class="row">
+                                        <label class="col-xs-4"> Bio </label>
+                                        <textarea type="text" class="col-xs-8" ng-model="scrape_result.bio" rows="4" style="color:#000000"></textarea>
+                                    </div>
+
+                                    <div id="achievements" class="row">
+                                        <label class="col-xs-4"> Achievements </label>
+                                        <input type="text" class="col-xs-8" ng-model="scrape_result.achievements"/>
+                                    </div>
+
+                                    <div id="origin" class="row">
+                                        <label class="col-xs-4"> Origin </label>
+                                        <input type="text" class="col-xs-8" ng-model="scrape_result.origin"/>
+                                    </div>
+
+                                    <div id="associated_actors" class="row">
+                                        <label class="col-xs-4"> Associated Actors </label>
+                                        <input type="text" class="col-xs-8" ng-model="scrape_result.associated_actors"/>
+                                    </div>
+
+                                    <div id="data_sources" class="row">
+                                        <label class="col-xs-4"> Data Sources </label>
+                                        <input type="text" class="col-xs-8" ng-model="scrape_result.data_sources"/>
+                                    </div>
+
+                                    <div id="img_title" class="row">
+                                        <label class="col-xs-4"> Image Title </label>
+                                        <input type="text" class="col-xs-8" ng-model="scrape_result.img_title"/>
+                                    </div>
+
+                                    <div id="links" class="row">
+                                        <label class="col-xs-4"> Links </label>
+                                        <input type="text" class="col-xs-8" ng-model="scrape_result.links"/>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-xs-2"></div>
                             </div>
+                            
+                            <div class="row" style="margin:20px;">
+                                <h2 style="margin:0px 40px;"> Dump </h2>
+                                <div class="col-xs-2"></div>
+                                <div class="col-xs-8">
+                            
+                                    <div class="col-xs-12 row" ng-repeat="(key, value) in data_dump">
+                                        <label class="col-xs-4"> {{key}} </label>
+                                        <input type="text" class="col-xs-8" ng-model="value"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-2"></div>
+                            </div>
+                            
+                            
+                            <div class="row" style="padding:20px;">
+
+                                <div class="col-sm-4"></div>
+
+                                <div class="col-sm-2">
+                                    <input type="submit" value="Submit" style="padding:10px;width:100%;height:100%;text-align:center;" ng-click="approve_actor(stage_name)">
+                                </div>
+                                
+                                <div class="col-sm-4"></div>
+                            </div>
+                            
                         </div>
                         
                         <div class="modal-footer" style="background-color:red">
