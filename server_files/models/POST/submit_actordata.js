@@ -42,22 +42,42 @@ module.exports = {
 
         //create array of target objectIds
         for(var i = 0; i < submission_data.nicknames.length; i++){
-            nicknames_formatted.push(submission_data.nicknames[i].text);
+            if(submission_data.nicknames[i].text){
+                nicknames_formatted.push(submission_data.nicknames[i].text);
+            }
+            else{
+                nicknames_formatted.push(submission_data.nicknames[i]);
+            }
         }
 
         //create array of target objectIds
         for(var i = 0; i < submission_data.occupations.length; i++){
-            occupations_formatted.push(submission_data.occupations[i].text);
+            if(submission_data.occupations[i].text){
+                occupations_formatted.push(submission_data.occupations[i].text);
+            }
+            else{
+                occupations_formatted.push(submission_data.occupations[i]);
+            }
         }
 
         //create array of target objectIds
         for(var i = 0; i < submission_data.achievements.length; i++){
-            achievements_formatted.push(submission_data.achievements[i].text);
+            if(submission_data.achievements[i].text){
+                achievements_formatted.push(submission_data.achievements[i].text);
+            }
+            else{
+                achievements_formatted.push(submission_data.achievements[i]);
+            }
         }
 
         //create array of target objectIds
         for(var i = 0; i < submission_data.data_sources.length; i++){
-            data_sources_formatted.push(submission_data.data_sources[i].text);
+            if(submission_data.data_sources[i].text){
+                data_sources_formatted.push(submission_data.data_sources[i].text);
+            }
+            else{
+                data_sources_formatted.push(submission_data.data_sources[i]);
+            }
         }
 
         //create array of target objectIds

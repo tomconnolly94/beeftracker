@@ -213,7 +213,7 @@ submit_app.controller('actorFormController', ['$scope','$http', 'fileService', '
             form.append('attachment', fileService[0]);
             form.append('data', JSON.stringify($scope.form_data));        
 
-            return $http({
+            /*return $http({
                 url: "/submit_actordata",
                 method: 'POST',
                 data: form,
@@ -238,7 +238,7 @@ submit_app.controller('actorFormController', ['$scope','$http', 'fileService', '
                 }
             }, function (error) {
                 console.log("Upload failed.");
-            });
+            });*/
         }
     };
     

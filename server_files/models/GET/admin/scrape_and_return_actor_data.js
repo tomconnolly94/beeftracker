@@ -6,8 +6,6 @@ module.exports = {
     
         var options = {};
         var search_term = request.params.actor_name;
-        console.log(request.params.actor_name);
-        console.log(request.params);
         
         //config options based on current OS
         if(/^win/.test(process.platform)){ //Windows
@@ -33,11 +31,7 @@ module.exports = {
 
         PythonShell.run('scrape_actor.py', options, function (err, result) {
             if (err) throw err;
-            
-            //var result = JSON.stringify(result[1]);
-            
-            console.log(result);
-            
+                        
             response.send( { result : result[0] } );
         });
     }

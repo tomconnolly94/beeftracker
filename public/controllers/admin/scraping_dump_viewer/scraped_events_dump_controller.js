@@ -137,12 +137,14 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                 
                     $scope.scrape_result_type = "options";
                     $scope.scraping_options = data_scrape;
-                    $scope.url_clarification_string = "";
+                    $scope.scraping_options_conf = {};
+                    $scope.scraping_options_conf.conf = "";
                 }
                 else{ //data object
                     
                     $scope.scrape_result_type = "data";
                     $scope.scrape_result = JSON.parse(data_scrape.actor_object);
+                    console.log($scope.scrape_result);
                     $scope.data_dump = data_scrape.field_data_dump;
                     
                 }
