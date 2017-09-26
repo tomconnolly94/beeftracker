@@ -65,7 +65,7 @@ module.exports = {
             assoc_actors_formatted.push(BSON.ObjectID.createFromHexString(submission_data.assoc_actors[i]));
         }
 
-        links_formatted["mf_img_link"] = file.filename;
+        if(file){ links_formatted["mf_img_link"] = file.filename; }
 
         //create array of target objectIds ## unfinished need to deal with images and videos that are not null  and other button links too
         for(var i = 0; i < submission_data.button_links.length; i++){

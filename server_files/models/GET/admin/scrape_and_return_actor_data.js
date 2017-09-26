@@ -34,11 +34,11 @@ module.exports = {
         PythonShell.run('scrape_actor.py', options, function (err, result) {
             if (err) throw err;
             
-            var result = JSON.parse(result[1]);
+            //var result = JSON.stringify(result[1]);
             
             console.log(result);
             
-            response.send( { result : result } );
+            response.send( { result : result[0] } );
         });
     }
 }

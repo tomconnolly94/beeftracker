@@ -119,7 +119,9 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             method: 'GET',
             url: "/scrape_actor/" + actor
         }).then(function(response_1){
-            var data_scrape = response_1.data.result;
+            var data_scrape = JSON.parse(response_1.data.result);
+            
+            
             
             if(typeof data_scrape == "string"){ //actor has not been found
                                 
@@ -177,10 +179,10 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         form.bio = $scope.scrape_result.bio;
         form.achievements = $scope.scrape_result.achievements;
         form.origin = $scope.scrape_result.origin;
-        form.associated_actors = $scope.scrape_result.associated_actors;
-        form.data_sources = $scope.scrape_result.data_sources;
+        form.assoc_actors = $scope.scrape_result.associated_actors;
+        form.data_sources = [$scope.scrape_result.data_sources];
         form.img_title = $scope.scrape_result.img_title;
-        form.links = $scope.scrape_result.links;
+        form.button_links = $scope.scrape_result.links;
         
         //form.append('data', form);
         form = JSON.stringify({data: form});
