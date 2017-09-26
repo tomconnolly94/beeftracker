@@ -144,7 +144,12 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                     
                     $scope.scrape_result_type = "data";
                     $scope.scrape_result = JSON.parse(data_scrape.actor_object);
-                    console.log($scope.scrape_result);
+                    //add extra fields to allow additions
+                    $scope.scrape_result.nicknames.push("");
+                    $scope.scrape_result.occupations.push("");
+                    $scope.scrape_result.achievements.push("");
+                    $scope.scrape_result.associated_actors.push("");
+                    $scope.scrape_result.links.push("");
                     $scope.data_dump = data_scrape.field_data_dump;
                     
                 }
