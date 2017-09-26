@@ -362,7 +362,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
         //preload data from url for testing
         var hashParams = window.location.href.split('?');
         
-        if(hashParams.length > 0){
+        if(hashParams.length > 1){
             
             hashParams = hashParams[1].split('&');
         

@@ -167,12 +167,12 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
     
     $scope.approve_actor = function(actor){
         //approve actor
-        var form = new FormData();
+        var form = {};
         
         form.stage_name = $scope.scrape_result.stage_name;
         form.birth_name = $scope.scrape_result.birth_name;
         form.nicknames = $scope.scrape_result.nicknames;
-        form.d_o_b = $scope.scrape_result.d_o_b;
+        form.date = $scope.scrape_result.d_o_b;
         form.occupations = $scope.scrape_result.occupations;
         form.bio = $scope.scrape_result.bio;
         form.achievements = $scope.scrape_result.achievements;
@@ -182,7 +182,8 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         form.img_title = $scope.scrape_result.img_title;
         form.links = $scope.scrape_result.links;
         
-        form.append('data', JSON.stringify(form));
+        //form.append('data', form);
+        form = JSON.stringify({data: form});
         
         console.log(form);
         
@@ -190,7 +191,8 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             url: "/submit_actordata",
             method: 'POST',
             data: form,
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            headers: { 'Content-Type': "application/json"}
+            //headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         })
         .then(function (success) {
             console.log("Upload succeeded.");

@@ -12,10 +12,24 @@ module.exports = {
 
         //extract data for use later
         var url = process.env.MONGODB_URI; //get db uri
-        var file = request.file; //get submitted image
-        console.log(request.body);
-        var submission_data = JSON.parse(request.body.data); //get form data
+        
+        var file;
+        if(request.file){
+            file = request.file; //get submitted image
+        }
+        
+        var submission_data;
 
+        if(typeof request.body.data =='object'){
+            // It is JSON
+            submission_data = request.body.data; //get form data
+        }
+        else{
+            submission_data = JSON.parse(request.body.data);
+        }
+        
+        console.log(submission_data);
+        
         //format data for db insertion
         //console.log(submission_data);
         var date = submission_data.date.split('/');
