@@ -14,7 +14,6 @@ actor_app.controller("actorSearchController", ['$scope','$http', '$routeParams',
     
     //wait untill module has been configured before running this
     $scope.$on('$routeChangeSuccess', function() {
-        console.log("hello");
                 
         //$http.get("/search_actors_by_id/" + $routeParams.tagId).success(function(response_1){
         $http({
@@ -28,7 +27,6 @@ actor_app.controller("actorSearchController", ['$scope','$http', '$routeParams',
                 
                 if(actor_object != undefined){
                     
-                    console.log(actor_object);
                     //assign fields to scope
                     $scope.stage_name = actor_object.stage_name;
                     $scope.birth_name = actor_object.birth_name;

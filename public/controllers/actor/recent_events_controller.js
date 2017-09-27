@@ -35,7 +35,6 @@ actor_app.controller("recentEventsController", ['$scope','$http', '$routeParams'
                     for(var i = 0; i < Object.keys(response_2.data.events).length; i++){
                         
                         event = response_2.data.events[i];
-                        console.log(event);
                         var record = {
                                 _id : event._id,
                                 title : event.title,
@@ -47,7 +46,6 @@ actor_app.controller("recentEventsController", ['$scope','$http', '$routeParams'
                         $scope.events[i] = record;
                     }
                     $scope.events = $scope.events.slice(0,4);
-                        console.log(event);
                 }, 
                 function(response_2) {
                     //failed http request

@@ -23,18 +23,14 @@ actor_app.controller("relatedActorsController", ['$scope','$http', '$routeParams
         }).then(function(response){
             response = response.data
             $scope.associated_actors = new Array();
-            console.log(response);
             var actors = response.actors;
-            console.log(actors);
             for(var i = 0; i < actors.length; i++){
                 var actor = {
                     _id : actors[i]._id,
                     loc_img_link : actors[i].img_title,
                     stage_name : actors[i].stage_name
                 };
-                console.log(actor);
                 $scope.associated_actors.push(actor);
-                console.log($scope.associated_actors);
             }
         }, 
         function(response_2) {

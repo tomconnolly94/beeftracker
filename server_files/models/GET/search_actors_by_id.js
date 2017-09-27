@@ -24,6 +24,7 @@ module.exports = {
                                                            ]).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
                     else{
+                        console.log(docs[0]);
                         response.send( { actor : docs[0] } );
                     }
                 });

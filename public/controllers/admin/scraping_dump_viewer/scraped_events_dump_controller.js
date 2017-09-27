@@ -85,14 +85,14 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         
         console.log($scope.form_data[id]);
         
-        /*
+        
         //formdata.append('data', $scope.form_data);
         console.log(fileService[0])
         form.append('attachment', fileService[0]);
         form.append('data', JSON.stringify($scope.form_data));        
 
-        console.log(form);*/
-        /*
+        console.log(form);
+        
         return $http({
             url: "/submit_beefdata",
             method: 'POST',
@@ -109,7 +109,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         }, function (error) {
             console.log("Upload failed.");
             console.log(error);
-        });*/
+        });
     }
     
     $scope.scrape_actor = function(actor){
@@ -124,10 +124,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             
             
             if(typeof data_scrape == "string"){ //actor has not been found
-                                
-                console.log("string");
                 alert("name cannot be scraped")
-                
             }
             else if(typeof data_scrape == "object"){ //actor has been found and either data is returned or request needs more info
                 
@@ -153,30 +150,54 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                     $scope.data_dump = data_scrape.field_data_dump;
                     
                 }
-                
-                
-                $("#myModal").modal({
-                    show:true
-                });
+                $("#myModal").modal({ show : true });
             }
             else{ //un-recognised field
-             
                 console.log(data_scrape);
             }        
-            
-            
-            
         }, 
         function(response_1) {
             //failed http request
             console.log("HTTP request failed (scrapedEventsDumpController)");
         });
-        
     }
     
     $scope.approve_actor = function(actor){
         //approve actor
         var form = {};
+                
+        for(var i = 0; i < $scope.scrape_result.nicknames.length; i++){
+            if(!$scope.scrape_result.nicknames[i].length > 0){
+                $scope.scrape_result.nicknames.splice(i, 1);
+                i--;
+            }
+        }
+
+        for(var i = 0; i < $scope.scrape_result.occupations.length; i++){
+            if(!$scope.scrape_result.occupations[i].length > 0){
+                $scope.scrape_result.occupations.splice(i, 1);
+                i--;
+            }
+        }
+
+        for(var i = 0; i < $scope.scrape_result.achievements.length; i++){
+            if(!$scope.scrape_result.achievements[i].length > 0){
+                $scope.scrape_result.achievements.splice(i, 1);
+                i--;
+            }
+        }
+
+        for(var i = 0; i < $scope.scrape_result.data_sources.length; i++){
+            if(!$scope.scrape_result.data_sources[i].length > 0){
+                $scope.scrape_result.data_sources.splice(i, 1);
+            }
+        }
+
+        for(var i = 0; i < $scope.scrape_result.links.length; i++){
+            if(!$scope.scrape_result.links[i].length > 0){
+                $scope.scrape_result.links.splice(i, 1);
+            }
+        }
         
         form.stage_name = $scope.scrape_result.stage_name;
         form.birth_name = $scope.scrape_result.birth_name;
@@ -193,9 +214,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         
         //form.append('data', form);
         form = JSON.stringify({data: form});
-        
-        console.log(form);
-        
+                
         return $http({
             url: "/submit_actordata",
             method: 'POST',
@@ -207,6 +226,9 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             console.log("Upload succeeded.");
             //$window.location.href = '/submission_confirmation';
             console.log(success);
+            console.log(success.data.id);
+            
+            $("#myModal").modal({ show : false });
         }, function (error) {
             console.log("Upload failed.");
             console.log(error);

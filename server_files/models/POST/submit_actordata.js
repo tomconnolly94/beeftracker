@@ -3,7 +3,7 @@ var db_ref = require("../../db_config.js");
 var BSON = require('bson');
 var nodemailer = require('nodemailer');
 var fs = require('fs');
-var http = require('http');
+var dl_request = require('request');
 
 //configure testing mode, if set: true, record will be collected, printed but not sent to db and no email notification will be sent.
 var test_mode = false;
@@ -13,7 +13,7 @@ module.exports = {
     execute : function(request, response) {
 
         //extract data for use later
-        var url = process.env.MONGODB_URI; //get db uri
+        var db_url = process.env.MONGODB_URI; //get db uri
         
         var file;
         if(request.file){
@@ -93,14 +93,30 @@ module.exports = {
             links_formatted["mf_img_link"] = file.filename;
         }
         else{
-            var uri = "http:" + submission_data.img_title;
-            var filename = "new_img.png"
-            var dl_file = fs.createWriteStream(filename);
+            var download = function(img_url, file_location, callback){
+                dl_request.head(img_url, function(err, res, body){
+                    console.log('content-type:', res.headers['content-type']);
+                    console.log('content-length:', res.headers['content-length']);
+
+                    dl_request(img_url).pipe(fs.createWriteStream(file_location)).on('close', callback);
+                });
+            };
             
-            console.log(uri);
+            var img_url = submission_data.img_title;
+            if(!img_url.includes("http:")){
+                img_url = "http:" + submission_data.img_title;
+            }
+            var url_split = img_url.split("/");
+            var filename = url_split[url_split.length - 1];
+            console.log("############################################################");
+            console.log(filename);
+            filename = filename.replace(/%/gi, "");
+            console.log(filename);
+            var file_location = "public/assets/images/actors/" + filename;
             
-            var dl_request = http.get(uri, function(dl_response) {
-                dl_response.pipe(dl_file);
+            links_formatted["mf_img_link"] = filename;
+            download(img_url, file_location, function(){
+                console.log('image downloaded');
             });
         }
 
@@ -132,7 +148,7 @@ module.exports = {
         console.log(insert_object);
 
         //store data temporarily until submission is confirmed
-        db_ref.get_db_object().connect(url, function(err, db) {
+        db_ref.get_db_object().connect(db_url, function(err, db) {
             if(err){ console.log(err); }
             else{
                 //standard query to match an event and resolve aggressor and targets references
