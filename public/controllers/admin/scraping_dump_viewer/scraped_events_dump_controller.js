@@ -112,7 +112,10 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         });
     }
     
-    $scope.scrape_actor = function(actor){
+    $scope.scrape_actor = function(actor, event_id){
+        
+        //invoke an endpoint to searh the db for an actor with name == actor, return _id if exists, avoid scraping if an _id is returned and assign _id to actor.db_id
+        
         
         //load events from scraping dump db table
         $http({
@@ -136,6 +139,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                     $scope.scraping_options = data_scrape;
                     $scope.scraping_options_conf = {};
                     $scope.scraping_options_conf.conf = "";
+                    $scope.scraping_options_conf.event_id = event_id;
                 }
                 else{ //data object
                     
@@ -147,6 +151,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                     $scope.scrape_result.achievements.push("");
                     $scope.scrape_result.associated_actors.push("");
                     $scope.scrape_result.links.push("");
+                    $scope.scrape_result.event_id = event_id;
                     $scope.data_dump = data_scrape.field_data_dump;
                     
                 }
@@ -162,7 +167,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         });
     }
     
-    $scope.approve_actor = function(actor){
+    $scope.approve_actor = function(actor, event_id){
         //approve actor
         var form = {};
                 
@@ -228,7 +233,23 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             console.log(success);
             console.log(success.data.id);
             
-            $("#myModal").modal({ show : false });
+            //store newly created id
+            
+            
+            $('#myModal').modal('hide'); //close modal
+            
+            for(var i = 0; i < $scope.events.length; i++){
+                
+                var event = $scope.events[i];
+                if(event._id == event_id){
+                    for(var j = 0; j < event.relevant_actors.length; j++){
+                        var actor = event.relevant_actors[j];
+                        if(actor.name == $scope.scrape_result.stage_name){
+                            actor.db_id = success.data.id;
+                        }
+                    }
+                }
+            }            
         }, function (error) {
             console.log("Upload failed.");
             console.log(error);
@@ -248,5 +269,9 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             //failed http request
             console.log("HTTP request failed (scrapedEventsDumpController)");
         });        
+    }
+    
+    $scope.show_modal = function(bool){
+        $("#myModal").modal({ show : bool });
     }
 }]);
