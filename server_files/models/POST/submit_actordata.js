@@ -1,7 +1,9 @@
 //get database reference object
 var db_ref = require("../../db_config.js");
 var BSON = require('bson');
-var nodemailer = require('nodemailer'); 
+var nodemailer = require('nodemailer');
+var fs = require('fs');
+var http = require('http');
 
 //configure testing mode, if set: true, record will be collected, printed but not sent to db and no email notification will be sent.
 var test_mode = false;
@@ -82,10 +84,25 @@ module.exports = {
 
         //create array of target objectIds
         for(var i = 0; i < submission_data.assoc_actors.length; i++){
-            assoc_actors_formatted.push(BSON.ObjectID.createFromHexString(submission_data.assoc_actors[i]));
+            if(submission_data.assoc_actors[i].length > 1){
+                assoc_actors_formatted.push(BSON.ObjectID.createFromHexString(submission_data.assoc_actors[i]));
+            }
         }
 
-        if(file){ links_formatted["mf_img_link"] = file.filename; }
+        if(file){ 
+            links_formatted["mf_img_link"] = file.filename;
+        }
+        else{
+            var uri = "http:" + submission_data.img_title;
+            var filename = "new_img.png"
+            var dl_file = fs.createWriteStream(filename);
+            
+            console.log(uri);
+            
+            var dl_request = http.get(uri, function(dl_response) {
+                dl_response.pipe(dl_file);
+            });
+        }
 
         //create array of target objectIds ## unfinished need to deal with images and videos that are not null  and other button links too
         for(var i = 0; i < submission_data.button_links.length; i++){

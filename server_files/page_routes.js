@@ -9,7 +9,7 @@ router.get('/footer_html/', function(request, response) { response.render('parti
 router.get('/beef/:tagId', function(request, response) { response.render('pages/dynamic_pages/beef.ejs'); }); //beef page
 router.get('/actor/:tagId', function(request, response) { response.render('pages/dynamic_pages/actor.ejs'); }); //actor page
 router.get('/add_beef/', function(request, response) { response.render('pages/form_pages/submit_event.ejs'); }); // submit beefdata page page
-router.get('/raw_submit_actor/', function(request, response) { response.render('partials/submit_data/raw_submit_actor.ejs'); }); // add_actor form abstract
+router.get('/raw_add_actor/', function(request, response) { response.render('partials/submit_data/raw_add_actor.ejs'); }); // add_actor form abstract
 router.get('/add_actor/', function(request, response) { response.render('pages/form_pages/submit_actor.ejs'); }); // submit actordata page
 router.get('/list/:tagId', function(request, response) { response.render('pages/dynamic_pages/list.ejs'); }); // submit actordata page
 router.get('/subscribe/', function(request, response) { response.render('pages/form_pages/subscribe_to_news.ejs'); }); // submit actordata page
