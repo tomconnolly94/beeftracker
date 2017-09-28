@@ -219,7 +219,7 @@
                                                 
                                                 <div class="row" ng-repeat="actor in event.relevant_actors track by $index" style="margin:0px;">
                                                     <div class="col-sm-8 row" style="margin:0px;">    
-                                                        <input class="col-sm-2" type="radio" value={{actor.name}} ng-model=form_data[event._id].aggressor ng-disabled="actor.db_id.length == 0">
+                                                        <input class="col-sm-2" type="radio" value={{actor.db_id}} ng-model=form_data[event._id].aggressor ng-disabled="actor.db_id.length == 0">
                                                         <input class="col-sm-8" type="text" ng-value="actor.name" ng-model="actor.name" style="padding:0px;"/>
                                                     </div>
                                                     <div class="col-sm-4 text-center" style="margin:0px;">
@@ -274,10 +274,11 @@
                                         <div  class="col-sm-6" style="height:80%;">
                                             
                                             <h4>Categories</h4>
-                                            <h5 ng-repeat="category in event.selected_categories track by $index" style="margin:0px;">
-                                                {{category}}
-                                            </h5>
-                                            
+                                            <div ng-repeat="category in categories">
+                                                <input class="col-xs-2" type="checkbox" ng-value=category.cat_id ng-model="form_data[event._id].categories_selection[$index]" ng style="margin:0px;">
+                                                {{ category.name }}
+                                            </div>
+                                                                                        
                                         </div>
                                     </div>
                                     
@@ -285,7 +286,7 @@
                                         
                                         <div class="col-sm-6 row">
                                             
-                                            <h4 style="padding:15px;">Data Sources</h4>
+                                            <h4 style="padding:15px;">Data Source</h4>
                                             <h5 style="margin:0px;">
                                                 {{event.data_source}}
                                             </h5>

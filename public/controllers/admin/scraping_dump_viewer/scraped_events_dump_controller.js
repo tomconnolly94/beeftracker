@@ -20,6 +20,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             url: "/get_scraped_events_dump/"
         }).then(function(response_1){
             $scope.events = response_1.data.events;
+            console.log($scope.events);
 
             $scope.form_data = {};
 
@@ -28,7 +29,9 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                 $scope.form_data[$scope.events[i]._id].title = $scope.events[i].title;
                 $scope.form_data[$scope.events[i]._id].targets = {};
                 $scope.form_data[$scope.events[i]._id].description = $scope.events[i].description;
+                $scope.form_data[$scope.events[i]._id].categories_selection = {};
             }
+            $scope.get_category_data();
         }, 
         function(response_1) {
             //failed http request
@@ -37,6 +40,41 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
     }
     
     $scope.load_scraped_events();
+    
+    //function to request data about beef event categories in order to present it in the form
+    $scope.get_category_data = function(){
+        //request to get artists to fill aggressor and targets option inputs
+        //$http.get("/search_all_artists/").success(function(response){
+        $http({
+            method: 'GET',
+            url: "/get_event_categories/"
+        }).then(function(response){
+            //validate the url tagId to make sure the event exists                
+            if(response != undefined){
+                console.log(response);
+                
+                $scope.categories = response.data.categories;
+                
+                for(var i = 0; i < $scope.events.length; i++){
+                    
+                    var event = $scope.events[i];
+                    
+                    for(var j = 0; j < event.selected_categories.length; j++){
+                        
+                        $scope.form_data[$scope.events[i]._id].categories_selection[event.selected_categories[j]] = true;
+                    }
+                    
+                }
+            }
+            else{
+                //error msg
+                console.log("No events found in database");
+            }
+        }, function(response) {
+            //failed http request
+            console.log("Error in HTTP request in search_controller.js:searchController");
+        });
+    }
     
     $scope.approve_record = function(event_id){
         
@@ -51,21 +89,27 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             }
         }
         
-        var form = new FormData();
-
-        $scope.form_data[event_id].data_sources = event.data_sources;
-        $scope.form_data[event_id].img_link = event.img_title;
+        $scope.form_data[event_id].data_sources = [{url: event.data_source}];
+        $scope.form_data[event_id].img_title = event.img_title;
         $scope.form_data[event_id].media_link = event.media_link;
         $scope.form_data[event_id].highlights = [];
         $scope.form_data[event_id].targets = [];
+        $scope.form_data[event_id].button_links = [];
+        $scope.form_data[event_id].selected_categories = [];
         
         //handle highlight selection
         if($scope.form_data[event_id].highlights_selection && Object.keys($scope.form_data[event_id].highlights_selection).length){
+            
+            var highlights_object = {};
+            highlights_object.title = "Top Quotes";
+            highlights_object.fields = [];
+            
             for(var i = 0; i < Object.keys($scope.form_data[event_id].highlights_selection).length; i++){
                 var highlight_index = Object.keys($scope.form_data[event_id].highlights_selection)[i];
-
-                $scope.form_data[event_id].highlights.push(event.highlights[highlight_index]);
+                
+                highlights_object.fields.push(event.highlights[highlight_index]);
             }
+            $scope.form_data[event_id].highlights.push(highlights_object);
             delete $scope.form_data[event_id].highlights_selection;
         }
         
@@ -77,6 +121,16 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                 $scope.form_data[event_id].targets.push(event.relevant_actors[target_index].db_id);
             }
             delete $scope.form_data[event_id].targets_selection;
+        }
+        
+        //handle highlight selection
+        if($scope.form_data[event_id].categories_selection && Object.keys($scope.form_data[event_id].categories_selection).length){
+            for(var i = 0; i < Object.keys($scope.form_data[event_id].categories_selection).length; i++){
+                var category_index = Object.keys($scope.form_data[event_id].categories_selection)[i];
+
+                $scope.form_data[event_id].selected_categories.push($scope.categories[category_index].cat_id);
+            }
+            delete $scope.form_data[event_id].categories_selection;
         }
         
         //handle date
@@ -97,32 +151,24 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         }
         
         console.log($scope.form_data[event_id]);
-        
-        
-        //formdata.append('data', $scope.form_data);
-        console.log(fileService[0])
-        form.append('attachment', fileService[0]);
-        form.append('data', JSON.stringify($scope.form_data));        
-
-        console.log(form);
-        
-        /*return $http({
+        var form = JSON.stringify({data: $scope.form_data[event_id]});
+           
+        return $http({
             url: "/submit_beefdata",
             method: 'POST',
             data: form,
-            //assign content-type as undefined, the browser
-            //will assign the correct boundary for us
-            headers: { 'Content-Type': undefined},
-            //prevents serializing payload.  don't do it.
-            transformRequest: angular.identity
+            headers: { 'Content-Type': "application/json"}
+            //headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         })
         .then(function (success) {
+            
             console.log("Upload succeeded.");
-            $window.location.href = '/submission_confirmation';
+            $scope.remove_record(event_id);
+            
         }, function (error) {
             console.log("Upload failed.");
             console.log(error);
-        });*/
+        });
     }
     
     $scope.scrape_actor = function(actor, event_id){

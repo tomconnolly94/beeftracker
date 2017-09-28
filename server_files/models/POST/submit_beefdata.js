@@ -1,7 +1,9 @@
 //get database reference object
 var db_ref = require("../../db_config.js");
 var BSON = require('bson');
-var nodemailer = require('nodemailer'); 
+var nodemailer = require('nodemailer');
+var fs = require('fs');
+var dl_request = require('request');
 
 //configure testing mode, if set: true, record will be collected, printed but not sent to db and no email notification will be sent.
 var test_mode = false;
@@ -12,9 +14,21 @@ module.exports = {
 
         //extract data for use later
         var url = process.env.MONGODB_URI; //get db uri
-        var file = request.file; //get submitted image
-        var submission_data = JSON.parse(request.body.data); //get form data
+        var file;
+        if(request.file){
+            file = request.file; //get submitted image
+        }
+        
+        var submission_data;
 
+        if(typeof request.body.data =='object'){
+            // It is JSON
+            submission_data = request.body.data; //get form data
+        }
+        else{
+            submission_data = JSON.parse(request.body.data);
+        }
+        
         console.log(submission_data);
 
         //format data for db insertion
@@ -89,6 +103,38 @@ module.exports = {
 
             formatted_special_feature_content = submission_data.special_feature.content;
         }
+        
+        var img_title;
+        
+        if(file){ 
+            img_title = file.filename;
+        }
+        else{
+            var download = function(img_url, file_location, callback){
+                dl_request.head(img_url, function(err, res, body){
+                    //console.log('content-type:', res.headers['content-type']);
+                    //console.log('content-length:', res.headers['content-length']);
+
+                    dl_request(img_url).pipe(fs.createWriteStream(file_location)).on('close', callback);
+                });
+            };
+            
+            var img_url = submission_data.img_title;
+            if(!img_url.includes("http")){
+                img_url = "http:" + submission_data.img_title;
+            }
+            var url_split = img_url.split("/");
+            var filename = url_split[url_split.length - 1];
+            filename = filename.replace(/%/gi, "");
+            var file_location = "public/assets/images/events/" + filename;
+            
+            img_title = filename;
+            download(img_url, file_location, function(){
+                console.log('image downloaded');
+            });
+        }
+
+        
 
         var insert_object = {
             "title" : submission_data.title,
@@ -101,7 +147,7 @@ module.exports = {
             "data_sources" : data_sources_formatted,
             "links" : links_formatted,
             "selected_categories" : submission_data.selected_categories,
-            "img_title" : file.filename,
+            "img_title" : img_title,
             "special_feature" : {
                 type : submission_data.special_feature.type,
                 content : formatted_special_feature_content
