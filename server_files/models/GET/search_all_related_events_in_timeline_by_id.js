@@ -25,7 +25,7 @@ module.exports = {
                                                                         localField: "aggressor",
                                                                         foreignField: "_id",
                                                                         as: "aggressor_object" }},
-                                                                    { $unwind : "$targets"},
+                                                                    { $unwind : { "path" : "$targets", "preserveNullAndEmptyArrays": true  }},
                                                                     { $lookup : { 
                                                                         from: db_ref.get_current_actor_table(),
                                                                         localField: "targets",

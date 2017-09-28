@@ -119,7 +119,7 @@ module.exports = {
                 });
             };
             
-            var img_url = submission_data.img_title;
+            var img_url = submission_data.img_title.split("?")[0];
             if(!img_url.includes("http")){
                 img_url = "http:" + submission_data.img_title;
             }
