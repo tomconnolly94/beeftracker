@@ -38,14 +38,14 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
     
     $scope.load_scraped_events();
     
-    $scope.approve_record = function(){
+    $scope.approve_record = function(event_id){
         
         var event;
         
         //find event
         for(var i = 0; i < $scope.events.length; i++){
             
-            if($scope.events[i]._id == id){
+            if($scope.events[i]._id == event_id){
                 event = $scope.events[i];
                 break;
             }
@@ -53,18 +53,31 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         
         var form = new FormData();
 
-        $scope.form_data[id].data_sources = event.data_sources;
-        $scope.form_data[id].img_link = event.img_title;
-        $scope.form_data[id].media_link = event.media_link;
-        $scope.form_data[id].highlights = [];
+        $scope.form_data[event_id].data_sources = event.data_sources;
+        $scope.form_data[event_id].img_link = event.img_title;
+        $scope.form_data[event_id].media_link = event.media_link;
+        $scope.form_data[event_id].highlights = [];
+        $scope.form_data[event_id].targets = [];
         
         //handle highlight selection
-        for(var i = 0; i < Object.keys($scope.form_data[id].highlights_selection).length; i++){
-            var highlight_index = Object.keys($scope.form_data[id].highlights_selection)[i];
-            
-            $scope.form_data[id].highlights.push(event.highlights[highlight_index]);
+        if($scope.form_data[event_id].highlights_selection && Object.keys($scope.form_data[event_id].highlights_selection).length){
+            for(var i = 0; i < Object.keys($scope.form_data[event_id].highlights_selection).length; i++){
+                var highlight_index = Object.keys($scope.form_data[event_id].highlights_selection)[i];
+
+                $scope.form_data[event_id].highlights.push(event.highlights[highlight_index]);
+            }
+            delete $scope.form_data[event_id].highlights_selection;
         }
-        delete $scope.form_data[id].highlights_selection;
+        
+        //handle highlight selection
+        if($scope.form_data[event_id].targets_selection && Object.keys($scope.form_data[event_id].targets_selection).length){
+            for(var i = 0; i < Object.keys($scope.form_data[event_id].targets_selection).length; i++){
+                var target_index = Object.keys($scope.form_data[event_id].targets_selection)[i];
+
+                $scope.form_data[event_id].targets.push(event.relevant_actors[target_index].db_id);
+            }
+            delete $scope.form_data[event_id].targets_selection;
+        }
         
         //handle date
         
@@ -80,10 +93,10 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                     date_split[1] = months.indexOf(date_split[1].toLowerCase());
                 }
             }
-            $scope.form_data[id].date = date_split[0] + "/" + date_split[1] + "/" + date_split[2];
+            $scope.form_data[event_id].date = date_split[0] + "/" + date_split[1] + "/" + date_split[2];
         }
         
-        console.log($scope.form_data[id]);
+        console.log($scope.form_data[event_id]);
         
         
         //formdata.append('data', $scope.form_data);
@@ -93,7 +106,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
 
         console.log(form);
         
-        return $http({
+        /*return $http({
             url: "/submit_beefdata",
             method: 'POST',
             data: form,
@@ -109,57 +122,90 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         }, function (error) {
             console.log("Upload failed.");
             console.log(error);
-        });
+        });*/
     }
     
     $scope.scrape_actor = function(actor, event_id){
         
         //invoke an endpoint to searh the db for an actor with name == actor, return _id if exists, avoid scraping if an _id is returned and assign _id to actor.db_id
-        
-        
-        //load events from scraping dump db table
         $http({
             method: 'GET',
-            url: "/scrape_actor/" + actor
+            url: "/search_actors_by_stage_name/" + actor
         }).then(function(response_1){
-            var data_scrape = JSON.parse(response_1.data.result);
             
+            console.log(response_1);
             
+            var actors = response_1.data.actors;
             
-            if(typeof data_scrape == "string"){ //actor has not been found
-                alert("name cannot be scraped")
-            }
-            else if(typeof data_scrape == "object"){ //actor has been found and either data is returned or request needs more info
-                
-                $scope.scrape_result_type = "";
-                
-                if(data_scrape.length){ //array further options
-                
-                    $scope.scrape_result_type = "options";
-                    $scope.scraping_options = data_scrape;
-                    $scope.scraping_options_conf = {};
-                    $scope.scraping_options_conf.conf = "";
-                    $scope.scraping_options_conf.event_id = event_id;
+            if(actors.length == 1){
+                            
+                for(var i = 0; i < $scope.events.length; i++){
+
+                    var event = $scope.events[i];
+                    if(event._id == event_id){
+                        for(var j = 0; j < event.relevant_actors.length; j++){
+                            var rel_actor = event.relevant_actors[j];
+                            if(rel_actor.name == actors[0].stage_name){
+                                rel_actor.db_id = actors[0]._id;
+                            }
+                        }
+                    }
                 }
-                else{ //data object
-                    
-                    $scope.scrape_result_type = "data";
-                    $scope.scrape_result = JSON.parse(data_scrape.actor_object);
-                    //add extra fields to allow additions
-                    $scope.scrape_result.nicknames.push("");
-                    $scope.scrape_result.occupations.push("");
-                    $scope.scrape_result.achievements.push("");
-                    $scope.scrape_result.associated_actors.push("");
-                    $scope.scrape_result.links.push("");
-                    $scope.scrape_result.event_id = event_id;
-                    $scope.data_dump = data_scrape.field_data_dump;
-                    
-                }
-                $("#myModal").modal({ show : true });
             }
-            else{ //un-recognised field
-                console.log(data_scrape);
-            }        
+        
+            else if(actors.length == 0){
+                //load events from scraping dump db table
+                $http({
+                    method: 'GET',
+                    url: "/scrape_actor/" + actor
+                }).then(function(response_2){
+                    var data_scrape = JSON.parse(response_2.data.result);
+
+
+
+                    if(typeof data_scrape == "string"){ //actor has not been found
+                        alert("name cannot be scraped")
+                    }
+                    else if(typeof data_scrape == "object"){ //actor has been found and either data is returned or request needs more info
+
+                        $scope.scrape_result_type = "";
+
+                        if(data_scrape.length){ //array further options
+
+                            $scope.scrape_result_type = "options";
+                            $scope.scraping_options = data_scrape;
+                            $scope.scraping_options_conf = {};
+                            $scope.scraping_options_conf.conf = "";
+                            $scope.scraping_options_conf.event_id = event_id;
+                        }
+                        else{ //data object
+
+                            $scope.scrape_result_type = "data";
+                            $scope.scrape_result = JSON.parse(data_scrape.actor_object);
+                            //add extra fields to allow additions
+                            $scope.scrape_result.nicknames.push("");
+                            $scope.scrape_result.occupations.push("");
+                            $scope.scrape_result.achievements.push("");
+                            $scope.scrape_result.associated_actors.push("");
+                            $scope.scrape_result.links.push("");
+                            $scope.scrape_result.event_id = event_id;
+                            $scope.data_dump = data_scrape.field_data_dump;
+
+                        }
+                        $("#myModal").modal({ show : true });
+                    }
+                    else{ //un-recognised field
+                        console.log(data_scrape);
+                    }        
+                }, 
+                function(response_2) {
+                    //failed http request
+                    console.log("HTTP request failed (scrapedEventsDumpController)");
+                });
+            }
+            else{
+                console.log("Found " + actors.length + "actors. ???");
+            }
         }, 
         function(response_1) {
             //failed http request
@@ -243,9 +289,9 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                 var event = $scope.events[i];
                 if(event._id == event_id){
                     for(var j = 0; j < event.relevant_actors.length; j++){
-                        var actor = event.relevant_actors[j];
-                        if(actor.name == $scope.scrape_result.stage_name){
-                            actor.db_id = success.data.id;
+                        var rel_actor = event.relevant_actors[j];
+                        if(rel_actor.name == $scope.scrape_result.stage_name){
+                            rel_actor.db_id = success.data.id;
                         }
                     }
                 }
