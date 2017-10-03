@@ -251,6 +251,9 @@
                                         <div  class="col-sm-3" style="height:80%;margin:20px 0px;">
                                             <img ng-src="{{ event.img_title }}" style="height:100px;width:100%;"/>
                                             <input type="text" ng-model="event.img_title" ng-style="margin:0px;">
+                                            
+                                            <iframe scrolling="no" ng-src="{{ trustSrc( event.media_link ) }}" class="embed-responsive-item" allowfullscreen="true"></iframe><!-- youtube embed -->
+                                            
                                         </div>
                                         
                                     </div>
