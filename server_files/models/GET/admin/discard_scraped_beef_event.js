@@ -14,7 +14,7 @@ module.exports = {
         db_ref.get_db_object().connect(url, function(err, db) {
             if(err){ console.log(err); }
             else{
-                db.collection(db_ref.get_scraped_events_dump()).remove( { _id: object } )
+                db.collection(db_ref.get_scraped_events_dump_table()).remove( { _id: object } )
                 
                 response.send();
             }

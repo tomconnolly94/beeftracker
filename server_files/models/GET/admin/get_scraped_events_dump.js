@@ -14,7 +14,7 @@ module.exports = {
             else{
 
 
-                db.collection(db_ref.get_scraped_events_dump()).find({}).toArray(function(queryErr, docs) {
+                db.collection(db_ref.get_scraped_events_dump_table()).find({}).toArray(function(queryErr, docs) {
                     response.send({events : docs});
                 });
             }

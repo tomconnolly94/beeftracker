@@ -250,10 +250,10 @@
                                         
                                         <div  class="col-sm-3" style="height:80%;margin:20px 0px;">
                                             <img ng-src="{{ event.img_title }}" style="height:100px;width:100%;"/>
-                                            <input type="text" ng-model="event.img_title" ng-style="margin:0px;">
+                                            <input type="text" ng-model="event.img_title" style="margin:0px;">
                                             
-                                            <iframe scrolling="no" ng-src="{{ trustSrc( event.media_link ) }}" class="embed-responsive-item" allowfullscreen="true"></iframe><!-- youtube embed -->
-                                            
+                                            <iframe scrolling="no" ng-src="{{trustSrc(event.media_link)}}" class="embed-responsive-item" allowfullscreen="true"></iframe><!-- youtube embed -->
+                                            <input type="text" ng-model="event.media_link" style="margin:0px;">
                                         </div>
                                         
                                     </div>
@@ -279,7 +279,7 @@
                                             
                                             <h4>Categories</h4>
                                             <div ng-repeat="category in categories">
-                                                <input class="col-xs-2" type="checkbox" ng-value=category.cat_id ng-model="form_data[event._id].categories_selection[$index]" ng-style="margin:0px;">
+                                                <input class="col-xs-2" type="checkbox" ng-value=category.cat_id ng-model="form_data[event._id].categories_selection[$index]" style="margin:0px;">
                                                 {{ category.name }}
                                             </div>
                                                                                         

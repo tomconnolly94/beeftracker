@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$http', function($scope,$http) {
+scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$http','$sce', function($scope,$http, $sce) {
     
     
     $scope.load_scraped_events = function(){
@@ -149,6 +149,8 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             }
             $scope.form_data[event_id].date = date_split[0] + "/" + date_split[1] + "/" + date_split[2];
         }
+        
+        $scope.form_data[event_id].record_origin = "scraped";
         
         console.log($scope.form_data[event_id]);
         var form = JSON.stringify({data: $scope.form_data[event_id]});
@@ -365,5 +367,9 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
     
     $scope.show_modal = function(bool){
         $("#myModal").modal({ show : bool });
+    }
+    
+    $scope.trustSrc = function(src) {
+        return $sce.trustAsResourceUrl(src);
     }
 }]);
