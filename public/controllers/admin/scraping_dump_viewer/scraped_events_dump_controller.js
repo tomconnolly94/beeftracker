@@ -113,7 +113,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             delete $scope.form_data[event_id].highlights_selection;
         }
         
-        //handle highlight selection
+        //handle targets selection
         if($scope.form_data[event_id].targets_selection && Object.keys($scope.form_data[event_id].targets_selection).length){
             for(var i = 0; i < Object.keys($scope.form_data[event_id].targets_selection).length; i++){
                 var target_index = Object.keys($scope.form_data[event_id].targets_selection)[i];
@@ -123,7 +123,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             delete $scope.form_data[event_id].targets_selection;
         }
         
-        //handle highlight selection
+        //handle category selection
         if($scope.form_data[event_id].categories_selection && Object.keys($scope.form_data[event_id].categories_selection).length){
             for(var i = 0; i < Object.keys($scope.form_data[event_id].categories_selection).length; i++){
                 var category_index = Object.keys($scope.form_data[event_id].categories_selection)[i];
@@ -209,9 +209,9 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                 }).then(function(response_2){
                     var data_scrape = JSON.parse(response_2.data.result);
 
+                    console.log(data_scrape);
 
-
-                    if(typeof data_scrape == "string"){ //actor has not been found
+                    if(data_scrape.error){ //actor has not been found
                         alert("name cannot be scraped")
                     }
                     else if(typeof data_scrape == "object"){ //actor has been found and either data is returned or request needs more info
@@ -286,12 +286,6 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             }
         }
 
-        for(var i = 0; i < $scope.scrape_result.data_sources.length; i++){
-            if(!$scope.scrape_result.data_sources[i].length > 0){
-                $scope.scrape_result.data_sources.splice(i, 1);
-            }
-        }
-
         for(var i = 0; i < $scope.scrape_result.links.length; i++){
             if(!$scope.scrape_result.links[i].length > 0){
                 $scope.scrape_result.links.splice(i, 1);
@@ -307,7 +301,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         form.achievements = $scope.scrape_result.achievements;
         form.origin = $scope.scrape_result.origin;
         form.assoc_actors = $scope.scrape_result.associated_actors;
-        form.data_sources = [$scope.scrape_result.data_sources];
+        form.data_sources = [$scope.scrape_result.data_source];
         form.img_title = $scope.scrape_result.img_title;
         form.button_links = $scope.scrape_result.links;
         

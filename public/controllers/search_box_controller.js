@@ -15,7 +15,6 @@ function SearchBoxReusableController(){
         $scope.submit = function(){
 
             console.log($scope.search_term);
-            console.log($scope.search_term.length);
 
             if ($scope.search_term.length > 1 && $scope.search_term !=" ") {
                 //make http request to server for data
@@ -41,31 +40,30 @@ function SearchBoxReusableController(){
                             var obj = objects[objectId];
                             var name = "";
                             var title = "";
-                            var type_path = "";
-                            var img_path = "";
+                            var img_link = "";
+                            var content_link = "";
 
                             //if object is an event config record differently
                             if(obj.hasOwnProperty('aggressor')){ //object is an event
                                 title = objects[objectId].title;
-                                name = objects[objectId].name;
-                                type_path = "/beef/";
-                                img_path = "/event_images/";
+                                name = " - " + objects[objectId].aggressor_object[0].stage_name;
+                                img_link = "/event_images/" + objects[objectId].img_title;
+                                content_link = "/beef/" + objects[objectId]._id;
                             }
                             else{//object is an artists
                                 title = objects[objectId].stage_name;
-                                type_path = "/actor/";
-                                img_path = "/actor_images/";
+                                img_link = "/actor_images/" + objects[objectId].img_title;
+                                content_link = "/actor/" + objects[objectId]._id;
                             }
 
 
                             //create data record
                             var record = {
+                                event_num : objects[objectId]._id,
+                                content_link : content_link,
                                 name : name,
                                 title : title,
-                                img_link : objects[objectId].img_title,
-                                eventNum : objects[objectId]._id,
-                                type_path : type_path,
-                                img_path : img_path
+                                img_link : img_link
                             };
 
                             //add data record to global scope

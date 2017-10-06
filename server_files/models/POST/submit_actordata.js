@@ -33,7 +33,6 @@ module.exports = {
         console.log(submission_data);
         
         //format data for db insertion
-        //console.log(submission_data);
         var date = submission_data.date.split('/');
         var nicknames_formatted = new Array();
         var occupations_formatted = new Array();
@@ -89,8 +88,10 @@ module.exports = {
             }
         }
 
+        var img_title = "";
+        
         if(file){ 
-            links_formatted["mf_img_link"] = file.filename;
+            img_title = file.filename;
         }
         else{
             var download = function(img_url, file_location, callback){
@@ -114,7 +115,7 @@ module.exports = {
             console.log(filename);
             var file_location = "public/assets/images/actors/" + filename;
             
-            links_formatted["mf_img_link"] = filename;
+            img_title = filename;
             download(img_url, file_location, function(){
                 console.log('image downloaded');
             });
@@ -142,7 +143,8 @@ module.exports = {
             "data_sources" : data_sources_formatted,
             "associated_actors" : assoc_actors_formatted,
             "links" : links_formatted, 
-            "date_added" : new Date()
+            "date_added" : new Date(),
+            img_title: img_title
         }
 
         console.log(insert_object);

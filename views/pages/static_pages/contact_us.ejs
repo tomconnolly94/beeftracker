@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="beef_app">
 
     <!--
         Page name: home.ejs
@@ -33,7 +33,8 @@
 
     <body id="bootstrap-overrides">
         <div class="container" style="text-align:center">
-            <div id="top_bar"></div>
+           
+            <div header-directive></div>
             
             <!-- spacer bar -->
             <div class="row">
@@ -88,8 +89,7 @@
                 <div class="col-sm-4"></div>
             </div>
             
-            
-            <div id="bottom_bar"></div>
+            <div footer-directive></div>
         </div>
         
         <!-- JQuery -->
@@ -104,13 +104,7 @@
         <script src="/controllers/search_box_controller.js"></script>
         <script src="/controllers/static_pages/contact_us_app.js"></script>
         
-        <script>        
-            //load header and footer
-            $(function(){
-                $("#top_bar").load("/partials/header.ejs");
-                $("#bottom_bar").load("/partials/footer.ejs");
-            });
-            
+        <script>
             //get client ip address - not in use
             /*$.getJSON('//freegeoip.net/json/?callback=?', function(data) {
                 console.log(JSON.stringify(data, null, 2));
