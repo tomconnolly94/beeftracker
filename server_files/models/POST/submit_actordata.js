@@ -108,10 +108,9 @@ module.exports = {
             }
             var url_split = img_url.split("/");
             var filename = url_split[url_split.length - 1];
-            console.log("############################################################");
-            console.log(filename);
+            
             filename = filename.replace(/%/gi, "");
-            console.log(filename);
+            
             var file_location = "public/assets/images/actors/" + filename;
             
             links_formatted["mf_img_link"] = filename;
