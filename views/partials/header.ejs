@@ -31,7 +31,7 @@
         
         <hr style="margin:0px;">
         
-        <nav class="navbar navbar-default navbar-static-top">
+        <nav class="navbar navbar-default navbar-static-top" ng-controller="searchController" style="z-index:0">
             <div class="container-fluid" style="background-color:black;">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -50,21 +50,28 @@
                         <li id="button_3"><a href="/contact_us" target="_self"><b>Contact</b></a></li>
                     </ul>
                 
-                    <div class="navbar-form navbar-right" ng-controller="searchController">
+                    <div class="navbar-form navbar-right">
                         <div class="input-group">
                             <input type="text" class="form-control" ng-model="search_term" ng-change="submit()" placeholder="Search">
                             <div class="input-group-btn">
                                 <button class="btn btn-default" type="submit" ng-click="" style="height:34px;">
-                                <i class="glyphicon glyphicon-search"></i>
+                                    <i class="glyphicon glyphicon-search"></i>
                                 </button>
                             </div>
                         </div>
-                        <div ng-show="show_results" style="color:white;">
-                            <h3>hellio</h3>
-                        
-                        </div>
                     </div>
                 </div>
+            </div>
+            <div ng-show="show_results" style="color:black;">
+                <a class="row" target="_self" ng-repeat="record in records" ng-href="{{record.content_link}}" style="margin:5px;">
+                    <div class="col-xs-5"></div>
+                    <div class="col-xs-7 row" style="border-bottom:1px solid #000000; padding:2px">
+                        <div class="col-xs-10" style="/*float:none;display:inline-block;*/"> {{ record.title }} {{ record.name }}  </div>
+                        <div class="col-xs-1">
+                            <img ng-src="{{record.img_link}}" style="height:50px;width:50px;float:none;display:inline-block;">
+                        </div>
+                    </div>
+                </a>
             </div>
         </nav>
         

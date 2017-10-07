@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$http', function($scope,$http) {
+scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$http','$sce', function($scope,$http, $sce) {
     
     
     $scope.load_scraped_events = function(){
@@ -113,7 +113,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             delete $scope.form_data[event_id].highlights_selection;
         }
         
-        //handle highlight selection
+        //handle targets selection
         if($scope.form_data[event_id].targets_selection && Object.keys($scope.form_data[event_id].targets_selection).length){
             for(var i = 0; i < Object.keys($scope.form_data[event_id].targets_selection).length; i++){
                 var target_index = Object.keys($scope.form_data[event_id].targets_selection)[i];
@@ -123,7 +123,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             delete $scope.form_data[event_id].targets_selection;
         }
         
-        //handle highlight selection
+        //handle category selection
         if($scope.form_data[event_id].categories_selection && Object.keys($scope.form_data[event_id].categories_selection).length){
             for(var i = 0; i < Object.keys($scope.form_data[event_id].categories_selection).length; i++){
                 var category_index = Object.keys($scope.form_data[event_id].categories_selection)[i];
@@ -149,6 +149,8 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             }
             $scope.form_data[event_id].date = date_split[0] + "/" + date_split[1] + "/" + date_split[2];
         }
+        
+        $scope.form_data[event_id].record_origin = "scraped";
         
         console.log($scope.form_data[event_id]);
         var form = JSON.stringify({data: $scope.form_data[event_id]});
@@ -207,9 +209,9 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                 }).then(function(response_2){
                     var data_scrape = JSON.parse(response_2.data.result);
 
+                    console.log(data_scrape);
 
-
-                    if(typeof data_scrape == "string"){ //actor has not been found
+                    if(data_scrape.error){ //actor has not been found
                         alert("name cannot be scraped")
                     }
                     else if(typeof data_scrape == "object"){ //actor has been found and either data is returned or request needs more info
@@ -284,15 +286,25 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             }
         }
 
-        for(var i = 0; i < $scope.scrape_result.data_sources.length; i++){
-            if(!$scope.scrape_result.data_sources[i].length > 0){
-                $scope.scrape_result.data_sources.splice(i, 1);
-            }
-        }
-
         for(var i = 0; i < $scope.scrape_result.links.length; i++){
             if(!$scope.scrape_result.links[i].length > 0){
                 $scope.scrape_result.links.splice(i, 1);
+            }
+            else{ 
+                var link_objs = {};
+                
+                var str = $scope.scrape_result.links[i];
+                
+                var reg = /www.|.com|.co.uk|.org|.gov|.co|.fr|.de|.net|http:/ig;
+                str = str.replace(reg, ""); 
+                
+                var link_obj = {};
+                
+                link_obj.title = str;
+                link_obj.special_title = str;
+                link_obj.url = $scope.scrape_result.links[i];
+                
+                $scope.scrape_result.links[i] = link_obj;
             }
         }
         
@@ -305,7 +317,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         form.achievements = $scope.scrape_result.achievements;
         form.origin = $scope.scrape_result.origin;
         form.assoc_actors = $scope.scrape_result.associated_actors;
-        form.data_sources = [$scope.scrape_result.data_sources];
+        form.data_sources = [$scope.scrape_result.data_source];
         form.img_title = $scope.scrape_result.img_title;
         form.button_links = $scope.scrape_result.links;
         
@@ -365,5 +377,9 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
     
     $scope.show_modal = function(bool){
         $("#myModal").modal({ show : bool });
+    }
+    
+    $scope.trustSrc = function(src) {
+        return $sce.trustAsResourceUrl(src);
     }
 }]);

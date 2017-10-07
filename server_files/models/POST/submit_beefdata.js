@@ -40,6 +40,8 @@ module.exports = {
         var links_formatted = {};
 
 
+        
+        
         //create array of target objectIds
         for(var i = 0; i < submission_data.targets.length; i++){
             targets_formatted.push(BSON.ObjectID.createFromHexString(submission_data.targets[i]));
@@ -63,8 +65,6 @@ module.exports = {
         for(var i = 0; i < submission_data.data_sources.length; i++){
             data_sources_formatted.push(submission_data.data_sources[i].url);
         }
-
-        console.log(file);
 
         //create array of target objectIds ## unfinished need to deal with images and videos that are not null  and other button links too
         for(var i = 0; i < submission_data.button_links.length; i++){
@@ -110,31 +110,32 @@ module.exports = {
             img_title = file.filename;
         }
         else{
-            var download = function(img_url, file_location, callback){
-                dl_request.head(img_url, function(err, res, body){
-                    //console.log('content-type:', res.headers['content-type']);
-                    //console.log('content-length:', res.headers['content-length']);
+            if(submission_data.img_title.length > 0){
+            
+                var download = function(img_url, file_location, callback){
+                    dl_request.head(img_url, function(err, res, body){
+                        //console.log('content-type:', res.headers['content-type']);
+                        //console.log('content-length:', res.headers['content-length']);
 
-                    dl_request(img_url).pipe(fs.createWriteStream(file_location)).on('close', callback);
+                        dl_request(img_url).pipe(fs.createWriteStream(file_location)).on('close', callback);
+                    });
+                };
+
+                var img_url = submission_data.img_title.split("?")[0];
+                if(!img_url.includes("http")){
+                    img_url = "http:" + submission_data.img_title;
+                }
+                var url_split = img_url.split("/");
+                var filename = url_split[url_split.length - 1];
+                filename = filename.replace(/%/gi, "");
+                var file_location = "public/assets/images/events/" + filename;
+
+                img_title = filename;
+                download(img_url, file_location, function(){
+                    console.log('image downloaded');
                 });
-            };
-            
-            var img_url = submission_data.img_title.split("?")[0];
-            if(!img_url.includes("http")){
-                img_url = "http:" + submission_data.img_title;
             }
-            var url_split = img_url.split("/");
-            var filename = url_split[url_split.length - 1];
-            filename = filename.replace(/%/gi, "");
-            var file_location = "public/assets/images/events/" + filename;
-            
-            img_title = filename;
-            download(img_url, file_location, function(){
-                console.log('image downloaded');
-            });
         }
-
-        
 
         var insert_object = {
             "title" : submission_data.title,
@@ -163,45 +164,53 @@ module.exports = {
             db_ref.get_db_object().connect(url, function(err, db) {
                 if(err){ console.log(err); }
                 else{
-                    //standard query to match an event and resolve aggressor and targets references
+                    //standard query to insert into live events table
                     db.collection(db_ref.get_current_event_table()).insert(insert_object, function(err, document){
 
                         if(document != null && document.ops != null){
-
+                            
                             //add _id field so object can be found later
                             insert_object._id = document.ops[0]._id;
+                            
+                            var events_confirm_obj = {
+                                event_id: insert_object._id,
+                                title: insert_object.title
+                            }
 
-                            //parse json directly to string with indents
-                            var text = JSON.stringify(insert_object, null, 2);
+                            db.collection(db_ref.get_scraped_events_confirmed_table()).insert(events_confirm_obj, function(err, document){
 
-                            var transporter = nodemailer.createTransport({
-                                service: 'Gmail',
-                                auth: {
-                                    user: 'beeftracker@gmail.com', // Your email id
-                                    pass: 'UoNYtG4gDsabqtpMtx7tryQWKi8Nlm49HXKn3YqqDslZKb6AbAcTy57k/ZGfTSY0' // Your password
-                                }
-                            });
+                                //parse json directly to string with indents
+                                var text = JSON.stringify(insert_object, null, 2);
 
-                            //config mail options
-                            var mailOptions = {
-                                from: 'bf_sys@gmail.com', // sender address
-                                to: 'beeftracker@gmail.com', // list of receivers
-                                subject: 'New Beefdata Submission', // Subject line
-                                text: text //, // plaintext body
-                                // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
-                            };
+                                var transporter = nodemailer.createTransport({
+                                    service: 'Gmail',
+                                    auth: {
+                                        user: 'beeftracker@gmail.com', // Your email id
+                                        pass: 'UoNYtG4gDsabqtpMtx7tryQWKi8Nlm49HXKn3YqqDslZKb6AbAcTy57k/ZGfTSY0' // Your password
+                                    }
+                                });
 
-                            //send email notifying beeftracker account new submisson
-                            transporter.sendMail(mailOptions, function(error, info){
-                                if(error){
-                                    console.log(error);
-                                }else{
-                                    console.log('Message sent: ' + info.response);
-                                    response.json({yo: info.response});
+                                //config mail options
+                                var mailOptions = {
+                                    from: 'bf_sys@gmail.com', // sender address
+                                    to: 'beeftracker@gmail.com', // list of receivers
+                                    subject: 'New Beefdata Submission', // Subject line
+                                    text: text //, // plaintext body
+                                    // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
                                 };
-                            });
 
-                            response.send();
+                                //send email notifying beeftracker account new submisson
+                                transporter.sendMail(mailOptions, function(error, info){
+                                    if(error){
+                                        console.log(error);
+                                    }else{
+                                        console.log('Message sent: ' + info.response);
+                                        response.json({yo: info.response});
+                                    };
+                                });
+
+                                response.send();
+                            });
                         }
 
                     });

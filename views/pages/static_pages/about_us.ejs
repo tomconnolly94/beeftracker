@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html ng-app="about_us">
 
     <!--
         Page name: home.ejs
@@ -33,7 +33,8 @@
 
     <body id="bootstrap-overrides">
         <div class="container" style="text-align:center">
-            <div id="top_bar"></div>
+            
+            <div header-directive></div>
             
             <div class="row">
                 
@@ -67,7 +68,7 @@
                 <div class="col-xs-12" style="height:60px;"></div>
             </div>
             
-            <div id="bottom_bar"></div>
+            <div footer-directive></div>
         </div>
         
         <!-- JQuery -->
@@ -84,10 +85,10 @@
         
         <script>        
             //load header and footer
-            $(function(){
+            /*$(function(){
                 $("#top_bar").load("/partials/header.ejs");
                 $("#bottom_bar").load("/partials/footer.ejs");
-            });
+            });*/
             
             //get client ip address - not in use
             /*$.getJSON('//freegeoip.net/json/?callback=?', function(data) {
