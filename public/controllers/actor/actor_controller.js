@@ -31,7 +31,7 @@ actor_app.controller("actorSearchController", ['$scope','$http', '$routeParams',
                     $scope.stage_name = actor_object.stage_name;
                     $scope.birth_name = actor_object.birth_name;
                     $scope.d_o_b = actor_object.d_o_b.slice(0,10);
-                    $scope.loc_img_link = actor_object.links.mf_img_link;
+                    $scope.loc_img_link = actor_object.img_title ? actor_object.img_title: actor_object.links.mf_img_link;
                     $scope.bio = actor_object.bio;
                     $scope.data_sources = actor_object.data_sources;
                     $scope.nicknames = actor_object.nicknames;

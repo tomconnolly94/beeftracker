@@ -34,7 +34,12 @@ h3, h4, h5{
     color: #000000;
 }
 
-/*handle zone resizing */
+#top_events_zone{
+    height:auto;
+}
+
+/*
+handle zone resizing 
 @media (max-width: 425px) {
     #top_events_zone{
         height:200px;
@@ -59,7 +64,7 @@ h3, h4, h5{
     #top_events_zone{
         height:500px;
     }
-}
+}*/
 
 .top_event_title{
     font-weight:bold;

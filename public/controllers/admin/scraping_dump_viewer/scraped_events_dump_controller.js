@@ -290,6 +290,22 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             if(!$scope.scrape_result.links[i].length > 0){
                 $scope.scrape_result.links.splice(i, 1);
             }
+            else{ 
+                var link_objs = {};
+                
+                var str = $scope.scrape_result.links[i];
+                
+                var reg = /www.|.com|.co.uk|.org|.gov|.co|.fr|.de|.net|http:/ig;
+                str = str.replace(reg, ""); 
+                
+                var link_obj = {};
+                
+                link_obj.title = str;
+                link_obj.special_title = str;
+                link_obj.url = $scope.scrape_result.links[i];
+                
+                $scope.scrape_result.links[i] = link_obj;
+            }
         }
         
         form.stage_name = $scope.scrape_result.stage_name;
