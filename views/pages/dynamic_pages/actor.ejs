@@ -49,9 +49,13 @@
                     
                     <div class="col-sm-12 row">
                         <div class="col-sm-4" style="height:100%">
-                            <img class="img-circle" src="/actor_images/{{ loc_img_link }}" class="img-circle" height="100%" width="100%">
+                            <img class="img-circle" src="{{ loc_img_link }}" class="img-circle" height="100%" width="100%">
                         </div>
 
+                        <script>
+                            cl.imageTag('beeftracker_new_logo_cropped_small_square_psypj8.png').toHtml();
+                        </script>
+                        
                         <div class="col-sm-8">
                             <h1>{{ stage_name }}</h1>
                             <h4 class="sub">{{ birth_name }}</h4>
@@ -126,7 +130,7 @@
                     <h2>Related actors:</h2>        
                         <div ng-repeat="actor in associated_actors"  class="selectable_event" style="background-color:#9C0505;font-weight:bold;padding:15px;margin:0px;border-color:#000000;border-width:10px;border-radius: 5px;float:left;" target="_self">
                             <a ng-href="/actor/{{ actor._id }}" target="_self" style="padding:0px;">
-                                <img class="img-circle" ng-src="/event_images/{{ actor.loc_img_link }}" style="margin:0px auto;" height="50px" width="50px">
+                                <img class="img-circle" ng-src={{event.loc_img_link}} style="margin:0px auto;" height="50px" width="50px">
                                 <h5>{{ actor.stage_name }}</h5>
                             </a>
                         </div>
@@ -136,7 +140,7 @@
                     <h2>Recent Events:</h2>        
                         <div ng-repeat="event in events"  class="selectable_event" style="background-color:#9C0505;font-weight:bold;padding:15px;margin:10px;border-color:#000000;border-width:10px;border-radius: 5px;float:left;" target="_self">
                             <a ng-href="/beef/{{event._id}}" target="_self" style="padding:0px;">
-                                <img class="img-circle" ng-src="/event_images/{{event.loc_img_link}}" height="50px" width="50px">
+                                <img class="img-circle" ng-src={{event.loc_img_link}} height="50px" width="50px">
                                 <h5>{{ event.title }}</h5>
                                 actors included: 
                                 <ul>
@@ -177,6 +181,9 @@
         
         <!-- JQuery -->
         <script src="/modules/jquery/dist/jquery.min.js"></script>
+        
+        <!-- Globals file -->
+        <script src="/js/globals.js"></script>
         
         <!-- Core angular scripts -->
         <script src="/modules/angular/angular.min.js"></script>

@@ -40,7 +40,7 @@ actor_app.controller("recentEventsController", ['$scope','$http', '$routeParams'
                                 title : event.title,
                                 aggressor : event.aggressor_object[0].stage_name,
                                 targets : event.targets,
-                                loc_img_link : event.img_title
+                                loc_img_link : EVENT_IMAGES_PATH + event.img_title
                             };
                         
                         $scope.events[i] = record;

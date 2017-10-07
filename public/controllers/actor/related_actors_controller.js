@@ -27,7 +27,7 @@ actor_app.controller("relatedActorsController", ['$scope','$http', '$routeParams
             for(var i = 0; i < actors.length; i++){
                 var actor = {
                     _id : actors[i]._id,
-                    loc_img_link : actors[i].img_title,
+                    loc_img_link : EVENT_IMAGES_PATH + actors[i].img_title,
                     stage_name : actors[i].stage_name
                 };
                 $scope.associated_actors.push(actor);
