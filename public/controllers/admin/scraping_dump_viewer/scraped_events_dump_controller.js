@@ -96,6 +96,11 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         $scope.form_data[event_id].targets = [];
         $scope.form_data[event_id].button_links = [];
         $scope.form_data[event_id].selected_categories = [];
+        $scope.form_data[event_id].special_feature = {
+            title: event.media_link,
+            content: event.media_link
+        };
+        
         $scope.source = "scraping";
         
         //handle highlight selection
