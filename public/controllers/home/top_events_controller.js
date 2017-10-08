@@ -38,7 +38,7 @@ home_app.controller('topEventsController', ['$scope','$http', function($scope, $
                     _id : event._id,
                     title : event.title,
                     aggressor : event.aggressor_object[0].stage_name,
-                    img_title : event.img_title,
+                    img_title : EVENT_IMAGES_PATH + event.img_title,
                     date : event.event_date.slice(0,10)
                 }
                 

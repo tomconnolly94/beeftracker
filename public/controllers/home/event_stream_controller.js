@@ -51,7 +51,7 @@ home_app.controller('eventStreamController', ['$scope','$http', function($scope,
                     title : events[eventId].title,
                     description : events[eventId].description,
                     date : events[eventId].event_date.slice(0,10),
-                    img_link : events[eventId].img_title,
+                    img_link : EVENT_IMAGES_PATH + events[eventId].img_title,
                     top_lyrics : best_lyrics,
                     eventNum : events[eventId]._id
                 };

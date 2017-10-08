@@ -105,7 +105,7 @@
                                                 <h6 class="event_date">{{ event.date }}</h6>
 
                                             </div>
-                                            <img ng-src="/event_images/{{ event.loc_img_link }}" class="img-circle col-sm-4 event_img">
+                                            <img ng-src={{event.loc_img_link}} class="img-circle col-sm-4 event_img">
                                         </div>
                                     </a>
                                 </li>
@@ -210,6 +210,9 @@
 
         <!-- JQuery -->
         <script src="/modules/jquery/dist/jquery.min.js"></script>
+        
+        <!-- Globals file -->
+        <script src="/js/globals.js"></script>
         
         <!-- Core angular scripts -->
         <script src="/modules/angular/angular.min.js"></script>

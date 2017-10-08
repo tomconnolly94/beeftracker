@@ -219,7 +219,7 @@ function build_event(event, lh_side, main_event, name_colour_map){
         name : event.aggressor_object[0].stage_name,
         title : event.title,
         date : event.event_date.slice(0,10),
-        loc_img_link : event.img_title,
+        loc_img_link : EVENT_IMAGES_PATH + event.img_title,
         event_num : event._id,
         colour : name_colour_map[event.aggressor],
         timeline_event_class : timeline_event,

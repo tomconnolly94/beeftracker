@@ -29,7 +29,7 @@ home_app.controller('splashZoneController', ['$scope','$http', function($scope, 
                 title : event.title,
                 aggressor : event.aggressor_object[0].stage_name,
                 date : event.event_date,
-                img_title : event.img_title
+                img_title : EVENT_IMAGES_PATH + event.img_title
             };
             
             $scope.main_splash_zone_event = event_data;
@@ -47,7 +47,7 @@ home_app.controller('splashZoneController', ['$scope','$http', function($scope, 
                     title : event.title,
                     aggressor : event.aggressor_object[0].stage_name,
                     date : event.event_date,
-                    img_title : event.img_title
+                    img_title : EVENT_IMAGES_PATH + event.img_title
                 };
                 
                 $scope.alt_splash_zone_events.push(event_data);
