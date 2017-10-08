@@ -96,6 +96,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         $scope.form_data[event_id].targets = [];
         $scope.form_data[event_id].button_links = [];
         $scope.form_data[event_id].selected_categories = [];
+        $scope.source = "scraping";
         
         //handle highlight selection
         if($scope.form_data[event_id].highlights_selection && Object.keys($scope.form_data[event_id].highlights_selection).length){
@@ -166,6 +167,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             
             console.log("Upload succeeded.");
             $scope.remove_record(event_id);
+            $('.collapse').collapse('hide');
             
         }, function (error) {
             console.log("Upload failed.");
@@ -320,6 +322,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         form.data_sources = [$scope.scrape_result.data_source];
         form.img_title = $scope.scrape_result.img_title;
         form.button_links = $scope.scrape_result.links;
+        $scope.source = "scraping";
         
         //form.append('data', form);
         form = JSON.stringify({data: form});

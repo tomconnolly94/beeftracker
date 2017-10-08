@@ -18,3 +18,30 @@
 
 #header_container{
 }
+
+
+@media (max-width: 425px) {
+    #drop_info_link #drop_info_text{
+        font-size:10px;
+    }
+}/*
+@media (min-width: 425px) {
+    #drop_info_text{
+        font-size:275px;
+    }
+}
+@media (min-width: 600px) {
+    #top_events_zone{
+        height:350px;
+    }
+}
+@media (min-width: 768px) {
+    #top_events_zone{
+        height:425px;
+    }
+}
+@media (min-width: 768px) {
+    #top_events_zone{
+        height:500px;
+    }
+}*/
