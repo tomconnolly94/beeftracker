@@ -85,13 +85,19 @@ module.exports = {
         //format special feature for storage
         else if(submission_data.special_feature.type == "youtube_embed"){
 
-            var video_id = submission_data.special_feature.content.split('v=')[1];
-            var ampersandPosition = video_id.indexOf('&');
-            if(ampersandPosition != -1) {
-                video_id = video_id.substring(0, ampersandPosition);
-            }
+            if(submission_data.special_feature.content.indexOf("embed") == -1){
+            
+                var video_id = submission_data.special_feature.content.split('v=')[1];
+                var ampersandPosition = video_id.indexOf('&');
+                if(ampersandPosition != -1) {
+                    video_id = video_id.substring(0, ampersandPosition);
+                }
 
-            formatted_special_feature_content = "https://www.youtube.com/embed/" + video_id;
+                formatted_special_feature_content = "https://www.youtube.com/embed/" + video_id;
+            }
+            else{
+                formatted_special_feature_content = submission_data.special_feature.content;
+            }
         }
         else if(submission_data.special_feature.type == "spotify_embed"){
 

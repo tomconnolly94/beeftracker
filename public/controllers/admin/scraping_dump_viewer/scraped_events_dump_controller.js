@@ -98,6 +98,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         $scope.form_data[event_id].selected_categories = [];
         $scope.form_data[event_id].special_feature = {
             title: event.media_link,
+            type: "youtube_embed",
             content: event.media_link
         };
         
@@ -113,7 +114,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             for(var i = 0; i < Object.keys($scope.form_data[event_id].highlights_selection).length; i++){
                 var highlight_index = Object.keys($scope.form_data[event_id].highlights_selection)[i];
                 
-                highlights_object.fields.push(event.highlights[highlight_index]);
+                highlights_object.fields.push({ text: event.highlights[highlight_index] });
             }
             $scope.form_data[event_id].highlights.push(highlights_object);
             delete $scope.form_data[event_id].highlights_selection;
@@ -171,8 +172,8 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         .then(function (success) {
             
             console.log("Upload succeeded.");
-            $scope.remove_record(event_id);
-            $('.collapse').collapse('hide');
+            //$scope.remove_record(event_id);
+            //$('.collapse').collapse('hide');
             
         }, function (error) {
             console.log("Upload failed.");
