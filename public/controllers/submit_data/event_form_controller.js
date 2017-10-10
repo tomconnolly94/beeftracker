@@ -20,7 +20,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     $scope.categories = [];
     $scope.datepicker = "00/00/0000";
     $scope.error_message = "";
-    var test_mode = true;
+    var test_mode = false;
     
     //function to request data about actors in order to present it in the form
     $scope.get_actor_data = function(){
@@ -151,7 +151,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
         button.disabled = true;
         console.log($scope.event_form);
         
-        if($scope.event_form.$valid && ($scope.validate_input() || test_mode)){
+        if(($scope.event_form.$valid && $scope.validate_input()) || test_mode){
 
             var form = new FormData();
             $scope.form_data = {};
@@ -166,7 +166,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
                 }
             }
             $scope.form_data.description = $scope.description;
-            $scope.form_data.date = $scope.datePicker;
+            $scope.form_data.date = $scope.datePicker.getDate() + "/" + $scope.datePicker.getMonth() + "/" + $scope.datePicker.getFullYear();
             $scope.form_data.highlights = $scope.highlights;
             $scope.form_data.data_sources = $scope.data_sources;
             $scope.form_data.button_links = $scope.button_links;

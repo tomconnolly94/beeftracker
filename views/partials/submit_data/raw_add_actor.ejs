@@ -87,7 +87,8 @@
                         <label id="d_o_b" class="control-label col-sm-3" style="text-align:center;" for="comment">* Date of Birth:</label>
                         <div class="col-sm-9 datepicker row" style="margin:0px;">
                             <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Add the actor's date of birth here. Type or click dd/mm/yyy" aria-hidden="true"></span>
-                            <input class="col-sm-11" type="text" name="datepicker" ng-model="datePicker" datepicker style="color:#000000;" value="{{datePicker || '00/00/0000'}}" />
+                            <!--<input class="col-sm-11" type="text" name="datepicker" ng-model="datePicker" datepicker style="color:#000000;" value="{{datePicker || '00/00/0000'}}" />-->
+                            <input name="datePicker" class="col-sm-11" type="date" ng-model="datePicker" value="{{datePicker || '0000/00/00'}}">
                         </div>
                     </div>
                     

@@ -185,7 +185,8 @@
                             <label class="control-label col-sm-3" style="text-align:center;" for="comment">* Date:</label>
                             <div class="col-sm-9 datepicker row" style="margin:0px;color:#000000;">
                                 <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Enter the date on which this event occurred." aria-hidden="true"></span>
-                                <input id="datepicker" class="col-sm-11" type="text" name="datepicker" ng-model="datePicker" datepicker style="" value="{{datePicker || '00/00/0000'}}">
+                                <!--<input id="datepicker" class="col-sm-11" type="text" name="datepicker" ng-model="datePicker" datepicker style="" value="{{datePicker || '00/00/0000'}}">-->
+                                <input name="datePicker" class="col-sm-11" type="date" ng-model="datePicker" value="{{datePicker || '0000/00/00'}}">
                             </div>
                         </div>
                         
