@@ -97,7 +97,7 @@
                             <div class="col-sm-9 row" style="margin:0px;">
                                 <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Write a title for this event, to describe, very briefly what happened. If it is an artifact like a tweet or a song, enter its title." aria-hidden="true"></span>
                                 <div class="col-sm-11" style="padding:0px;">
-                                    <input id="title" class="form-control col-sm-12" name="title" type="text" placeholder="" ng-model="title" ng-Trim="false"  style="margin:0px;" required>
+                                    <input id="title" class="form-control col-sm-12" name="title" type="text" placeholder="Title" ng-model="title" ng-Trim="false"  style="margin:0px;" required>
                                 </div>
                                 
                             </div>
@@ -174,7 +174,7 @@
                             <div class="col-sm-9 row" style="margin:0px;">
                                 <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Sum up what happened with this event mentioning how each actor was targeted. Try not to add your own point of view because it will be filtered out during the moderation process." aria-hidden="true"></span>
                                 <div class="col-sm-11" style="padding:0px;">
-                                    <textarea class="form-control" name="description" type="text" ng-model="description" rows="3" id="comment" placeholder="" style="resize: vertical;" required></textarea>
+                                    <textarea class="form-control" name="description" type="text" ng-model="description" rows="3" id="comment" placeholder="Description" style="resize: vertical;" required></textarea>
                                 </div>
                             </div>
                         </div>
@@ -320,6 +320,12 @@
         <!-- Datepicker scripts -->
         <script src="/modules/ng-datepicker/src/js/ngDatepicker.min.js"></script>
         <script src="/modules/moment/moment.js"></script>
+        
+        
+        <!-- Browser detection -->
+        <!--<script type=”text/javascript” src=”/modules/re-tree/re-tree.js”></script>-->
+        <script src="https://rawgit.com/srfrnk/re-tree/master/re-tree.js" type="text/javascript"></script>
+        <script type="text/javascript" src="/modules/ng-device-detector/ng-device-detector.js"></script>
         
         <!-- File upload scripts -->
         <script src="/modules/angular-file-upload/dist/angular-file-upload.min.js"></script>

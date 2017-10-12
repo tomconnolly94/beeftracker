@@ -7,7 +7,7 @@
 //                  format and send new beef data submitteed by a user
 //
 /////////////////////////////////////////////////////////////////////////////////
-submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '$window', function($scope, $http, fileService, $window) {
+submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '$window', 'deviceDetector', function($scope, $http, fileService, $window, deviceDetector) {
     
     //create var 
     $scope.form_data = {};
@@ -357,6 +357,8 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     $scope.config_special_feature();
     //$scope.add_link("Image Upload");
     $scope.add_highlight_event();
+    
+    console.log(deviceDetector.browser);
     
     if(test_mode){
         //preload data from url for testing

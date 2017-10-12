@@ -28,7 +28,7 @@
                         <div class="col-sm-9 row" style="margin:0px;">
                             <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Enter the name this person is most famous for, e.g. Snoop Dogg, Oprah..." aria-hidden="true"></span>
                             <div class="col-sm-11" style="margin:0px;padding:0px">
-                                <input name="stage_name" type="text" ng-model="stage_name" class="form-control" id="title" placeholder="" required>
+                                <input name="stage_name" type="text" ng-model="stage_name" class="form-control" id="title" placeholder="Stage Name" required>
                             </div>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                         <div class="col-sm-9 row" style="margin:0px;">
                             <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Enter the name this actor was given at birth. If it is the same as above" aria-hidden="true"></span>
                             <div class="col-sm-7" style="margin:0px;padding:0px">
-                                <input name="birth_name" type="text" ng-model="birth_name" class="form-control" id="title" placeholder="" required>
+                                <input name="birth_name" type="text" ng-model="birth_name" class="form-control" id="title" placeholder="Birth Name" required>
                             </div>
                             <div class="col-sm-4" style="padding:0px;margin:0px;">
                                 <button type="button" class="btn btn-default" style="color:#000000;height:60%;margin:0px 10px;" class="btn btn-info btn-lg" ng-click="birth_name = stage_name">Same as above</button>
@@ -75,7 +75,7 @@
                             <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Add any other names that this actor may be famous for e.g. Slim Shady" aria-hidden="true"></span>
                             <div class="col-sm-11" style="margin:0px;padding:0px">
                                 <div ng-repeat="nickname in nicknames" style="margin:0px;padding:0px 0px 5px 0px;display:block" class="row col-sm-12" >
-                                    <input class="col-sm-12 form-control" style="color:#000000;" type="text" placeholder="" ng-model="nickname.text">
+                                    <input class="col-sm-12 form-control" style="color:#000000;" type="text" placeholder="Nickame" ng-model="nickname.text">
                                 </div>
                             </div>
                         </div>
@@ -90,6 +90,7 @@
                             
                             <div class="col-sm-11" style="margin:0px;padding:0px">
                                 <input name="datePicker" class="col-sm-12 form-control" type="date" ng-model="datePicker" value="{{datePicker || '0000/00/00'}}">
+                                
                             </div>
                         </div>
                     </div>
@@ -111,7 +112,7 @@
                             <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Add any jobs this actor may have had or be famous for. e.g singer, co-owner of a company etc..." aria-hidden="true"></span>
                             <div class="col-sm-11" style="margin:0px;padding:0px">
                                 <div ng-repeat="occupation in occupations" style="margin:0px;padding:0px 0px 5px 0px;display:block" class="row col-sm-12" >
-                                    <input class="col-sm-12 form-control" style="color:#000000;" type="text" placeholder="" ng-model="occupation.text" required>
+                                    <input class="col-sm-12 form-control" style="color:#000000;" type="text" placeholder="Occupation" ng-model="occupation.text" required>
                                 </div>
                             </div>
                         </div>
@@ -124,7 +125,7 @@
                         <div class="col-sm-9 row" style="margin:0px;">
                             <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Enter the city, country/state/province and country where this person was born." aria-hidden="true"></span>
                             <div class="col-sm-11" style="margin:0px;padding:0px">
-                                <input name="origin" type="text" ng-model="origin" class="form-control" id="title" placeholder="">
+                                <input name="origin" type="text" ng-model="origin" class="form-control" id="title" placeholder="Origin">
                             </div>
                         </div>
                     </div>
@@ -146,7 +147,7 @@
                             <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Add any notable achievements this actor may have had, awards they have won, records they have broken etc..." aria-hidden="true"></span>
                             <div class="col-sm-11" style="margin:0px;padding:0px">
                                 <div ng-repeat="achievement in achievements" style="margin:0px;padding:0px 0px 5px 0px;display:block" class="row col-sm-12" >
-                                    <input class="col-sm-12 form-control" style="color:#000000;" type="text" placeholder="" ng-model="achievement.text">
+                                    <input class="col-sm-12 form-control" style="color:#000000;" type="text" placeholder="Achievement" ng-model="achievement.text">
                                 </div>
                             </div>
                         </div>
@@ -159,7 +160,7 @@
                         <div class="col-sm-9 row" style="margin:0px;">
                             <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Write a short paragraph about this person, Include a brief description of their history and any major events they have been involved in. Write as much as you can." aria-hidden="true"></span>
                             <div class="col-sm-11" style="margin:0px;padding:0px">
-                                <textarea name="bio" class="form-control" ng-model="bio" rows="3" id="comment" placeholder="" style="resize:vertical;" required></textarea>
+                                <textarea name="bio" class="form-control" ng-model="bio" rows="3" id="comment" placeholder="Bio" style="resize:vertical;" required></textarea>
                             </div>
                         </div>
                     </div>
@@ -182,7 +183,7 @@
                                 <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="We hate fake news at Beeftracker, so if you submit information we need to know where you learned it from. Add a URL, documentary title or other kind of reference here:  A documentary, website, book, song etc... These will be verified before the data is made accessible." aria-hidden="true"></span>
                                 
                                 <div class="col-sm-11" style="margin:0px;padding:0px">
-                                    <input class="col-sm-11 form-control" style="color:#000000;" type="text" placeholder="" ng-model="data_source.text" required>
+                                    <input class="col-sm-11 form-control" style="color:#000000;" type="text" placeholder="Data Source" ng-model="data_source.text" required>
                                 </div>
                             </div>
                         </div>
@@ -220,12 +221,12 @@
                                 <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="You may have seen that we like to provide button links to other places where you can get more information. This is much less formal than the data sources entry so a wikipedia article, or link to a tweet is perfect. Add the title of the button here. e.g. Wiki page, Tweet etc..." aria-hidden="true"></span>
                                 
                                 <div class="col-sm-11" style="margin:0px;padding:0px">
-                                    <input class="col-sm-12 form-control" type="text" style="color:#000000;" type="text" placeholder="" value="{{button_link.special_title}}" ng-model="button_link.title">
+                                    <input class="col-sm-12 form-control" type="text" style="color:#000000;" type="text" placeholder="Link Title" value="{{button_link.special_title}}" ng-model="button_link.title">
                                 </div>
                                 <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="You may have seen that we like to provide button links to other places where you can get more information. This is much less formal than the data sources entry so a wikipedia article, or link to a tweet is perfect. Add the link to the resource here." aria-hidden="true"></span>
 
                                 <div class="col-sm-11" style="margin:0px;padding:0px">
-                                    <input class="col-sm-12 form-control" type="url" style="color:#000000;" type="text" placeholder="" ng-model="button_link.url">
+                                    <input class="col-sm-12 form-control" type="url" style="color:#000000;" type="text" placeholder="Link" ng-model="button_link.url">
                                 </div>
                             </div>
                         </div>
