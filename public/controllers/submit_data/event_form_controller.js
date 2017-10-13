@@ -358,7 +358,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     //$scope.add_link("Image Upload");
     $scope.add_highlight_event();
     
-    console.log(deviceDetector.browser);
+    $scope.browser = deviceDetector.browser;
     
     if(test_mode){
         //preload data from url for testing
