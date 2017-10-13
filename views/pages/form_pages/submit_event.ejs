@@ -97,7 +97,7 @@
                             <div class="col-sm-9 row" style="margin:0px;">
                                 <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Write a title for this event, to describe, very briefly what happened. If it is an artifact like a tweet or a song, enter its title." aria-hidden="true"></span>
                                 <div class="col-sm-11" style="padding:0px;">
-                                    <input id="title" class="form-control col-sm-12" name="title" type="text" placeholder="" ng-model="title" ng-Trim="false"  style="margin:0px;" required>
+                                    <input id="title" class="form-control col-sm-12" name="title" type="text" placeholder="Title" ng-model="title" ng-Trim="false"  style="margin:0px;" required>
                                 </div>
                                 
                             </div>
@@ -176,7 +176,7 @@
                             <div class="col-sm-9 row" style="margin:0px;">
                                 <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Sum up what happened with this event mentioning how each actor was targeted. Try not to add your own point of view because it will be filtered out during the moderation process." aria-hidden="true"></span>
                                 <div class="col-sm-11" style="padding:0px;">
-                                    <textarea class="form-control" name="description" type="text" ng-model="description" rows="3" id="comment" placeholder="" style="resize: vertical;" required></textarea>
+                                    <textarea class="form-control" name="description" type="text" ng-model="description" rows="3" id="comment" placeholder="Description" style="resize: vertical;" required></textarea>
                                 </div>
                             </div>
                         </div>
@@ -187,18 +187,16 @@
                             <label class="control-label col-sm-3" style="text-align:center;" for="comment">* Date:</label>
                             <div class="col-sm-9 datepicker row" style="margin:0px;color:#000000;">
                                 <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Enter the date on which this event occurred." aria-hidden="true"></span>
-                                <!--<input id="datepicker" class="col-sm-11" type="text" name="datepicker" ng-model="datePicker" datepicker style="" value="{{datePicker || '00/00/0000'}}">-->
                                 
                                 <div class="col-sm-11" style="padding:0px;">
-                                    <input name="datePicker" class="col-sm-12 form-control" type="date" ng-model="datePicker" value="{{datePicker || '0000/00/00'}}">
+                                    <input id="datepicker" class="col-sm-11" type="text" name="datepicker" ng-model="datePicker" ng-show="browser != 'chrome'" datepicker style="" value="{{datePicker || '00/00/0000'}}">
+                                    <input name="datePicker" class="col-sm-11" type="date" ng-model="datePicker" ng-show="browser == 'chrome'" value="{{datePicker || '0000/00/00'}}">
                                 </div>
                             </div>
                         </div>
                         
                         <hr>
                          
-                         
-                        <!--<div class="input_fields_wrap form-group row" ng-controller="highlightsController">-->
                         <div class="input_fields_wrap form-group row">
                             <div class="col-sm-3">
                                 <div class="row">
@@ -336,6 +334,11 @@
         <!-- Datepicker scripts -->
         <script src="/modules/ng-datepicker/src/js/ngDatepicker.min.js"></script>
         <script src="/modules/moment/moment.js"></script>
+        
+        
+        <!-- Browser detection -->
+        <script src='/modules/re-tree/re-tree.js'></script>
+        <script type="text/javascript" src="/modules/ng-device-detector/ng-device-detector.js"></script>
         
         <!-- File upload scripts -->
         <script src="/modules/angular-file-upload/dist/angular-file-upload.min.js"></script>
