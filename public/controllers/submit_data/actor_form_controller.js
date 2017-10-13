@@ -165,7 +165,7 @@ submit_app.controller('actorFormController', ['$scope','$http', 'fileService', '
             $scope.form_data.stage_name = $scope.stage_name;
             $scope.form_data.birth_name = $scope.birth_name;
             $scope.form_data.nicknames = $scope.nicknames;
-            $scope.form_data.date = $scope.datePicker;
+            $scope.form_data.date = $scope.datePicker.getDate() + "/" + $scope.datePicker.getMonth() + "/" + $scope.datePicker.getFullYear();;
             $scope.form_data.occupations = $scope.occupations;
             $scope.form_data.origin = $scope.origin;
             $scope.form_data.achievements = $scope.achievements;
