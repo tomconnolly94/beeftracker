@@ -143,15 +143,15 @@ a:link {
 }
 /* visited link */
 a:visited {
-    color: #CCCCCC;
+    color: #555555;
 }
 /* mouse over link */
 a:hover {
-    color: #999999;
+    color: #FF0000;
 }
 /* selected link */
 a:active {
-    color: #666666;
+    color: #222222;
 }
 /* change colour on hover over timeline event */
 #bootstrap-overrides a.selectable_event:hover{
