@@ -31,12 +31,12 @@ module.exports = {
                                                                         localField: "resolved_event.aggressor",
                                                                         foreignField: "_id",
                                                                         as: "resolved_event.aggressor_object" }
-                                                                    }, 
+                                                                    },
                                                                     { $group: {
                                                                         _id : "$_id",
                                                                         resolved_event: { $first: "$resolved_event" }
                                                                       }
-                                                                    }]).toArray(function(queryErr, docs) {
+                                                                    }]).sort({ order : 1 }).toArray(function(queryErr, docs) {
                     response.send({events : docs});
                 });
             }

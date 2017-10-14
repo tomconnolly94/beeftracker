@@ -20,7 +20,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     $scope.categories = [];
     $scope.datepicker = "00/00/0000";
     $scope.error_message = "";
-    var test_mode = false;
+    var test_mode = true;
     
     //function to request data about actors in order to present it in the form
     $scope.get_actor_data = function(){
