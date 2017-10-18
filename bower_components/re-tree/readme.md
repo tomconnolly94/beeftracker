@@ -41,6 +41,7 @@ Add script load to HTML:`<script type="text/javascript" src=".../re-tree.js"></s
 To use from angular:
 Add module to your app dependencies: `...angular.module("...", [..."reTree"...])...`
 
+
 ### API
 
 reTree has two functions:
@@ -78,6 +79,10 @@ var re = {
 ### Support
 
 Pull-requests with new stuff will be highly appreciated :)
+
+### Example
+
+See [plunker](http://plnkr.co/edit/urqMI1?p=preview)
 
 ### License
 
