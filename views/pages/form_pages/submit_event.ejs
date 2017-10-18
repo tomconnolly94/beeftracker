@@ -97,7 +97,8 @@
                             <div class="col-sm-9 row" style="margin:0px;">
                                 <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Write a title for this event, to describe, very briefly what happened. If it is an artifact like a tweet or a song, enter its title." aria-hidden="true"></span>
                                 <div class="col-sm-11" style="padding:0px;">
-                                    <input id="title" class="form-control col-sm-12" name="title" type="text" placeholder="Title" ng-model="title" ng-Trim="false"  style="margin:0px;" required>
+                                    <input id="title" class="form-control col-sm-12" name="title" type="text" placeholder="Title" ng-model="title" ng-Trim="false" style="margin:0px;" required>
+                                    <span ng-show="event_form.title.$touched && event_form.title.$invalid" style="color:black">The name is required.</span>
                                 </div>
                                 
                             </div>

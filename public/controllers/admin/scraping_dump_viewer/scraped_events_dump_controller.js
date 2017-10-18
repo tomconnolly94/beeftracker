@@ -30,6 +30,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                 $scope.form_data[$scope.events[i]._id].targets = {};
                 $scope.form_data[$scope.events[i]._id].description = $scope.events[i].description;
                 $scope.form_data[$scope.events[i]._id].categories_selection = {};
+                $scope.form_data[$scope.events[i]._id].delete_checkbox = false;
             }
             $scope.get_category_data();
         }, 
@@ -172,8 +173,8 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         .then(function (success) {
             
             console.log("Upload succeeded.");
-            //$scope.remove_record(event_id);
-            //$('.collapse').collapse('hide');
+            $scope.remove_record(event_id);
+            $('.collapse').collapse('hide');
             
         }, function (error) {
             console.log("Upload failed.");
@@ -371,17 +372,30 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
     
     $scope.remove_record = function(id){
         
-        $http({
-            method: 'GET',
-            url: "/discard_scraped_beef_event/" + id
-        }).then(function(response_1){
+        var event_ids = [id];
+        
+        for(var i = 0; i < $scope.events.length; i++){
             
-            $scope.load_scraped_events();
-        }, 
-        function(response_1) {
-            //failed http request
-            console.log("HTTP request failed (scrapedEventsDumpController)");
-        });        
+            if($scope.form_data[$scope.events[i]._id].delete_checkbox){
+                event_ids.push($scope.events[i]._id);
+            }
+            $scope.form_data[$scope.events[i]._id].delete_checkbox = false;
+        }
+        
+        
+        for(var i = 0; i < event_ids.length; i++){
+            $http({
+                method: 'GET',
+                url: "/discard_scraped_beef_event/" + event_ids[i]
+            }).then(function(response_1){
+
+                $scope.load_scraped_events();
+            }, 
+            function(response_1) {
+                //failed http request
+                console.log("HTTP request failed (scrapedEventsDumpController)");
+            });
+        }
     }
     
     $scope.show_modal = function(bool){
