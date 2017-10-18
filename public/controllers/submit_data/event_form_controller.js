@@ -31,7 +31,6 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
         }).then(function(response){
             //validate the url tagId to make sure the event exists                
             if(response != undefined){
-                console.log(response);
                 $scope.actors = response.data.items;
             }
             else{
@@ -54,8 +53,6 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
         }).then(function(response){
             //validate the url tagId to make sure the event exists                
             if(response != undefined){
-                console.log(response);
-                
                 $scope.categories = response.data.categories;
             }
             else{
@@ -149,7 +146,6 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     //function to process, format and send all form data to servers
     $scope.process_form = function(button) {
         button.disabled = true;
-        console.log($scope.event_form);
         
         if(($scope.event_form.$valid && $scope.validate_input()) || test_mode){
 
@@ -254,9 +250,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     
     //function to dynamcially add/remove sub input boxes for highlights
     $scope.modify_fields = function(highlight,field,add_button){
-        
-        console.log("h3llo");
-        
+                
         if(add_button){
             highlight.fields.push({
                 text: "",
@@ -329,10 +323,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
                 db_ref : "twitter_embed", //twitter features not supported yet
                 title : "Tweet"
             }*/
-                                    ];
-        
-        console.log("config_special_feature called.");
-        console.log($scope.special_feature_select);
+        ];
         
         if($scope.special_feature_select != undefined){
             
@@ -370,9 +361,6 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
         
             for(var i = 0; i < hashParams.length; i++){
                 var p = hashParams[i].split('=');
-
-                console.log(p[0]);
-                console.log(p[1]);
 
                 if(p[1].indexOf(',') >= 0){
                     $scope[p[0]] = p[1].split(",");

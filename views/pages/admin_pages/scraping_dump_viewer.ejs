@@ -77,13 +77,17 @@
                                     </div>
                                     
                                      <div class="col-sm-2">
-                                        <input type="button" value="Delete" style="padding:10px;width:100%;height:100%;text-align:center;" ng-click="remove_record(event._id, form_data)">
+                                        <input type="button" value="Delete" class="form-control" style="padding:5px;width:100%;height:100%;text-align:center;" ng-click="remove_record(event._id, form_data)">
                                     </div>
+                                    
+                                    <div class="col-sm-1 row" style="padding:0px;">
+                                        <input type="checkbox" class="col-sm-6" ng-model=form_data[event._id].delete_checkbox style="padding:8px 0px;">
+                                    
 
-                                    <a id="index_container" class="col-sm-1" data-toggle="collapse" data-parent="#accordion" href="#collapse{{$index}}" >
-                                        <span class="glyphicon glyphicon-chevron-down"></span>
-                                    </a>
-
+                                        <a id="index_container" class="col-sm-6" data-toggle="collapse" data-parent="#accordion" href="#collapse{{$index}}" style="padding:8px 0px;">
+                                            <span class="glyphicon glyphicon-chevron-down"></span>
+                                        </a>
+                                    </div>
                                 </div>
                                 
                                 <div id="collapse{{$index}}" class="row panel-collapse collapse" style="margin:0px;">
@@ -170,9 +174,9 @@
                                         <div class="col-sm-6 row">
                                             
                                             <h4 style="padding:15px;">Data Source</h4>
-                                            <h5 style="margin:0px;">
+                                            <a target="_blank" ng-href={{event.data_source}} style="margin:0px;">
                                                 {{event.data_source}}
-                                            </h5>
+                                            </a>
                                             
                                         </div>
                                         <div  class="col-sm-6 row" style="height:80%;">

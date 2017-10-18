@@ -65,7 +65,9 @@
 
                     <div id="bio" class="row">
                         <label class="col-xs-4"> Bio </label>
-                        <textarea type="text" class="col-xs-8" ng-model="scrape_result.bio" rows="4" style="color:#000000"></textarea>
+                        <div class="col-sm-8" style="padding:0px;">
+                            <textarea type="text" ng-model="scrape_result.bio" rows="4" style="color:#000000;resize: vertical; width: 100%"></textarea>
+                        </div>
                     </div>
 
                     <div id="achievements" class="row">
