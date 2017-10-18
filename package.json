@@ -1,7 +1,7 @@
 {
   "name": "beeftracker",
-  "version": "1.0.0",
-  "description": "An index of arguments occuring in the music industry.",
+  "version": "1.0.1",
+  "description": "An website documenting disagreements between parties in popular culture and beyond.",
   "engines": {
     "node": "7.10.0"
   },
@@ -25,6 +25,8 @@
     "ng-datepicker": "^1.0.2",
     "ng-device-detector": "^4.0.3",
     "nodemailer": "4.0.1",
+    "python-shell": "^0.4.0",
+    "request": "^2.83.0",
     "sitemap": "^1.9.0"
   },
   "keywords": [
