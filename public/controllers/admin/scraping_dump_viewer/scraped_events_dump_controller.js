@@ -385,7 +385,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         
         for(var i = 0; i < event_ids.length; i++){
             $http({
-                method: 'GET',
+                method: 'DELETE',
                 url: "/discard_scraped_beef_event/" + event_ids[i]
             }).then(function(response_1){
 

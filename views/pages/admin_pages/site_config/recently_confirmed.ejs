@@ -38,7 +38,7 @@
             <div header-directive></div>
             
             <!-- Modal -->
-<!--            <div class="modal fade" id="myModal" role="dialog">
+            <!--<div class="modal fade" id="myModal" role="dialog">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         
@@ -58,154 +58,73 @@
                 </div>
             </div>-->
             
-            <div id="scraped_events_container" class="row">
+            <div id="recent_events_container" class="row">
                     <div class="col-sm-1"></div>
-                    <div id="top_events_container accordion" class="col-sm-10 panel-group">
+                    <div id="" class="col-sm-10 panel-group">
 
-                        <div class="row top_event_container_1 panel panel-default" ng-repeat="event in events track by $index" style="padding:15px;">
+                        <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                        
                             
-                            <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-sm-3" style="">
+                                    <input ng-click="submit_config()" type="button" value="Submit"/>
+                                </div>
+                            </div>    
+                            
+                            <div class="row top_event_container_1" ng-repeat="event in events track by $index" style="padding:15px;">
+                            
+                            
                                 
-                                <div class="top_event_title panel_title" style="margin:10px;">
+                                <div class="row" style="margin:10px;">
 
                                     <div id="index_container" class="col-sm-1">
                                         <h4>{{$index+1}}</h4>
                                     </div>
 
-                                    <div class="col-sm-8" >
+                                    <div class="col-sm-11" >
                                         <input type="text" ng-model=form_data[event._id].title style="font-size:22px;width:100%;">
                                     </div>
-                                    
-                                     <div class="col-sm-2">
-                                        <input type="button" value="Delete" class="form-control" style="padding:5px;width:100%;height:100%;text-align:center;" ng-click="remove_record(event._id, form_data)">
-                                    </div>
-                                    
-                                    <div class="col-sm-1 row" style="padding:0px;">
-                                        <input type="checkbox" class="col-sm-6" ng-model=form_data[event._id].delete_checkbox style="padding:8px 0px;">
-                                    
-
-                                        <a id="index_container" class="col-sm-6" data-toggle="collapse" data-parent="#accordion" href="#collapse{{$index}}" style="padding:8px 0px;">
-                                            <span class="glyphicon glyphicon-chevron-down"></span>
-                                        </a>
-                                    </div>
-                                </div>
+                                </div>     
                                 
-                                <div id="collapse{{$index}}" class="row panel-collapse collapse" style="margin:0px;">
-                                    
-                                    <div class="row" style="padding:20px;">
-                                        
-                                        <div class="col-sm-8 row">
-                                            
-                                            <div class="col-sm-6">
-                                                
-                                                <h4>Aggressor</h4>
-                                                
-                                                <div class="row" ng-repeat="actor in event.relevant_actors track by $index" style="margin:0px;">
-                                                    <div class="col-sm-8 row" style="margin:0px;">    
-                                                        <input class="col-sm-2" type="radio" value={{actor.db_id}} ng-model=form_data[event._id].aggressor ng-disabled="actor.db_id.length == 0">
-                                                        <input class="col-sm-8" type="text" ng-value="actor.name" ng-model="actor.name" style="padding:0px;"/>
-                                                    </div>
-                                                    <div class="col-sm-4 text-center" style="margin:0px;">
-                                                        <i class="glyphicon glyphicon-ok" ng-show="actor.db_id.length > 0"></i>
-                                                        <input type="button" value="Scrape" style="padding:1px;width:100%;height:20%;text-align:center;" ng-click="scrape_actor(actor.name, event._id)" ng-show="actor.db_id.length == 0">
-                                                    </div>
-                                                </div>
-                                                
-                                            </div>
-                                            
-                                            <div class="col-sm-6">
-                                            
-                                                <h4>Targets</h4>
-                                                
-                                                <div ng-repeat="actor in event.relevant_actors track by $index" style="margin:0px;">
-                                                    <div class="col-sm-8 row" style="margin:0px;">    
-                                                        <input class="col-sm-2" type="checkbox" value={{actor.name}} ng-model=form_data[event._id].targets_selection[$index] ng-disabled="actor.db_id.length == 0">
-                                                        <input class="col-sm-8" type="text" ng-value="actor.name" ng-model="actor.name" style="padding:0px;"/>
-                                                    </div>
-                                                    <div class="col-sm-4 text-center">
-                                                        <i class="glyphicon glyphicon-ok" ng-show="actor.db_id.length > 0"></i>
-                                                        <input type="button" value="Scrape" style="padding:1px;width:100%;height:20%;text-align:center;" ng-click="scrape_actor(actor.name, event._id)" ng-show="actor.db_id.length == 0">
-                                                    </div>
-                                                </div>
-                                                
-                                            </div>
-                                        </div>
-                                        
-                                        <div  class="col-sm-3" style="height:80%;margin:20px 0px;">
-                                            <img ng-src="{{ event.img_title }}" style="height:100px;width:100%;"/>
-                                            <input type="text" ng-model="event.img_title" style="margin:0px;">
-                                            
-                                            <iframe scrolling="no" ng-src="{{trustSrc(event.media_link)}}" class="embed-responsive-item" allowfullscreen="true"></iframe><!-- youtube embed -->
-                                            <input type="text" ng-model="event.media_link" style="margin:0px;">
-                                        </div>
-                                        
+                                <div class="row" style="margin:10px;">
+
+                                    <div id="index_container" class="col-sm-1">
+                                        <h4>{{ event._id }}</h4>
                                     </div>
-                                    
-                                    <div class="row" style="padding:20px;">
-                                        
-                                        <div class="col-sm-12">
-                                            <textarea style="width:100%;height:200px;resize:none;color:black;padding:5px;font-size:15px;" ng-model=form_data[event._id].description></textarea>
-                                        </div>
-                                        
+                                </div>                       
+
+                                <div class="row" style="height:80%;margin:20px 0px;">
+                                    <div class="col-sm-6">
+                                        <img ng-src="{{ event.img_title }}" style="height:200px;width:200px;"/>
+                                        <input type="text" ng-model="event.img_title" style="margin:0px;">
                                     </div>
-                                    
-                                    <div class="row" style="padding:20px;">
-                                        
-                                        <div class="col-sm-6 row">
-                                            
-                                            <div class="col-sm-6">
-                                                <h5>{{event.event_date}}</h5>
-                                            </div>
-                                            
-                                        </div>
-                                        <div  class="col-sm-6" style="height:80%;">
-                                            
-                                            <h4>Categories</h4>
-                                            <div ng-repeat="category in categories">
-                                                <input class="col-xs-2" type="checkbox" ng-value=category.cat_id ng-model="form_data[event._id].categories_selection[$index]" style="margin:0px;">
-                                                {{ category.name }}
-                                            </div>
-                                                                                        
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="row" style="padding:20px;">
-                                        
-                                        <div class="col-sm-6 row">
-                                            
-                                            <h4 style="padding:15px;">Data Source</h4>
-                                            <a target="_blank" ng-href={{event.data_source}} style="margin:0px;">
-                                                {{event.data_source}}
-                                            </a>
-                                            
-                                        </div>
-                                        <div  class="col-sm-6 row" style="height:80%;">
-                                            
-                                            <h4>Highlights</h4>
-                                            <div ng-repeat="highlight in event.highlights track by $index">
-                                                <input class="col-xs-2" type="checkbox" ng-model=form_data[event._id].highlights_selection[$index] style="margin:0px;">
-                                                <input class="col-xs-10" ng-model=form_data[event._id].highlights[$index] ng-value=highlight style="margin:0px;">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="row" style="padding:20px;">
-                                        
-                                        <div class="col-sm-4"></div>
-                                        
-                                        <div class="col-sm-2">
-                                            <input type="submit" value="Submit" style="padding:10px;width:100%;height:100%;text-align:center;" ng-click="approve_record(event._id)">
-                                        </div>
-                                        
-                                       <!-- <div class="col-sm-2">
-                                            <input type="button" value="Delete" style="padding:10px;width:100%;height:100%;text-align:center;" ng-click="remove_record(event._id, form_data)">
-                                        </div>-->
-                                                                                
-                                        <div class="col-sm-4"></div>
+
+                                    <div class="col-sm-6">
+                                        <iframe scrolling="no" ng-src="{{trustSrc(event.media_link)}}" class="embed-responsive-item" allowfullscreen="true"></iframe><!-- youtube embed -->
+                                        <input type="text" ng-model="event.media_link" style="margin:0px;">
                                     </div>
                                 </div>
-                            </form>
-                        </div>
+
+                                <div class="row" style="height:80%;margin:20px 0px;">
+                                    <div class="col-sm-6 row">
+                                        <div class="col-sm-3" style="">
+                                            <input ng-click="set_event('main_event', event._id)" name="splash_zone_main_event" type="radio" /><label>Main</label>
+                                        </div>
+
+                                        <div class="col-sm-3" style="">
+                                            <input ng-click="set_event('event_one', event._id)" name="splash_zone_event_one" type="radio" /><label>1</label>
+                                        </div>
+
+                                        <div class="col-sm-3" style="">
+                                            <input ng-click="set_event('event_two', event._id)" name="splash_zone_event_two" type="radio" /><label>2</label>
+                                        </div>
+                                        <div class="col-sm-3" style="">
+                                            <input ng-click="set_event('event_three', event._id)" name="splash_zone_event_three" type="radio" /><label>3</label>
+                                        </div>
+                                     </div>                            
+                                </div>
+                            </div>                                    
+                        </form>
                     </div>
                     <div class="col-sm-1"></div>
             </div>
@@ -214,6 +133,9 @@
         
         <!-- JQuery -->
         <script src="/modules/jquery/dist/jquery.min.js"></script>
+        
+        <!-- Globals file -->
+        <script src="/js/globals.js"></script>
         
         <!-- Core angular scripts -->
         <script src="/modules/angular/angular.min.js"></script>

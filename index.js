@@ -103,17 +103,20 @@ app.get('/search_popular_events/:num_of_events', require('./server_files/models/
 app.get('/search_recent_events/:num_of_events', require('./server_files/models/GET/search_recent_events.js').execute); //retrieve the provided number of events based on which have been added most recently
 app.get('/search_related_actors_by_id/:actor_id', require('./server_files/models/GET/search_related_actors_by_id.js').execute); //retrieve actors related to a provided actor
 app.get('/get_scraped_events_dump/', require('./server_files/models/GET/admin/get_scraped_events_dump.js').execute); //retrieve all scraped events, by the python beeftracker scraping module
-app.get('/discard_scraped_beef_event/:id', require('./server_files/models/GET/admin/discard_scraped_beef_event.js').execute); //remove data about a scraped beef event by id
 app.get('/scrape_actor/:actor_name', require('./server_files/models/GET/admin/scrape_and_return_actor_data.js').execute); //use the provided actor name to generate a data dump about that actor
+
+// ### DELETE endpoints ###
+app.delete('/discard_scraped_beef_event/:id', require('./server_files/models/DELETE/admin/discard_scraped_beef_event.js').execute); //remove data about a scraped beef event by id
+
+// ### POST endpoints ###
+app.post('/submit_beefdata/', upload_event_img.single('attachment'), require('./server_files/models/POST/submit_beefdata.js').execute); //organise, verify and insert user provided beef data to database and save provided image file
+app.post('/submit_actordata/', upload_event_img.single('attachment'), require('./server_files/models/POST/submit_actordata.js').execute); //organise, verify and insert user provided actor data to database and save provided image file
+app.post('/set_splash_zone_events/', require('./server_files/models/POST/admin/site_config/set_splash_zone_events.js').execute); //organise, verify and insert user provided actor data to database and save provided image file
 
 // ### Search engine information/verification files ###
 app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/verification_files/google3fc5d5a06ad26a53.html'); }); //google verification
 app.get('/BingSiteAuth.xml', function(request, response) { response.sendFile(__dirname + '/views/verification_files/BingSiteAuth.xml'); });
 app.get('/robots.txt', function(request, response) { response.sendFile(__dirname + '/views/verification_files/robots.txt'); }); //robots config file
-
-// ### Form Handling ###
-app.post('/submit_beefdata/', upload_event_img.single('attachment'), require('./server_files/models/POST/submit_beefdata.js').execute); //organise, verify and insert user provided beef data to database and save provided image file
-app.post('/submit_actordata/', upload_event_img.single('attachment'), require('./server_files/models/POST/submit_actordata.js').execute); //organise, verify and insert user provided actor data to database and save provided image file
 
 // ### Serve an error page on unrecognised url path ###
 app.get('/*', function(req, res, next) { res.render("pages/static_pages/error.ejs"); });

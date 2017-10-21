@@ -18,7 +18,7 @@ router.get('/about/', function(request, response) { response.render('pages/stati
 router.get('/submission_confirmation/', function(request, response) { response.render('pages/static_pages/submit_conf.ejs'); }); // about_us page
 router.get('/terms_of_use/', function(request, response) { response.render('pages/static_pages/terms_of_use.ejs'); }); // about_us page
 router.get('/scraping_dump/', function(request, response) { response.render('pages/admin_pages/scraping_control/scraping_dump_viewer.ejs'); }); // about_us page
-//router.get('/recently_added/', function(request, response) { response.render('pages/admin_pages/site_config/recently_confirmed.ejs'); }); // about_us page
+router.get('/recently_added/', function(request, response) { response.render('pages/admin_pages/site_config/recently_confirmed.ejs'); }); // about_us page
 router.get('/raw_actor_scraping_html/', function(request, response) { response.render('partials/scraping_dump/raw_actor_scraping.ejs'); }); // about_us page
 router.get('/sitemap', function(req, res) {
     sitemap.toXML( function (err, xml) {
@@ -28,18 +28,6 @@ router.get('/sitemap', function(req, res) {
         res.header('Content-Type', 'application/xml');
         res.send( xml );
   });
-}); // access to sitemap generated above
-/*
-require('./dynamic_routes/search_events_by_id.js');
-require('./dynamic_routes/search_all.js');
-require('./dynamic_routes/search_actors_by_id.js');
-require('./dynamic_routes/search_actors_by_stage_name.js');
-require('./dynamic_routes/search_related_actors_by_id.js');
-require('./dynamic_routes/search_events_by_event_aggressor.js');
-require('./dynamic_routes/search_all_related_events_in_timeline_by_id.js');
-require('./dynamic_routes/search_all_actors.js');
-require('./dynamic_routes/search_all_events.js');
-require('./dynamic_routes/get_event_categories.js');
-require('./dynamic_routes/search_popular_events.js');*/
+});
 
 module.exports = router;
