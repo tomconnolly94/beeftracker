@@ -20,7 +20,11 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     $scope.categories = [];
     $scope.datepicker = "00/00/0000";
     $scope.error_message = "";
-    var test_mode = true;
+    
+    //config panel
+    var url_param_mode = true;
+    var bypass_client_validation = false;
+    var prevent_submit = false;
     
     //function to request data about actors in order to present it in the form
     $scope.get_actor_data = function(){
@@ -145,9 +149,12 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     
     //function to process, format and send all form data to servers
     $scope.process_form = function(button) {
+        
+        console.log($scope.data_sources);
+        
         button.disabled = true;
         
-        if(($scope.event_form.$valid && $scope.validate_input()) || test_mode){
+        if(($scope.event_form.$valid && $scope.validate_input()) || bypass_client_validation){
 
             var form = new FormData();
             $scope.form_data = {};
@@ -211,23 +218,25 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
 
             console.log(form);
             
-            return $http({
-                url: "/submit_beefdata",
-                method: 'POST',
-                data: form,
-                //assign content-type as undefined, the browser
-                //will assign the correct boundary for us
-                headers: { 'Content-Type': undefined},
-                //prevents serializing payload.  don't do it.
-                transformRequest: angular.identity
-            })
-            .then(function (success) {
-                console.log("Upload succeeded.");
-                $window.location.href = '/submission_confirmation';
-            }, function (error) {
-                console.log("Upload failed.");
-                console.log(error);
-            });
+            if(!prevent_submit){
+                
+                return $http({
+                    url: "/submit_beefdata",
+                    method: 'POST',
+                    data: form,
+                    //assign content-type as undefined, the browser will assign the correct boundary
+                    headers: { 'Content-Type': undefined},
+                    //prevents serializing payload.  don't do it.
+                    transformRequest: angular.identity
+                })
+                .then(function (success) {
+                    console.log("Upload succeeded.");
+                    $window.location.href = '/submission_confirmation';
+                }, function (error) {
+                    console.log("Upload failed.");
+                    console.log(error);
+                });
+            }
         }
     };
     
@@ -351,7 +360,11 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     
     $scope.browser = deviceDetector.browser;
     
-    if(test_mode){
+    if(url_param_mode){
+        
+        /* url to set page up
+        http://localhost:5000/add_beef?title=hello&aggressor=5920b5a2e750f1576f5a661c&description=descriptiondescription1234561&targets=5920b5a2e750f1576f5a661c,58d3e34ab2f2afb7795844ce&data_sources=bbc.co.uk,cnn.com&selected_categories=1,2
+        */
         //preload data from url for testing
         var hashParams = window.location.href.split('?');
         
@@ -360,18 +373,32 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
             hashParams = hashParams[1].split('&');
         
             for(var i = 0; i < hashParams.length; i++){
-                var p = hashParams[i].split('=');
+                                
+                var p = hashParams[i].split('=');        
 
                 if(p[1].indexOf(',') >= 0){
-                    $scope[p[0]] = p[1].split(",");
+                    
+                    if(p[0] == "data_sources"){
+                        
+                        var target_arr = p[1].split(",");
+                        var end_arr = [];
+                        
+                        for(var j = 0; j < target_arr.length; j++){
+                            var target = {
+                                url: target_arr[j]
+                            }
+                            end_arr.push(target);
+                        }
+                        $scope[p[0]] = end_arr;
+                    }
+                    else{
+                        $scope[p[0]] = p[1].split(",");
+                    }
                 }
                 else{
                     $scope[p[0]] = p[1];//decodeURIComponent(p[1]);
                 }
             }
-            console.log($scope);
         }
-        
     }
-    
 }]);

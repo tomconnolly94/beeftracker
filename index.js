@@ -111,7 +111,7 @@ app.delete('/discard_scraped_beef_event/:id', require('./server_files/models/DEL
 // ### POST endpoints ###
 app.post('/submit_beefdata/', upload_event_img.single('attachment'), require('./server_files/models/POST/submit_beefdata.js').execute); //organise, verify and insert user provided beef data to database and save provided image file
 app.post('/submit_actordata/', upload_event_img.single('attachment'), require('./server_files/models/POST/submit_actordata.js').execute); //organise, verify and insert user provided actor data to database and save provided image file
-app.post('/set_splash_zone_events/', require('./server_files/models/POST/admin/site_config/set_splash_zone_events.js').execute); //organise, verify and insert user provided actor data to database and save provided image file
+app.post('/set_splash_zone_events/', require('./server_files/models/POST/admin/site_config/set_splash_zone_events.js').execute); //set which events will be displayed in the splash zone on the home page
 
 // ### Search engine information/verification files ###
 app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/verification_files/google3fc5d5a06ad26a53.html'); }); //google verification
