@@ -38,8 +38,10 @@ var storage_actor = multer.diskStorage({
 var upload_event_img = multer({storage: storage_event}); //build upload handlers
 var upload_actor_img = multer({storage: storage_actor}); //build upload handlers
 
+
+/*
 //config remote file storage
-/*var cloudinary = require('cloudinary');
+var cloudinary = require('cloudinary');
 cloudinary.config({ 
   cloud_name: 'hnwdllmgu', 
   api_key: '876856425585275', 
