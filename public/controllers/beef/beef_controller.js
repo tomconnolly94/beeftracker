@@ -65,7 +65,7 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
                             console.log($scope.special_feature)
                             
                             //handle empty or non-existent special feature by using the image instead
-                            if(eventObject.special_feature == undefined || eventObject.special_feature.type == ""){
+                            if(eventObject.special_feature == undefined || eventObject.special_feature.type == "" || eventObject.special_feature.content == ""){
                                 $scope.special_feature = {
                                     type : "no_special_feature"
                                 };

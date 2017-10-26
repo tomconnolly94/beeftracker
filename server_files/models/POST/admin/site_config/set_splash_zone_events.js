@@ -16,8 +16,6 @@ module.exports = {
         db_ref.get_db_object().connect(url, function(err, db) {
             if(err){ console.log(err); }
             else{
-                
-                //standard query to match an event and resolve aggressor and targets references
                 db.collection(db_ref.get_splash_zone_table()).remove(function(err, document){
                     
                     var insert_objects_list = [];
@@ -25,13 +23,9 @@ module.exports = {
                     for(var i = 0; i < event_ids.length; i++){
                     
                         var insert_object = {
-
                             _id: BSON.ObjectID.createFromHexString(event_ids[i]),
                             order: i + 1
-
                         }
-
-                        console.log(insert_object);
                         insert_objects_list.push(insert_object)
                     }
                     
@@ -39,8 +33,6 @@ module.exports = {
                     //standard query to match an event and resolve aggressor and targets references
                     db.collection(db_ref.get_splash_zone_table()).insert(insert_objects_list, function(err, document){
                         if(err){ console.log(err); }
-                        
-                        console.log(document);
                     });
                 });
             }

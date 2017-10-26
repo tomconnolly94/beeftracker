@@ -31,6 +31,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                 $scope.form_data[$scope.events[i]._id].description = $scope.events[i].description;
                 $scope.form_data[$scope.events[i]._id].categories_selection = {};
                 $scope.form_data[$scope.events[i]._id].delete_checkbox = false;
+                $scope.events[i].relevant_actors.push({name: "", db_id: ""});
             }
             $scope.get_category_data();
         }, 
@@ -97,6 +98,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         $scope.form_data[event_id].targets = [];
         $scope.form_data[event_id].button_links = [];
         $scope.form_data[event_id].selected_categories = [];
+        $scope.form_data[event_id].date = event.event_date;
         $scope.form_data[event_id].special_feature = {
             title: event.media_link,
             type: "youtube_embed",
