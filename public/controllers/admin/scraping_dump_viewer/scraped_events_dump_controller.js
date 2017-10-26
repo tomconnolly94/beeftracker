@@ -92,15 +92,14 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         
         $scope.form_data[event_id].data_sources = [{url: event.data_source}];
         $scope.form_data[event_id].img_title = event.img_title;
-        $scope.form_data[event_id].media_link = event.media_link;
         $scope.form_data[event_id].highlights = [];
         $scope.form_data[event_id].targets = [];
         $scope.form_data[event_id].button_links = [];
         $scope.form_data[event_id].selected_categories = [];
         $scope.form_data[event_id].special_feature = {
-            title: event.media_link,
-            type: "youtube_embed",
-            content: event.media_link
+            title: event.media_link.link,
+            type: event.media_link.type,
+            content: event.media_link.link
         };
         
         $scope.source = "scraping";
