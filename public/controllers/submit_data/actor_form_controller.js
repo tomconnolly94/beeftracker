@@ -245,8 +245,6 @@ submit_app.controller('actorFormController', ['$scope','$http', 'fileService', '
     //function to dynamcially add input boxes for nicknames
     $scope.add_nickname = function(){
         
-        console.log("add nickname called.");
-        
         $scope.nicknames.push({
             text: ""
         });

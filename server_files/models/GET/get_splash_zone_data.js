@@ -35,8 +35,15 @@ module.exports = {
                                                                     { $group: {
                                                                         _id : "$_id",
                                                                         resolved_event: { $first: "$resolved_event" }
-                                                                      }
-                                                                    }]).sort({ order : 1 }).toArray(function(queryErr, docs) {
+                                                                    }
+                                                                    },
+                                                                    { $sort : { order : -1} }
+                                                                    ]).sort({ order : -1 }).toArray(function(queryErr, docs) {
+                    console.log(docs[0]._id)
+                    console.log(docs[1]._id)
+                    console.log(docs[2]._id)
+                    console.log(docs[3]._id)
+                    
                     response.send({events : docs});
                 });
             }

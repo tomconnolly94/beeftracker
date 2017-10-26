@@ -1,4 +1,7 @@
 /* (source: http://bootsnipp.com/snippets/OzQj) */
+.timeline-badge {
+    background-color: #000000 !important;
+}
 .timeline {
     list-style: none;
     padding: 20px 0 20px;
@@ -10,7 +13,7 @@
     position: absolute;
     content: " ";
     width: 3px;
-    background-color: #eeeeee;
+    background-color: #000000;
     left: 50%;
     margin-left: -1.5px;
 }

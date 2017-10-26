@@ -184,7 +184,7 @@ function extract_actor_name_array(actor_object_array){
 function build_event(event, lh_side, main_event, name_colour_map){
                   
     var timeline_event;
-    var event_glyphicon;
+    var event_glyphicon = "glyphicon ";
     var width = 150;
     var side_panel_indent;
     

@@ -54,29 +54,23 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
                             $scope.highlights = eventObject.highlights;
                             $scope.data_sources = Object.values(eventObject.data_sources);
                             $scope.event_id = eventObject._id;
+                            $scope.img_link = EVENT_IMAGES_PATH + eventObject.img_title;
                             
-                            //if record has no video link, use the image link instead
-                            /*if(eventObject.links.mf_video_link != undefined && eventObject.links.mf_video_link.length > 0){
-                               $scope.mf_link = eventObject.links.mf_video_link; 
-                            }
-                            else{
-                                $scope.mf_link = "/event_images/" + eventObject.img_title; 
-                            }*/ //DEPRECATED
+                            console.log($scope.img_link);
                             
                             //code to build special feature embed
                             
                             $scope.special_feature = eventObject.special_feature;
                             
+                            console.log($scope.special_feature)
+                            
                             //handle empty or non-existent special feature by using the image instead
-                            if(eventObject.special_feature == undefined || eventObject.special_feature.type == ""){
-                                $scope.special_feature = {};
-                                $scope.special_feature.type = "img";
-                                $scope.special_feature.content = "/event_images/" + eventObject.img_title;
+                            if(eventObject.special_feature == undefined || eventObject.special_feature.type == "" || eventObject.special_feature.content == ""){
+                                $scope.special_feature = {
+                                    type : "no_special_feature"
+                                };
                             }
-                    
-                            //$scope.loc_img_link = "/event_images/" + eventObject.img_title;
-                            /*delete eventObject.links["mf_video_link"];
-                            delete eventObject.links["mf_img_link"];*///DEPRECATED
+                            
                             $scope.links = [];
 
                             var triple;
@@ -103,7 +97,7 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
                         }
                         else{
                             //error msg
-                            console.log("An incorrect event_id has been used. please check the url")
+                            console.log("An incorrect actor_id has been used: " + eventObject.aggressor)
                         }
                     }, 
                     function(response_2) {
@@ -113,7 +107,7 @@ beef_app.controller("currentEventController", ['$scope','$http', '$routeParams',
             }
             else{
                 //error msg
-                console.log("An incorrect event_id has been used. please check the url")
+                console.log("An incorrect event_id has been used: " + $routeParams.tagId)
             }
         }, 
         function(response_1) {

@@ -112,7 +112,7 @@
                                 <span class="col-sm-1 glyphicon glyphicon-info-sign"  title="Please select the instigator/aggressor of this event, if they are not in the list, click 'Add new' and submit a new actor to our records." aria-hidden="true"></span>
                                 <div class="col-sm-8" style="padding:0px;margin:0px;">
                                     <select ng-model="aggressor" class="form-control" name="aggressor" placeholder="" required>
-                                        <option value="" disabled selected style="display: none;" style="margin:3px;" style="margin:3px;"> Select Actor </option>
+                                        <option value="" disabled style="display: none;" style="margin:3px;" style="margin:3px;"> Select Actor </option>
                                         <option ng-repeat="actor in actors" value="{{actor._id}}" style="margin:3px;"><p>{{ actor.stage_name }}</p></option>
                                     </select>
                                 </div>
@@ -222,7 +222,7 @@
                                             <button ng-click="modify_fields(highlight,field,field.add_button)" class="col-sm-6" style="color:#000000;padding:0px;"><b>{{field.symbol}}</b></button>
                                         </div>
                                         <div class="col-sm-10" style="padding:0px 0px 0px 5px;">
-                                            <textarea class="form-control" rows="3" id="comment" placeholder="" ng-model="field.text" style="resize: vertical;"></textarea>
+                                            <textarea class="form-control" rows="3" ng-id="{{ $index }}" placeholder="" ng-model="field.text" style="resize: vertical;"></textarea>
                                         </div>
                                     </div>
                                 </div>

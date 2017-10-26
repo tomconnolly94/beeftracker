@@ -14,7 +14,7 @@ module.exports = {
             else{
 
 
-                db.collection(db_ref.get_scraped_events_dump_table()).find({}).limit(60).toArray(function(queryErr, docs) {
+                db.collection(db_ref.get_scraped_events_dump_table()).find({}).sort({date_added : -1 }).limit(60).toArray(function(queryErr, docs) {
                     response.send({events : docs});
                 });
             }
