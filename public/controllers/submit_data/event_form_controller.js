@@ -23,7 +23,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
     
     //config panel
     var url_param_mode = true;
-    var bypass_client_validation = false;
+    var bypass_client_validation = true;
     var prevent_submit = false;
     
     //function to request data about actors in order to present it in the form

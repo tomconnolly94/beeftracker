@@ -4,9 +4,11 @@ var BSON = require('bson');
 var nodemailer = require('nodemailer');
 var fs = require('fs');
 var dl_request = require('request');
+var datauri = require('datauri');
+var path = require('path');
 
 //configure testing mode, if set: true, record will be collected, printed but not sent to db and no email notification will be sent.
-var test_mode = false;
+var test_mode = true;
 
 module.exports = {
     
@@ -29,8 +31,6 @@ module.exports = {
             submission_data = JSON.parse(request.body.data);
         }
         
-        console.log(submission_data);
-
         //format data for db insertion
         var actor_object = BSON.ObjectID.createFromHexString(submission_data.aggressor);
         var date = submission_data.date.split('/');
@@ -112,20 +112,51 @@ module.exports = {
             formatted_special_feature_content = submission_data.special_feature.content;
         }
         
+        
+        var Datauri = require('datauri');
+        var dUri = new Datauri();
+        
+        //config remote file storage
+        var cloudinary = require('cloudinary');
+        cloudinary.config({ 
+            cloud_name: 'hghz4zts3', 
+            api_key: '871942984534813', 
+            api_secret: 'viCT1gIlPtcy4273Zy_nBiJ166M' 
+        });
+        
         var img_title;
         
         if(file){ 
             img_title = file.filename;
+            
+            /*dUri.format(path.extname(request.file.originalname).toString(),request.file.buffer);
+        
+            cloudinary.uploader.upload(dUri.content, function (err, i) {
+                if (err) { console.log(err); }
+
+            });*/
         }
         else{
             if(submission_data.img_title.length > 0){
             
                 var download = function(img_url, file_location, callback){
                     dl_request.head(img_url, function(err, res, body){
-                        //console.log('content-type:', res.headers['content-type']);
-                        //console.log('content-length:', res.headers['content-length']);
-
-                        dl_request(img_url).pipe(fs.createWriteStream(file_location)).on('close', callback);
+                        
+                        var options = { 
+                            unique_filename: true, 
+                            folder: "events" 
+                        };
+                        
+                        cloudinary.uploader.upload(submission_data.img_title, function (result) {
+                            
+                            if(result.public_id){ 
+                                console.log(result);
+                                console.log(result.public_id.split("/")[1] + "." + result.format);
+                                img_title = result.public_id.split("/")[1];
+                            }
+                        }, options);
+                        
+                        //dl_request(img_url).pipe(fs.createWriteStream(file_location)).on('close', callback);
                     });
                 };
 
@@ -139,12 +170,18 @@ module.exports = {
                 var file_location = "public/assets/images/events/" + filename;
 
                 img_title = filename;
+                
+                console.log(img_title);
+                
                 download(img_url, file_location, function(){
                     console.log('image downloaded');
                 });
             }
         }
 
+        
+        
+        
         var insert_object = {
             "title" : submission_data.title,
             "aggressor" : actor_object,
@@ -168,7 +205,7 @@ module.exports = {
             console.log(insert_object);
         }
         else{
-            //store data temporarily untill submission is confirmed
+            //store data temporarily until submission is confirmed
             db_ref.get_db_object().connect(url, function(err, db) {
                 if(err){ console.log(err); }
                 else{
