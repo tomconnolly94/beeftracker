@@ -1,5 +1,6 @@
 //get database reference object
 var db_ref = require("../../db_config.js");
+var storage_ref = require("../../storage_config.js");
 var BSON = require('bson');
 var nodemailer = require('nodemailer');
 var fs = require('fs');
@@ -8,7 +9,7 @@ var datauri = require('datauri');
 var path = require('path');
 
 //configure testing mode, if set: true, record will be collected, printed but not sent to db and no email notification will be sent.
-var test_mode = true;
+var test_mode = false;
 
 module.exports = {
     
@@ -111,52 +112,47 @@ module.exports = {
 
             formatted_special_feature_content = submission_data.special_feature.content;
         }
-        
-        
-        var Datauri = require('datauri');
-        var dUri = new Datauri();
-        
-        //config remote file storage
-        var cloudinary = require('cloudinary');
-        cloudinary.config({ 
-            cloud_name: 'hghz4zts3', 
-            api_key: '871942984534813', 
-            api_secret: 'viCT1gIlPtcy4273Zy_nBiJ166M' 
-        });
-        
+                
         var img_title;
+        
+        var cloudinary_options = { 
+            unique_filename: true, 
+            folder: storage_ref.get_event_images_folder()
+        };
         
         if(file){ 
             img_title = file.filename;
             
-            /*dUri.format(path.extname(request.file.originalname).toString(),request.file.buffer);
-        
-            cloudinary.uploader.upload(dUri.content, function (err, i) {
-                if (err) { console.log(err); }
+            if(storage_ref.get_upload_method() == "cloudinary"){
+                //format image path for cloudinary
+                var dUri = new Datauri();
+                dUri.format(path.extname(request.file.originalname).toString(),request.file.buffer);
 
-            });*/
+                storage_ref.get_upload_object().uploader.upload(dUri.content, function (err, i) {
+                    if (err) { console.log(err); }
+
+                }, cloudinary_options);
+            }
         }
         else{
             if(submission_data.img_title.length > 0){
             
-                var download = function(img_url, file_location, callback){
+                var download_to_cloudinary = function(img_url, callback){
                     dl_request.head(img_url, function(err, res, body){
-                        
-                        var options = { 
-                            unique_filename: true, 
-                            folder: "events" 
-                        };
-                        
-                        cloudinary.uploader.upload(submission_data.img_title, function (result) {
-                            
-                            if(result.public_id){ 
-                                console.log(result);
-                                console.log(result.public_id.split("/")[1] + "." + result.format);
+                                                
+                        storage_ref.get_upload_object().uploader.upload(img_url, function (result) {
+                            if(result.error){ console.log(result.error); }
+                            if(result.public_id){
                                 img_title = result.public_id.split("/")[1];
                             }
-                        }, options);
-                        
-                        //dl_request(img_url).pipe(fs.createWriteStream(file_location)).on('close', callback);
+                            callback();
+                        }, cloudinary_options);
+                    });
+                };
+                
+                var download_to_local = function(img_url, file_location, callback){
+                    dl_request.head(img_url, function(err, res, body){
+                        dl_request(img_url).pipe(fs.createWriteStream(file_location)).on('close', callback);
                     });
                 };
 
@@ -164,24 +160,32 @@ module.exports = {
                 if(!img_url.includes("http")){
                     img_url = "http:" + submission_data.img_title;
                 }
-                var url_split = img_url.split("/");
-                var filename = url_split[url_split.length - 1];
-                filename = filename.replace(/%/gi, "");
-                var file_location = "public/assets/images/events/" + filename;
+                
+                if(storage_ref.get_upload_method() == "local"){
+                    
+                    var url_split = img_url.split("/");
+                    var filename = url_split[url_split.length - 1];
+                    filename = filename.replace(/%/gi, "");
+                    var file_location = "public/assets/images/events/" + filename;
 
-                img_title = filename;
+                    img_title = filename;
+
+                    download_to_local(img_url, file_location, function(){
+                        console.log("image downloaded to server's local file system");
+                    });
+                }
+                if(storage_ref.get_upload_method() == "cloudinary"){
                 
-                console.log(img_title);
+                    console.log()
+                    
+                    download_to_cloudinary(img_url, function(){
+                        console.log("image downloaded to cloudinary");
+                    });
                 
-                download(img_url, file_location, function(){
-                    console.log('image downloaded');
-                });
+                }
             }
         }
 
-        
-        
-        
         var insert_object = {
             "title" : submission_data.title,
             "aggressor" : actor_object,

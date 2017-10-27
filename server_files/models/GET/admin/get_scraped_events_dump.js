@@ -13,8 +13,9 @@ module.exports = {
             if(err){ console.log(err); }
             else{
 
-
-                db.collection(db_ref.get_scraped_events_dump_table()).find({}).sort({date_added : -1 }).limit(60).toArray(function(queryErr, docs) {
+                var limit = 5;
+                
+                db.collection(db_ref.get_scraped_events_dump_table()).find({}).sort({date_added : -1 }).limit(limit).toArray(function(queryErr, docs) {
                     response.send({events : docs});
                 });
             }

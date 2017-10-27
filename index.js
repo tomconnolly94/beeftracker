@@ -10,46 +10,48 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 // ### Create all the modules that are needed to run this server ###
-var express = require('express');
+var express = require('express'); //server library
 var app = express();
-var bodyParser = require('body-parser');
+var bodyParser = require('body-parser'); //library to assist with parsing data to readable content
 var methodOverride = require('method-override');
 var path = require('path');
 var sitemap_generator = require('sitemap');
-//var datauri = require('datauri');
-var multer = require('multer');
 var mime = require('mime-types');
-var memoryStorage = multer.memoryStorage();
-var memoryUpload = multer({
-    storage: memoryStorage,
-    limits: {fileSize: 500000, files: 1}
-}).single('attachment');
+var storage_ref = require("./server_files/storage_config.js");
+var multer = require('multer'); //library to assist with file storage
 
-/*
+console.log("Storage Method: " + storage_ref.get_upload_method());
+if(storage_ref.get_upload_method() == "cloudinary"){
+    var memoryStorage = multer.memoryStorage();
+    var memoryUpload = multer({
+        storage: memoryStorage,
+        limits: {fileSize: 500000, files: 1}
+    }).single('attachment');
+}
+else if(storage_ref.get_upload_method() == "local"){
 
-var storage_event = multer.diskStorage({
-  destination: function (req, file, cb) {
-      console.log(file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    cb(null, "public/assets/images/events/")
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-  }
-}); //multer config options
+    var storage_event = multer.diskStorage({
+      destination: function (req, file, cb) {
+          console.log(file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+        cb(null, "public/assets/images/events/")
+      },
+      filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+      }
+    }); //multer config options
 
-var storage_actor = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/assets/images/actors/")
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-  }
-}); //multer config options
+    var storage_actor = multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, "public/assets/images/actors/")
+      },
+      filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+      }
+    }); //multer config options
 
-var upload_event_img = multer({storage: storage_event}); //build upload handlers
-var upload_actor_img = multer({storage: storage_actor}); //build upload handlers
-*/
-
+    var upload_event_img = multer({storage: storage_event}); //build upload handlers
+    var upload_actor_img = multer({storage: storage_actor}); //build upload handlers
+}
 // ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({
     hostname: 'http://www.beeftracker.co.uk',
@@ -113,10 +115,17 @@ app.get('/scrape_actor/:actor_name', require('./server_files/models/GET/admin/sc
 app.delete('/discard_scraped_beef_event/:id', require('./server_files/models/DELETE/admin/discard_scraped_beef_event.js').execute); //remove data about a scraped beef event by id
 
 // ### POST endpoints ###
-app.post('/submit_beefdata/', memoryUpload, require('./server_files/models/POST/submit_beefdata.js').execute); //organise, verify and insert user provided beef data to database and save provided image file
-//app.post('/submit_beefdata/', upload_event_img.single('attachment'), require('./server_files/models/POST/submit_beefdata.js').execute); //organise, verify and insert user provided beef data to database and save provided image file
-app.post('/submit_actordata/', memoryUpload, require('./server_files/models/POST/submit_actordata.js').execute); //organise, verify and insert user provided actor data to database and save provided image file
-//app.post('/submit_actordata/', upload_event_img.single('attachment'), require('./server_files/models/POST/submit_actordata.js').execute); //organise, verify and insert user provided actor data to database and save provided image file
+if(storage_ref.get_upload_method() == "cloudinary"){
+    app.post('/submit_beefdata/', memoryUpload, require('./server_files/models/POST/submit_beefdata.js').execute); //organise, verify and insert user provided beef data to database and save provided image file
+    app.post('/submit_actordata/', memoryUpload, require('./server_files/models/POST/submit_actordata.js').execute); //organise, verify and insert user provided actor data to database and save provided image file
+    
+}
+else if(storage_ref.get_upload_method() == "local"){
+    app.post('/submit_beefdata/', upload_event_img.single('attachment'), require('./server_files/models/POST/submit_beefdata.js').execute); //organise, verify and insert user provided beef data to database and save provided image file
+    app.post('/submit_actordata/', upload_event_img.single('attachment'), require('./server_files/models/POST/submit_actordata.js').execute); //organise, verify and insert user provided actor data to database and save provided image file
+}
+
+
 app.post('/set_splash_zone_events/', require('./server_files/models/POST/admin/site_config/set_splash_zone_events.js').execute); //set which events will be displayed in the splash zone on the home page
 
 // ### Search engine information/verification files ###

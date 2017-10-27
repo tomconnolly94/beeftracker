@@ -34,7 +34,7 @@ module.exports = {
             
             console.log(result);
             
-            if(result[0] == "404 error\r"){
+            if(result[0] == "404 error\r" || result[0] == "404 error"){
                 result[0] = JSON.stringify({ error : "404 error. Wikipedia has no pages on this topic."})
             }
                         

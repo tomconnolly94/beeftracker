@@ -390,13 +390,13 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                 url: "/discard_scraped_beef_event/" + event_ids[i]
             }).then(function(response_1){
 
-                $scope.load_scraped_events();
             }, 
             function(response_1) {
                 //failed http request
                 console.log("HTTP request failed (scrapedEventsDumpController)");
             });
         }
+        $scope.load_scraped_events();
     }
     
     $scope.show_modal = function(bool){
