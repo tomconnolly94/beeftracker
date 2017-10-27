@@ -50,7 +50,6 @@ var upload_event_img = multer({storage: storage_event}); //build upload handlers
 var upload_actor_img = multer({storage: storage_actor}); //build upload handlers
 */
 
-
 // ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({
     hostname: 'http://www.beeftracker.co.uk',
