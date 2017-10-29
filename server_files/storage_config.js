@@ -1,5 +1,8 @@
 //file to hold all configuration needed to access the method of file storage used by the server
 
+//config remote file storage
+var cloudinary = require('cloudinary');
+
 //var upload_method = "local";
 var upload_method = "cloudinary";
 var event_images_folder = "events";
@@ -10,12 +13,10 @@ module.exports = {
     get_upload_method: function(){
         return upload_method;
     },
+    
     //create database reference object
     get_upload_object: function(){
-        
-        //config remote file storage
-        var cloudinary = require('cloudinary');
-        
+            
         //config cloudinary object
         //TODO: find some encrypton method for the secret data, plaintext storage is never safe
         cloudinary.config({ 
@@ -26,9 +27,11 @@ module.exports = {
         
         return cloudinary;
     },
+    
     get_event_images_folder: function(){
         return event_images_folder;
     },
+    
     get_actor_images_folder: function(){
         return actor_images_folder;
     }

@@ -7,6 +7,8 @@ var fs = require('fs');
 var dl_request = require('request');
 var datauri = require('datauri');
 var path = require('path');
+var storage_interface = require('../../interfacing/storage_interface.js');
+var db_interface = require('../../interfacing/db_interface.js');
 
 //configure testing mode, if set: true, record will be collected, printed but not sent to db and no email notification will be sent.
 var test_mode = false;
@@ -115,12 +117,22 @@ module.exports = {
                 
         var img_title;
         
-        var cloudinary_options = { 
-            unique_filename: true, 
-            folder: storage_ref.get_event_images_folder()
-        };
+        if(file){
+            storage_interface.upload_image_to_cloudinary(false, file.filename, request.file.buffer, function(img_dl_title){
+                img_title = img_dl_title;
+            });
+        }
+        else{
+            if(submission_data.img_title.length > 0){
+                storage_interface.upload_image_to_cloudinary(true, submission_data.img_title, null, function(img_dl_title){
+                    img_title = img_dl_title;
+                });            
+            }
+        }
+    
         
-        if(file){ 
+        
+        /*if(file){ 
             img_title = file.filename;
             
             if(storage_ref.get_upload_method() == "cloudinary"){
@@ -184,7 +196,7 @@ module.exports = {
                 
                 }
             }
-        }
+        }*/
 
         var insert_object = {
             "title" : submission_data.title,
@@ -209,6 +221,18 @@ module.exports = {
             console.log(insert_object);
         }
         else{
+            
+            var db_options = {
+                send_email_notification: true,
+                add_to_scraped_confirmed_table: true
+            };
+            
+            db_interface.upload_record_to_db(insert_object, db_config.get_current_event_table(), db_options, function(){
+                
+                
+            });
+            
+            /*
             //store data temporarily until submission is confirmed
             db_ref.get_db_object().connect(url, function(err, db) {
                 if(err){ console.log(err); }
@@ -264,7 +288,7 @@ module.exports = {
 
                     });
                 }
-            });
+            });*/
         }
     }
 }

@@ -27,6 +27,7 @@ module.exports = {
     get_scraped_events_dump_table: function(){
         return "scraped_training_events_dump_v0_1";
     },
+    
     get_scraped_events_confirmed_table: function(){
         return "scraped_training_events_confirmed_v0_1";
     }
