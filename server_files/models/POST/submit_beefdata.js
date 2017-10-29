@@ -4,7 +4,6 @@ var storage_ref = require("../../storage_config.js");
 var BSON = require('bson');
 var nodemailer = require('nodemailer');
 var fs = require('fs');
-var dl_request = require('request');
 var datauri = require('datauri');
 var path = require('path');
 var storage_interface = require('../../interfacing/storage_interface.js');
@@ -16,6 +15,8 @@ var test_mode = false;
 module.exports = {
     
     execute : function(request, response) {
+        
+        console.log("Insert Beef record procedure started.")
 
         //extract data for use later
         var url = process.env.MONGODB_URI; //get db uri
@@ -41,9 +42,6 @@ module.exports = {
         var highlights_formatted = {};
         var data_sources_formatted = new Array();
         var links_formatted = {};
-
-
-        
         
         //create array of target objectIds
         for(var i = 0; i < submission_data.targets.length; i++){
@@ -114,90 +112,7 @@ module.exports = {
 
             formatted_special_feature_content = submission_data.special_feature.content;
         }
-                
-        var img_title;
         
-        if(file){
-            storage_interface.upload_image_to_cloudinary(false, file.filename, request.file.buffer, function(img_dl_title){
-                img_title = img_dl_title;
-            });
-        }
-        else{
-            if(submission_data.img_title.length > 0){
-                storage_interface.upload_image_to_cloudinary(true, submission_data.img_title, null, function(img_dl_title){
-                    img_title = img_dl_title;
-                });            
-            }
-        }
-    
-        
-        
-        /*if(file){ 
-            img_title = file.filename;
-            
-            if(storage_ref.get_upload_method() == "cloudinary"){
-                //format image path for cloudinary
-                var dUri = new Datauri();
-                dUri.format(path.extname(request.file.originalname).toString(),request.file.buffer);
-
-                storage_ref.get_upload_object().uploader.upload(dUri.content, function (err, i) {
-                    if (err) { console.log(err); }
-
-                }, cloudinary_options);
-            }
-        }
-        else{
-            if(submission_data.img_title.length > 0){
-            
-                var download_to_cloudinary = function(img_url, callback){
-                    dl_request.head(img_url, function(err, res, body){
-                                                
-                        storage_ref.get_upload_object().uploader.upload(img_url, function (result) {
-                            if(result.error){ console.log(result.error); }
-                            if(result.public_id){
-                                img_title = result.public_id.split("/")[1];
-                            }
-                            callback();
-                        }, cloudinary_options);
-                    });
-                };
-                
-                var download_to_local = function(img_url, file_location, callback){
-                    dl_request.head(img_url, function(err, res, body){
-                        dl_request(img_url).pipe(fs.createWriteStream(file_location)).on('close', callback);
-                    });
-                };
-
-                var img_url = submission_data.img_title.split("?")[0];
-                if(!img_url.includes("http")){
-                    img_url = "http:" + submission_data.img_title;
-                }
-                
-                if(storage_ref.get_upload_method() == "local"){
-                    
-                    var url_split = img_url.split("/");
-                    var filename = url_split[url_split.length - 1];
-                    filename = filename.replace(/%/gi, "");
-                    var file_location = "public/assets/images/events/" + filename;
-
-                    img_title = filename;
-
-                    download_to_local(img_url, file_location, function(){
-                        console.log("image downloaded to server's local file system");
-                    });
-                }
-                if(storage_ref.get_upload_method() == "cloudinary"){
-                
-                    console.log()
-                    
-                    download_to_cloudinary(img_url, function(){
-                        console.log("image downloaded to cloudinary");
-                    });
-                
-                }
-            }
-        }*/
-
         var insert_object = {
             "title" : submission_data.title,
             "aggressor" : actor_object,
@@ -209,13 +124,15 @@ module.exports = {
             "data_sources" : data_sources_formatted,
             "links" : links_formatted,
             "selected_categories" : submission_data.selected_categories,
-            "img_title" : img_title,
+            "img_title" : "",
             "special_feature" : {
                 type : submission_data.special_feature.type,
                 content : formatted_special_feature_content
             }
         }
-
+                
+        var img_title;
+        
         if(test_mode){
             console.log("test mode is on.");
             console.log(insert_object);
@@ -224,71 +141,27 @@ module.exports = {
             
             var db_options = {
                 send_email_notification: true,
-                add_to_scraped_confirmed_table: true
+                add_to_scraped_confirmed_table: submission_data.record_origin == "scraped" ? true : false
             };
-            
-            db_interface.upload_record_to_db(insert_object, db_config.get_current_event_table(), db_options, function(){
-                
-                
-            });
-            
-            /*
-            //store data temporarily until submission is confirmed
-            db_ref.get_db_object().connect(url, function(err, db) {
-                if(err){ console.log(err); }
-                else{
-                    //standard query to insert into live events table
-                    db.collection(db_ref.get_current_event_table()).insert(insert_object, function(err, document){
-
-                        if(document != null && document.ops != null){
-                            
-                            //add _id field so object can be found later
-                            insert_object._id = document.ops[0]._id;
-                            
-                            var events_confirm_obj = {
-                                event_id: insert_object._id,
-                                title: insert_object.title
-                            }
-
-                            db.collection(db_ref.get_scraped_events_confirmed_table()).insert(events_confirm_obj, function(err, document){
-
-                                //parse json directly to string with indents
-                                var text = JSON.stringify(insert_object, null, 2);
-
-                                var transporter = nodemailer.createTransport({
-                                    service: 'Gmail',
-                                    auth: {
-                                        user: 'beeftracker@gmail.com', // Your email id
-                                        pass: 'UoNYtG4gDsabqtpMtx7tryQWKi8Nlm49HXKn3YqqDslZKb6AbAcTy57k/ZGfTSY0' // Your password
-                                    }
-                                });
-
-                                //config mail options
-                                var mailOptions = {
-                                    from: 'bf_sys@gmail.com', // sender address
-                                    to: 'beeftracker@gmail.com', // list of receivers
-                                    subject: 'New Beefdata Submission', // Subject line
-                                    text: text //, // plaintext body
-                                    // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
-                                };
-
-                                //send email notifying beeftracker account new submisson
-                                transporter.sendMail(mailOptions, function(error, info){
-                                    if(error){
-                                        console.log(error);
-                                    }else{
-                                        console.log('Message sent: ' + info.response);
-                                        response.json({yo: info.response});
-                                    };
-                                });
-
-                                response.send();
-                            });
-                        }
-
+                                    
+            if(file){
+                storage_interface.upload_image_to_cloudinary(false, file.filename, request.file.buffer, function(img_dl_title){
+                    insert_object.img_title = img_dl_title;
+                    db_interface.insert_record_into_db(insert_object, db_ref.get_current_event_table(), db_options, function(){
+                        
                     });
+                });
+            }
+            else{
+                if(submission_data.img_title.length > 0){
+                    storage_interface.upload_image_to_cloudinary(true, submission_data.img_title, null, function(img_dl_title){
+                        insert_object.img_title = img_dl_title;
+                        db_interface.insert_record_into_db(insert_object, db_ref.get_current_event_table(), db_options, function(){
+                            
+                        });
+                    });            
                 }
-            });*/
-        }
+            }
+        }        
     }
 }

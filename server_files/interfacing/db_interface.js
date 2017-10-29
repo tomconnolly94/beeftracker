@@ -1,18 +1,22 @@
 //file to hold all functions involving the server's interfacing with the database
-var db_ref = require("../../db_config.js");
+var db_ref = require("../db_config.js");
 var nodemailer = require('nodemailer');
 
+
+const db_url = process.env.MONGODB_URI; //get db uri
+
 module.exports = {
-   
-    
+       
     insert_record_into_db: function(insert_object, table, options, callback){
         
+        console.log("insert function called.")
+        
         //store data temporarily until submission is confirmed
-        db_ref.get_db_object().connect(url, function(err, db) {
+        db_ref.get_db_object().connect(db_url, function(err, db) {
             if(err){ console.log(err); }
             else{
                 //standard query to insert into live events table
-                db.collection(table.insert(insert_object, function(err, document){
+                db.collection(table).insert(insert_object, function(err, document){
 
                     if(document != null && document.ops != null){
 
@@ -52,14 +56,14 @@ module.exports = {
                                     console.log(error);
                                 }else{
                                     console.log('Message sent: ' + info.response);
-                                    response.json({yo: info.response});
+                                    //response.json({yo: info.response});
                                 };
                             });
                         }
                         
-                        if(optons.add_to_scraped_confirmed_table){
+                        if(options.add_to_scraped_confirmed_table){
                             db.collection(db_ref.get_scraped_events_confirmed_table()).insert(events_confirm_obj, function(err, document){
-                                response.send();
+                                //response.send();
                             });
                         }
                     }

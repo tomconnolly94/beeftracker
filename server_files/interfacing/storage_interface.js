@@ -2,6 +2,7 @@
 //config remote file storage
 var cloudinary = require('cloudinary');
 var storage_ref = require("../storage_config.js");
+var dl_request = require('request');
 
 var cloudinary_options = { 
     unique_filename: true, 
