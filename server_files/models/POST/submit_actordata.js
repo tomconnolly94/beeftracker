@@ -135,7 +135,7 @@ module.exports = {
             
             var db_options = {
                 send_email_notification: true,
-                email_notification_tagline: "Actor data",
+                email_notification_tagline: "Actor",
                 add_to_scraped_confirmed_table: false
             };
                                     

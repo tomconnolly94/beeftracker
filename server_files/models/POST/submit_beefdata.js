@@ -141,7 +141,7 @@ module.exports = {
             
             var db_options = {
                 send_email_notification: true,
-                email_notification_tagline: "Beef data",
+                email_notification_text: "Beef",
                 add_to_scraped_confirmed_table: submission_data.record_origin == "scraped" ? true : false
             };
                                     

@@ -45,7 +45,7 @@ module.exports = {
                             var mailOptions = {
                                 from: 'bf_sys@gmail.com', // sender address
                                 to: 'beeftracker@gmail.com', // list of receivers
-                                subject: 'New Beefdata Submission', // Subject line
+                                subject: "New " + options.email_notification_text + " Submission", // Subject line
                                 text: text //, // plaintext body
                                 // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
                             };
@@ -56,14 +56,14 @@ module.exports = {
                                     console.log(error);
                                 }else{
                                     console.log('Message sent: ' + info.response);
-                                    //response.json({yo: info.response});
+                                    response.json({yo: info.response});
                                 };
                             });
                         }
                         
                         if(options.add_to_scraped_confirmed_table){
                             db.collection(db_ref.get_scraped_events_confirmed_table()).insert(events_confirm_obj, function(err, document){
-                                //response.send();
+                                response.send();
                             });
                         }
                     }
