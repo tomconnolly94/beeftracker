@@ -141,11 +141,12 @@ module.exports = {
             
             var db_options = {
                 send_email_notification: true,
+                email_notification_tagline: "Beef data",
                 add_to_scraped_confirmed_table: submission_data.record_origin == "scraped" ? true : false
             };
                                     
             if(file){
-                storage_interface.upload_image_to_cloudinary(false, file.filename, request.file.buffer, function(img_dl_title){
+                storage_interface.upload_image_to_cloudinary(false, file.filename, file.buffer, function(img_dl_title){
                     insert_object.img_title = img_dl_title;
                     db_interface.insert_record_into_db(insert_object, db_ref.get_current_event_table(), db_options, function(){
                         

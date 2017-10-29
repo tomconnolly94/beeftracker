@@ -90,6 +90,15 @@ module.exports = {
                 assoc_actors_formatted.push(BSON.ObjectID.createFromHexString(submission_data.assoc_actors[i]));
             }
         }
+        
+        //create array of target objectIds ## unfinished need to deal with images and videos that are not null  and other button links too
+        for(var i = 0; i < submission_data.button_links.length; i++){
+            if(submission_data.button_links[i].special_title != undefined && submission_data.button_links[i].special_title.length > 0){
+                links_formatted[submission_data.button_links[i].special_title] = submission_data.button_links[i].url;
+            }else{
+                links_formatted[submission_data.button_links[i].title] = submission_data.button_links[i].url;
+            }
+        }
 
         var img_title = "";
         
@@ -98,7 +107,58 @@ module.exports = {
             folder: storage_ref.get_actor_images_folder()
         };
         
-        if(file){ 
+
+        //format object for insertion into pending db
+        var insert_object = {        
+            "stage_name" : submission_data.stage_name,
+            "birth_name" : submission_data.birth_name,
+            "nicknames" : nicknames_formatted,
+            "d_o_b" : new Date(date[2],date[1]-1,date[0]),
+            "occupations" : occupations_formatted,
+            "origin" : submission_data.origin,
+            "achievements" : submission_data.origin,
+            "bio" : submission_data.bio,
+            "data_sources" : data_sources_formatted,
+            "associated_actors" : assoc_actors_formatted,
+            "links" : links_formatted, 
+            "date_added" : new Date(),
+            img_title: img_title
+        }
+
+        console.log(insert_object);
+
+        if(test_mode){
+            console.log("test mode is on.");
+            console.log(insert_object);
+        }
+        else{
+            
+            var db_options = {
+                send_email_notification: true,
+                email_notification_tagline: "Actor data",
+                add_to_scraped_confirmed_table: false
+            };
+                                    
+            if(file){
+                storage_interface.upload_image_to_cloudinary(false, file.filename, file.buffer, function(img_dl_title){
+                    insert_object.img_title = img_dl_title;
+                    db_interface.insert_record_into_db(insert_object, db_ref.get_current_actor_table(), db_options, function(){
+                        
+                    });
+                });
+            }
+            else{
+                if(submission_data.img_title.length > 0){
+                    storage_interface.upload_image_to_cloudinary(true, submission_data.img_title, null, function(img_dl_title){
+                        insert_object.img_title = img_dl_title;
+                        db_interface.insert_record_into_db(insert_object, db_ref.get_current_actor_table(), db_options, function(){
+                            
+                        });
+                    });            
+                }
+            }
+        }
+        /*if(file){ 
             img_title = file.filename;
             
             if(storage_ref.get_upload_method() == "cloudinary"){
@@ -164,41 +224,10 @@ module.exports = {
                 
                 }
             }
-        }
+        }*/
 
-        //create array of target objectIds ## unfinished need to deal with images and videos that are not null  and other button links too
-        for(var i = 0; i < submission_data.button_links.length; i++){
-            if(submission_data.button_links[i].special_title != undefined && submission_data.button_links[i].special_title.length > 0){
-                links_formatted[submission_data.button_links[i].special_title] = submission_data.button_links[i].url;
-            }else{
-                links_formatted[submission_data.button_links[i].title] = submission_data.button_links[i].url;
-            }
-        }
 
-        //format object for insertion into pending db
-        var insert_object = {        
-            "stage_name" : submission_data.stage_name,
-            "birth_name" : submission_data.birth_name,
-            "nicknames" : nicknames_formatted,
-            "d_o_b" : new Date(date[2],date[1]-1,date[0]),
-            "occupations" : occupations_formatted,
-            "origin" : submission_data.origin,
-            "achievements" : submission_data.origin,
-            "bio" : submission_data.bio,
-            "data_sources" : data_sources_formatted,
-            "associated_actors" : assoc_actors_formatted,
-            "links" : links_formatted, 
-            "date_added" : new Date(),
-            img_title: img_title
-        }
-
-        console.log(insert_object);
-
-        if(test_mode){
-            console.log("test mode is on.");
-            console.log(insert_object);
-        }
-        else{
+            /*
             //store data temporarily until submission is confirmed
             db_ref.get_db_object().connect(db_url, function(err, db) {
                 if(err){ console.log(err); }
@@ -245,7 +274,6 @@ module.exports = {
                         }
                     });
                 }
-            });
-        }
+            });*/
     }
 }
