@@ -3,7 +3,7 @@
 
 ###### Requirements with Version Specifiers ######
 #   See https://www.python.org/dev/peps/pep-0440/#version-specifiers
-beautifulsoup4==4.6.0
+bs4==4.6.0
 demjson==2.2.4
 nltk==3.2.4
 six==1.10.0
