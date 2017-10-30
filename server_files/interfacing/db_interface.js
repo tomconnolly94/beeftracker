@@ -52,12 +52,7 @@ module.exports = {
 
                             //send email notifying beeftracker account new submisson
                             transporter.sendMail(mailOptions, function(error, info){
-                                if(error){
-                                    console.log(error);
-                                }else{
-                                    console.log('Message sent: ' + info.response);
-                                    response.json({yo: info.response});
-                                };
+                                if(error){ console.log(error); }
                             });
                         }
                         
