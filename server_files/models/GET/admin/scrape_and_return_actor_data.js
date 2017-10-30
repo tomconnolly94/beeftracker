@@ -24,8 +24,8 @@ module.exports = {
                 mode: 'text',
                 pythonPath: '/usr/bin/python3',
                 pythonOptions: ['-u'],
-                //scriptPath: '/home/tom/beeftracker/news_scraping_project/beeftracker_scraping',
-                scriptPath: '/app/beeftracker_scraping',
+                scriptPath: '/home/tom/beeftracker/news_scraping_project/beeftracker_scraping',
+                //scriptPath: '/app/beeftracker_scraping',
                 args: [search_term]
             };
         }
