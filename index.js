@@ -122,7 +122,7 @@ if(storage_ref.get_upload_method() == "cloudinary"){
 }
 else if(storage_ref.get_upload_method() == "local"){
     app.post('/submit_beefdata/', upload_event_img.single('attachment'), require('./server_files/models/POST/submit_beefdata.js').execute); //organise, verify and insert user provided beef data to database and save provided image file
-    app.post('/submit_actordata/', upload_event_img.single('attachment'), require('./server_files/models/POST/submit_actordata.js').execute); //organise, verify and insert user provided actor data to database and save provided image file
+    app.post('/submit_actordata/', upload_actor_img.single('attachment'), require('./server_files/models/POST/submit_actordata.js').execute); //organise, verify and insert user provided actor data to database and save provided image file
 }
 
 

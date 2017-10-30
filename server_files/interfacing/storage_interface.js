@@ -2,7 +2,9 @@
 //config remote file storage
 var cloudinary = require('cloudinary');
 var storage_ref = require("../storage_config.js");
-var dl_request = require('request');
+var dl_request = require("request");
+var datauri = require("datauri");
+var path = require("path");
 
 var cloudinary_options = { 
     unique_filename: true, 
@@ -15,6 +17,7 @@ var download_to_cloudinary = function(img_url, callback){
         storage_ref.get_upload_object().uploader.upload(img_url, function (result) {
             if(result.error){ console.log(result.error); }
             
+            console.log(result);
             if(result.public_id){
                 callback(result.public_id.split("/")[1]);
             }
@@ -35,11 +38,13 @@ module.exports = {
 
     upload_image_to_cloudinary: function(image_requires_download, img_title, img_buffer, callback){
     
+        console.log(img_title);
+        
         if(image_requires_download){ //if image is provided in post 
             
             var img_url = img_title.split("?")[0];
             if(!img_url.includes("http")){
-                img_url = "http:" + submission_data.img_title;
+                img_url = "http:" + img_title;
             }
 
             //choose storage method
@@ -70,7 +75,7 @@ module.exports = {
             
             if(storage_ref.get_upload_method() == "cloudinary"){
                 //format image path for cloudinary
-                var dUri = new Datauri();
+                var dUri = new datauri();
                 dUri.format(path.extname(img_title).toString(), img_buffer);
 
                 storage_ref.get_upload_object().uploader.upload(dUri.content, function (err, i) {

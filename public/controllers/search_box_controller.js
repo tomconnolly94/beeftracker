@@ -47,12 +47,12 @@ function SearchBoxReusableController(){
                             if(obj.hasOwnProperty('aggressor')){ //object is an event
                                 title = objects[objectId].title;
                                 name = " - " + objects[objectId].aggressor_object[0].stage_name;
-                                img_link = "/event_images/" + objects[objectId].img_title;
+                                img_link = EVENT_IMAGES_PATH + objects[objectId].img_title;
                                 content_link = "/beef/" + objects[objectId]._id;
                             }
                             else{//object is an artists
                                 title = objects[objectId].stage_name;
-                                img_link = "/actor_images/" + objects[objectId].img_title;
+                                img_link = ACTOR_IMAGES_PATH + objects[objectId].img_title;
                                 content_link = "/actor/" + objects[objectId]._id;
                             }
 

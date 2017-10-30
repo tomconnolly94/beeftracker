@@ -2,14 +2,13 @@
 var db_ref = require("../db_config.js");
 var nodemailer = require('nodemailer');
 
-
 const db_url = process.env.MONGODB_URI; //get db uri
 
 module.exports = {
        
     insert_record_into_db: function(insert_object, table, options, callback){
         
-        console.log("insert function called.")
+        console.log("insert function called.");
         
         //store data temporarily until submission is confirmed
         db_ref.get_db_object().connect(db_url, function(err, db) {
@@ -52,18 +51,20 @@ module.exports = {
 
                             //send email notifying beeftracker account new submisson
                             transporter.sendMail(mailOptions, function(error, info){
-                                if(error){
-                                    console.log(error);
-                                }else{
+                                if(error){ console.log(error); }
+                                else{
                                     console.log('Message sent: ' + info.response);
-                                    response.json({yo: info.response});
+                                    callback({ id: insert_object._id });
                                 };
                             });
+                        }
+                        else{
+                            callback({ id: insert_object._id });
                         }
                         
                         if(options.add_to_scraped_confirmed_table){
                             db.collection(db_ref.get_scraped_events_confirmed_table()).insert(events_confirm_obj, function(err, document){
-                                response.send();
+    
                             });
                         }
                     }

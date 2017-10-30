@@ -2,14 +2,11 @@
 var db_ref = require("../../db_config.js");
 var storage_ref = require("../../storage_config.js");
 var BSON = require('bson');
-var nodemailer = require('nodemailer');
-var fs = require('fs');
-var dl_request = require('request');
-var datauri = require('datauri');
-var path = require('path');
+var storage_interface = require('../../interfacing/storage_interface.js');
+var db_interface = require('../../interfacing/db_interface.js');
 
 //configure testing mode, if set: true, record will be collected, printed but not sent to db and no email notification will be sent.
-var test_mode = true;
+var test_mode = false;
 
 module.exports = {
     
@@ -135,15 +132,16 @@ module.exports = {
             
             var db_options = {
                 send_email_notification: true,
-                email_notification_tagline: "Actor",
+                email_notification_text: "Actor",
                 add_to_scraped_confirmed_table: false
             };
                                     
             if(file){
                 storage_interface.upload_image_to_cloudinary(false, file.filename, file.buffer, function(img_dl_title){
                     insert_object.img_title = img_dl_title;
-                    db_interface.insert_record_into_db(insert_object, db_ref.get_current_actor_table(), db_options, function(){
-                        
+                    db_interface.insert_record_into_db(insert_object, db_ref.get_current_actor_table(), db_options, function(id){
+                        console.log("callback run 1")
+                        response.send(id);
                     });
                 });
             }
@@ -151,8 +149,9 @@ module.exports = {
                 if(submission_data.img_title.length > 0){
                     storage_interface.upload_image_to_cloudinary(true, submission_data.img_title, null, function(img_dl_title){
                         insert_object.img_title = img_dl_title;
-                        db_interface.insert_record_into_db(insert_object, db_ref.get_current_actor_table(), db_options, function(){
-                            
+                        db_interface.insert_record_into_db(insert_object, db_ref.get_current_actor_table(), db_options, function(id){
+                            console.log("callback run 2")
+                            response.send(id);
                         });
                     });            
                 }
