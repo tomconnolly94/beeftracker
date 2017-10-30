@@ -8,13 +8,16 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 var submit_app = angular.module("submit", ["jkuri.datepicker", "toggle-switch", "ng.deviceDetector"]);
-/*submit_app.config(function($routeProvider, $locationProvider){
-    $routeProvider.when('/raw_add_actor',
+
+/*
+submit_app.config(function($routeProvider, $locationProvider){
+    $routeProvider.when('/add_actor',
         {
             controller: 'actorFormController',
-            templateUrl: '/raw_add_actor'
+            templateUrl: '/add_actor'
         });
-});*/
+});
+*/
 
 submit_app.directive('headerDirective', function($compile, $http){
     return {

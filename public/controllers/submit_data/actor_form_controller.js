@@ -22,6 +22,8 @@ submit_app.controller('actorFormController', ['$scope','$http', 'fileService', '
     $scope.assoc_actors = [];
     $scope.show_birth_name = true;
     
+    var bypass_client_validation = true;
+    
     //request to get actors to fill aggressor and targets option inputs
     $http({
         method: 'GET',
@@ -158,7 +160,7 @@ submit_app.controller('actorFormController', ['$scope','$http', 'fileService', '
     //function to process, format and send all form data to servers
     $scope.process_form = function() {
         
-        if($scope.validate_input()){
+        if($scope.validate_input() || bypass_client_validation){
 
             var form = new FormData();
             
