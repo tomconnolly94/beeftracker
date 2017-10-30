@@ -1,3 +1,3 @@
 [submodule "beeftracker_scraping"]
 	path = beeftracker_scraping
-	url = https://bitbucket.org/beeftracker/beeftracker_scraping.git
+	url = https://beeftracker@bitbucket.org/beeftracker/beeftracker_scraping.git
