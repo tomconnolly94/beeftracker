@@ -151,8 +151,9 @@ module.exports = {
             }
             else{
                 if(submission_data.img_title.length > 0){
-                    storage_interface.upload_image_to_cloudinary(true, submission_data.img_title, null, function(img_dl_title){
+                    storage_interface.upload_image(true, "events", submission_data.img_title, null, function(img_dl_title){
                         insert_object.img_title = img_dl_title;
+
                         db_interface.insert_record_into_db(insert_object, db_ref.get_current_event_table(), db_options, function(id){
                             response.send(id);
                         });
