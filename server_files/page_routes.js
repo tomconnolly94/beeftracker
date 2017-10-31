@@ -7,10 +7,9 @@ console.log("deployment_mode: " + Object.keys(process.env));
 
 if(process.env.DEPLOYMENT_ENV == "heroku"){
     /* Detect any http requests, if found, redirect to https, otherwise continue to other routes */
-    router.get('*',function(req,res,next){
-        if(req.headers['x-forwarded-proto']!='https'){
-            console.log('https://beeftracker.co.uk'+req.url);
-            res.redirect('https://beeftracker.co.uk'+req.url)
+    router.get(""*",function(req,res,next){
+        if(req.headers["x-forwarded-proto"] != "https"){
+            res.redirect("https://www.beeftracker.co.uk"+req.url)
         }
         else{
             next();
