@@ -22,7 +22,7 @@ module.exports = {
         else{ //Linux
              options = {
                 mode: 'text',
-                pythonPath: '/usr/bin/python3',
+                pythonPath: '/usr/bin/python',
                 pythonOptions: ['-u'],
                 //scriptPath: '/home/tom/beeftracker/news_scraping_project/beeftracker_scraping',
                 scriptPath: '/app/beeftracker_scraping',
@@ -33,7 +33,7 @@ module.exports = {
         
         console.log("javascript actor_scraping wrapper called.")
 
-        var pyshell = PythonShell.run("scrape_actor.py", options, function(){}); /*, function (err, result) {
+        var pyshell = PythonShell.run('scrape_actor.py', options, function (err, result) {
             if(err){ console.log(err) }
             
             console.log(result);
@@ -43,11 +43,6 @@ module.exports = {
             }
                         
             response.send( { result : result[0] } );
-        });*/
-        
-        pyshell.on('message', function (message) { 
-            // received a message sent from the Python script (a simple "print" statement)  
-            console.log(message); 
         });
     }
 }
