@@ -1,6 +1,7 @@
 // routes/index.js
 var router = require('express').Router();
 
+console.log("deployment_mode: " + process.env.DEPLOYMENT_ENV);
 console.log("deployment_mode: " + Object.keys(process.env));
 
 if(process.env.DEPLOYMENT_ENV == "heroku"){
