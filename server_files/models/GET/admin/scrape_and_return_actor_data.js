@@ -22,7 +22,7 @@ module.exports = {
         else{ //Linux
              options = {
                 mode: 'text',
-                pythonPath: '/usr/bin/python',
+                //pythonPath: '/usr/bin/python',
                 pythonOptions: ['-u'],
                 //scriptPath: '/home/tom/beeftracker/news_scraping_project/beeftracker_scraping',
                 scriptPath: '/app/beeftracker_scraping',
