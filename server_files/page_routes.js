@@ -3,7 +3,7 @@ var router = require('express').Router();
 
 console.log("deployment_mode: " + process.env.DEPLOYMENT_MODE);
 
-if(process.env.DEPLOYMENT_MODE == "production"){
+if(process.env.DEPLOYMENT_ENV == "heroku"){
     /* Detect any http requests, if found, redirect to https, otherwise continue to other routes */
     router.get('*',function(req,res,next){
       if(req.headers['x-forwarded-proto']!='https')
