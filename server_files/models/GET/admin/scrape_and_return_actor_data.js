@@ -29,9 +29,6 @@ module.exports = {
                 args: [search_term]
             };
         }
-        
-        
-        console.log("javascript actor_scraping wrapper called.")
 
         var pyshell = PythonShell.run('scrape_actor.py', options, function (err, result) {
             if(err){ console.log(err) }
