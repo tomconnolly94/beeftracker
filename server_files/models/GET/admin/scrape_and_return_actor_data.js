@@ -30,6 +30,7 @@ module.exports = {
             };
         }
         
+        
         console.log("javascript actor_scraping wrapper called.")
 
         PythonShell.run('scrape_actor.py', options, function (err, result) {
