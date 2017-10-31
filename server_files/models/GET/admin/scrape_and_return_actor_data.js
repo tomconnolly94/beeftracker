@@ -32,8 +32,7 @@ module.exports = {
 
         var pyshell = PythonShell.run('scrape_actor.py', options, function (err, result) {
             if(err){ console.log(err) }
-            
-            console.log(result);
+                console.log(result);
             
             if(result[0] == "404 error\r" || result[0] == "404 error"){
                 result[0] = JSON.stringify({ error : "404 error. Wikipedia has no pages on this topic."})
