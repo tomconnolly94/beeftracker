@@ -36,7 +36,7 @@ module.exports = {
                                 service: 'Gmail',
                                 auth: {
                                     user: 'beeftracker@gmail.com', // Your email id
-                                    pass: 'UoNYtG4gDsabqtpMtx7tryQWKi8Nlm49HXKn3YqqDslZKb6AbAcTy57k/ZGfTSY0' // Your password
+                                    pass: '7EvA84qF0nsu' // Your password
                                 }
                             });
 
