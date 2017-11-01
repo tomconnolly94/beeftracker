@@ -16,19 +16,23 @@ var upload_to_cloudinary = function(img_url, callback){
 
     storage_ref.get_upload_object().uploader.upload(img_url, function (result) {
         if(result.error){ console.log(result.error); }
-
-        if(result.public_id){
-            callback(result.public_id.split("/")[1]);
-        }
         else{
-            callback(null);                
+            if(result.public_id){
+                callback(result.public_id.split("/")[1]);
+            }
+            else{
+                callback("");                
+            }
         }
     }, cloudinary_options);
 };
 
 var download_to_local = function(img_url, file_location, callback){
     dl_request.head(img_url, function(err, res, body){
-        dl_request(img_url).pipe(fs.createWriteStream(file_location)).on('close', callback);
+        if(err){ console.log(err); }
+        else{
+            dl_request(img_url).pipe(fs.createWriteStream(file_location)).on('close', callback);
+        }
     });
 };
 

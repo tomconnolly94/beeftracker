@@ -13,7 +13,7 @@ module.exports = {
             if(err){ console.log(err); }
             else{
 
-                var limit = 5;
+                var limit = 20;
                 
                 db.collection(db_ref.get_scraped_events_dump_table()).find({}).sort({date_added : -1 }).limit(limit).toArray(function(queryErr, docs) {
                     response.send({events : docs});
