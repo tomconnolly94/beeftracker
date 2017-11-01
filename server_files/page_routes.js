@@ -31,6 +31,8 @@ router.get('/terms_of_use/', function(request, response) { response.render('page
 router.get('/scraping_dump/', function(request, response) { response.render('pages/admin_pages/scraping_control/scraping_dump_viewer.ejs'); }); // about_us page
 router.get('/recently_added/', function(request, response) { response.render('pages/admin_pages/site_config/recently_confirmed.ejs'); }); // about_us page
 router.get('/raw_actor_scraping_html/', function(request, response) { response.render('partials/scraping_dump/raw_actor_scraping.ejs'); }); // about_us page
+
+
 router.get('/sitemap', function(req, res) {
     sitemap.toXML( function (err, xml) {
         if (err) {

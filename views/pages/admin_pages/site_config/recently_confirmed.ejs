@@ -9,26 +9,7 @@
     -->
     
     <head>
-        <title>Recently Confirmed</title>
-        <meta name="description" content="Beeftracker is a brand new way to read the news, working from crowd sourced data it aims to put news events back into their context by stringing them together in a timeline. Check it out now!">
-        <meta charset="utf-8"><!-- encoding version -->
-        <link rel="shortcut icon" href="/logo/v2/beeftracker_new_logo_cropped_small.ico"><!-- icon -->
-        <meta name="viewport" content="width=device-width, initial-scale=1"><!-- tag for mobile zoom -->
-        
-        <!-- Font Scripts -->
-        <link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet"> 
-        <link href="https://fonts.googleapis.com/css?family=Josefin+Slab" rel="stylesheet"> 
-        <link rel="stylesheet" type="text/css" href="/stylesheets/amatic_font.css" />
-        
-        <!-- Core angular css files -->
-        <link rel="stylesheet" href="/modules/bootstrap/dist/css/bootstrap.min.css"/>
-        <link rel="stylesheet" href="/modules/bootstrap/dist/css/bootstrap-theme.min.css"/>
-        <link rel="stylesheet" href="/modules/angular-loading-bar/build/loading-bar.min.css"/>
-        
-        <!-- Bespoke css files -->
-        <link rel="stylesheet" href="/stylesheets/house_styles.css"/>
-        <link rel="stylesheet" href="/stylesheets/header.css"/>
-        
+        <title>Recently Confirmed</title>        
     </head>
 
     <body id="bootstrap-overrides">
@@ -36,28 +17,7 @@
             <div id="loading-bar-container"></div>
             
             <div header-directive></div>
-            
-            <!-- Modal -->
-            <!--<div class="modal fade" id="myModal" role="dialog">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
                         
-                        <div class="modal-header" style="background-color:red">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title" style="color:#000000;">Scraped Data</h4>
-                        </div>
-                        
-                        <div class="modal-body" style="background-color:#000000;color:#FFFFFF;">
-                                <div actor-scraping-directive></div>
-                        </div>
-                        
-                        <div class="modal-footer" style="background-color:red">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>-->
-            
             <div id="recent_events_container" class="row">
                     <div class="col-sm-1"></div>
                     <div id="" class="col-sm-10 panel-group">
@@ -148,6 +108,9 @@
         <script src="/controllers/search_box_controller.js"></script>
         <script src="/controllers/admin/site_config/recently_confirmed_app.js"></script>
         <script src="/controllers/admin/site_config/recently_confirmed_controller.js"></script>
+        
+        <!-- Load global css files -->
+        <script src="/stylesheets/loading/global_css_loader.js"></script>
         
         <script>
             //google analytics code

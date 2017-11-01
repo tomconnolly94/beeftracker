@@ -9,26 +9,7 @@
     -->
     
     <head>
-        <title>Scraping Dump</title>
-        <meta name="description" content="Beeftracker is a brand new way to read the news, working from crowd sourced data it aims to put news events back into their context by stringing them together in a timeline. Check it out now!">
-        <meta charset="utf-8"><!-- encoding version -->
-        <link rel="shortcut icon" href="/logo/v2/beeftracker_new_logo_cropped_small.ico"><!-- icon -->
-        <meta name="viewport" content="width=device-width, initial-scale=1"><!-- tag for mobile zoom -->
-        
-        <!-- Font Scripts -->
-        <link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet"> 
-        <link href="https://fonts.googleapis.com/css?family=Josefin+Slab" rel="stylesheet"> 
-        <link rel="stylesheet" type="text/css" href="/stylesheets/amatic_font.css" />
-        
-        <!-- Core angular css files -->
-        <link rel="stylesheet" href="/modules/bootstrap/dist/css/bootstrap.min.css"/>
-        <link rel="stylesheet" href="/modules/bootstrap/dist/css/bootstrap-theme.min.css"/>
-        <link rel="stylesheet" href="/modules/angular-loading-bar/build/loading-bar.min.css"/>
-        
-        <!-- Bespoke css files -->
-        <link rel="stylesheet" href="/stylesheets/house_styles.css"/>
-        <link rel="stylesheet" href="/stylesheets/header.css"/>
-        
+        <title>Scraping Dump</title>        
     </head>
 
     <body id="bootstrap-overrides">
@@ -163,7 +144,8 @@
                                     <div class="col-sm-6 row">
 
                                         <div class="col-sm-6">
-                                            <h5>{{event.event_date}}</h5>
+                                            <!--<h5>{{event.event_date}}</h5>-->
+                                            <input type="text" ng-model=event.event_date style="font-size:22px;width:100%;">
                                         </div>
 
                                     </div>
@@ -239,6 +221,9 @@
         <script src="/controllers/admin/scraping_dump_viewer/scraping_dump_viewer_app.js"></script>
         <script src="/directives/scraping_dump/actor_scraping_directive.js"></script>
         <script src="/controllers/admin/scraping_dump_viewer/scraped_events_dump_controller.js"></script>
+        
+        <!-- Load global css files -->
+        <script src="/stylesheets/loading/global_css_loader.js"></script>
         
         <script>
             //google analytics code

@@ -10,24 +10,8 @@
     
     <head>
         <title>Home</title>
-        <meta name="description" content="Beeftracker is a brand new way to read the news, working from crowd sourced data it aims to put news events back into their context by stringing them together in a timeline. Check it out now!">
-        <meta charset="utf-8"><!-- encoding version -->
-        <link rel="shortcut icon" href="/logo/v2/beeftracker_new_logo_cropped_small.ico"><!-- icon -->
-        <meta name="viewport" content="width=device-width, initial-scale=1"><!-- tag for mobile zoom -->
-        
-        <!-- Font Scripts -->
-        <link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet"> 
-        <link href="https://fonts.googleapis.com/css?family=Josefin+Slab" rel="stylesheet"> 
-        <link rel="stylesheet" type="text/css" href="/stylesheets/amatic_font.css" />
-        
-        <!-- Core angular css files -->
-        <link rel="stylesheet" href="/modules/bootstrap/dist/css/bootstrap.min.css"/>
-        <link rel="stylesheet" href="/modules/bootstrap/dist/css/bootstrap-theme.min.css"/>
-        <link rel="stylesheet" href="/modules/angular-loading-bar/build/loading-bar.min.css"/>
         
         <!-- Bespoke css files -->
-        <link rel="stylesheet" href="/stylesheets/house_styles.css"/>
-        <link rel="stylesheet" href="/stylesheets/header.css"/>
         <link rel="stylesheet" href="/stylesheets/event_box_styles_home.css"/>
         <link rel="stylesheet" href="/stylesheets/home/splash_zone_styles.css"/>
         <link rel="stylesheet" href="/stylesheets/home/top_events_styles.css"/>
@@ -40,39 +24,7 @@
             <!--<div id="top_bar"></div>-->
             
             <div header-directive></div>
-            
-        <!--
-            <div id="search_area" ng-controller="searchController">
-                    
-                <div id="search_results" class="row" style="padding:0px;">
-                    <div class="col-sm-3"></div>
-                    <div class="col-sm-6">
-                        <h3>{{ results_string }}</h3>
-                        <h4>{{ results_details_string }}</h4>
-
-                        <ul style="list-style-type:none;">
-
-                            <li ng-repeat="record in records" style="margin:30px 0px;font-weight:bold;background-color:#9C0505;padding:20px;">   
-
-                                <a ng-href="{{record.type_path}}{{record.eventNum}}#{{record.eventNum}}" target="_self">
-                                    <div class="row">
-                                        <div class="col-sm-8" style="padding:0px;">
-                                            <h3 style="margin:5px;font-weight:bold;"> {{ record.title }} </h3>
-                                            <h4 style="margin:5px;font-weight:bold;"> {{ record.name }} </h4>
-                                        </div>
-                                        <div class="col-sm-4" style="margin:0px;padding:0px;">
-                                            <img  ng-src="{{record.img_path}}{{ record.img_link }}" class="img-circle" style="width:100%;height:100%;">
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-3"></div>
-                </div>
-            </div>
-
-    
+            <!--
             Email subscription code
             <div class="row" style="overflow:hidden;">
                 <div class="col-sm-4"></div>
@@ -96,17 +48,20 @@
             <div footer-directive></div>
         </div>
         
+        <!-- load global js files -->
+        <!--<script src="/js/global_js_loader.js"></script>-->
+
         <!-- JQuery -->
         <script src="/modules/jquery/dist/jquery.min.js"></script>
         <script src="/js/globals.js"></script>
-        
+
         <!-- Core angular scripts -->
         <script src="/modules/angular/angular.min.js"></script>
         <script src="/modules/angular-resource/angular-resource.min.js"></script>
         <script src="/modules/angular-route/angular-route.min.js"></script>
         <script src="/modules/angular-loading-bar/build/loading-bar.min.js"></script>
         <script src="/modules/bootstrap/dist/js/bootstrap.min.js"></script>
-        
+
         <!-- Bespoke angular scripts -->
         <script src="/controllers/search_box_controller.js"></script>
         <script src="/controllers/home/home_app.js"></script>
@@ -115,10 +70,14 @@
         <script src="/controllers/home/splash_zone_controller.js"></script>
         <script src="/controllers/home/top_events_controller.js"></script>
         <script src="/js/beef_tracker_colour_bank.js"></script>
-        
+
+        <!-- Special area direcives -->
         <script src="/directives/home/splash_zone_directive.js"></script>
         <script src="/directives/home/top_events_directive.js"></script>
 
+        <!-- load global css files -->
+        <script src="/stylesheets/loading/global_css_loader.js"></script>
+        
         <script>
             //google analytics code
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
