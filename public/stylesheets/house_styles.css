@@ -78,54 +78,6 @@ a{
     display:none;
 }
 
-/* override font sizes (for Amatic font)*/
-/*#bootstrap-overrides h1{
-    font-size:60px;
-}
-#bootstrap-overrides h2{
-    font-size:50px;
-}
-#bootstrap-overrides h3{
-    font-size:32px;
-    font-weight:bold;
-}
-#bootstrap-overrides h4{
-    font-size:28px;
-}
-#bootstrap-overrides h5{
-    font-size:24px;
-}
-#bootstrap-overrides h6{
-    font-size:22px;
-}
-#bootstrap-overrides p, #bootstrap-overrides input, #bootstrap-overrides textarea, #bootstrap-overrides label{
-    font-size:20px;
-     text-align: justify;
-}*/
-
-/* override font sizes (for Abel font)*/
-/*#bootstrap-overrides h1{
-    font-size:56px;
-}
-#bootstrap-overrides h2{
-    font-size:38px;
-}
-#bootstrap-overrides h3{
-    font-size:24px;
-    font-weight:bold;
-}
-#bootstrap-overrides h4{
-    font-size:20px;
-}
-#bootstrap-overrides h5{
-    font-size:16px;
-}
-#bootstrap-overrides h6{
-    font-size:14px;
-}
-#bootstrap-overrides p, #bootstrap-overrides input, #bootstrap-overrides textarea, #bootstrap-overrides label{
-    font-size:14px;
-}*/
 /* styles for footer */
 #bootstrap-overrides #bottom_bar {
     /*position:absolute;*/

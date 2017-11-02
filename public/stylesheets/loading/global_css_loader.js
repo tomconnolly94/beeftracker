@@ -3,7 +3,7 @@ css_scripts = [
     //fonts
     "https://fonts.googleapis.com/css?family=Abel",
     "https://fonts.googleapis.com/css?family=Josefin+Slab",
-    "/stylesheets/amatic_font.css",
+    "/stylesheets/fonts/amatic_font.css",
     //bootstrap
     "/modules/bootstrap/dist/css/bootstrap.min.css",
     "/modules/bootstrap/dist/css/bootstrap-theme.min.css",
@@ -11,7 +11,8 @@ css_scripts = [
     "/modules/angular-loading-bar/build/loading-bar.min.css",
     //global styles
     "/stylesheets/house_styles.css",
-    "/stylesheets/header.css"
+    "/stylesheets/header.css",
+    "/stylesheets/images.css",
 ]
 
 var head  = document.getElementsByTagName('head')[0];

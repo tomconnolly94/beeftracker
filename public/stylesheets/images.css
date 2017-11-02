@@ -1,0 +1,14 @@
+.responsive_image:hover {
+    transform: scale(1.01);
+    -moz-transform:scale(1.01); 
+    -webkit-transform:scale(1.01);
+    -o-transform:scale(1.01);
+}
+
+.responsive_image_parent:hover div img {
+    transform: scale(1.01);
+    -moz-transform:scale(1.01); 
+    -webkit-transform:scale(1.01);
+    -o-transform:scale(1.01);
+}
+

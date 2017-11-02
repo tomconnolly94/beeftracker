@@ -13,7 +13,6 @@
         <!-- Bespoke css files -->
         <link rel="stylesheet" type="text/css" href="/stylesheets/beef.css"/>
         <link rel="stylesheet" type="text/css" href="/stylesheets/timeline_styles.css"/>
-         
     </head>
 
     <body id="bootstrap-overrides">
@@ -69,10 +68,7 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-                            
-                            
                         </div>
                     </div>
                 </div>
@@ -99,29 +95,9 @@
                 
                 <div class="col-sm-4" ng-controller="recentEventsController">
                     <h2>Recent Events:</h2>        
-                        <div ng-repeat="event in events"  class="selectable_event" style="background-color:#9C0505;font-weight:bold;padding:15px;margin:10px;border-color:#000000;border-width:10px;border-radius: 5px;float:left;" target="_self">
-                            <a ng-href="/beef/{{event._id}}" target="_self" style="padding:0px;">
-                                <img class="img-circle" ng-src={{event.loc_img_link}} height="50px" width="50px">
-                                <h5>{{ event.title }}</h5>
-                                actors included: 
-                                <ul>
-                                    <li ng-repeat="target in event.targets">
-
-                                        <p>{{ target.stage_name }}</p>
-
-                                    </li>
-                                </ul>
-                            </a>
-                        </div>
-                </div>
-
-                <!--<div class="col-sm-4" ng-controller="recentEventsController">
-                    <h2>Recent Events:</h2>
-                    <div ng-repeat="event in events" style="margin:0px 0px 0px 5px;float:left;">
-                        <a ng-href="/beef/{{event._id}}" class="selectable_event" style="background-color:#9C0505;font-weight:bold;padding:15px;margin:0px;border-color:#000000;border-width:10px;border-radius: 5px;" target="_self">
-                            <img class="img-circle" ng-src="/event_images/{{event.loc_img_link}}" style="margin:0px auto;" height="50px" width="50px">
-
-
+                    <div ng-repeat="event in events"  class="selectable_event" style="background-color:#9C0505;font-weight:bold;padding:15px;margin:10px;border-color:#000000;border-width:10px;border-radius: 5px;float:left;" target="_self">
+                        <a ng-href="/beef/{{event._id}}" target="_self" style="padding:0px;">
+                            <img class="img-circle" ng-src={{event.loc_img_link}} height="50px" width="50px">
                             <h5>{{ event.title }}</h5>
                             actors included: 
                             <ul>
@@ -131,10 +107,9 @@
 
                                 </li>
                             </ul>
-
                         </a>
                     </div>
-                </div>-->
+                </div>
                 <div class="col-sm-2"></div>
             </div>
             <div footer-directive></div>
