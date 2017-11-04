@@ -186,7 +186,7 @@
                                     <div class="col-sm-4"></div>
 
                                     <div class="col-sm-2">
-                                        <input type="submit" value="Submit" style="padding:10px;width:100%;height:100%;text-align:center;" ng-click="approve_record(event._id)">
+                                        <input type="submit" value="Submit" style="padding:10px;width:100%;height:100%;text-align:center;" ng-click="approve_record(event._id)" ng-disabled="form_data[event._id].title.length == 0 || form_data[event._id].aggressor.length == 0 || form_data[event._id].targets_selection.length == null || event.img_title.length == 0 || form_data[event._id].description.length == 0 || event.event_date.length == 0">
                                     </div>
 
                                    <!-- <div class="col-sm-2">
@@ -195,6 +195,29 @@
 
                                     <div class="col-sm-4"></div>
                                 </div>
+                                
+                                        <div class="row">
+                                            {{ form_data[event._id].title.length }}
+                                            -
+                                            {{ form_data[event._id].aggressor.length }}
+                                            -
+                                            {{ form_data[event._id].targets_selection }}
+                                            -
+                                            {{ Object.keys(JSON.parse(form_data[event._id].targets_selection)) }}
+                                            -
+                                            {{ event.img_title.length }}
+                                            -
+                                            {{ form_data[event._id].description.length }}
+                                            -
+                                            {{ event.event_date.length }}
+                                            -
+                                            {{ form_data[event._id].categories_selection }}
+                                            -
+                                            {{ Object.keys(form_data[event._id].categories_selection) }}
+                                            -
+                                            {{ form_data[event._id].categories_selection.length }}
+                                            -
+                                        </div>
                             </div>
                         </form>
                     </div>
