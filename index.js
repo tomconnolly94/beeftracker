@@ -110,6 +110,7 @@ app.get('/search_recent_events/:num_of_events', require('./server_files/models/G
 app.get('/search_related_actors_by_id/:actor_id', require('./server_files/models/GET/search_related_actors_by_id.js').execute); //retrieve actors related to a provided actor
 app.get('/get_scraped_events_dump/', require('./server_files/models/GET/admin/get_scraped_events_dump.js').execute); //retrieve all scraped events, by the python beeftracker scraping module
 app.get('/scrape_actor/:actor_name', require('./server_files/models/GET/admin/scrape_and_return_actor_data.js').execute); //use the provided actor name to generate a data dump about that actor
+app.get('/get_broken_fields_stats/', require('./server_files/models/GET/admin/get_broken_fields_data.js').execute); //use the provided actor name to generate a data dump about that actor
 
 // ### DELETE endpoints ###
 app.delete('/discard_scraped_beef_event/:id', require('./server_files/models/DELETE/admin/discard_scraped_beef_event.js').execute); //remove data about a scraped beef event by id

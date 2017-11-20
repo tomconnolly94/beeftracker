@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html ng-app="broken_fields_stats_app">
+
+    <!--
+        Page name: home.ejs
+        Project: Beeftracker
+        Author: Tom Connolly
+        Date: 8/11/16
+    -->
+    
+    <head>
+        <title>Scraping Dump</title>        
+    </head>
+
+    <body id="bootstrap-overrides">
+        <div class="container" ng-cloak>
+            <div id="loading-bar-container"></div>
+            
+            <div header-directive></div>
+            
+            <div ng-controller="brokenFieldsStatsController">
+                <table class="table">
+                    <thead>
+                        <td ng-repeat="source in sources">
+                            {{ source }}
+                        </td>
+                    
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="record in records">
+
+                        </tr>
+                
+                    </tbody>
+                </table>
+            </div>
+            
+            <div footer-directive></div>
+        </div>
+        
+        <!-- JQuery -->
+        <script src="/modules/jquery/dist/jquery.min.js"></script>
+        
+        <!-- Globals file -->
+        <script src="/js/globals.js"></script>
+        
+        <!-- Core angular scripts -->
+        <script src="/modules/angular/angular.min.js"></script>
+        <script src="/modules/angular-resource/angular-resource.min.js"></script>
+        <script src="/modules/angular-route/angular-route.min.js"></script>
+        <script src="/modules/angular-loading-bar/build/loading-bar.min.js"></script>
+        <script src="/modules/bootstrap/dist/js/bootstrap.min.js"></script>
+        
+        <!-- Bespoke angular scripts -->
+        <script src="/controllers/search_box_controller.js"></script>
+        <script src="/controllers/admin/broken_fields_stats/broken_fields_stats_app.js"></script>
+        <script src="/controllers/admin/broken_fields_stats/broken_fields_stats_controller.js"></script>
+        
+        <!-- Load global css files -->
+        <script src="/stylesheets/loading/global_css_loader.js"></script>
+        
+        <script>
+            //google analytics code
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-92664606-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    </body>
+</html>
