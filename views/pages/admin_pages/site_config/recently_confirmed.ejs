@@ -68,18 +68,18 @@
                                 <div class="row" style="height:80%;margin:20px 0px;">
                                     <div class="col-sm-6 row">
                                         <div class="col-sm-3" style="">
-                                            <input ng-click="set_event('main_event', event._id)" name="splash_zone_main_event" type="radio" /><label>Main</label>
+                                            <input ng-click="set_event('main_event', event._id)" name="splash_zone_main_event" ng-id="{{ event._id }}_main" type="radio" /><label>Main</label>
                                         </div>
 
                                         <div class="col-sm-3" style="">
-                                            <input ng-click="set_event('event_one', event._id)" name="splash_zone_event_one" type="radio" /><label>1</label>
+                                            <input ng-click="set_event('event_one', event._id)" name="splash_zone_event_one" ng-id="{{ event._id }}_1" type="radio" /><label>1</label>
                                         </div>
 
                                         <div class="col-sm-3" style="">
-                                            <input ng-click="set_event('event_two', event._id)" name="splash_zone_event_two" type="radio" /><label>2</label>
+                                            <input ng-click="set_event('event_two', event._id)" name="splash_zone_event_two" ng-id="{{ event._id }}_2" type="radio" /><label>2</label>
                                         </div>
                                         <div class="col-sm-3" style="">
-                                            <input ng-click="set_event('event_three', event._id)" name="splash_zone_event_three" type="radio" /><label>3</label>
+                                            <input ng-click="set_event('event_three', event._id)" name="splash_zone_event_three" ng-id="{{ event._id }}_3" type="radio" /><label>3</label>
                                         </div>
                                      </div>                            
                                 </div>

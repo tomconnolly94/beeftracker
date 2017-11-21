@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-recently_confirmed_app.controller("recentlyConfirmedController", ['$scope','$http','$sce', function($scope,$http, $sce) {
+recently_confirmed_app.controller("recentlyConfirmedController", ['$scope','$http','$sce','$element', function($scope,$http, $sce, $element) {
     
     
     $scope.load_recent_events = function(){
@@ -49,7 +49,38 @@ recently_confirmed_app.controller("recentlyConfirmedController", ['$scope','$htt
         });
     }
     
+    
+    $scope.load_current_splash_zone_events = function($element){
+        //load events from scraping dump db table
+        $http({
+            method: 'GET',
+            url: "/get_splash_zone_data/"
+        }).then(function(response_1){
+            var splash_zone_events = response_1.data.events;
+            var id_suffixes = [
+                "_main",
+                "_1",
+                "_2",
+                "_3"
+            ]
+            
+            for(var i = 0; i < splash_zone_events.length; i++){
+                
+                var radio_input = $element.find("#" + splash_zone_events[i]._id + id_suffixes[i]);
+                
+                radio_input.checked = "checked";
+            }
+        }, 
+        function(response_1) {
+            //failed http request
+            console.log("HTTP request failed (scrapedEventsDumpController)");
+        });
+    }
+    
+    
+    
     $scope.load_recent_events();
+    $scope.load_current_splash_zone_events($element);
     
     $scope.set_event = function(event_string, event_id){
                 
