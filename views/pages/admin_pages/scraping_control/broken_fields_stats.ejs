@@ -2,14 +2,42 @@
 <html ng-app="broken_fields_stats_app">
 
     <!--
-        Page name: home.ejs
+        Page name: broken_field_stats.ejs
         Project: Beeftracker
         Author: Tom Connolly
-        Date: 8/11/16
+        Date: 21/11/17
     -->
     
     <head>
-        <title>Scraping Dump</title>        
+        <title>Broken Fields</title>
+        <style>
+            /* Tooltip container */
+            .tooltip {
+                position: relative;
+                display: inline-block;
+                border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+            }
+
+            /* Tooltip text */
+            .tooltip .tooltiptext {
+                visibility: hidden;
+                width: 120px;
+                background-color: black;
+                color: #fff;
+                text-align: center;
+                padding: 5px 0;
+                border-radius: 6px;
+
+                /* Position the tooltip text - see examples below! */
+                position: absolute;
+                z-index: 1;
+            }
+
+            /* Show the tooltip text when you mouse over the tooltip container */
+            .tooltip:hover .tooltiptext {
+                visibility: visible;
+            }
+        </style>
     </head>
 
     <body id="bootstrap-overrides">
@@ -18,23 +46,42 @@
             
             <div header-directive></div>
             
-            <div ng-controller="brokenFieldsStatsController">
+            <div ng-controller="brokenFieldsStatsController" style="overflow: scroll">
+                
+                <label>Threshold: <input type="text" ng-model="threshold" ng-change="build_stats()"/></label>
+                
                 <table class="table">
                     <thead>
+                        <td></td>
                         <td ng-repeat="source in sources">
-                            {{ source }}
+                            <b>{{ source }}</b>
                         </td>
                     
                     </thead>
                     <tbody>
-                        <tr ng-repeat="record in records">
+                        <tr ng-repeat="field in fields">
+                            <td><b>{{ field }}</b></td>
+                            <td ng-repeat="source in sources">
+                                <table class="table">
+                                    <thead>
+                                        <td ng-repeat="broken_reasons_header in broken_reasons_headers">
+                                            {{ broken_reasons_header }}
+                                        </td>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td ng-repeat="broken_reason in broken_reasons" ng-style="{'background-color': stats[source][field][broken_reason].bg_colour}">
+                                                {{ stats[source][field][broken_reason].value }}
+                                            </td>
+                                        </tr>
 
+                                    </tbody>
+                                </table>
+                            </td>
                         </tr>
-                
                     </tbody>
                 </table>
             </div>
-            
             <div footer-directive></div>
         </div>
         
