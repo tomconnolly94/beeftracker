@@ -175,6 +175,7 @@ submit_app.controller('actorFormController', ['$scope','$http', 'fileService', '
             $scope.form_data.data_sources = $scope.data_sources;
             $scope.form_data.assoc_actors = $scope.assoc_actors;
             $scope.form_data.button_links = $scope.button_links;
+            $scope.form_data.record_origin = "submission";
             
             for(var i = 0; i < $scope.nicknames.length; i++){
                 if(!$scope.nicknames[i].text.length > 0){

@@ -45,42 +45,48 @@
             <div id="loading-bar-container"></div>
             
             <div header-directive></div>
-            
-            <div ng-controller="brokenFieldsStatsController" style="overflow: scroll">
-                
-                <label>Threshold: <input type="text" ng-model="threshold" ng-change="build_stats()"/></label>
-                
-                <table class="table">
-                    <thead>
-                        <td></td>
-                        <td ng-repeat="source in sources">
-                            <b>{{ source }}</b>
-                        </td>
-                    
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="field in fields">
-                            <td><b>{{ field }}</b></td>
-                            <td ng-repeat="source in sources">
-                                <table class="table">
-                                    <thead>
-                                        <td ng-repeat="broken_reasons_header in broken_reasons_headers">
-                                            {{ broken_reasons_header }}
-                                        </td>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td ng-repeat="broken_reason in broken_reasons" ng-style="{'background-color': stats[source][field][broken_reason].bg_colour}">
-                                                {{ stats[source][field][broken_reason].value }}
-                                            </td>
-                                        </tr>
 
-                                    </tbody>
-                                </table>
+            <div ng-controller="brokenFieldsStatsController" class="row">
+                
+                <div class="col-sm-12" ng-show="data.length == 0" style="text-align:center;">
+                    <h3>Nuttin</h3>
+                </div>
+                
+                <div ng-show="data.length > 0" style="overflow: scroll">
+                    <label>Threshold: <input type="text" ng-model="threshold" ng-change="build_stats()"/></label>
+
+                    <table class="table" ng-show="data.length > 0">
+                        <thead>
+                            <td></td>
+                            <td ng-repeat="source in sources">
+                                <b>{{ source }}</b>
                             </td>
-                        </tr>
-                    </tbody>
-                </table>
+
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="field in fields">
+                                <td><b>{{ field }}</b></td>
+                                <td ng-repeat="source in sources">
+                                    <table class="table">
+                                        <thead>
+                                            <td ng-repeat="broken_reasons_header in broken_reasons_headers">
+                                                {{ broken_reasons_header }}
+                                            </td>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td ng-repeat="broken_reason in broken_reasons" ng-style="{'background-color': stats[source][field][broken_reason].bg_colour}">
+                                                    {{ stats[source][field][broken_reason].value }}
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div footer-directive></div>
         </div>

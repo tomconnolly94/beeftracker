@@ -174,6 +174,7 @@ submit_app.controller('eventFormController', ['$scope','$http', 'fileService', '
             $scope.form_data.data_sources = $scope.data_sources;
             $scope.form_data.button_links = $scope.button_links;
             $scope.form_data.selected_categories = $scope.selected_categories;
+            $scope.form_data.record_origin = "submission";
             
             for(var i = 0; i < $scope.highlights.length; i++){
                 if(!$scope.highlights[i].title.length > 0){
