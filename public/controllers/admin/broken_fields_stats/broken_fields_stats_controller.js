@@ -35,14 +35,16 @@ broken_fields_stats_app.controller("brokenFieldsStatsController", ['$scope','$ht
             $scope.broken_reasons = [
                 "empty",
                 "incorrect_format",
+                "irrelevant",
                 "too_long",
-                "too_short",
+                "too_short"
             ];
             $scope.broken_reasons_headers = [
                 $scope.broken_reasons[0].charAt(0) + $scope.broken_reasons[0].charAt(1),
                 $scope.broken_reasons[1].charAt(0) + $scope.broken_reasons[1].charAt(10),
-                $scope.broken_reasons[2].charAt(0) + $scope.broken_reasons[2].charAt(4),
+                $scope.broken_reasons[2].charAt(0) + $scope.broken_reasons[2].charAt(1),
                 $scope.broken_reasons[3].charAt(0) + $scope.broken_reasons[3].charAt(4),
+                $scope.broken_reasons[4].charAt(0) + $scope.broken_reasons[4].charAt(4),
             ];
             $scope.threshold = 15;
             
