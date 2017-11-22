@@ -75,13 +75,21 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td ng-repeat="broken_reason in broken_reasons" ng-style="{'background-color': stats[source][field][broken_reason].bg_colour}">
+                                                <td ng-repeat="broken_reason in broken_reasons" ng-style="{'background-color': stats[source][field][broken_reason].bg_colour}" ng-click="print_stuff(stats[source][field][broken_reason].incorrect_values)" style="cursor:pointer;">
                                                     {{ stats[source][field][broken_reason].value }}
                                                 </td>
                                             </tr>
 
                                         </tbody>
                                     </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>Irrelevant event count</b>
+                                </td>
+                                <td ng-repeat="source in sources" ng-click="print_stuff(stats[source].irrelevant_event_titles)" style="cursor:pointer;">
+                                    {{ stats[source].irrelevant_event_count }}
                                 </td>
                             </tr>
                         </tbody>

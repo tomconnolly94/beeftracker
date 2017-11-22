@@ -12,6 +12,9 @@
 
 broken_fields_stats_app.controller("brokenFieldsStatsController", ['$scope','$http','$sce', function($scope,$http, $sce) {
     
+    $scope.print_stuff = function(stuff){
+        console.log(stuff);
+    }
     
     $scope.load_broken_field_data = function(){
         //load events from scraping dump db table
@@ -35,16 +38,14 @@ broken_fields_stats_app.controller("brokenFieldsStatsController", ['$scope','$ht
             $scope.broken_reasons = [
                 "empty",
                 "incorrect_format",
-                "irrelevant",
                 "too_long",
                 "too_short"
             ];
             $scope.broken_reasons_headers = [
                 $scope.broken_reasons[0].charAt(0) + $scope.broken_reasons[0].charAt(1),
                 $scope.broken_reasons[1].charAt(0) + $scope.broken_reasons[1].charAt(10),
-                $scope.broken_reasons[2].charAt(0) + $scope.broken_reasons[2].charAt(1),
+                $scope.broken_reasons[2].charAt(0) + $scope.broken_reasons[2].charAt(4),
                 $scope.broken_reasons[3].charAt(0) + $scope.broken_reasons[3].charAt(4),
-                $scope.broken_reasons[4].charAt(0) + $scope.broken_reasons[4].charAt(4),
             ];
             $scope.threshold = 15;
             
@@ -62,7 +63,7 @@ broken_fields_stats_app.controller("brokenFieldsStatsController", ['$scope','$ht
                     if($scope.sources.indexOf(base_source) == -1){
                         $scope.sources.push(base_source);
 
-                        $scope.stats[base_source] = {};
+                        $scope.stats[base_source] = { irrelevant_event_count: 0, irrelevant_event_titles: [] };
                         for(var j = 0; j < $scope.fields.length; j++){
 
                             $scope.stats[base_source][$scope.fields[j]] = {};
@@ -77,11 +78,17 @@ broken_fields_stats_app.controller("brokenFieldsStatsController", ['$scope','$ht
                         }
                     }
                     else{
-                        $scope.stats[base_source][record.broken_field][record.broken_mode].value++;
-                        $scope.stats[base_source][record.broken_field][record.broken_mode].incorrect_values.push(record.value);
+                        if(record.broken_mode == "irrelevant"){
+                            $scope.stats[base_source].irrelevant_event_count++;
+                            $scope.stats[base_source].irrelevant_event_titles.push(record.value);
+                        }
+                        else{
+                            $scope.stats[base_source][record.broken_field][record.broken_mode].value++;
+                            $scope.stats[base_source][record.broken_field][record.broken_mode].incorrect_values.push(record.value);
 
-                        if($scope.stats[base_source][record.broken_field][record.broken_mode].value >= $scope.threshold){
-                            $scope.stats[base_source][record.broken_field][record.broken_mode].bg_colour = "red";
+                            if($scope.stats[base_source][record.broken_field][record.broken_mode].value >= $scope.threshold){
+                                $scope.stats[base_source][record.broken_field][record.broken_mode].bg_colour = "red";
+                            }
                         }
                     }
                 }
