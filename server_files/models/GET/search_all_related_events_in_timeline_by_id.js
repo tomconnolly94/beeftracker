@@ -1,5 +1,5 @@
-//model dependencies
-var db_ref = require("../../db_config.js"); //get database reference object
+//get database reference object
+var db_ref = require("../../db_config.js"); 
 var async = require("async");
 var BSON = require('bson');
 

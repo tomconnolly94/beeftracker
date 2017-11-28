@@ -141,7 +141,7 @@ module.exports = {
                 add_to_scraped_confirmed_table: submission_data.record_origin == "scraped" ? true : false
             };
                                     
-            if(file){
+            if(file){ //file has been provided with POST request
                 storage_interface.upload_image(false, "events", file.originalname, file.buffer, function(img_dl_title){
                     insert_object.img_title = img_dl_title;
                     db_interface.insert_record_into_db(insert_object, db_ref.get_current_event_table(), db_options, function(id){
@@ -149,7 +149,7 @@ module.exports = {
                     });
                 });
             }
-            else{
+            else{ //file has not been provided with request
                 if(submission_data.img_title.length > 0){
                     storage_interface.upload_image(true, "events", submission_data.img_title, null, function(img_dl_title){
                         insert_object.img_title = img_dl_title;

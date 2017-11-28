@@ -62,6 +62,7 @@ module.exports = {
                             callback({ id: insert_object._id });
                         }
                         
+                        //this is never called
                         if(options.add_to_scraped_confirmed_table){
                             db.collection(db_ref.get_scraped_events_confirmed_table()).insert(events_confirm_obj, function(err, document){
     
