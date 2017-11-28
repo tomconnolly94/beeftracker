@@ -34,5 +34,9 @@ module.exports = {
     
     get_broken_fields_data_table: function(){
         return "broken_fields";
+    },
+    
+    get_event_classification_table: function(){
+        return "all_scraped_events_with_classifications";
     }
 }

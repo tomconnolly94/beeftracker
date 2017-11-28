@@ -15,7 +15,9 @@ module.exports = {
 
                 var limit = 20;
                 
-                db.collection(db_ref.get_scraped_events_dump_table()).find({}).sort({date_added : -1 }).limit(limit).toArray(function(queryErr, docs) {
+                db.collection(db_ref.get_scraped_events_dump_table()).aggregate([{ $match: { title: "Fight Night: XXXtentacion Says He Got His Delicate Dreads Realigned By The Migos Outside An LA Hotel" } },
+                                                            { $lookup : { from: db_ref.get_event_classification_table(), localField: "title", foreignField: "title", as: "classification_object" }}
+                                                           ]).sort({date_added : -1 }).limit(limit).toArray(function(queryErr, docs) {
                     response.send({events : docs});
                 });
             }

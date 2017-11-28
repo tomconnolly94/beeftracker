@@ -32,6 +32,18 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                 $scope.form_data[$scope.events[i]._id].categories_selection = {};
                 $scope.form_data[$scope.events[i]._id].delete_checkbox = false;
                 $scope.events[i].relevant_actors.push({name: "", db_id: ""});
+                
+                var colour_mapping = {
+                    "definite_beef": "#00FF00",
+                    "possible_beef": "#c3ff00",
+                    "unsure": "#faff00",
+                    "unlikely_beef": "#ff9000",
+                    "not_beef": "#FF0000",            
+                }
+
+                $scope.events[0].classification_colour = colour_mapping[$scope.events[0].classification_object[0].classification];
+                console.log($scope.events[0].classification_colour);
+
             }
             $scope.get_category_data();
         }, 

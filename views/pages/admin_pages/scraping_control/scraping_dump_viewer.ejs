@@ -65,6 +65,7 @@
 
                                  <div class="col-sm-2">
                                     <input type="button" value="Delete" class="form-control" style="padding:5px;width:100%;height:100%;text-align:center;" ng-click="remove_record(event._id, form_data)">
+                                    <input type="text" class="form-control" readonly="readonly" style="margin:3px 0px;padding:5px;width:100%;height:100%;text-align:center;" ng-model="event.classification_object[0].classification" ng-style="{'background-color':event.classification_colour}">
                                 </div>
 
                                 <div class="col-sm-1 row" style="padding:0px;">
