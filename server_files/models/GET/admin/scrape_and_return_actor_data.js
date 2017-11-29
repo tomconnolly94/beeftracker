@@ -1,4 +1,5 @@
 var PythonShell = require('python-shell');
+var os = require("os");
 
 module.exports = {
     
@@ -20,14 +21,27 @@ module.exports = {
             };
         }
         else{ //Linux
-             options = {
-                mode: 'text',
-                //pythonPath: '/usr/bin/python',
-                pythonOptions: ['-u'],
-                //scriptPath: '/home/tom/beeftracker/news_scraping_project/beeftracker_scraping',
-                scriptPath: '/app/beeftracker_scraping',
-                args: [search_term]
-            };
+            
+            //laptop
+            var hostname = os.hostname();
+            if(hostname == "sam_ub"){
+                options = {
+                    mode: 'text',
+                    //pythonPath: '/usr/bin/python',
+                    pythonOptions: ['-u'],
+                    scriptPath: '/home/tom/beeftracker/news_scraping_project/beeftracker_scraping',
+                    args: [search_term]
+                };                
+            }else{
+                options = {
+                    mode: 'text',
+                    //pythonPath: '/usr/bin/python',
+                    pythonOptions: ['-u'],
+                    //scriptPath: '/home/tom/beeftracker/news_scraping_project/beeftracker_scraping',
+                    scriptPath: '/app/beeftracker_scraping',
+                    args: [search_term]
+                };
+            }
         }
 
         var pyshell = PythonShell.run('scrape_actor.py', options, function (err, result) {
@@ -35,6 +49,7 @@ module.exports = {
                 console.log(result);
             
             if(!result || !result[0] || result[0] == "404 error\r" || result[0] == "404 error"){
+                result = [];
                 result[0] = JSON.stringify({ error : "404 error. Wikipedia has no pages on this topic."})
             }
                         

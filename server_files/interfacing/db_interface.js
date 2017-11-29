@@ -63,6 +63,7 @@ module.exports = {
                                 }
                             },
                             function(callback){
+                                console.log(options);
                                 if(options.add_to_scraped_confirmed_table){
                                     
                                     var classification_obj = {
