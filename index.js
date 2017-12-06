@@ -113,7 +113,7 @@ app.get('/scrape_actor/:actor_name', require('./server_files/models/GET/admin/sc
 app.get('/get_broken_fields_stats/', require('./server_files/models/GET/admin/get_broken_fields_data.js').execute); //use the provided actor name to generate a data dump about that actor
 
 // ### DELETE endpoints ###
-app.delete('/discard_scraped_beef_event/:id', require('./server_files/models/DELETE/admin/discard_scraped_beef_event.js').execute); //remove data about a scraped beef event by id
+app.delete('/discard_scraped_beef_event/', require('./server_files/models/DELETE/admin/discard_scraped_beef_event.js').execute); //remove data about a scraped beef event by id
 
 // ### POST endpoints ###
 if(storage_ref.get_upload_method() == "cloudinary"){

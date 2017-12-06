@@ -63,22 +63,21 @@ module.exports = {
                                 }
                             },
                             function(callback){
-                                console.log(options);
-                                if(options.add_to_scraped_confirmed_table){
-                                    
-                                    var classification_obj = {
-                                        title: insert_object.title,
-                                        content: insert_object.description,
-                                        classification: "definite_beef"
-                                    };
-                                    
-                                    db.collection(db_ref.get_event_classification_table()).update( { title: insert_object.title }, classification_obj, { upsert: true }, function(err, document){
-                                        callback(null);
-                                    });
-                                }
-                                else{
+                                
+                                /*var classification_obj = {
+                                    title: insert_object.title,
+                                    content: insert_object.description,
+                                    classification: "definite_beef"
+                                };
+
+                                console.log(classification_obj.classification);
+
+                                db.collection(db_ref.get_event_classification_table()).update( { title: insert_object.title }, classification_obj, { upsert: true }, function(err, document){
+                                    if(err){ console.log(err); }
+
                                     callback(null);
-                                }
+                                });*/
+                                callback(null);
                             }
                             /*,
                             function(callback){ //insert into confirmed table

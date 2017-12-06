@@ -182,7 +182,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         .then(function (success) {
             
             console.log("Upload succeeded.");
-            $scope.remove_record(event_id);
+            $scope.remove_record( event_id, "definite_beef");
             $('.collapse').collapse('hide');
             
         }, function (error) {
@@ -379,7 +379,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         });
     }
     
-    $scope.remove_record = function(id){
+    $scope.remove_record = function(id, classification){
         
         var event_ids = [id];
         
@@ -391,11 +391,12 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             $scope.form_data[$scope.events[i]._id].delete_checkbox = false;
         }
         
-        
         for(var i = 0; i < event_ids.length; i++){
             $http({
+                url: "/discard_scraped_beef_event/",
                 method: 'DELETE',
-                url: "/discard_scraped_beef_event/" + event_ids[i]
+                data: JSON.stringify({ data: { event_id: event_ids[i], classification: classification } }),
+                headers: { 'Content-Type': "application/json"}
             }).then(function(response_1){
 
             }, 
@@ -404,7 +405,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                 console.log("HTTP request failed (scrapedEventsDumpController)");
             });
         }
-        $scope.load_scraped_events();
+        //$scope.load_scraped_events();
     }
     
     $scope.show_modal = function(bool){
