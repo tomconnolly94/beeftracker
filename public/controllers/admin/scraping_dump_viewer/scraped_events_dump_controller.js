@@ -398,14 +398,13 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                 data: JSON.stringify({ data: { event_id: event_ids[i], classification: classification } }),
                 headers: { 'Content-Type': "application/json"}
             }).then(function(response_1){
-
+                $scope.load_scraped_events();
             }, 
             function(response_1) {
                 //failed http request
                 console.log("HTTP request failed (scrapedEventsDumpController)");
             });
         }
-        //$scope.load_scraped_events();
     }
     
     $scope.show_modal = function(bool){
