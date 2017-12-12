@@ -22,17 +22,17 @@ module.exports = {
         }
         else{ //Linux
             
-            //laptop
             var hostname = os.hostname();
-            if(hostname == "sam_ub"){
+            if(hostname == "sam_ub"){ //laptop
                 options = {
                     mode: 'text',
-                    //pythonPath: '/usr/bin/python',
+                    pythonPath: '/usr/bin/python3',
                     pythonOptions: ['-u'],
-                    scriptPath: '/home/tom/beeftracker/news_scraping_project/beeftracker_scraping',
+                    scriptPath: '/home/tom/beeftracker/bf-dev/beeftracker_scraping/',
                     args: [search_term]
                 };                
-            }else{
+            }
+            else{ //heroku server
                 options = {
                     mode: 'text',
                     //pythonPath: '/usr/bin/python',

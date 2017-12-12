@@ -6,7 +6,7 @@ var storage_interface = require('../../interfacing/storage_interface.js');
 var db_interface = require('../../interfacing/db_interface.js');
 
 //configure testing mode, if set: true, record will be collected, printed but not sent to db and no email notification will be sent.
-var test_mode = true;
+var test_mode = false;
 
 module.exports = {
     
