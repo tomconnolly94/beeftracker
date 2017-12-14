@@ -20,7 +20,6 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             url: "/get_scraped_events_dump/"
         }).then(function(response_1){
             $scope.events = response_1.data.events;
-            console.log($scope.events);
             
             $scope.classification_colour_mapping = {
                 "definite_beef": "#00FF00",
@@ -61,7 +60,6 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         }).then(function(response){
             //validate the url tagId to make sure the event exists                
             if(response != undefined){
-                console.log(response);
                 
                 $scope.categories = response.data.categories;
                 
@@ -168,8 +166,6 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         }
         
         $scope.form_data[event_id].record_origin = "scraped";
-        
-        console.log($scope.form_data[event_id]);
         var form = JSON.stringify({data: $scope.form_data[event_id]});
            
         return $http({
@@ -179,16 +175,16 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             headers: { 'Content-Type': "application/json"}
             //headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         })
-        .then(function (success) {
-            
-            console.log("Upload succeeded.");
-            $scope.remove_record( event_id, "definite_beef");
-            $('.collapse').collapse('hide');
-            
-        }, function (error) {
-            console.log("Upload failed.");
-            console.log(error);
-        });
+        .then(
+            function (success) {
+                $scope.remove_record( event_id, "definite_beef");
+                $('.collapse').collapse('hide');
+            },
+            function (error) {
+                console.log("Upload failed.");
+                console.log(error);
+            }
+        );
     }
     
     $scope.scrape_actor = function(actor, event_id){
@@ -198,9 +194,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             method: 'GET',
             url: "/search_actors_by_stage_name/" + actor
         }).then(function(response_1){
-            
-            console.log(response_1);
-            
+                        
             var actors = response_1.data.actors;
             
             if(actors.length == 1){
@@ -211,14 +205,13 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                     if(event._id == event_id){
                         for(var j = 0; j < event.relevant_actors.length; j++){
                             var rel_actor = event.relevant_actors[j];
-                            if(rel_actor.name == actors[0].stage_name){
+                            if(rel_actor.name.toLowerCase() == actors[0].stage_name_lower){
                                 rel_actor.db_id = actors[0]._id;
                             }
                         }
                     }
                 }
             }
-        
             else if(actors.length == 0){
                 //load events from scraping dump db table
                 $http({
@@ -226,8 +219,6 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                     url: "/scrape_actor/" + actor
                 }).then(function(response_2){
                     var data_scrape = JSON.parse(response_2.data.result);
-
-                    console.log(data_scrape);
 
                     if(data_scrape.error){ //actor has not been found
                         alert("name cannot be scraped")

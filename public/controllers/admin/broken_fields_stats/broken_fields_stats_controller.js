@@ -57,6 +57,10 @@ broken_fields_stats_app.controller("brokenFieldsStatsController", ['$scope','$ht
                 for(var i = 0; i < $scope.data.length; i++){
 
                     var record = $scope.data[i];
+                    
+                    if(record.broken_field != "none"){
+                        console.log(record);
+                    }
 
                     var base_source = record.source.split("/")[2];
 

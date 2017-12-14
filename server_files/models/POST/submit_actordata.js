@@ -108,6 +108,7 @@ module.exports = {
         //format object for insertion into pending db
         var insert_object = {        
             "stage_name" : submission_data.stage_name,
+            "stage_name_lower" : submission_data.stage_name.toLowerCase(),
             "birth_name" : submission_data.birth_name,
             "nicknames" : nicknames_formatted,
             "d_o_b" : new Date(date[2],date[1]-1,date[0]),

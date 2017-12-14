@@ -6,7 +6,7 @@ module.exports = {
     execute : function(request, response) {
     
         var url = process.env.MONGODB_URI;
-        var identifier = request.params.actor_name;
+        var identifier = request.params.actor_name.toLowerCase();
         
         console.log(identifier);
 
@@ -20,7 +20,7 @@ module.exports = {
                 
                 console.log(qry);*/
                 
-                db.collection(db_ref.get_current_actor_table()).aggregate([{ $match: { stage_name : identifier} },
+                db.collection(db_ref.get_current_actor_table()).aggregate([{ $match: { stage_name_lower : identifier} },
                                                             { $unwind :  { "path" : "$associated_actors", "preserveNullAndEmptyArrays": true  }},
                                                             { $lookup : { 
                                                                 from: db_ref.get_current_actor_table(),
@@ -29,7 +29,8 @@ module.exports = {
                                                                 as: "associated_actors" }}, 
                                                             { $group : { 
                                                                 _id: "$_id", 
-                                                                stage_name: { "$max": "$stage_name" }, 
+                                                                stage_name: { "$max": "$stage_name" },
+                                                                stage_name_lower: { "$max": "$stage_name_lower" },
                                                                 birth_name: { "$max": "$birth_name" },
                                                                 nicknames: { "$max": "$nicknames" },
                                                                 d_o_b: { "$max": "$d_o_b" },
