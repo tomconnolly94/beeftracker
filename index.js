@@ -19,6 +19,7 @@ var sitemap_generator = require('sitemap');
 var mime = require('mime-types');
 var storage_ref = require("./server_files/storage_config.js");
 var multer = require('multer'); //library to assist with file storage
+var morgan = require("morgan");
 
 console.log("Storage Method: " + storage_ref.get_upload_method());
 if(storage_ref.get_upload_method() == "cloudinary"){
@@ -75,6 +76,13 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride());
+app.use(morgan("dev"));
+app.use(function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
+    next();
+});
 
 // ### Directory routes ###
 app.use('/actor_images', express.static(__dirname + '/public/assets/images/actors/')); //route to reference images

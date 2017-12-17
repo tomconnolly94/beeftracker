@@ -1,7 +1,6 @@
 //get database reference object
 var db_ref = require("../../../db_config.js");
 //var BSON = require('bson');
-var morgan = require("morgan");
 var bodyParser = require("body-parser");
 var jwt = require("jsonwebtoken");
 
@@ -15,18 +14,21 @@ module.exports = {
         //extract data for use later
         var db_url = process.env.MONGODB_URI; //get db uri
         var auth_details = request.body; //get form data
-
-        console.log(auth_details);
         
         //store data temporarily until submission is confirmed
         db_ref.get_db_object().connect(db_url, function(err, db) {
             if(err){ console.log(err); }
             else{
                 //standard query to insert into live events table
-                db.collection(db_ref.get_authentication_table()).aggregate([{ $match: { username: auth_details.username } }]).toArray(function(err, auth_arr){
+                db.collection(db_ref.get_authentication_table()).aggregate([{ $match: { username: auth_details.username, password: auth_details.password } }]).toArray(function(err, auth_arr){
                     if(err){ console.log(err); }
                     else{
-                        console.log(auth_arr[0]);
+                        
+                        var user_details = auth_arr[0];
+                        
+                        //generate an auth token
+                        user.token = jwt.sign(user_details, process.env.JWT_SECRET);
+                        
                         response.send(auth_arr[0]);
                     }
                 });
