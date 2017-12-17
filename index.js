@@ -127,6 +127,9 @@ else if(storage_ref.get_upload_method() == "local"){
 
 app.post('/set_splash_zone_events/', require('./server_files/models/POST/admin/site_config/set_splash_zone_events.js').execute); //set which events will be displayed in the splash zone on the home page
 
+// ## AUTH endpoints ###
+app.post('/auth_user/', require('./server_files/models/POST/authentication/authenticate_user.js').execute); //set which events will be displayed in the splash zone on the home page
+
 // ### Search engine information/verification files ###
 app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/verification_files/google3fc5d5a06ad26a53.html'); }); //google verification
 app.get('/BingSiteAuth.xml', function(request, response) { response.sendFile(__dirname + '/views/verification_files/BingSiteAuth.xml'); });

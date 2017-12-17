@@ -32,6 +32,7 @@ router.get('/scraping_dump/', function(request, response) { response.render('pag
 router.get('/recently_added/', function(request, response) { response.render('pages/admin_pages/site_config/recently_confirmed.ejs'); }); // about_us page
 router.get('/raw_actor_scraping_html/', function(request, response) { response.render('partials/scraping_dump/raw_actor_scraping.ejs'); }); // raw actor scraping page route
 router.get('/broken_fields_stats/', function(request, response) { response.render('pages/admin_pages/scraping_control/broken_fields_stats.ejs'); }); // raw actor scraping page route
+router.get('/authenticate/', function(request, response) { response.render('pages/authentication/auth.ejs'); }); // raw actor scraping page route
 
 
 router.get('/sitemap', function(req, res) {

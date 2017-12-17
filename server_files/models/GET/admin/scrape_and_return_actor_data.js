@@ -21,7 +21,6 @@ module.exports = {
             };
         }
         else{ //Linux
-            
             var hostname = os.hostname();
             if(hostname == "sam_ub"){ //laptop
                 options = {

@@ -38,5 +38,9 @@ module.exports = {
     
     get_event_classification_table: function(){
         return "all_scraped_events_with_classifications";
+    },
+    
+    get_authentication_table: function(){
+        return "authentication_details";
     }
 }
