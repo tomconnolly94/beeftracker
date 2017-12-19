@@ -29,3 +29,4 @@ auth_app.directive('footerDirective', function($compile, $http){
 });
 
 auth_app.controller('searchController', ['$scope','$http', SearchBoxReusableController()]);
+

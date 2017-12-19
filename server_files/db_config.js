@@ -42,5 +42,9 @@ module.exports = {
     
     get_authentication_table: function(){
         return "authentication_details";
+    },
+    
+    get_session_table: function(){
+        return "session_details";
     }
 }

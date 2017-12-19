@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-auth_app.controller('authController', ['$scope','$http', function($scope, $http) {
+auth_app.controller('authController', ['$scope','$http', function($scope, $http, $httpProvider) {
         
     $scope.send_auth_details = function(){
         
@@ -19,7 +19,6 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
             dataType: 'json',
             success: function( data ) {
                 var client_ip = JSON.stringify(data, null, 2);
-                console.log(client_ip)
 
                 var auth_data = JSON.stringify({ username: $scope.username, password: $scope.password, client_ip_address: data.geobytesipaddress });
                 send_req(auth_data);
@@ -38,16 +37,26 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
                 data: auth_data,
                 //assign content-type as undefined, the browser will assign the correct boundary
                 headers: { 'Content-Type': "application/json"},
-            }).then(function(auth_return){
+            }).then(function(return_data){
 
+                auth_return = return_data.data;
+                
                 console.log(auth_return);
-                //validate the url tagId to make sure the event exists                
-                if(auth_return != undefined){
-
+                
+                if(auth_return.message == "Authentication details not found."){
+                    console.log(auth_return.message);
                 }
                 else{
-                    //error msg
-                    console.log("No events found in database");
+                    
+                    //validate the url tagId to make sure the event exists                
+                    if(auth_return != undefined){
+                        localStorage["auth_token"] = auth_return.token;
+                        
+                    }
+                    else{
+                        //error msg
+                        console.log("No events found in database");
+                    }
                 }
             }, 
             function(response) {
@@ -55,6 +64,5 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
                 console.log("Error in HTTP request in search_controller.js:searchController");
             });    
         }
-        
     }
 }]);

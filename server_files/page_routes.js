@@ -1,6 +1,61 @@
 // routes/index.js
 var router = require('express').Router();
 
+//model dependencies
+var db_ref = require("./db_config.js"); //get database reference object
+
+var check_authentication = function(request, response, next){
+    
+    //extract data for use later
+    var db_url = process.env.MONGODB_URI; //get db uri
+    var session_details = request.body; //get form data
+
+    console.log(session_details);
+    console.log(request.headers);
+    
+    var cookies = parse_cookies(request);
+    
+    console.log(cookies);
+    
+    //store data temporarily until submission is confirmed
+    db_ref.get_db_object().connect(db_url, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            
+            var query_object = { token: cookies.session_cookie };
+            
+            if(session_details.ip_address){
+                query_object.ip_address = session_details.ip_address;
+            }
+            
+            console.log(query_object);
+            
+            //standard query to insert into live events table
+            db.collection(db_ref.get_session_table()).aggregate([{ $match: query_object }]).toArray(function(err, auth_arr){
+                if(err){ console.log(err); }
+                else if(auth_arr.length < 1){
+                    response.send({ message: "Authentication failed." });
+                }
+                else{
+                    next();   
+                }
+            });
+        }
+    });
+}
+
+function parse_cookies (request) {
+    var list = {},
+        rc = request.headers.cookie;
+
+    rc && rc.split(';').forEach(function( cookie ) {
+        var parts = cookie.split('=');
+        list[parts.shift().trim()] = decodeURI(parts.join('='));
+    });
+
+    return list;
+}
+
 if(process.env.DEPLOYMENT_ENV == "heroku"){ //only apply https redirect if deployed on a heroku server
     /* Detect any http requests, if found, redirect to https, otherwise continue to other routes */
     router.get("*", function(req,res,next){
@@ -28,12 +83,11 @@ router.get('/contact_us/', function(request, response) { response.render('pages/
 router.get('/about/', function(request, response) { response.render('pages/static_pages/about_us.ejs'); }); // about_us page
 router.get('/submission_confirmation/', function(request, response) { response.render('pages/static_pages/submit_conf.ejs'); }); // about_us page
 router.get('/terms_of_use/', function(request, response) { response.render('pages/static_pages/terms_of_use.ejs'); }); // about_us page
-router.get('/scraping_dump/', function(request, response) { response.render('pages/admin_pages/scraping_control/scraping_dump_viewer.ejs'); }); // about_us page
-router.get('/recently_added/', function(request, response) { response.render('pages/admin_pages/site_config/recently_confirmed.ejs'); }); // about_us page
-router.get('/raw_actor_scraping_html/', function(request, response) { response.render('partials/scraping_dump/raw_actor_scraping.ejs'); }); // raw actor scraping page route
-router.get('/broken_fields_stats/', function(request, response) { response.render('pages/admin_pages/scraping_control/broken_fields_stats.ejs'); }); // raw actor scraping page route
+router.get('/scraping_dump/', check_authentication, function(request, response) { response.render('pages/admin_pages/scraping_control/scraping_dump_viewer.ejs'); }); // about_us page
+router.get('/recently_added/', check_authentication, function(request, response) { response.render('pages/admin_pages/site_config/recently_confirmed.ejs'); }); // about_us page
+router.get('/raw_actor_scraping_html/', check_authentication, function(request, response) { response.render('partials/scraping_dump/raw_actor_scraping.ejs'); }); // raw actor scraping page route
+router.get('/broken_fields_stats/', check_authentication, function(request, response) { response.render('pages/admin_pages/scraping_control/broken_fields_stats.ejs'); }); // raw actor scraping page route
 router.get('/authenticate/', function(request, response) { response.render('pages/authentication/auth.ejs'); }); // raw actor scraping page route
-
 
 router.get('/sitemap', function(req, res) {
     sitemap.toXML( function (err, xml) {
