@@ -12,6 +12,17 @@
 function SearchBoxReusableController(){
     return function($scope, $http) {
 
+        var cookies = document.cookie.split(";")
+        
+        console.log(document.cookie)
+        for(var i = 0; i < cookies.length; i++){
+            console.log(cookies[i]);
+            var compare = cookies[i].trim().split("=")[0];
+            if("logged_in" == cookies[i].trim().split("=")[0]){
+                $scope.show_logout_button = true;
+            }
+        }
+        
         $scope.submit = function(){
 
             console.log($scope.search_term);
@@ -95,6 +106,23 @@ function SearchBoxReusableController(){
                 $scope.results_string = "";
                 $scope.results_details_string = "";  
             }
+        }
+        
+        $scope.deauth = function(){
+            
+            $http({
+                method: 'POST',
+                url: "/deauth_user/",
+            }).then(function(return_data){
+
+                auth_return = return_data.data;
+                console.log(auth_return);
+                window.location.href = "/authenticate";
+            }, 
+            function(response) {
+                //failed http request
+                console.log("Error in HTTP request");
+            });    
         }
     }
 }

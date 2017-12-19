@@ -14,6 +14,7 @@ module.exports = {
         //extract data for use later
         var db_url = process.env.MONGODB_URI; //get db uri
         var auth_details = request.body; //get form data
+        var cookies_http_only = true;
         
         //store data temporarily until submission is confirmed
         db_ref.get_db_object().connect(db_url, function(err, db) {
@@ -41,7 +42,8 @@ module.exports = {
                                 
                                 console.log("Session already exists.")
                                 
-                                response.cookie("auth_cookie", existing_session_details.token, { expires: existing_session_details.expires, httpOnly: true });
+                                response.cookie("auth_cookie", existing_session_details.token, { expires: existing_session_details.expires, httpOnly: cookies_http_only });
+                                response.cookie("logged_in", "true", { expires: insert_object.expires, httpOnly: false });
                                 response.send({ auth_success: true, auth_details: existing_session_details });
                             }
                             else{
@@ -63,7 +65,8 @@ module.exports = {
                                     else{
                                         console.log(document.ops[0]);
                                         
-                                        response.cookie("auth_cookie", insert_object.token, { expires: insert_object.expires, httpOnly: true });
+                                        response.cookie("auth_cookie", insert_object.token, { expires: insert_object.expires, httpOnly: cookies_http_only });
+                                        response.cookie("logged_in", "true", { expires: insert_object.expires, httpOnly: false });
                                         response.send({ auth_success: true, auth_details: document.ops[0] });
                                     }
                                 });

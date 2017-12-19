@@ -11,7 +11,9 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 auth_app.controller('authController', ['$scope','$http', function($scope, $http) {
-        
+    
+    console.log(document.cookie);
+    
     $scope.authenticate = function(){
         
         $.ajax({
@@ -48,7 +50,7 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
             }, 
             function(response) {
                 //failed http request
-                console.log("Error in HTTP request in search_controller.js:searchController");
+                console.log("Error in HTTP request");
             });    
         }
     }    
@@ -68,7 +70,7 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
             }, 
             function(response) {
                 //failed http request
-                console.log("Error in HTTP request in search_controller.js:searchController");
+                console.log("Error in HTTP request");
             });    
         }
         send_deauth_req();
