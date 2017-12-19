@@ -1,5 +1,6 @@
 // routes/index.js
 var router = require('express').Router();
+var cookie_parser = require('./cookie_parsing.js');
 
 //model dependencies
 var db_ref = require("./db_config.js"); //get database reference object
@@ -13,7 +14,7 @@ var check_authentication = function(request, response, next){
     console.log(session_details);
     console.log(request.headers);
     
-    var cookies = parse_cookies(request);
+    var cookies = cookie_parser.parse_cookies(request);
     
     console.log(cookies);
     
@@ -22,7 +23,7 @@ var check_authentication = function(request, response, next){
         if(err){ console.log(err); }
         else{
             
-            var query_object = { token: cookies.session_cookie };
+            var query_object = { token: cookies.auth_cookie };
             
             if(session_details.ip_address){
                 query_object.ip_address = session_details.ip_address;
@@ -34,7 +35,8 @@ var check_authentication = function(request, response, next){
             db.collection(db_ref.get_session_table()).aggregate([{ $match: query_object }]).toArray(function(err, auth_arr){
                 if(err){ console.log(err); }
                 else if(auth_arr.length < 1){
-                    response.send({ message: "Authentication failed." });
+                    console.log(auth_arr)
+                    response.render('pages/authentication/auth.ejs');
                 }
                 else{
                     next();   
@@ -42,18 +44,6 @@ var check_authentication = function(request, response, next){
             });
         }
     });
-}
-
-function parse_cookies (request) {
-    var list = {},
-        rc = request.headers.cookie;
-
-    rc && rc.split(';').forEach(function( cookie ) {
-        var parts = cookie.split('=');
-        list[parts.shift().trim()] = decodeURI(parts.join('='));
-    });
-
-    return list;
 }
 
 if(process.env.DEPLOYMENT_ENV == "heroku"){ //only apply https redirect if deployed on a heroku server

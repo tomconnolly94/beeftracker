@@ -36,7 +36,12 @@
                         <label>Password: <input type="password" ng-model="password"/></label>
                     </div>
                     <div class="row col-sm-12">
-                        <input type="submit" ng-click="send_auth_details()"/>
+                        <div class="row col-sm-6">
+                            <input type="submit" ng-click="authenticate()"/>
+                        </div>
+                        <div class="row col-sm-6">
+                            <input type="button" value="Logout" ng-click="deauthenticate()"/>
+                        </div>
                     </div>
                 </div>
                 <div class="col-sm-4"></div>

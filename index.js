@@ -137,6 +137,7 @@ app.post('/set_splash_zone_events/', require('./server_files/models/POST/admin/s
 
 // ## AUTH endpoints ###
 app.post('/auth_user/', require('./server_files/models/POST/authentication/authenticate_user.js').execute); //set which events will be displayed in the splash zone on the home page
+app.post('/deauth_user/', require('./server_files/models/POST/authentication/deauthenticate_user.js').execute); //set which events will be displayed in the splash zone on the home page
 
 // ### Search engine information/verification files ###
 app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/verification_files/google3fc5d5a06ad26a53.html'); }); //google verification
