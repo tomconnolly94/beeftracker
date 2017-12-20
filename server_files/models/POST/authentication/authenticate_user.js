@@ -21,6 +21,7 @@ module.exports = {
         var cookies_secure = os.hostname() == "sam_ub" || os.hostname() == "DESKTOP-D3OBC42" ? false : true; //use secure cookies when on heroku server, dont use when 
         
         console.log(cookies_secure);
+        console.log(os.hostname());
         
         //store data temporarily until submission is confirmed
         db_ref.get_db_object().connect(db_url, function(err, db) {
