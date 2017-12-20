@@ -40,10 +40,12 @@ module.exports = {
                                 
                                 existing_session_details = existing_session_details_arr[0];
                                 
-                                console.log("Session already exists.")
+                                console.log("Session already exists.");
+                                console.log(existing_session_details_arr);
+                                console.log(existing_session_details);
                                 
                                 response.cookie("auth_cookie", existing_session_details.token, { expires: existing_session_details.expires, httpOnly: cookies_http_only });
-                                response.cookie("logged_in", "true", { expires: insert_object.expires, httpOnly: false });
+                                response.cookie("logged_in", "true", { expires: existing_session_details.expires, httpOnly: false });
                                 response.send({ auth_success: true, auth_details: existing_session_details });
                             }
                             else{
