@@ -18,7 +18,7 @@ module.exports = {
         
         //cookie config
         var cookies_http_only = true;
-        var cookies_secure = os.hostname() == "41300621-2f9f-44c8-bb19-424be0e64e06" ? true : false; //use secure cookies when on heroku server, dont use when 
+        var cookies_secure = process.env.DEPLOYMENT_ENV == "heroku_production" ? true : false; //use secure cookies when on heroku server, dont use when 
         
         console.log(cookies_secure);
         console.log(os.hostname());

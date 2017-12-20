@@ -46,7 +46,7 @@ var check_authentication = function(request, response, next){
     });
 }
 
-if(process.env.DEPLOYMENT_ENV == "heroku"){ //only apply https redirect if deployed on a heroku server
+if(process.env.DEPLOYMENT_ENV == "heroku_production"){ //only apply https redirect if deployed on a heroku server
     /* Detect any http requests, if found, redirect to https, otherwise continue to other routes */
     router.get("*", function(req,res,next){
         if(req.headers["x-forwarded-proto"] != "https"){
