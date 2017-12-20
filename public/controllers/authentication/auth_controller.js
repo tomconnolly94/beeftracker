@@ -21,8 +21,14 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
             dataType: 'json',
             success: function( data ) {
                 var client_ip = JSON.stringify(data, null, 2);
+                
+                //validation 
+                //escape html < characters and text contained in them to avoid xss attacks
+                var validated_username = $scope.username.replace(/ *\<[^>]*\> */g,"");
+                var validated_password = $scope.password.replace(/ *\<[^>]*\> */g,"");
+                
 
-                var auth_data = JSON.stringify({ username: $scope.username, password: $scope.password, client_ip_address: data.geobytesipaddress });
+                var auth_data = JSON.stringify({ username: validated_username, password: validated_password, client_ip_address: data.geobytesipaddress });
                 send_auth_req(auth_data);
             },
             error: function( data ) {

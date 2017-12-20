@@ -3,6 +3,7 @@ var db_ref = require("../../../db_config.js");
 //var BSON = require('bson');
 var bodyParser = require("body-parser");
 var jwt = require("jsonwebtoken");
+var os = require("os");
 
 //configure testing mode, if set: true, record will be collected, printed but not sent to db and no email notification will be sent.
 var test_mode = false;
@@ -14,7 +15,12 @@ module.exports = {
         //extract data for use later
         var db_url = process.env.MONGODB_URI; //get db uri
         var auth_details = request.body; //get form data
+        
+        //cookie config
         var cookies_http_only = true;
+        var cookies_secure = os.hostname() == "sam_ub" || os.hostname() == "DESKTOP-D3OBC42" ? false : true; //use secure cookies when on heroku server, dont use when 
+        
+        console.log(cookies_secure);
         
         //store data temporarily until submission is confirmed
         db_ref.get_db_object().connect(db_url, function(err, db) {
@@ -44,7 +50,7 @@ module.exports = {
                                 console.log(existing_session_details_arr);
                                 console.log(existing_session_details);
                                 
-                                response.cookie("auth_cookie", existing_session_details.token, { expires: existing_session_details.expires, httpOnly: cookies_http_only });
+                                response.cookie("auth_cookie", existing_session_details.token, { expires: existing_session_details.expires, httpOnly: cookies_http_only, secure: cookies_secure });
                                 response.cookie("logged_in", "true", { expires: existing_session_details.expires, httpOnly: false });
                                 response.send({ auth_success: true, auth_details: existing_session_details });
                             }
@@ -67,7 +73,7 @@ module.exports = {
                                     else{
                                         console.log(document.ops[0]);
                                         
-                                        response.cookie("auth_cookie", insert_object.token, { expires: insert_object.expires, httpOnly: cookies_http_only });
+                                        response.cookie("auth_cookie", insert_object.token, { expires: insert_object.expires, httpOnly: cookies_http_only, secure: cookies_secure });
                                         response.cookie("logged_in", "true", { expires: insert_object.expires, httpOnly: false });
                                         response.send({ auth_success: true, auth_details: document.ops[0] });
                                     }
