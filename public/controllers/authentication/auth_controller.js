@@ -59,7 +59,8 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
                 console.log("Error in HTTP request");
             });    
         }
-    }    
+    }
+    
     $scope.deauthenticate = function(){
                         
         var send_deauth_req = function(){

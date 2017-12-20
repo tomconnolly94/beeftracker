@@ -29,20 +29,29 @@
             <div class="row" ng-cloak ng-controller="authController">
                 <div class="col-sm-4"></div>
                 <div class="col-sm-4 row">
-                    <div class="row col-sm-12">
-                        <label>Username: <input type="text" ng-model="username"/></label>
-                    </div>
-                    <div class="row col-sm-12">
-                        <label>Password: <input type="password" ng-model="password"/></label>
-                    </div>
-                    <div class="row col-sm-12">
-                        <div class="row col-sm-6">
-                            <input type="submit" ng-click="authenticate()"/>
+                    
+                    <h2 style="text-align:center;">Admin Login</h2>            
+                    
+                    <form name="authenticate">
+                        <div class="row col-sm-12">
+                            <label class="col-sm-4">Username: </label>
+                            <input class="col-sm-8" type="text" ng-model="username"/>
                         </div>
-                        <div class="row col-sm-6">
-                            <input type="button" value="Logout" ng-click="deauthenticate()"/>
+                        <div class="row col-sm-12">
+                            <label class="col-sm-4">Password: </label>
+                            <input class="col-sm-8" type="password" ng-model="password"/>
                         </div>
-                    </div>
+                        <div class="row col-sm-12" style="padding:10px 0px">
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-4">
+                                <input type="submit" class="btn" id="submit" ng-click="authenticate()"/>
+                            </div>
+                            <div class="col-sm-4"></div>
+                            <!--<div class="row col-sm-6">
+                                <input type="button" class="btn" value="Logout" ng-click="deauthenticate()"/>
+                            </div>-->
+                        </div>
+                    </form>
                 </div>
                 <div class="col-sm-4"></div>
             </div>

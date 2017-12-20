@@ -20,9 +20,6 @@ module.exports = {
         var cookies_http_only = true;
         var cookies_secure = process.env.DEPLOYMENT_ENV == "heroku_production" ? true : false; //use secure cookies when on heroku server, dont use when 
         
-        console.log(cookies_secure);
-        console.log(os.hostname());
-        
         //store data temporarily until submission is confirmed
         db_ref.get_db_object().connect(db_url, function(err, db) {
             if(err){ console.log(err); }
@@ -47,43 +44,56 @@ module.exports = {
                                 
                                 existing_session_details = existing_session_details_arr[0];
                                 
-                                console.log("Session already exists.");
-                                console.log(existing_session_details_arr);
-                                console.log(existing_session_details);
-                                
-                                response.cookie("auth_cookie", existing_session_details.token, { expires: existing_session_details.expires, httpOnly: cookies_http_only, secure: cookies_secure });
-                                response.cookie("logged_in", "true", { expires: existing_session_details.expires, httpOnly: false });
-                                response.send({ auth_success: true, auth_details: existing_session_details });
-                            }
-                            else{
-                                
-                                console.log("Creating new session.")
-                                
-                                //generate an auth token
-                                user_details.token = jwt.sign(user_details, process.env.JWT_SECRET);
-
-                                var insert_object = { username: user_details.username, token: user_details.token, expires: new Date(Date.now() + (1000 * 60 * 12)) };
-
-                                if(auth_details.client_ip_address){
-                                    insert_object.ip_address = auth_details.client_ip_address;
-                                }
+                                var remove_query = { token: existing_session_details.token };
                                 
                                 //create session record with username, token and ip address
-                                db.collection(db_ref.get_session_table()).insert(insert_object, function(err, document){
+                                db.collection(db_ref.get_session_table()).remove(remove_query, function(err, document){
                                     if(err){ console.log(err); }
                                     else{
-                                        console.log(document.ops[0]);
-                                        
-                                        response.cookie("auth_cookie", insert_object.token, { expires: insert_object.expires, httpOnly: cookies_http_only, secure: cookies_secure });
-                                        response.cookie("logged_in", "true", { expires: insert_object.expires, httpOnly: false });
-                                        response.send({ auth_success: true, auth_details: document.ops[0] });
+                                        create_and_send_new_token(user_details, auth_details, db, cookies_http_only, cookies_secure);
                                     }
                                 });
+                            }
+                            else{
+                                create_and_send_new_token(user_details, auth_details, db, cookies_http_only, cookies_secure);
                             }
                         });
                     }
                 });
             }
         });
+        
+        
+        var create_and_send_new_token = function(user_details, auth_details, db, cookies_http_only, cookies_secure){
+            
+            console.log("Creating new session.");
+            console.log(user_details);
+            console.log(auth_details);
+            console.log(db);
+            console.log(cookies_http_only);
+            console.log(cookies_secure);
+            
+            //generate an auth token
+            user_details.token = jwt.sign(user_details, process.env.JWT_SECRET);
+
+            var insert_object = { username: user_details.username, token: user_details.token, expires: new Date(Date.now() + (1000 * 60 * 60 * 1)) };
+
+            if(auth_details.client_ip_address){
+                insert_object.ip_address = auth_details.client_ip_address;
+            }
+
+            //create session record with username, token and ip address
+            db.collection(db_ref.get_session_table()).insert(insert_object, function(err, document){
+                if(err){ console.log(err); }
+                else{
+                    console.log(document.ops[0]);
+
+                    response.cookie("auth_cookie", insert_object.token, { expires: insert_object.expires, httpOnly: cookies_http_only, secure: cookies_secure });
+                    response.cookie("logged_in", "true", { expires: insert_object.expires, httpOnly: false });
+                    response.send({ auth_success: true, auth_details: document.ops[0] });
+                }
+            });
+            
+        }
     }
 }

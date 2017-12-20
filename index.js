@@ -20,6 +20,7 @@ var mime = require('mime-types');
 var storage_ref = require("./server_files/storage_config.js");
 var multer = require('multer'); //library to assist with file storage
 var morgan = require("morgan");
+var token_authentication = require("./server_files/token_authentication.js"); //get token authentication object
 
 console.log("Storage Method: " + storage_ref.get_upload_method());
 if(storage_ref.get_upload_method() == "cloudinary"){
@@ -116,12 +117,12 @@ app.get('/search_events_by_id/:event_id', require('./server_files/models/GET/sea
 app.get('/search_popular_events/:num_of_events', require('./server_files/models/GET/search_popular_events.js').execute); //retrieve the provided number of events based on which have the most requests
 app.get('/search_recent_events/:num_of_events', require('./server_files/models/GET/search_recent_events.js').execute); //retrieve the provided number of events based on which have been added most recently
 app.get('/search_related_actors_by_id/:actor_id', require('./server_files/models/GET/search_related_actors_by_id.js').execute); //retrieve actors related to a provided actor
-app.get('/get_scraped_events_dump/', require('./server_files/models/GET/admin/get_scraped_events_dump.js').execute); //retrieve all scraped events, by the python beeftracker scraping module
-app.get('/scrape_actor/:actor_name', require('./server_files/models/GET/admin/scrape_and_return_actor_data.js').execute); //use the provided actor name to generate a data dump about that actor
-app.get('/get_broken_fields_stats/', require('./server_files/models/GET/admin/get_broken_fields_data.js').execute); //use the provided actor name to generate a data dump about that actor
+app.get('/get_scraped_events_dump/', token_authentication.authenticate_token, require('./server_files/models/GET/admin/get_scraped_events_dump.js').execute); //retrieve all scraped events, by the python beeftracker scraping module
+app.get('/scrape_actor/:actor_name', token_authentication.authenticate_token, require('./server_files/models/GET/admin/scrape_and_return_actor_data.js').execute); //use the provided actor name to generate a data dump about that actor
+app.get('/get_broken_fields_stats/', token_authentication.authenticate_token, require('./server_files/models/GET/admin/get_broken_fields_data.js').execute); //use the provided actor name to generate a data dump about that actor
 
 // ### DELETE endpoints ###
-app.delete('/discard_scraped_beef_event/', require('./server_files/models/DELETE/admin/discard_scraped_beef_event.js').execute); //remove data about a scraped beef event by id
+app.delete('/discard_scraped_beef_event/', token_authentication.authenticate_token, require('./server_files/models/DELETE/admin/discard_scraped_beef_event.js').execute); //remove data about a scraped beef event by id
 
 // ### POST endpoints ###
 if(storage_ref.get_upload_method() == "cloudinary"){
@@ -133,7 +134,7 @@ else if(storage_ref.get_upload_method() == "local"){
     app.post('/submit_actordata/', upload_actor_img.single('attachment'), require('./server_files/models/POST/submit_actordata.js').execute); //organise, verify and insert user provided actor data to database and save provided image file
 }
 
-app.post('/set_splash_zone_events/', require('./server_files/models/POST/admin/site_config/set_splash_zone_events.js').execute); //set which events will be displayed in the splash zone on the home page
+app.post('/set_splash_zone_events/', token_authentication.authenticate_token, require('./server_files/models/POST/admin/site_config/set_splash_zone_events.js').execute); //set which events will be displayed in the splash zone on the home page
 
 // ## AUTH endpoints ###
 app.post('/auth_user/', require('./server_files/models/POST/authentication/authenticate_user.js').execute); //set which events will be displayed in the splash zone on the home page
