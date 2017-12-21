@@ -12,9 +12,21 @@
 
 auth_app.controller('authController', ['$scope','$http', function($scope, $http) {
     
-    console.log(document.cookie);
+    //init
+    $scope.server_auth_error = false;
+    $scope.server_auth_success = false;
+    var cookies = document.cookie.split(";")
+
+    //search through cookies to check if we are logged in
+    for(var i = 0; i < cookies.length; i++){
+        var compare = cookies[i].trim().split("=")[0];
+        if("logged_in" == compare.trim().split("=")[0]){
+            $scope.server_auth_success = true;
+        }
+    }
     
     $scope.authenticate = function(){
+        
         
         $.ajax({
             url: 'http://gd.geobytes.com/GetCityDetails?callback=?',
@@ -51,7 +63,13 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
                 console.log(auth_return);
                 
                 if(auth_return.auth_success){
-                    location.reload();
+                    $scope.server_auth_success = true;
+                    //if(window.location.href.split("/")[window.location.href.split("/").length-1] != "authenticate"){
+                        location.reload();
+                    //}
+                }
+                else{
+                    $scope.server_auth_error = true;
                 }
             }, 
             function(response) {

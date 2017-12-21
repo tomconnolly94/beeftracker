@@ -30,9 +30,17 @@
                 <div class="col-sm-4"></div>
                 <div class="col-sm-4 row">
                     
-                    <h2 style="text-align:center;">Admin Login</h2>            
+                    <h2 style="text-align:center;">Admin</h2>
+                    <div ng-show="server_auth_error"><h4 style="text-align:center;color:red;">Incorrect Authentication Details</h4></div>
+                    <div ng-show="server_auth_success"><h4 style="text-align:center;margin: 0px 0px 30px 0px">Logged In</h4></div>
                     
-                    <form name="authenticate">
+                    <div ng-show="server_auth_success"><h5 style="text-align:center;font-weight:bold;">Pages</h5></div>
+                    <div ng-show="server_auth_success"><a href="/scraping_dump" target="_self"><h6 style="text-align:center;">Scraping Page</h6></a></div>
+                    <div ng-show="server_auth_success"><a href="/broken_fields_stats" target="_self"><h6 style="text-align:center;">Broken Fields Stats</h6></a></div>
+                    <div ng-show="server_auth_success"><a href="/recently_added" target="_self"><h6 style="text-align:center;">Splash Zone Config</h6></a></div>
+                    
+                    
+                    <form name="authentication_form" ng-show="!server_auth_success">
                         <div class="row col-sm-12">
                             <label class="col-sm-4">Username: </label>
                             <input class="col-sm-8" type="text" ng-model="username"/>

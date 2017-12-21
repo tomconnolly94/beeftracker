@@ -14,11 +14,9 @@ function SearchBoxReusableController(){
 
         var cookies = document.cookie.split(";")
         
-        console.log(document.cookie)
         for(var i = 0; i < cookies.length; i++){
-            console.log(cookies[i]);
             var compare = cookies[i].trim().split("=")[0];
-            if("logged_in" == cookies[i].trim().split("=")[0]){
+            if("logged_in" == compare){
                 $scope.show_logout_button = true;
             }
         }
