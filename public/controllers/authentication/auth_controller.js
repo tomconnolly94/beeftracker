@@ -27,6 +27,10 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
     
     $scope.authenticate = function(){
         
+        //validation 
+        //escape html < characters and text contained in them to avoid xss attacks
+        var validated_username = $scope.sanitise_data($scope.username);
+        var validated_password = $scope.sanitise_data($scope.password);
         
         $.ajax({
             url: 'http://gd.geobytes.com/GetCityDetails?callback=?',
@@ -34,11 +38,6 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
             success: function( data ) {
                 var client_ip = JSON.stringify(data, null, 2);
                 
-                //validation 
-                //escape html < characters and text contained in them to avoid xss attacks
-                var validated_username = $scope.sanitise_data($scope.username);
-                var validated_password = $scope.sanitise_data($scope.password);
-
                 var auth_data = JSON.stringify({ username: validated_username, password: validated_password, client_ip_address: data.geobytesipaddress });
                 send_auth_req(auth_data);
             },
