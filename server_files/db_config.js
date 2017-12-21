@@ -46,5 +46,9 @@ module.exports = {
     
     get_session_table: function(){
         return "session_details";
+    },
+    
+    get_pending_registered_admin_users_table: function(){
+        return "pending_registered_admin_users";
     }
 }

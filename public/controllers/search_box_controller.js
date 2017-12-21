@@ -115,7 +115,7 @@ function SearchBoxReusableController(){
 
                 auth_return = return_data.data;
                 console.log(auth_return);
-                window.location.href = "/authenticate";
+                window.location.href = "/admin_login";
             }, 
             function(response) {
                 //failed http request

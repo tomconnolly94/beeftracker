@@ -36,7 +36,7 @@ router.get('/scraping_dump/', token_authentication.authenticate_token, function(
 router.get('/recently_added/', token_authentication.authenticate_token, function(request, response) { response.render('pages/admin_pages/site_config/recently_confirmed.ejs'); }); // about_us page
 router.get('/raw_actor_scraping_html/', token_authentication.authenticate_token, function(request, response) { response.render('partials/scraping_dump/raw_actor_scraping.ejs'); }); // raw actor scraping page route
 router.get('/broken_fields_stats/', token_authentication.authenticate_token, function(request, response) { response.render('pages/admin_pages/scraping_control/broken_fields_stats.ejs'); }); // raw actor scraping page route
-router.get('/authenticate/', function(request, response) { response.render('pages/authentication/auth.ejs'); }); // raw actor scraping page route
+router.get('/admin_login/', function(request, response) { response.render('pages/authentication/admin_login.ejs'); }); // raw actor scraping page route
 
 router.get('/sitemap', function(req, res) {
     sitemap.toXML( function (err, xml) {

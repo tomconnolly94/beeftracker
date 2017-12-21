@@ -36,15 +36,14 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
                 
                 //validation 
                 //escape html < characters and text contained in them to avoid xss attacks
-                var validated_username = $scope.username.replace(/ *\<[^>]*\> */g,"");
-                var validated_password = $scope.password.replace(/ *\<[^>]*\> */g,"");
-                
+                var validated_username = $scope.sanitise_data($scope.username);
+                var validated_password = $scope.sanitise_data($scope.password);
 
                 var auth_data = JSON.stringify({ username: validated_username, password: validated_password, client_ip_address: data.geobytesipaddress });
                 send_auth_req(auth_data);
             },
             error: function( data ) {
-                var auth_data = JSON.stringify({ username: $scope.username, password: $scope.password });
+                var auth_data = JSON.stringify({ username: validated_username, password: validated_password });
                 send_auth_req(auth_data);
             }
         });
@@ -56,7 +55,7 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
                 url: "/auth_user/",
                 data: auth_data,
                 //assign content-type as undefined, the browser will assign the correct boundary
-                headers: { 'Content-Type': "application/json"},
+                headers: { 'Content-Type': "application/json"}
             }).then(function(return_data){
 
                 auth_return = return_data.data;
@@ -79,25 +78,34 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
         }
     }
     
-    $scope.deauthenticate = function(){
-                        
-        var send_deauth_req = function(){
-            
-            $http({
-                method: 'POST',
-                url: "/deauth_user/",
-            }).then(function(return_data){
+    $scope.register_user = function(){
+        
+        //escape html < characters and text contained in them to avoid xss attacks
+        var validated_username = $scope.sanitise_data($scope.username);
+        var validated_password = $scope.sanitise_data($scope.password);
 
-                auth_return = return_data.data;
-                
-                console.log(auth_return);
-                
-            }, 
-            function(response) {
-                //failed http request
-                console.log("Error in HTTP request");
-            });    
-        }
-        send_deauth_req();
+        var auth_data = JSON.stringify({ username: validated_username, password: validated_password });
+        
+        $http({
+            method: 'POST',
+            url: "/register_user/",
+            data: auth_data,
+            //assign content-type as undefined, the browser will assign the correct boundary
+            headers: { 'Content-Type': "application/json"},
+        }).then(function(return_data){
+
+            auth_return = return_data.data;
+
+            console.log(auth_return);
+
+        }, 
+        function(response) {
+            //failed http request
+            console.log("Error in HTTP request");
+        });
+    }
+    
+    $scope.sanitise_data = function(data){
+        return data.replace(/ *\<[^>]*\> */g,"");
     }
 }]);

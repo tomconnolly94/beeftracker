@@ -45,13 +45,17 @@ module.exports = {
                         console.log(session_arr);
 
                         if(session_arr.length < 1){                        
-                            console.log(session_arr)
-                            response.render('pages/authentication/auth.ejs');
+                            console.log(session_arr);
+                            response.render('pages/authentication/admin_login.ejs');
                         }
                         else if(session_arr[0].expires < new Date()){
                             console.log("expired cookie.");
+                            response.render('pages/authentication/admin_login.ejs');
                         }
                         else{
+                            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+                            response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+                            //response.setDateHeader("Expires", 0); // Proxies
                             next();   
                         }
                     }
