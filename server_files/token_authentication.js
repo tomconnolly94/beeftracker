@@ -18,19 +18,47 @@ module.exports = {
         var session_details = request.body; //get form data
 
         var cookies = cookie_parser.parse_cookies(request);
+        console.log(request.connection.remoteAddress);
+        console.log(request.headers['x-forwarded-for']);
 
         //verify token to ensure its still valid
-        jwt.verify(cookies.auth_cookie, process.env.JWT_SECRET, function(error, token){
+        jwt.verify(cookies.auth, process.env.JWT_SECRET, function(error, auth_token){
             if(error){ 
                 console.log(error);
-                response.render('pages/authentication/admin_login.ejs');
+                reset_auth();
             }
             else{
-                response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-                response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-                //response.setDateHeader("Expires", 0); // Proxies
-                next();  
+                //if ip location cookie is provided, also verify this
+                if(auth_token.ip_loc_cookie_set){
+                    jwt.verify(cookies.ip_loc, process.env.JWT_SECRET, function(error, ip_loc_token){
+                        if(error){ 
+                            console.log(error);
+                            reset_auth();
+                        }
+                        else{
+                            console.log(ip_loc_token);
+                            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+                            response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+                            //response.setDateHeader("Expires", 0); // Proxies
+                            next();  
+                        }            
+                    });
+                }
+                else{
+                    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+                    response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+                    //response.setDateHeader("Expires", 0); // Proxies
+                    next();
+                }
             }            
         });
+        
+        var reset_auth = function(response){
+            response.cookie( "auth", "0", { expires: new Date(0), httpOnly: true });
+            response.cookie( "logged_in", "false", { expires: new Date(0)});
+            response.cookie( "ip_loc", "false", { expires: new Date(0)});
+            response.render('pages/authentication/admin_login.ejs');
+        }
+        
     }
 }

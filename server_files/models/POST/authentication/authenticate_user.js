@@ -38,22 +38,32 @@ module.exports = {
                         var possible_peppers = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
                         var response_sent = false;
                         
+                        //loop through possible peppers to find the appropriate one
                         for(var i = 0; i < possible_peppers.length; i++ ){
                             
+                            //compare the hashed password from the db with a fresh hash of the password + possible pepper and provided salt
                             if(user_details.hashed_password == encryption.encrypt_password(auth_details.password, user_details.salt, possible_peppers[i]).hashed_password){
                                 
                                 //create exp date
                                 var expiry_timestamp = Math.floor(Date.now() + (1000 * 60 * 60));
+                                var ip_loc_cookie_set = false;
 
+                                //if client provides an ip address, create new jsonwebtoken with it and store as cookie
+                                if(auth_details.client_ip_address){
+                                    
+                                    var ip_loc_token = jwt.sign({ exp: expiry_timestamp, login_ip_loc: auth_details.client_ip_address }, process.env.JWT_SECRET);
+                                    response.cookie("ip_loc", ip_loc_token, { expires: new Date(expiry_timestamp), httpOnly: cookies_http_only, secure: cookies_secure });
+                                    ip_loc_cookie_set = true;
+                                }
+                                
                                 //generate an auth token
-                                var token = jwt.sign({ exp: expiry_timestamp, username: user_details.username }, process.env.JWT_SECRET);
+                                var auth_token = jwt.sign({ exp: expiry_timestamp, username: user_details.username, ip_loc_cookie_set: ip_loc_cookie_set }, process.env.JWT_SECRET);
 
-                                /*if(auth_details.client_ip_address){
-                                    insert_object.ip_address = auth_details.client_ip_address;
-                                }*/
-
-                                response.cookie("auth_cookie", token, { expires: new Date(expiry_timestamp), httpOnly: cookies_http_only, secure: cookies_secure });
+                                //set auth token for verification and logged_in token so client javascript knows how to behave
+                                response.cookie("auth", auth_token, { expires: new Date(expiry_timestamp), httpOnly: cookies_http_only, secure: cookies_secure });
                                 response.cookie("logged_in", "true", { expires: new Date(expiry_timestamp), httpOnly: false });
+                                
+                                //send response with cookies
                                 response.send({ auth_success: true });
                                 
                                 response_sent = true;

@@ -34,11 +34,7 @@ module.exports = {
         //assign undefined fields
         if(!salt){ salt = generate_salt(16); }
         if(!pepper){ pepper = generate_pepper(); }
-        
-        console.log(salt);
-        console.log(pepper);
-        
+            
         return sha_512_hash(password + pepper, salt);
-        
     }
 }

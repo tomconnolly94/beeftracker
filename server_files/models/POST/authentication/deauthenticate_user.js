@@ -30,7 +30,7 @@ module.exports = {
                     if(err){ console.log(err); }
                     else{
 
-                        response.cookie( "auth_cookie", "0", { expires: new Date(0), httpOnly: true });
+                        response.cookie( "auth", "0", { expires: new Date(0), httpOnly: true });
                         response.cookie( "logged_in", "false", { expires: new Date(0)});
                         response.send({ auth_success: false});
                     }
