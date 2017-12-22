@@ -33,7 +33,7 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
         var validated_password = $scope.sanitise_data($scope.password);
         
         $.ajax({
-            url: 'http://gd.geobytes.com/GetCityDetails?callback=?',
+            url: 'https://gd.geobytes.com/GetCityDetails?callback=?',
             dataType: 'json',
             success: function( data ) {
                 var client_ip = JSON.stringify(data, null, 2);
@@ -62,10 +62,10 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
                 
                 if(auth_return.auth_success){
                     $scope.server_auth_success = true;
-                    console.log(window.location.href.split("/")[window.location.href.split("/").length-1]);
-                    if(window.location.href.split("/")[window.location.href.split("/").length-1] != "admin_login"){
+                    
+                    //if(window.location.href.split("/")[window.location.href.split("/").length-1] != "admin_login"){
                         location.reload();
-                    }
+                    //}
                 }
                 else{
                     $scope.server_auth_error = true;
