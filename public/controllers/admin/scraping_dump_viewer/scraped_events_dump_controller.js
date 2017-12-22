@@ -204,6 +204,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             function (success) {
                 $scope.remove_record( event_id, "definite_beef");
                 $('.collapse').collapse('hide');
+                $scope.load_scraped_events();
             },
             function (error) {
                 console.log("Upload failed.");
