@@ -62,9 +62,9 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
                 
                 if(auth_return.auth_success){
                     $scope.server_auth_success = true;
-                    //if(window.location.href.split("/")[window.location.href.split("/").length-1] != "authenticate"){
+                    if(window.location.href.split("/")[window.location.href.split("/").length-1] != "authenticate"){
                         location.reload();
-                    //}
+                    }
                 }
                 else{
                     $scope.server_auth_error = true;

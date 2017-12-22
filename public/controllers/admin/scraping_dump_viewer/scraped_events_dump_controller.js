@@ -382,14 +382,23 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
             $scope.form_data[$scope.events[i]._id].delete_checkbox = false;
         }
         
+        var total = event_ids.length;
+        var request_return_count = 0;
+        
         for(var i = 0; i < event_ids.length; i++){
+            
             $http({
                 url: "/discard_scraped_beef_event/",
                 method: 'DELETE',
                 data: JSON.stringify({ data: { event_id: event_ids[i], classification: classification } }),
                 headers: { 'Content-Type': "application/json"}
             }).then(function(response_1){
-                $scope.load_scraped_events();
+                request_return_count++; //inc count every time a request is returned
+                
+                //once all requests have returned, refresh the events
+                if(total == request_return_count){ 
+                    $scope.load_scraped_events();
+                }
             }, 
             function(response_1) {
                 //failed http request

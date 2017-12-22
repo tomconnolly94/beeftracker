@@ -28,7 +28,11 @@ module.exports = {
             else{
                 db.collection(db_ref.get_scraped_events_dump_table()).findOneAndDelete( { _id: object }, function(err, document_1){
                     if(err){ console.log(err); } 
-                    else if(!document_1.value){ console.log("event not found in scraping dump table."); }
+                    else if(!document_1.value){
+                        var message = "event not found in scraping dump table.";
+                        console.log(message);
+                        response.send({ success:false, message: message });
+                    }
                     else{
 
                         async.waterfall([
@@ -54,7 +58,7 @@ module.exports = {
                             if (error) { console.log(error); }
                             else{
                                 console.log("sending response.")
-                                response.send();
+                                response.send({ success: true });
                             }
                         });
                     }

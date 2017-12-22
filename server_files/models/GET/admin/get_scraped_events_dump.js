@@ -22,7 +22,7 @@ module.exports = {
                                                                                         foreignField: "title", 
                                                                                         as: "classification_object" 
                                                                                 }}
-                                                                                ]).sort({date_added : -1 }).limit(limit).toArray(function(queryErr, docs) {
+                                                                                ]).sort({date_added: 1 }).limit(limit).toArray(function(queryErr, docs) {
                     response.send({events : docs});
                 });
             }
