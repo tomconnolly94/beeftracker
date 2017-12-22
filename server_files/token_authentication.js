@@ -35,7 +35,7 @@ module.exports = {
             }
             else{
                 //if ip location cookie is provided, also verify this
-                if(auth_token.ip_loc_cookie_set){
+                if(auth_token.ip_loc_cookie_set && false){
                     jwt.verify(cookies.ip_loc, process.env.JWT_SECRET, function(error, ip_loc_token){
                         if(error){ 
                             console.log(error);
