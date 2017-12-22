@@ -20,12 +20,19 @@ module.exports = {
         var cookies = cookie_parser.parse_cookies(request);
         console.log(request.connection.remoteAddress);
         console.log(request.headers['x-forwarded-for']);
+        
+        var reset_auth = function(response){
+            response.cookie( "auth", "0", { expires: new Date(0), httpOnly: true });
+            response.cookie( "logged_in", "false", { expires: new Date(0)});
+            response.cookie( "ip_loc", "false", { expires: new Date(0)});
+            response.render('pages/authentication/admin_login.ejs');
+        }
 
         //verify token to ensure its still valid
         jwt.verify(cookies.auth, process.env.JWT_SECRET, function(error, auth_token){
             if(error){ 
                 console.log(error);
-                reset_auth();
+                reset_auth(response);
             }
             else{
                 //if ip location cookie is provided, also verify this
@@ -33,7 +40,7 @@ module.exports = {
                     jwt.verify(cookies.ip_loc, process.env.JWT_SECRET, function(error, ip_loc_token){
                         if(error){ 
                             console.log(error);
-                            reset_auth();
+                            reset_auth(response);
                         }
                         else{
                             console.log(ip_loc_token);
@@ -52,13 +59,6 @@ module.exports = {
                 }
             }            
         });
-        
-        var reset_auth = function(response){
-            response.cookie( "auth", "0", { expires: new Date(0), httpOnly: true });
-            response.cookie( "logged_in", "false", { expires: new Date(0)});
-            response.cookie( "ip_loc", "false", { expires: new Date(0)});
-            response.render('pages/authentication/admin_login.ejs');
-        }
         
     }
 }
