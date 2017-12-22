@@ -38,8 +38,6 @@ module.exports = {
                             response.send({success: false, message: "User already pending registration."});
                         }
                         else{
-
-
                             var password_data = hashing.hash_password(auth_details.password);
 
                             var insert_object = { username: auth_details.username, hashed_password: password_data.hashed_password, salt: password_data.salt};

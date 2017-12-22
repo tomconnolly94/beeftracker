@@ -23,18 +23,14 @@ module.exports = {
             if(err){ console.log(err); }
             else{
 
-                //standard query
+                //query to determine whether a 
                 db.collection(db_ref.get_authentication_table()).aggregate([{ $match: { username: auth_details.username } }]).toArray(function(err, auth_arr){
                     if(err){ console.log(err); }
-                    else if(auth_arr.length < 1){
-                        
-                        console.log("Username not found.")
-                                
-                        response.send({auth_success: false});
+                    else if(auth_arr.length < 1){                            
+                        response.send({auth_success: false, message: "User not found."});
                     }
                     else{
                         var user_details = auth_arr[0];
-                        
                         var possible_peppers = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
                         var response_sent = false;
                         
@@ -67,8 +63,8 @@ module.exports = {
                                 break;// ensure loop does not continue
                             }
                         }
-                        if(!response_sent){
-                            response.send({auth_success: false});
+                        if(!response_sent){ //if the password hash is not found send a failed auth response
+                            response.send({auth_success: false, message: "Incorrect Password."});
                         }
                     }
                 });
