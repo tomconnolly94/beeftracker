@@ -62,7 +62,8 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
                 
                 if(auth_return.auth_success){
                     $scope.server_auth_success = true;
-                    if(window.location.href.split("/")[window.location.href.split("/").length-1] != "authenticate"){
+                    console.log(window.location.href.split("/")[window.location.href.split("/").length-1]);
+                    if(window.location.href.split("/")[window.location.href.split("/").length-1] != "admin_login"){
                         location.reload();
                     }
                 }
