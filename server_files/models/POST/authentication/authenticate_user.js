@@ -49,9 +49,9 @@ module.exports = {
                                 var ip_loc_cookie_set = false;
 
                                 //if client provides an ip address, create new jsonwebtoken with it and store as cookie
-                                if(auth_details.client_ip_address){
+                                if(request.headers['x-forwarded-for']){
                                     
-                                    var ip_loc_token = jwt.sign({ exp: expiry_timestamp, login_ip_loc: auth_details.client_ip_address }, process.env.JWT_SECRET);
+                                    var ip_loc_token = jwt.sign({ exp: expiry_timestamp, login_ip_loc: request.headers['x-forwarded-for'] }, process.env.JWT_SECRET);
                                     response.cookie("ip_loc", ip_loc_token, { expires: new Date(expiry_timestamp), httpOnly: cookies_http_only, secure: cookies_secure });
                                     ip_loc_cookie_set = true;
                                 }

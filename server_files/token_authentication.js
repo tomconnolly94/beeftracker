@@ -18,7 +18,6 @@ module.exports = {
         var session_details = request.body; //get form data
 
         var cookies = cookie_parser.parse_cookies(request);
-        console.log(request.connection.remoteAddress);
         console.log(request.headers['x-forwarded-for']);
         
         var reset_auth = function(response){
@@ -43,11 +42,20 @@ module.exports = {
                             reset_auth(response);
                         }
                         else{
-                            console.log(ip_loc_token);
-                            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-                            response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-                            //response.setDateHeader("Expires", 0); // Proxies
-                            next();  
+                            console.log(request.headers['x-forwarded-for']);
+                            console.log(ip_loc_token.login_ip_loc);
+                            
+                            //check if this requests ip address matches the ip address that the user logged in with
+                            if(request.headers['x-forwarded-for'] == ip_loc_token.login_ip_loc ){
+                                console.log(ip_loc_token);
+                                response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+                                response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+                                //response.setDateHeader("Expires", 0); // Proxies
+                                next();
+                            }
+                            else{
+                                reset_auth(response);
+                            }
                         }            
                     });
                 }
