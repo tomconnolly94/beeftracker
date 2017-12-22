@@ -1,7 +1,7 @@
 "use strict";
 //get database reference object
 var db_ref = require("../../../db_config.js");
-var encryption = require("../../../encryption.js");
+var hashing = require("../../../hashing.js");
 //var BSON = require('bson');
 var bodyParser = require("body-parser");
 //var jwt = require("jsonwebtoken");
@@ -40,7 +40,7 @@ module.exports = {
                         else{
 
 
-                            var password_data = encryption.encrypt_password(auth_details.password);
+                            var password_data = hashing.hash_password(auth_details.password);
 
                             var insert_object = { username: auth_details.username, hashed_password: password_data.hashed_password, salt: password_data.salt};
 

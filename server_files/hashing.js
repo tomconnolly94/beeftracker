@@ -29,7 +29,7 @@ var generate_pepper = function() {
 
 module.exports = {
     
-    encrypt_password : function(password, salt, pepper) {
+    hash_password : function(password, salt, pepper) {
         
         //assign undefined fields
         if(!salt){ salt = generate_salt(16); }
