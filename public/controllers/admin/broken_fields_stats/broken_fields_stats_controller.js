@@ -23,7 +23,6 @@ broken_fields_stats_app.controller("brokenFieldsStatsController", ['$scope','$ht
             url: "/get_broken_fields_stats/"
         }).then(function(response_1){
             $scope.data = response_1.data.data;
-            console.log($scope.data);
             
             $scope.fields = [
                 "title",
@@ -58,10 +57,6 @@ broken_fields_stats_app.controller("brokenFieldsStatsController", ['$scope','$ht
 
                     var record = $scope.data[i];
                     
-                    if(record.broken_field != "none"){
-                        console.log(record);
-                    }
-
                     var base_source = record.source.split("/")[2];
 
                     if($scope.sources.indexOf(base_source) == -1){
@@ -98,7 +93,6 @@ broken_fields_stats_app.controller("brokenFieldsStatsController", ['$scope','$ht
                 }
             }
             $scope.build_stats();
-            console.log($scope.stats);
         }, 
         function(response_1) {
             //failed http request

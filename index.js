@@ -117,7 +117,8 @@ app.get('/search_events_by_id/:event_id', require('./server_files/models/GET/sea
 app.get('/search_popular_events/:num_of_events', require('./server_files/models/GET/search_popular_events.js').execute); //retrieve the provided number of events based on which have the most requests
 app.get('/search_recent_events/:num_of_events', require('./server_files/models/GET/search_recent_events.js').execute); //retrieve the provided number of events based on which have been added most recently
 app.get('/search_related_actors_by_id/:actor_id', require('./server_files/models/GET/search_related_actors_by_id.js').execute); //retrieve actors related to a provided actor
-app.get('/get_scraped_events_dump/', token_authentication.authenticate_token, require('./server_files/models/GET/admin/get_scraped_events_dump.js').execute); //retrieve all scraped events, by the python beeftracker scraping module
+app.get('/get_scraped_events_dump/', token_authentication.authenticate_token, require('./server_files/models/GET/admin/get_scraped_events_dump.js').get_events); //retrieve all scraped events, by the python beeftracker scraping module
+app.get('/get_scraped_events_dump_num/', token_authentication.authenticate_token, require('./server_files/models/GET/admin/get_scraped_events_dump.js').get_num_of_events); //retrieve all scraped events, by the python beeftracker scraping module
 app.get('/scrape_actor/:actor_name', token_authentication.authenticate_token, require('./server_files/models/GET/admin/scrape_and_return_actor_data.js').execute); //use the provided actor name to generate a data dump about that actor
 app.get('/get_broken_fields_stats/', token_authentication.authenticate_token, require('./server_files/models/GET/admin/get_broken_fields_data.js').execute); //use the provided actor name to generate a data dump about that actor
 

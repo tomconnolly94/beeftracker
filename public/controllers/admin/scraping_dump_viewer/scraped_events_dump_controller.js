@@ -41,6 +41,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                 $scope.events[i].relevant_actors.push({name: "", db_id: ""});
             }
             $scope.get_category_data();
+            $scope.get_number_of_scraped_events();
         }, 
         function(response_1) {
             //failed http request
@@ -73,6 +74,30 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                     }
                     
                 }
+            }
+            else{
+                //error msg
+                console.log("No events found in database");
+            }
+        }, function(response) {
+            //failed http request
+            console.log("Error in HTTP request in search_controller.js:searchController");
+        });
+    }
+    
+    //function to request data about beef event categories in order to present it in the form
+    $scope.get_number_of_scraped_events = function(){
+        //request to get artists to fill aggressor and targets option inputs
+        //$http.get("/search_all_artists/").success(function(response){
+        $http({
+            method: 'GET',
+            url: "/get_scraped_events_dump_num/"
+        }).then(function(response){
+            //validate the url tagId to make sure the event exists                
+            if(response != undefined){
+                
+                $scope.total_number_of_events = response.data.count;
+                console.log($scope.total_number_of_events);
             }
             else{
                 //error msg
