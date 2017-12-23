@@ -16,7 +16,8 @@ module.exports = {
         //extract data for use later
         var db_url = process.env.MONGODB_URI; //get db uri
         var session_details = request.body; //get form data
-
+        var auto_refresh_auth_token = false;
+        
         var cookies = cookie_parser.parse_cookies(request);
         
         //delete all auth cookies and redirect to login page
@@ -28,13 +29,23 @@ module.exports = {
         
         //confirm authentication, refresh cookie, and let page route continue executing
         var confirm_auth = function(response, token){
-            //refresh token expiry date
-            var expiry_timestamp = Math.floor(Date.now() + (1000 * 60 * 60)); //create new exp date
-            var new_token = jwt.sign({ exp: expiry_timestamp, username: token.username, ip_loc: token.ip_loc }, process.env.JWT_SECRET);
-            
+            if(auto_refresh_auth_token){
+                //cookie config
+                var cookies_http_only = true;
+                var cookies_secure = process.env.DEPLOYMENT_ENV == "heroku_production" ? true : false; //use secure cookies when on heroku server, dont use when 
+
+                //refresh token expiry date
+                var expiry_timestamp = Math.floor(Date.now() + (1000 * 60 * 60)); //create new exp date
+                var new_auth_token = jwt.sign({ exp: expiry_timestamp, username: token.username, ip_loc: token.ip_loc }, process.env.JWT_SECRET);
+
+                //set auth token for verification and logged_in token so client javascript knows how to behave
+                response.cookie("auth", new_auth_token, { expires: new Date(expiry_timestamp), httpOnly: cookies_http_only, secure: cookies_secure });
+                response.cookie("logged_in", "true", { expires: new Date(expiry_timestamp), httpOnly: false });
+            }
             //ensure no authentication pages can be cached in the browser
             response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
             response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+                                
             next();
         }
 
