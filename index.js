@@ -22,6 +22,7 @@ var multer = require('multer'); //library to assist with file storage
 var morgan = require("morgan");
 var token_authentication = require("./server_files/token_authentication.js"); //get token authentication object
 
+// ## Storage method configuration ##
 console.log("Storage Method: " + storage_ref.get_upload_method());
 if(storage_ref.get_upload_method() == "cloudinary"){
     var memoryStorage = multer.memoryStorage();
@@ -54,6 +55,7 @@ else if(storage_ref.get_upload_method() == "local"){
     var upload_event_img = multer({storage: storage_event}); //build upload handlers
     var upload_actor_img = multer({storage: storage_actor}); //build upload handlers
 }
+
 // ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({
     hostname: 'http://www.beeftracker.co.uk',
@@ -108,6 +110,7 @@ app.get('/get_event_categories/', require('./server_files/models/GET/get_event_c
 app.get('/get_splash_zone_data/', require('./server_files/models/GET/get_splash_zone_data.js').execute); //handle retrieval of splash zone data 
 app.get('/search_actors_by_id/:actor_id', require('./server_files/models/GET/search_actors_by_id.js').execute); //retrieve an actor based on the provided actor_id
 app.get('/search_actors_by_stage_name/:actor_name', require('./server_files/models/GET/search_actors_by_stage_name.js').execute); //retrieve an actor based on the provided stage_name
+app.get('/search_actors_by_all_names/:actor_name', require('./server_files/models/GET/search_actors_by_all_names.js').execute); //retrieve an actor based on the provided stage_name
 app.get('/search_all_actors/', require('./server_files/models/GET/search_all_actors.js').execute); //retrive all actors in the actors table
 app.get('/search_all_events/', require('./server_files/models/GET/search_all_events.js').execute); //retrieve all events in the events table
 app.get('/search_all_related_events_in_timeline_by_id/:event_id', require('./server_files/models/GET/search_all_related_events_in_timeline_by_id.js').execute); //complex, (almost recursive) algorithm to retrieve all events in an event chain based on a provided event_id

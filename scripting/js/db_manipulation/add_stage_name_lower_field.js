@@ -12,7 +12,16 @@ MongoClient.connect(url, function(err, db) {
         //standard query to match an event and resolve aggressor and targets references
         db.collection("actor_data_v0_3").find({}).forEach(function(doc) {
             
-            db.collection("actor_data_v0_3").update({ _id: doc._id }, { $set: { stage_name_lower: doc.stage_name.toLowerCase() } });            
+            
+            if(!doc.nicknames){console.log(doc)}
+            var nicknames = doc.nicknames;
+            var new_nicknames = [];
+            
+            for(var i = 0; i < nicknames.length; i++){
+                new_nicknames.push(nicknames[i].toLowerCase());
+            }
+            
+            db.collection("actor_data_v0_3").update({ _id: doc._id }, { $set: { nicknames_lower: new_nicknames } });            
         });
     }
 });

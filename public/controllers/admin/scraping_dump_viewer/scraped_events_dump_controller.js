@@ -218,7 +218,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         //invoke an endpoint to searh the db for an actor with name == actor, return _id if exists, avoid scraping if an _id is returned and assign _id to actor.db_id
         $http({
             method: 'GET',
-            url: "/search_actors_by_stage_name/" + actor
+            url: "/search_actors_by_all_names/" + actor
         }).then(function(response_1){
                         
             var actors = response_1.data.actors;
@@ -231,7 +231,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                     if(event._id == event_id){
                         for(var j = 0; j < event.relevant_actors.length; j++){
                             var rel_actor = event.relevant_actors[j];
-                            if(rel_actor.name.toLowerCase() == actors[0].stage_name_lower){
+                            if(rel_actor.name.toLowerCase() == actors[0].stage_name_lower || rel_actor.name.toLowerCase() == actors[0].birth_name_lower || actors[0].nicknames_lower.indexOf(rel_actor.name.toLowerCase()) != -1){
                                 rel_actor.db_id = actors[0]._id;
                             }
                         }
