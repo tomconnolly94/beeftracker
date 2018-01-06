@@ -199,28 +199,29 @@
                                     <div class="col-sm-4"></div>
                                 </div>
                                 
-                                        <div class="row">
-                                            {{ form_data[event._id].title.length }}
-                                            -
-                                            {{ form_data[event._id].aggressor.length }}
-                                            -
-                                            {{ form_data[event._id].targets_selection }}
-                                            -
-                                            {{ Object.keys(JSON.parse(form_data[event._id].targets_selection)) }}
-                                            -
-                                            {{ event.img_title.length }}
-                                            -
-                                            {{ form_data[event._id].description.length }}
-                                            -
-                                            {{ event.event_date.length }}
-                                            -
-                                            {{ form_data[event._id].categories_selection }}
-                                            -
-                                            {{ Object.keys(form_data[event._id].categories_selection) }}
-                                            -
-                                            {{ form_data[event._id].categories_selection.length }}
-                                            -
-                                        </div>
+                                <!--  -->
+                                <div class="row" ng-hide={{true}}>
+                                    {{ form_data[event._id].title.length }}
+                                    -
+                                    {{ form_data[event._id].aggressor.length }}
+                                    -
+                                    {{ form_data[event._id].targets_selection }}
+                                    -
+                                    {{ Object.keys(JSON.parse(form_data[event._id].targets_selection)) }}
+                                    -
+                                    {{ event.img_title.length }}
+                                    -
+                                    {{ form_data[event._id].description.length }}
+                                    -
+                                    {{ event.event_date.length }}
+                                    -
+                                    {{ form_data[event._id].categories_selection }}
+                                    -
+                                    {{ Object.keys(form_data[event._id].categories_selection) }}
+                                    -
+                                    {{ form_data[event._id].categories_selection.length }}
+                                    -
+                                </div>
                             </div>
                         </form>
                     </div>
