@@ -36,6 +36,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
                 $scope.form_data[$scope.events[i]._id].title = $scope.events[i].title;
                 $scope.form_data[$scope.events[i]._id].targets = {};
                 $scope.form_data[$scope.events[i]._id].description = $scope.events[i].description;
+                $scope.form_data[$scope.events[i]._id].paraphrased_description = $scope.events[i].paraphrased_description ? $scope.events[i].paraphrased_description : $scope.events[i].description;
                 $scope.form_data[$scope.events[i]._id].categories_selection = {};
                 $scope.form_data[$scope.events[i]._id].delete_checkbox = false;
                 $scope.events[i].relevant_actors.push({name: "", db_id: ""});
@@ -125,6 +126,7 @@ scraping_dump_viewer_app.controller("scrapedEventsDumpController", ['$scope','$h
         $scope.form_data[event_id].data_sources = [{url: event.data_source}];
         $scope.form_data[event_id].img_title = event.img_title;
         $scope.form_data[event_id].highlights = [];
+        $scope.form_data[event_id].description = $scope.form_data[event_id].paraphrased_description;
         $scope.form_data[event_id].targets = [];
         $scope.form_data[event_id].button_links = [];
         $scope.form_data[event_id].selected_categories = [];
