@@ -28,6 +28,10 @@ module.exports = {
         return "scraped_training_events_dump_v0_1";
     },
     
+    get_event_categories_table: function(){
+        return "event_categories";
+    },
+    
     get_scraped_events_confirmed_table: function(){
         return "scraped_training_events_confirmed_v0_1";
     },
@@ -50,5 +54,9 @@ module.exports = {
     
     get_pending_registered_admin_users_table: function(){
         return "pending_registered_admin_users";
+    },
+    
+    get_beef_chain_table: function(){
+        return "beef_chains";
     }
 }

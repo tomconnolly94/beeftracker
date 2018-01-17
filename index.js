@@ -124,6 +124,7 @@ app.get('/get_scraped_events_dump/', token_authentication.authenticate_token, re
 app.get('/get_scraped_events_dump_num/', token_authentication.authenticate_token, require('./server_files/models/GET/admin/get_scraped_events_dump.js').get_num_of_events); //retrieve all scraped events, by the python beeftracker scraping module
 app.get('/scrape_actor/:actor_name', token_authentication.authenticate_token, require('./server_files/models/GET/admin/scrape_and_return_actor_data.js').execute); //use the provided actor name to generate a data dump about that actor
 app.get('/get_broken_fields_stats/', token_authentication.authenticate_token, require('./server_files/models/GET/admin/get_broken_fields_data.js').execute); //use the provided actor name to generate a data dump about that actor
+app.get('/get_beef_chain_events/:beef_chain_id', require('./server_files/models/GET/get_beef_chain_events.js').execute); //use the provided actor name to generate a data dump about that actor
 
 // ### DELETE endpoints ###
 app.delete('/discard_scraped_beef_event/', token_authentication.authenticate_token, require('./server_files/models/DELETE/admin/discard_scraped_beef_event.js').execute); //remove data about a scraped beef event by id

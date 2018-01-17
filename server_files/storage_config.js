@@ -17,15 +17,11 @@ module.exports = {
     //create database reference object
     get_upload_object: function(){
         
-        //extract data from ENV URL
+        //extract config data from ENV URL
         var data = process.env.CLOUDINARY_URL.split("//")[0];
         var cloud_name = data.split("@")[1];
         var api_key = data.split(":")[0];
         var api_secret = data.split(":")[1];
-        
-        console.log(cloud_name)
-        console.log(api_key)
-        console.log(api_secret)
         
         //config cloudinary object
         //TODO: find some encrypton method for the secret data, plaintext storage is never safe
