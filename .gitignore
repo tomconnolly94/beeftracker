@@ -11,6 +11,3 @@ npm-debug.log
 # Docker
 Dockerfile
 docker-compose.yml
-
-#Local Scripting tools
-scripting/

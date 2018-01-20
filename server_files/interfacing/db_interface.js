@@ -11,16 +11,53 @@ module.exports = {
         
         console.log("insert function called.");
         
-        //store data temporarily until submission is confirmed
         db_ref.get_db_object().connect(db_url, function(err, db) {
             if(err){ console.log(err); }
             else{
+                
                 //standard query to insert into live events table
                 db.collection(table).insert(insert_object, function(err, document){
                     if(err){ console.log(err); }
                     else{
                         if(document != null && document.ops != null){
+                            
+                            var event = document.ops[0];
+                            var aggressor = event.aggressor;
 
+                            event.targets.forEach(function(target, index){
+
+                                //loop through events, check if event has beef chain id, 
+                                db.collection("beef_chains").find({ actors: { $all: [ aggressor, target[0]._id ]}}).toArray(function(err, beef_chains){ //TODO this query is not matching beef chains correctly
+
+                                    if(err){ console.log(err); }
+                                    else{
+                                        //if no beef chain id, get aggressor and each target and insert 
+                                        if(beef_chains.length > 0){ //beef chain does exist 
+
+                                            var beef_chain = beef_chains[0];
+
+                                            //check if this event is in the beef_chain table already
+                                            if(beef_chain.events.indexOf(event._id) == -1){
+                                                var new_beef_chain_events = beef_chain.events;
+
+                                                new_beef_chain_events.push(event._id);
+
+                                                db.collection("beef_chains").update({ _id: beef_chain._id}, { $set: { events: new_beef_chain_events } }); //update beef_chain events with new event included
+                                                db.collection("event_data_v0_3").update({ _id: event._id }, { $set: {beef_chain_id: beef_chain._id }}); //update event with beef_chain_id
+                                                console.log("beef_chain " + beef_chain._id + " updated.");
+                                            }   
+
+                                        }
+                                        else{ //beef chain doesnt exist, create one     
+
+                                            db.collection("beef_chains").insert({ events: [ event._id ], actors: [ aggressor, target[0]._id ] }, function(err, inserted_doc){ //insert new beef_chain with one event
+                                                db.collection("event_data_v0_3").update({ _id: event._id }, { $set: {beef_chain_id: inserted_doc.ops[0]._id }}); //update event with beef_chain_id
+                                                console.log("beef_chain " + inserted_doc.ops[0]._id + " created.");
+                                            });
+                                        }
+                                    }
+                                });
+                            });
                             //add _id field so object can be found later
                             insert_object._id = document.ops[0]._id;
 
