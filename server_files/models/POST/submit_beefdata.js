@@ -2,8 +2,8 @@
 var db_ref = require("../../db_config.js");
 var storage_ref = require("../../storage_config.js");
 var BSON = require('bson');
-var storage_interface = require('../../interfacing/storage_interface.js');
-var db_interface = require('../../interfacing/db_interface.js');
+var storage_interface = require('../../interfaces/storage_insert_interface.js');
+var db_interface = require('../../interfaces/db_insert_interface.js');
 
 //configure testing mode, if set: true, record will be collected, printed but not sent to db and no email notification will be sent.
 var test_mode = false;

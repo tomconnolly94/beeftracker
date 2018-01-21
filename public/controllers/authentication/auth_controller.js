@@ -51,7 +51,7 @@ auth_app.controller('authController', ['$scope','$http', function($scope, $http)
             
             $http({
                 method: 'POST',
-                url: "/auth_user/",
+                url: "/auth_admin_user/",
                 data: auth_data,
                 //assign content-type as undefined, the browser will assign the correct boundary
                 headers: { 'Content-Type': "application/json"}

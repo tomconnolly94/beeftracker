@@ -1,4 +1,3 @@
-//var BSON = require('bson');
 var bodyParser = require("body-parser");
 var crypto = require('crypto');
 

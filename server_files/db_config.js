@@ -44,8 +44,8 @@ module.exports = {
         return "all_scraped_events_with_classifications";
     },
     
-    get_authentication_table: function(){
-        return "authentication_details";
+    get_user_details_table: function(){
+        return "user_details";
     },
     
     get_session_table: function(){

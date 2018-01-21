@@ -88,9 +88,10 @@ app.use(function(req, res, next) {
 });
 
 // ### Directory routes ###
-app.use('/actor_images', express.static(__dirname + '/public/assets/images/actors/')); //route to reference images
-app.use('/event_images', express.static(__dirname + '/public/assets/images/events/')); //route to reference images
-//app.use('/event_images', express.static(__dirname + 'http://res.cloudinary.com/hnwdllmgu/image/upload/v1500713883/')); //route to reference images
+if(storage_ref.get_upload_method() == "local"){
+    app.use('/actor_images', express.static(__dirname + '/public/assets/images/actors/')); //route to reference images
+    app.use('/event_images', express.static(__dirname + '/public/assets/images/events/')); //route to reference images
+}
 app.use('/background_images', express.static(__dirname + '/public/assets/images/backgrounds/')); //route to reference images
 app.use('/logo', express.static(__dirname + '/public/assets/images/logo/')); //route to reference images
 app.use('/modules', express.static(__dirname + '/node_modules/')); //route to reference client libraries
@@ -105,7 +106,7 @@ app.use('/partials', express.static(__dirname + '/views/partials/')); //route to
 // ### Permanent page routes ###
 app.use('/', require('./server_files/page_routes'));
 
-// ### Data Models ###
+// ### GET endpoints ###
 app.get('/get_event_categories/', require('./server_files/models/GET/get_event_categories.js').execute); //handle retrieval of possible event categories
 app.get('/get_splash_zone_data/', require('./server_files/models/GET/get_splash_zone_data.js').execute); //handle retrieval of splash zone data 
 app.get('/search_actors_by_id/:actor_id', require('./server_files/models/GET/search_actors_by_id.js').execute); //retrieve an actor based on the provided actor_id
@@ -120,17 +121,14 @@ app.get('/search_events_by_id/:event_id', require('./server_files/models/GET/sea
 app.get('/search_popular_events/:num_of_events', require('./server_files/models/GET/search_popular_events.js').execute); //retrieve the provided number of events based on which have the most requests
 app.get('/search_recent_events/:num_of_events', require('./server_files/models/GET/search_recent_events.js').execute); //retrieve the provided number of events based on which have been added most recently
 app.get('/search_related_actors_by_id/:actor_id', require('./server_files/models/GET/search_related_actors_by_id.js').execute); //retrieve actors related to a provided actor
-app.get('/get_scraped_events_dump/', token_authentication.authenticate_token, require('./server_files/models/GET/admin/get_scraped_events_dump.js').get_events); //retrieve all scraped events, by the python beeftracker scraping module
-app.get('/get_scraped_events_dump_num/', token_authentication.authenticate_token, require('./server_files/models/GET/admin/get_scraped_events_dump.js').get_num_of_events); //retrieve all scraped events, by the python beeftracker scraping module
-app.get('/scrape_actor/:actor_name', token_authentication.authenticate_token, require('./server_files/models/GET/admin/scrape_and_return_actor_data.js').execute); //use the provided actor name to generate a data dump about that actor
-app.get('/get_broken_fields_stats/', 
-        token_authentication.authenticate_token, 
-        require('./server_files/models/GET/admin/get_broken_fields_data.js').execute); //use the provided actor name to generate a data dump about that actor
-app.get('/get_beef_chain_events/:beef_chain_id', 
-        require('./server_files/models/GET/get_beef_chain_events.js').execute); //use the provided actor name to generate a data dump about that actor
+app.get('/get_scraped_events_dump/', token_authentication.authenticate_admin_user_token, require('./server_files/models/GET/admin/get_scraped_events_dump.js').get_events); //retrieve all scraped events, by the python beeftracker scraping module
+app.get('/get_scraped_events_dump_num/', token_authentication.authenticate_admin_user_token, require('./server_files/models/GET/admin/get_scraped_events_dump.js').get_num_of_events); //retrieve all scraped events, by the python beeftracker scraping module
+app.get('/scrape_actor/:actor_name', token_authentication.authenticate_admin_user_token, require('./server_files/models/GET/admin/scrape_and_return_actor_data.js').execute); //use the provided actor name to generate a data dump about that actor
+app.get('/get_broken_fields_stats/', token_authentication.authenticate_admin_user_token, require('./server_files/models/GET/admin/get_broken_fields_data.js').execute); //use the provided actor name to generate a data dump about that actor
+app.get('/get_beef_chain_events/:beef_chain_id', require('./server_files/models/GET/get_beef_chain_events.js').execute); //use the provided actor name to generate a data dump about that actor
 
 // ### DELETE endpoints ###
-app.delete('/discard_scraped_beef_event/', token_authentication.authenticate_token, require('./server_files/models/DELETE/admin/discard_scraped_beef_event.js').execute); //remove data about a scraped beef event by id
+app.delete('/discard_scraped_beef_event/', token_authentication.authenticate_admin_user_token, require('./server_files/models/DELETE/admin/discard_scraped_beef_event.js').execute); //remove data about a scraped beef event by id
 
 // ### POST endpoints ###
 if(storage_ref.get_upload_method() == "cloudinary"){
@@ -142,12 +140,16 @@ else if(storage_ref.get_upload_method() == "local"){
     app.post('/submit_actordata/', upload_actor_img.single('attachment'), require('./server_files/models/POST/submit_actordata.js').execute); //organise, verify and insert user provided actor data to database and save provided image file
 }
 
-app.post('/set_splash_zone_events/', token_authentication.authenticate_token, require('./server_files/models/POST/admin/site_config/set_splash_zone_events.js').execute); //set which events will be displayed in the splash zone on the home page
+// ### POST endpoints ###
+app.post('/set_splash_zone_events/', token_authentication.authenticate_admin_user_token, require('./server_files/models/POST/admin/site_config/set_splash_zone_events.js').execute); //set which events will be displayed in the splash zone on the home page
 
 // ## AUTH endpoints ###
-app.post('/auth_user/', require('./server_files/models/POST/authentication/authenticate_user.js').execute); //set which events will be displayed in the splash zone on the home page
-app.post('/deauth_user/', require('./server_files/models/POST/authentication/deauthenticate_user.js').execute); //set which events will be displayed in the splash zone on the home page
-app.post('/register_user/', require('./server_files/models/POST/authentication/register_admin_user.js').execute); //set which events will be displayed in the splash zone on the home page
+app.post('/auth_user/', require('./server_files/models/POST/authentication/authenticate_user.js').auth_user); //authenticate any user and set-cookie an auth token
+app.post('/auth_admin_user/', require('./server_files/models/POST/authentication/authenticate_user.js').auth_admin_user); //authenticate an admin user and set-cookie an auth token
+app.post('/deauth_user/', require('./server_files/models/POST/authentication/deauthenticate_user.js').execute); //force all auth cookies to expire immediately
+app.post('/register_user/', require('./server_files/models/POST/user_profile/register_user.js').execute); //take new user data and save it
+app.post('/update_user_info/', token_authentication.authenticate_admin_user_token, require('./server_files/models/POST/user_profile/update_user_information.js').execute); //update any field of an existing user
+app.post('/reset_lost_password/', require('./server_files/models/POST/user_profile/reset_lost_password.js').execute); //update any field of an existing user
 
 // ### Search engine information/verification files ###
 app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/verification_files/google3fc5d5a06ad26a53.html'); }); //google verification
