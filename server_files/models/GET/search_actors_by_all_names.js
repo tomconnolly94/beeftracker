@@ -41,7 +41,7 @@ module.exports = {
                                                                 achievements: { "$max": "$achievements" },
                                                                 bio: { "$max": "$bio" },
                                                                 data_sources: { "$max": "$data_sources" },
-                                                                associated_actors: { "$addToSet": "$target_objects" },
+                                                                associated_actors: { "$addToSet": "$associated_actors" },
                                                                 links: { "$max": "$links" },
                                                                 date_added: { "$max": "$date_added" },
                                                                 img_title: { "$max": "$img_title"} }}

@@ -103,8 +103,15 @@ app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //r
 app.use('/bower_components', express.static(__dirname + '/bower_components/')); //route to reference css scripts
 app.use('/partials', express.static(__dirname + '/views/partials/')); //route to reference css scripts
 
-// ### Permanent page routes ###
+// ### Page route configuration file ###
 app.use('/', require('./server_files/page_routes'));
+
+// ### Endpoint route configuration ###
+app.use('/api', require('./server_files/endpoint_routing'));
+
+
+
+
 
 // ### GET endpoints ###
 app.get('/get_event_categories/', require('./server_files/models/GET/get_event_categories.js').execute); //handle retrieval of possible event categories
@@ -156,11 +163,8 @@ app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.s
 app.get('/BingSiteAuth.xml', function(request, response) { response.sendFile(__dirname + '/views/verification_files/BingSiteAuth.xml'); });
 app.get('/robots.txt', function(request, response) { response.sendFile(__dirname + '/views/verification_files/robots.txt'); }); //robots config file
 
-// ### Serve an error page on unrecognised url path ###
+// ### Serve an error page on unrecognised uri###
 app.get('/*', function(req, res, next) { res.render("pages/static_pages/error.ejs"); });
-
-//pages that are not in the current release design but may used later on
-//app.get('/', function(request, response) { response.render('pages/splash'); });
 
 // ### Launch application ####
 app.listen(app.get('port'), function() { console.log('Node app is running on port', app.get('port')); });

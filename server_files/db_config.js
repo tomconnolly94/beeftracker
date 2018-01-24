@@ -48,15 +48,19 @@ module.exports = {
         return "user_details";
     },
     
-    get_session_table: function(){
-        return "session_details";
-    },
-    
     get_pending_registered_admin_users_table: function(){
         return "pending_registered_admin_users";
     },
     
     get_beef_chain_table: function(){
         return "beef_chains";
+    },
+    
+    get_activity_logs_table: function(){
+        return "activity_logs";
+    },
+    
+    get_comments_table: function(){
+        return "activity_logs";
     }
 }
