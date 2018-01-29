@@ -32,9 +32,9 @@ module.exports = {
                                                                                            }
                                                                                        },
                                                                                        in: {
-                                                                                           first_name: "$$first_user.first_name",
-                                                                                           last_name: "$$first_user.first_name",
-                                                                                           img_title: "$$first_user.first_name"
+                                                                                            first_name: "$$first_user.first_name",
+                                                                                            last_name: "$$first_user.last_name",
+                                                                                            img_title: "$$first_user.img_title"
                                                                                        }
                                                                                     }
                                                                                }

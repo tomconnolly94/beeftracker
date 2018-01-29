@@ -63,5 +63,9 @@ module.exports = {
     
     get_actor_variable_fields_config: function(){
         return "actor_fields_config";
+    },
+    
+    get_comments_table: function(){
+        return "comments";
     }
 }

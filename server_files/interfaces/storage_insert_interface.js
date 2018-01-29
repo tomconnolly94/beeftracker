@@ -87,5 +87,17 @@ module.exports = {
                 });
             }        
         }
+    },
+    
+    delete_image: function(folder, img_title, callback){
+        
+        console.log(folder + "/" + img_title);
+        
+        storage_ref.get_upload_object().uploader.destroy(folder + "/" + img_title, function (result) {
+            if(result.error){ console.log(result.error); }
+            else{
+                callback();
+            }
+        });
     }
 }

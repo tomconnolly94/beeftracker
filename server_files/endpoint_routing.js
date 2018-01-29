@@ -20,31 +20,31 @@ router.route('/activity-logs/events/:event_id').get(activity_logs_controller.fin
 router.route('/activity-logs/actors/:actor_id').get(activity_logs_controller.findActivityLogsFromActor);//built, written, not tested
 
 //Actors endpoints
-router.route('/actors').get(actor_controller.findActors);//built, written, needs query handling, not tested
-router.route('/actors/:actor_id').get(actor_controller.findActor);//built, written, not tested
-router.route('/actors').post(actor_controller.createActor);//built, written, not tested
-router.route('/actors/:actor_id').put(actor_controller.updateActor);//built, not written, not tested
-router.route('/actors/:actor_id').delete(actor_controller.deleteActor);//built, written, not tested
+router.route('/actors').get(actor_controller.findActors);//built, written, needs query handling, tested
+router.route('/actors/:actor_id').get(actor_controller.findActor);//built, written, tested
+router.route('/actors').post(actor_controller.createActor);//built, written, tested
+router.route('/actors/:actor_id').put(actor_controller.updateActor);//built, written, tested, auth not tested
+router.route('/actors/:actor_id').delete(actor_controller.deleteActor);//built, written, tested, auth not tested
 
 //Actor fields config endpoints
-router.route('/actor-variable-fields-config').get(actor_controller.getVariableFieldsConfig);//built, written, not tested
+router.route('/actor-variable-fields-config').get(actor_controller.getVariableFieldsConfig);//built, written, tested
 
 //Administration data endpoints
 router.route('/contact-us-data').get(administration_data_controller.getContactUsData);//built, not written, not tested
 router.route('/about-us-data').get(administration_data_controller.getAboutUsData);//built, not written, not tested
 router.route('/privacy-policy-data').get(administration_data_controller.getPrivacyPolicyData);//built, not written, not tested
-router.route('/terms-and-conditions-data').get(administration_data_controller.getTermsAndConditionsData);//built, not writt, not testeden, not tested
+router.route('/terms-and-conditions-data').get(administration_data_controller.getTermsAndConditionsData);//built, not written, not testeden, not tested
 router.route('/disclaimer-data').get(administration_data_controller.getDisclaimerData);//built, not written
 
 //Comments endpoints
-router.route('/comments/events/:event_id').get(comments_controller.findCommentsFromEvent);//built, written, not tested
 router.route('/comments').post(comments_controller.createComment);//built, written, not tested
-router.route('/comments/actors/:actor_id').get(comments_controller.findCommentsFromActor);//built, written, not tested
-router.route('/comments/:comment_id').delete(comments_controller.deleteComment);//built, written, not tested
+router.route('/comments/events/:event_id').get(comments_controller.findCommentsFromEvent);//built, written, tested
+router.route('/comments/actors/:actor_id').get(comments_controller.findCommentsFromActor);//built, written, tested
+router.route('/comments/:comment_id').delete(comments_controller.deleteComment);//built, written, tested
 
 // Event categories endpoints
-router.route('/event-categories').get(event_categories_controller.getEventCategories);//built, not written, not tested
-router.route('/event-categories').post(event_categories_controller.createEventCategory);//built, not written, not tested
+router.route('/event-categories').get(event_categories_controller.getEventCategories);//built, written, tested
+router.route('/event-categories').post(event_categories_controller.createEventCategory);//built, written, tested
 
 // Events endpoints
 router.route('/events').get(event_controller.findEvents);//built, not written, not tested
