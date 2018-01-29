@@ -26,6 +26,9 @@ router.route('/actors').post(actor_controller.createActor);//built, written, not
 router.route('/actors/:actor_id').put(actor_controller.updateActor);//built, not written, not tested
 router.route('/actors/:actor_id').delete(actor_controller.deleteActor);//built, written, not tested
 
+//Actor fields config endpoints
+router.route('/actor-variable-fields-config').get(actor_controller.getVariableFieldsConfig);//built, written, not tested
+
 //Administration data endpoints
 router.route('/contact-us-data').get(administration_data_controller.getContactUsData);//built, not written, not tested
 router.route('/about-us-data').get(administration_data_controller.getAboutUsData);//built, not written, not tested

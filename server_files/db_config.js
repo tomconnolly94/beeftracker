@@ -13,7 +13,8 @@ module.exports = {
     },
 
     get_current_actor_table: function(){
-        return "actor_data_v0_3";
+        //return "actor_data_v0_3";
+        return "actor_data_v4";
     },
     
     get_current_subscriber_details_table: function(){
@@ -60,7 +61,7 @@ module.exports = {
         return "activity_logs";
     },
     
-    get_comments_table: function(){
-        return "activity_logs";
+    get_actor_variable_fields_config: function(){
+        return "actor_fields_config";
     }
 }
