@@ -102,7 +102,13 @@ module.exports = {
                                                            ]).toArray(function(queryErr, docs) {
                 if(queryErr){ console.log(queryErr); }
                 else{
-                    response.status(200).send( docs[0] );
+                    console.log("search completed");
+                    if(docs && docs.length > 0){
+                        response.status(200).send( docs[0] );
+                    }
+                    else{
+                        response.status(404).send( { message: "Actor not found."} );
+                    }
                 }
                 });            
             }
@@ -287,10 +293,13 @@ module.exports = {
                                 db.collection(db_ref.get_current_actor_table()).deleteOne({ _id: actor_id_object }, function(queryErr, docs) {
                                     if(queryErr){ console.log(queryErr); }
                                     else{
-                                        response.status(200).send( { success: true });
+                                        response.status(200).send();
                                     }
                                 });
                             });
+                        }
+                        else{
+                            response.status(404).send( { message: "Actor not found." });
                         }
                     }
                 });

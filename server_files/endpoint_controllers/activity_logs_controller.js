@@ -43,12 +43,12 @@ module.exports = {
                     //handle error
                     if(err) { console.log(err);}
                     else{
-                        //if(docs.length > 0){
-                            response.send({ activity_logs : docs });
-                        /*}
+                        if(docs.length > 0){
+                            response.status(200).send(docs);
+                        }
                         else{
-                            response.send({ comments : [] });
-                        }*/
+                            response.status(404).send({ message: "Activity log not found"});
+                        }
                     }
                 });
             }
@@ -94,12 +94,12 @@ module.exports = {
                     //handle error
                     if(err) { console.log(err);}
                     else{
-                        //if(docs.length > 0){
-                            response.send({ activity_logs : docs });
-                        /*}
+                        if(docs.length > 0){
+                            response.status(200).send( docs );
+                        }
                         else{
-                            response.send({ comments : [] });
-                        }*/
+                            response.status(404).send({ message: "Activity logs not found"});
+                        }
                     }
                 });
             }

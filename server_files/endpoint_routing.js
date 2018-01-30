@@ -67,6 +67,6 @@ router.route('/users/deauthenticate').post(users_controller.deauthenticateUser);
 router.route('/users/reset-password').post(users_controller.resetUserPassword);//built, not written, not tested
 
 //handle errors
-router.route('/*').get(function(request, response) {response.send({error: "404 endpoint not found"}); });
+router.route('/*').get(function(request, response) {response.status(404).send({success: false, message: "endpoint not found"}); });
 
 module.exports = router;

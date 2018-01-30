@@ -7,10 +7,11 @@ module.exports = {
     createComment: function(request, response){
         
         var comment_data = request.body;
+        console.log(comment_data);
         
         var comment_record = {
             text: comment_data.text,
-            user: BSON.ObjectID.createFromHexString(comment_data.user_id),
+            user: BSON.ObjectID.createFromHexString(comment_data.user),
             event_id: comment_data.event_id ? BSON.ObjectID.createFromHexString(comment_data.event_id) : null,
             actor_id: comment_data.actor_id ? BSON.ObjectID.createFromHexString(comment_data.actor_id) : null,
             date_added: new Date(),
@@ -25,7 +26,8 @@ module.exports = {
                     //handle error
                     if(err) { console.log(err);}
                     else{
-                        response.send({ success: true, message: "Record Inserted."});
+                        console.log(docs)
+                        response.status(201).send({ id: docs.ops[0]._id});
                     }
                 });
             }
@@ -72,7 +74,7 @@ module.exports = {
                     //handle error
                     if(err) { console.log(err);}
                     else{
-                        response.send({ comments: docs });
+                        response.status(200).send( docs );
                     }
                 });
             }
@@ -119,7 +121,7 @@ module.exports = {
                     //handle error
                     if(err) { console.log(err);}
                     else{
-                        response.send({ comments: docs });
+                        response.status(200).send({ comments: docs });
                     }
                 });
             }
@@ -140,7 +142,7 @@ module.exports = {
                     //handle error
                     if(err) { console.log(err);}
                     else{
-                        response.send({ success: true });
+                        response.status(200).send();
                     }
                 });
             }
