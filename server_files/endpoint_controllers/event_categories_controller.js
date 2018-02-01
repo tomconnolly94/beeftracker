@@ -1,5 +1,6 @@
 //controller dependencies
 var db_ref = require("../db_config.js");
+var EventCategory = require("../schemas/event_category_schema");
 
 module.exports = {
     
@@ -32,10 +33,10 @@ module.exports = {
                     if(err) { console.log(err);}
                     else{
                         
-                        var new_category_record = {
+                        var new_category_record = EventCategory({
                             cat_id: count,
                             name: request.body.name
-                        };
+                        });
                         
                         db.collection(db_ref.get_event_categories_table()).insert(new_category_record, function(err, count) {
                             //handle error

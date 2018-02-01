@@ -16,15 +16,15 @@ var users_controller = require('./endpoint_controllers/users_controller');
 //connect uri suffixes to controllers
 
 //Activity logs endpoints
-router.route('/activity-logs/events/:event_id').get(activity_logs_controller.findActivityLogsFromEvent);//built, written, not tested
-router.route('/activity-logs/actors/:actor_id').get(activity_logs_controller.findActivityLogsFromActor);//built, written, not tested
+router.route('/activity-logs/events/:event_id').get(activity_logs_controller.findActivityLogsFromEvent);//built, written, tested
+router.route('/activity-logs/actors/:actor_id').get(activity_logs_controller.findActivityLogsFromActor);//built, written, tested
 
 //Actors endpoints
-router.route('/actors').get(actor_controller.findActors);//built, written, needs query handling, tested
+router.route('/actors').get(actor_controller.findActors);//built, written, tested, needs query handling
 router.route('/actors/:actor_id').get(actor_controller.findActor);//built, written, tested
 router.route('/actors').post(actor_controller.createActor);//built, written, tested
-router.route('/actors/:actor_id').put(actor_controller.updateActor);//built, written, tested, auth not tested
-router.route('/actors/:actor_id').delete(actor_controller.deleteActor);//built, written, tested, auth not tested
+router.route('/actors/:actor_id').put(actor_controller.updateActor);//built, written, tested, needs auth
+router.route('/actors/:actor_id').delete(actor_controller.deleteActor);//built, written, tested, needs auth
 
 //Actor fields config endpoints
 router.route('/actor-variable-fields-config').get(actor_controller.getVariableFieldsConfig);//built, written, tested
@@ -37,10 +37,10 @@ router.route('/terms-and-conditions-data').get(administration_data_controller.ge
 router.route('/disclaimer-data').get(administration_data_controller.getDisclaimerData);//built, not written
 
 //Comments endpoints
-router.route('/comments').post(comments_controller.createComment);//built, written, not tested
+router.route('/comments').post(comments_controller.createComment);//built, written, tested, needs aith
 router.route('/comments/events/:event_id').get(comments_controller.findCommentsFromEvent);//built, written, tested
 router.route('/comments/actors/:actor_id').get(comments_controller.findCommentsFromActor);//built, written, tested
-router.route('/comments/:comment_id').delete(comments_controller.deleteComment);//built, written, tested
+router.route('/comments/:comment_id').delete(comments_controller.deleteComment);//built, written, tested, needs auth
 
 // Event categories endpoints
 router.route('/event-categories').get(event_categories_controller.getEventCategories);//built, written, tested
@@ -49,7 +49,7 @@ router.route('/event-categories').post(event_categories_controller.createEventCa
 // Events endpoints
 router.route('/events').get(event_controller.findEvents);//built, not written, not tested
 router.route('/events').post(event_controller.createEvent);//built, not written, not tested
-router.route('/events/:event_id').get(event_controller.findSpecificEvent);//built, not written, not tested
+router.route('/events/:event_id').get(event_controller.findEvent);//built, not written, not tested
 router.route('/events').put(event_controller.updateEvent);//built, not written, not tested
 router.route('/events').delete(event_controller.deleteEvent);//built, not written, not tested
 
