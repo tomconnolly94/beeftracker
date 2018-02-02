@@ -19,7 +19,7 @@ var actor_schema = new Schema({
             link : String
         }
     ],
-    date_added: ISODate,
+    date_added: Date,
     name_lower: String,
     also_known_as_lower: [ String ]
 });
