@@ -9,7 +9,8 @@ module.exports = {
 
     //create vars for current db table names
     get_current_event_table: function(){
-        return "event_data_v0_3";
+        //return "event_data_v0_3";
+        return "event_data_v4";
     },
 
     get_current_actor_table: function(){

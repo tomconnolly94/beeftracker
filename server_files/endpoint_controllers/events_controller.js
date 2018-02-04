@@ -6,6 +6,7 @@ var db_interface = require('../interfaces/db_insert_interface.js');
 var loop = require("async-looper");
 var BSON = require('bson');
 var Event = require("../schemas/event_schema");
+var EventContribution = require("../schemas/event_contribution_schema").model;
 
 module.exports = {
     
@@ -94,7 +95,6 @@ module.exports = {
         var date = submission_data.date.split('/'); //split date by delimeter into "DD", "MM" and "YYYY"
         var aggressor_ids = []; //create array to store target_ids
         var target_ids = []; //create array to store target_ids
-        var links_formatted = {}; //create object to store links
         var gallery_items_formatted = [];
         var files;
         var test_mode = false;
@@ -169,6 +169,29 @@ module.exports = {
             }
         }
         
+        //create initial conrtribution record
+        var submission_data_keys = Object.keys(submission_data);
+        var contribution_collection = [];
+        
+        for(var i = 0; i < submission_data_keys.length; i++){
+            
+            if(submission_data_keys[i] != "user_id"){
+                var record = {
+                    field: submission_data_keys[i],
+                    addition: submission_data[submission_data_keys[i]],
+                    removal: ""
+                }
+                contribution_collection.push(record);
+            }
+        }
+                
+        var initial_event_contribution = EventContribution({
+            user: BSON.ObjectID.createFromHexString(submission_data.user_id),
+            date_of_submission: new Date(),
+            date_of_approval: null,
+            contribution_details: contribution_collection 
+        });
+        
         var event_insert = new Event({
             title: submission_data.title,
             aggressors: aggressor_ids,
@@ -176,15 +199,15 @@ module.exports = {
             event_date: new Date(date[2],date[1]-1,date[0]+1),
             date_added: new Date(),
             description: submission_data.description,
-            links: links_formatted,
+            links: submission_data.links,
             hit_count: 0,
             gallery_items: submission_data.gallery_items,
-            selected_categories: submission_data.selected_categories,
+            categories: submission_data.categories,
             img_title_thumbnail: "",
             img_title_fullsize: "",
             rating: 0,
             data_sources: submission_data.data_sources,
-            contributions: []
+            contributions: [ initial_event_contribution ]
         });
         
         if(test_mode){
@@ -194,7 +217,7 @@ module.exports = {
             response.status(200).send({message: "Test mode is on, the db was not updated, nothing was added to the file server."});
         }
         else{
-                        
+            //use an asynchronous loop to cycle through gallery items, if item is an image, save image to cloudinary and update gallery item link
             loop(event_insert.gallery_items, function(item, next){
                 
                 if(item.media_type == "image"){
@@ -233,7 +256,6 @@ module.exports = {
                         else{
                             check_end_or_next();
                         }
-                        
                     });
                 }
             }, function(){
@@ -241,16 +263,22 @@ module.exports = {
                 console.log("done function");
                 console.log(event_insert);
                 
+                for(var i = 0; i < event_insert.gallery_items.length; i++){
+                                        
+                    if(event_insert.gallery_items[i].file){
+                        event_insert.gallery_items[i].file = null;
+                    }
+                }
+                
                 var db_options = {
                     send_email_notification: true,
                     email_notification_text: "Beef",
                     add_to_scraped_confirmed_table: submission_data.record_origin == "scraped" ? true : false
                 };
-                response.status(200).send();
 
-                /*db_interface.insert_record_into_db(event_insertevent_insert, db_ref.get_current_event_table(), db_options, function(id){
-                    response.send(id);
-                });*/
+                db_interface.insert_record_into_db(event_insert, db_ref.get_current_event_table(), db_options, function(id){
+                    response.status(200).send(id);
+                });
             });
         }
     },
