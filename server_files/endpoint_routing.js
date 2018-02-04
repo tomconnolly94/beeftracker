@@ -46,7 +46,7 @@ router.route('/terms-and-conditions-data').get(administration_data_controller.ge
 router.route('/disclaimer-data').get(administration_data_controller.getDisclaimerData);//built, not written
 
 //Comments endpoints
-router.route('/comments').post(comments_controller.createComment);//built, written, tested, needs aith
+router.route('/comments').post(comments_controller.createComment);//built, written, tested, needs auth
 router.route('/comments/events/:event_id').get(comments_controller.findCommentsFromEvent);//built, written, tested
 router.route('/comments/actors/:actor_id').get(comments_controller.findCommentsFromActor);//built, written, tested
 router.route('/comments/:comment_id').delete(comments_controller.deleteComment);//built, written, tested, needs auth
@@ -56,17 +56,18 @@ router.route('/event-categories').get(event_categories_controller.getEventCatego
 router.route('/event-categories').post(event_categories_controller.createEventCategory);//built, written, tested
 
 // Events endpoints
-router.route('/events').get(event_controller.findEvents);//built, not written, not tested
-router.route('/events').post(memoryUpload, event_controller.createEvent);//built, not written, not tested
-router.route('/events/:event_id').get(event_controller.findEvent);//built, not written, not tested
-router.route('/events').put(event_controller.updateEvent);//built, not written, not tested
+router.route('/events').get(event_controller.findEvents);//built, written, not tested
+router.route('/events/:event_id').get(event_controller.findEvent);//built, written, not tested
+router.route('/events').post(memoryUpload, event_controller.createEvent);//built, written, not tested
+router.route('/events').put(event_controller.updateEvent);//built, written, not tested, needs auth
 router.route('/events').delete(event_controller.deleteEvent);//built, not written, not tested
 
 //Peripheral events endpoints
 router.route('/events/from-beef-chain/:beef_chain_id').get(event_peripherals_controller.findEventsFromBeefChain);//built, not written, not tested
 router.route('/events/featured').get(event_peripherals_controller.findFeaturedEvents);//built, not written, not tested
 router.route('/events/related-to-event/:event_id').get(event_peripherals_controller.findEventsRelatedToEvent);//built, not written, not tested
-router.route('/events/related-to-actor/:actor_id').get(event_peripherals_controller.findEventsRelatedToActor);//built, not written, not tested
+router.route('/events/related-to-actactor/:actor_id').get(event_peripherals_controller.findEventsRelatedToActor);//built, not written, not tested
+router.route('/events/create_update_request').put(event_controller.updateEvent);//built, not written, not tested
 
 //Users endpoints
 router.route('/users').post(users_controller.createUser);//built, not written, not tested
