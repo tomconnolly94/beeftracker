@@ -15,7 +15,8 @@ var event_schema = new Schema({
     gallery_items: [{
         media_type: String,
         link: String,
-        main_graphic: Boolean
+        main_graphic: Boolean,
+        file: {}
     }],
     thumbnail_img_title: String,
     rating: Number,

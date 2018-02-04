@@ -1,6 +1,9 @@
 //routing dependencies
 var express = require('express');
 var router = express.Router();
+var multer = require('multer');
+
+//beeftracker dependencies
 var token_authentication = require("./token_authentication.js"); //get token authentication object
 
 //include endpoint controllers
@@ -12,6 +15,12 @@ var event_categories_controller = require('./endpoint_controllers/event_categori
 var event_controller = require('./endpoint_controllers/events_controller');
 var event_peripherals_controller = require('./endpoint_controllers/events_peripherals_controller');
 var users_controller = require('./endpoint_controllers/users_controller');
+
+var memoryStorage = multer.memoryStorage();
+var memoryUpload = multer({
+    storage: memoryStorage,
+    limits: {fileSize: 500000, files: 2}
+}).any('attachment');
 
 //connect uri suffixes to controllers
 
@@ -48,7 +57,7 @@ router.route('/event-categories').post(event_categories_controller.createEventCa
 
 // Events endpoints
 router.route('/events').get(event_controller.findEvents);//built, not written, not tested
-router.route('/events').post(event_controller.createEvent);//built, not written, not tested
+router.route('/events').post(memoryUpload, event_controller.createEvent);//built, not written, not tested
 router.route('/events/:event_id').get(event_controller.findEvent);//built, not written, not tested
 router.route('/events').put(event_controller.updateEvent);//built, not written, not tested
 router.route('/events').delete(event_controller.deleteEvent);//built, not written, not tested

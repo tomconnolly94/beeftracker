@@ -3,7 +3,8 @@ var db_ref = require("../db_config.js");
 var storage_ref = require("../storage_config.js");
 var storage_interface = require('../interfaces/storage_insert_interface.js');
 var db_interface = require('../interfaces/db_insert_interface.js');
-var async_loop = require("async-looper");
+var loop = require("async-looper");
+var BSON = require('bson');
 var Event = require("../schemas/event_schema");
 
 module.exports = {
@@ -89,17 +90,17 @@ module.exports = {
         
         //extract data for use later
         var url = process.env.MONGODB_URI; //get db uri
-        var submission_data = request.body.data; //get form data
+        var submission_data = JSON.parse(request.body.data); //get form data
         var date = submission_data.date.split('/'); //split date by delimeter into "DD", "MM" and "YYYY"
         var aggressor_ids = []; //create array to store target_ids
         var target_ids = []; //create array to store target_ids
         var links_formatted = {}; //create object to store links
         var gallery_items_formatted = [];
-        var file;
+        var files;
         var test_mode = false;
         
-        if(request.file){ //check if the user submitted a file via a file explorer
-            file = request.file;
+        if(request.files){ //check if the user submitted a file via a file explorer
+            files = request.files;
         }
         
         //format target_ids array
@@ -109,7 +110,7 @@ module.exports = {
         
         //format target_ids array
         for(var i = 0; i < submission_data.targets.length; i++){
-            targets_ids.push(BSON.ObjectID.createFromHexString(submission_data.targets[i]));
+            target_ids.push(BSON.ObjectID.createFromHexString(submission_data.targets[i]));
         }
         
         var link_keys = Object.keys(submission_data.links);
@@ -119,28 +120,32 @@ module.exports = {
         }
         
         var images = [];
-        var gallery_items_keys = Object.keys(submission_data.gallery_items);
         
-        for(var i = 0; submission_data.gallery_items.length; i++){
+        for(var i = 0; i < submission_data.gallery_items.length; i++){
             
             var gallery_item = submission_data.gallery_items[i];
             
             /*
-            gallery_items_keys[i] == "video_embed" || 
-            gallery_items_keys[i] == "wikipedia_link" || 
-            gallery_items_keys[i] == "website_link" || 
-            gallery_items_keys[i] == "twitter_embed" || 
-            gallery_items_keys[i] == "soundcloud_embed" 
-            no pre-processing is needed
+            gallery_item.media_type == "video_embed" || 
+            gallery_item.media_type == "wikipedia_link" || 
+            gallery_item.media_type == "website_link" || 
+            gallery_item.media_type == "twitter_embed" || 
+            gallery_item.media_type == "soundcloud_embed" 
+                no pre-processing is needed
             */
             
-            if(gallery_items_keys[i] == "image"){
-                //add image to array to be dealt with in an async loop by cloudinary
+            if(gallery_item.media_type == "image"){
+                
+                for(var j = 0; j < files.length; j++){
+                    if(gallery_item.link == files[j].originalname){
+                        gallery_item.file = files[j];
+                    }
+                }
             }            
-            if(gallery_items_keys[i] =="instagram_embed"){
+            if(gallery_item.media_type =="instagram_embed"){
                 gallery_item.link = gallery_item.link.split('?')[0];
             }
-            else if(gallery_items_keys[i] == "youtube_embed"){
+            else if(gallery_item.media_type == "youtube_embed"){
 
                 if(gallery_item.link.indexOf("embed") == -1){
                     var video_id = gallery_item.link.split('v=')[1];
@@ -151,7 +156,7 @@ module.exports = {
                     submission_data.gallery_items[i].link = "https://www.youtube.com/embed/" + video_id;
                 }
             }
-            else if(submission_data.special_feature.type == "spotify_embed"){
+            else if(gallery_item.media_type == "spotify_embed"){
                 if(gallery_item.link.indexOf("spotify:track") > 0){
                     var video_id = gallery_item.link.split("track:")[1];
                     submission_data.gallery_items[i].link = "https://embed.spotify.com/?uri=spotify%3Atrack%3A" + video_id;
@@ -167,7 +172,7 @@ module.exports = {
         var event_insert = new Event({
             title: submission_data.title,
             aggressors: aggressor_ids,
-            targets: targets_ids,
+            targets: target_ids,
             event_date: new Date(date[2],date[1]-1,date[0]+1),
             date_added: new Date(),
             description: submission_data.description,
@@ -181,52 +186,72 @@ module.exports = {
             data_sources: submission_data.data_sources,
             contributions: []
         });
-
-        
-        loop(array, function(item, next){
-            
-            
-    
-            storage_interface.upload_image(false, "events", file.originalname, file.buffer, function(img_dl_title){
-
-                res_array.push(response_1.domain);
-                console.log(counter);
-                next(done);
-
-            });
-        }, done);
         
         if(test_mode){
             console.log("test mode is on.");
             console.log(event_insert);
             
-            response.send("22");
+            response.status(200).send({message: "Test mode is on, the db was not updated, nothing was added to the file server."});
         }
         else{
-            
-            var db_options = {
-                send_email_notification: true,
-                email_notification_text: "Beef",
-                add_to_scraped_confirmed_table: submission_data.record_origin == "scraped" ? true : false
-            };
-                                    
-            if(file){ //file has been provided with POST request
-                //event_insert.img_title = img_dl_title;
-                db_interface.insert_record_into_db(event_insert, db_ref.get_current_event_table(), db_options, function(id){
-                    response.send(id);
-                });
-            }
-            else{ //file has not been provided with request
-                if(submission_data.img_title.length > 0){
-                    storage_interface.upload_image(true, "events", submission_data.img_title, null, function(img_dl_title){
-                        event_insert.img_title = img_dl_title;
+                        
+            loop(event_insert.gallery_items, function(item, next){
+                
+                if(item.media_type == "image"){
+                    
+                    var file_name = item.link;
+                    var file_buffer;
+                    var requires_download = true;
+                    
+                    if(item.file){
+                        file_name = item.file.originalname;
+                        file_buffer = item.file.buffer;
+                        requires_download = false;
+                    }
+                    
+                    var check_end_or_next = function(){
+                        //if last item, exit loop, else carry on to next iteration
+                        if(event_insert.gallery_items[event_insert.gallery_items.length-1].link == item.link){
+                            next(null, loop.END_LOOP);
+                        }
+                        else{
+                            next();
+                        }
+                    }
+                    
+                    storage_interface.upload_image(requires_download, "events", file_name, file_buffer, false, function(img_dl_title){
 
-                        db_interface.insert_record_into_db(event_insert, db_ref.get_current_event_table(), db_options, function(id){
-                            response.send(id);
-                        });
+                        console.log("upload callback");
+                        item.link = img_dl_title;
+                        
+                        if(item.main_graphic){
+                            storage_interface.upload_image(requires_download, "events", file_name, file_buffer, true, function(img_dl_title){
+                                event_insert.thumbnail_img_title = img_dl_title;
+                                check_end_or_next()
+                            });
+                        }
+                        else{
+                            check_end_or_next();
+                        }
+                        
                     });
                 }
-            }
+            }, function(){
+                
+                console.log("done function");
+                console.log(event_insert);
+                
+                var db_options = {
+                    send_email_notification: true,
+                    email_notification_text: "Beef",
+                    add_to_scraped_confirmed_table: submission_data.record_origin == "scraped" ? true : false
+                };
+                response.status(200).send();
+
+                /*db_interface.insert_record_into_db(event_insertevent_insert, db_ref.get_current_event_table(), db_options, function(id){
+                    response.send(id);
+                });*/
+            });
         }
     },
     
