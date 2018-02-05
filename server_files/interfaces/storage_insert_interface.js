@@ -76,14 +76,12 @@ module.exports = {
 
                 //call download function
                 download_to_local(img_url, file_location, function(dl_img_title){
-                    console.log("image downloaded to server's local file system");
                     callback(dl_img_title);
                 });
             }
             else if(storage_ref.get_upload_method() == "cloudinary"){
 
                 upload_to_cloudinary(img_url, function(dl_img_title){
-                    console.log("image downloaded to cloudinary");
                     callback(dl_img_title);
                 });
             }
@@ -95,7 +93,6 @@ module.exports = {
                 dUri.format(path.extname(img_title).toString(), img_buffer);
                 
                 upload_to_cloudinary(dUri.content, function(dl_img_title){
-                    console.log("image downloaded to cloudinary");
                     callback(dl_img_title);
                 });
             }        

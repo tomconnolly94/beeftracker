@@ -240,7 +240,7 @@ module.exports = {
             };
                                     
             if(file){
-                storage_interface.upload_image(false, "actors", file.originalname, file.buffer, function(img_dl_title){
+                storage_interface.upload_image(false, "actors", file.originalname, file.buffer, false, function(img_dl_title){
                     actor_insert.img_title = img_dl_title;
                     db_interface.insert_record_into_db(actor_insert, db_ref.get_current_actor_table(), db_options, function(id){
                         response.status(201).send(id);
@@ -249,7 +249,7 @@ module.exports = {
             }
             else{
                 if(submission_data.img_title.length > 0){
-                    storage_interface.upload_image(true, "actors", submission_data.img_title, null, function(img_dl_title){
+                    storage_interface.upload_image(true, "actors", submission_data.img_title, null, false, function(img_dl_title){
                         actor_insert.img_title = img_dl_title;
                         db_interface.insert_record_into_db(actor_insert, db_ref.get_current_actor_table(), db_options, function(id){
                             response.status(201).send(id);

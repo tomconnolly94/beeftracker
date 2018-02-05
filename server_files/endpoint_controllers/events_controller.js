@@ -8,6 +8,7 @@ var BSON = require('bson');
 var Event = require("../schemas/event_schema");
 var EventContribution = require("../schemas/event_contribution_schema").model;
 
+var test_mode = false;
 var event_projection = {
     $project: {
         "title": 1,
@@ -25,7 +26,6 @@ var event_projection = {
         "data_sources": 1
     }
 }
-var test_mode = false;
 
 var format_event_data = function(request, response){
     
@@ -137,10 +137,21 @@ var format_event_data = function(request, response){
         img_title_fullsize: "",
         rating: 0,
         data_sources: submission_data.data_sources,
-        contributions: [ initial_event_contribution ]
+        contributions: [ initial_event_contribution ],
+        record_origin: submission_data.record_origin
     });
     
     return event_insert;
+}
+
+var check_end_or_next = function(event, item, next){
+    //if last item, exit loop, else carry on to next iteration
+    if(event.gallery_items[event.gallery_items.length-1].link == item.link){
+        next(null, loop.END_LOOP);
+    }
+    else{
+        next();
+    }
 }
 
 module.exports = {
@@ -224,7 +235,6 @@ module.exports = {
                    ]).toArray(function(queryErr, docs) {
                 if(queryErr){ console.log(queryErr); }
                 else{
-                    console.log("search completed");
                     if(docs && docs.length > 0){
                         response.status(200).send( docs[0] );
                     }
@@ -241,7 +251,6 @@ module.exports = {
         
         //extract data for use later
         var url = process.env.MONGODB_URI; //get db uri
-        console.log(request.body.data)
         
         var event_insert = format_event_data(request, response);
         
@@ -259,6 +268,9 @@ module.exports = {
             response.status(200).send({message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_insert });
         }
         else{
+            
+            var thumbnail_img;
+            
             //use an asynchronous loop to cycle through gallery items, if item is an image, save image to cloudinary and update gallery item link
             loop(event_insert.gallery_items, function(item, next){
                 
@@ -273,43 +285,37 @@ module.exports = {
                         file_buffer = item.file.buffer;
                         requires_download = false;
                     }
-                    
-                    var check_end_or_next = function(){
-                        //if last item, exit loop, else carry on to next iteration
-                        if(event_insert.gallery_items[event_insert.gallery_items.length-1].link == item.link){
-                            next(null, loop.END_LOOP);
-                        }
-                        else{
-                            next();
-                        }
-                    }
-                    
+                                        
                     storage_interface.upload_image(requires_download, "events", file_name, file_buffer, false, function(img_dl_title){
 
-                        console.log("upload callback");
                         item.link = img_dl_title;
                         
                         if(item.main_graphic){
                             storage_interface.upload_image(requires_download, "events", file_name, file_buffer, true, function(img_dl_title){
-                                event_insert.thumbnail_img_title = img_dl_title;
-                                check_end_or_next()
+                                thumbnail_img = img_dl_title;
+                                check_end_or_next(event_insert, item, next);
                             });
                         }
                         else{
-                            check_end_or_next();
+                            check_end_or_next(event_insert, item, next);
                         }
                     });
                 }
             }, function(){
                 
-                console.log("done function");
+                event_insert.img_title_thumbnail = thumbnail_img;
                 
                 //remove file objects to avoid adding file buffer to the db
-                for(var i = 0; i < event_insert.gallery_items.length; i++){                
+                for(var i = 0; i < event_insert.gallery_items.length; i++){
                     if(event_insert.gallery_items[i].file){
                         event_insert.gallery_items[i].file = null;
                     }
+                    
+                    if(event_insert.gallery_items[i].main_graphic){
+                        event_insert.img_title_fullsize = event_insert.gallery_items[i].link;
+                    }
                 }
+                console.log(event_insert);
                 
                 var db_options = {
                     send_email_notification: true,
@@ -328,6 +334,9 @@ module.exports = {
         
         //extract data for use later
         var url = process.env.MONGODB_URI; //get db uri
+        var event_id = request.params.event_id;
+        
+        console.log(request.body);
         
         var event_insert = format_event_data(request, response);
         
@@ -345,6 +354,9 @@ module.exports = {
             response.status(200).send({message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_insert });
         }
         else{
+            
+            var thumbnail_img;
+            
             //use an asynchronous loop to cycle through gallery items, if item is an image, save image to cloudinary and update gallery item link
             loop(event_insert.gallery_items, function(item, next){
                 
@@ -360,50 +372,44 @@ module.exports = {
                         requires_download = false;
                     }
                     
-                    var check_end_or_next = function(){
-                        //if last item, exit loop, else carry on to next iteration
-                        if(event_insert.gallery_items[event_insert.gallery_items.length-1].link == item.link){
-                            next(null, loop.END_LOOP);
-                        }
-                        else{
-                            next();
-                        }
-                    }
-                    
                     storage_interface.upload_image(requires_download, "events", file_name, file_buffer, false, function(img_dl_title){
-
-                        console.log("upload callback");
+                        
                         item.link = img_dl_title;
                         
                         if(item.main_graphic){
                             storage_interface.upload_image(requires_download, "events", file_name, file_buffer, true, function(img_dl_title){
                                 event_insert.thumbnail_img_title = img_dl_title;
-                                check_end_or_next()
+                                check_end_or_next(event_insert, item, next);
                             });
                         }
                         else{
-                            check_end_or_next();
+                            check_end_or_next(event_insert, item, next);
                         }
                     });
                 }
             }, function(){
                 
-                console.log("done function");
-                
+                event_insert.img_title_thumbnail = thumbnail_img;
+                                
                 //remove file objects to avoid adding file buffer to the db
                 for(var i = 0; i < event_insert.gallery_items.length; i++){                
                     if(event_insert.gallery_items[i].file){
                         event_insert.gallery_items[i].file = null;
                     }
+                    
+                    if(event_insert.gallery_items[i].main_graphic){
+                        event_insert.img_title_fullsize = event_insert.gallery_items[i].link;
+                    }
                 }
+                console.log(event_insert);
                 
                 var db_options = {
                     send_email_notification: true,
                     email_notification_text: "Beef",
-                    add_to_scraped_confirmed_table: submission_data.record_origin == "scraped" ? true : false
+                    add_to_scraped_confirmed_table: request.body.data.record_origin == "scraped" ? true : false
                 };
 
-                db_interface.update_record_into_db(event_insert, db_ref.get_current_event_table(), db_options, function(id){
+                db_interface.update_record_in_db(event_insert, db_ref.get_current_event_table(), db_options, event_id, function(id){
                     response.status(200).send(id);
                 });
             });
@@ -411,8 +417,43 @@ module.exports = {
     },
     
     deleteEvent: function(request, response){
-        console.log("test completed 3.");
-        console.log(request.body);
-        response.send({test: "complete 4"});
+        
+        //extract data
+        var event_id = request.params.event_id;
+
+        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
+            if(err){ console.log(err); }
+            else{
+                var event_id_object = BSON.ObjectID.createFromHexString(event_id);
+                
+                db.collection(db_ref.get_current_event_table()).findOne({ _id: event_id_object }, function(queryErr, event_obj) {
+                    if(queryErr){ console.log(queryErr); }
+                    else{
+                        if(event_obj){
+                            
+                            //add thumbnail image to list
+                            event_obj.gallery_items.push({link: event_obj.img_title_thumbnail});
+                
+                            console.log(event_obj.gallery_items);
+                            console.log(event_obj);
+                            
+                            loop(event_obj.gallery_items, function(item, next){
+
+                                storage_interface.delete_image("events", item.link, function(img_dl_title){
+                                    check_end_or_next(event_obj, item, next);
+                                });
+                            }, function(){
+                                db.collection(db_ref.get_current_event_table()).deleteOne({ _id: event_id_object }, function(queryErr, docs) {
+                                    if(queryErr){ console.log(queryErr); }
+                                    else{
+                                        response.status(200).send( docs[0] );
+                                    }
+                                });
+                            });
+                        }
+                    }
+                });
+            }
+        });
     }
 }

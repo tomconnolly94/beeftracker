@@ -11,8 +11,7 @@ var post_insert_procedure = function(db, document, insert_object, table, options
     if(document != null && document.ops != null){
                             
         var event = document.ops[0];
-        console.log(table);
-
+        
         if(table == db_ref.get_current_event_table()){ //deal with adding records to the beef chains table only if events are being inserted
             event.aggressors.forEach(function(aggressor, index){
                 event.targets.forEach(function(target, index){
@@ -33,17 +32,14 @@ var post_insert_procedure = function(db, document, insert_object, table, options
 
                                     db.collection(db_ref.get_beef_chain_table()).update({ _id: beef_chain._id}, { $set: { events: new_beef_chain_events } }); //update beef_chain events with new event included
                                     db.collection(db_ref.get_current_event_table()).update({ _id: event._id }, { $push: {beef_chain_ids: beef_chain._id }}); //update event with beef_chain_id
-                                    console.log(db_ref.get_beef_chain_table() + beef_chain._id + " updated.");
+                                    //console.log("beef chain: " + beef_chain._id + " updated.");
                                 }   
 
                             }
-                            else{ //beef chain doesnt exist, create one     
-
-                                console.log(event);
-                                
+                            else{ //beef chain doesnt exist, create one
                                 db.collection(db_ref.get_beef_chain_table()).insert({ events: [ event._id ], actors: [ aggressor, target ] }, function(err, inserted_doc){ //insert new beef_chain with one event
                                     db.collection(db_ref.get_current_event_table()).update({ _id: event._id }, { $push: {beef_chain_ids: inserted_doc.ops[0]._id }}); //update event with beef_chain_id
-                                    console.log(db_ref.get_beef_chain_table() + inserted_doc.ops[0]._id + " created.");
+                                    //console.log("beef chain: " + inserted_doc.ops[0]._id + " created.");
                                 });
                             }
                         }
@@ -91,10 +87,7 @@ var post_insert_procedure = function(db, document, insert_object, table, options
 
 module.exports = {
        
-    insert_record_into_db: function(insert_object, table, options, fn_callback){
-        
-        console.log("insert function called.");
-        
+    insert_record_into_db: function(insert_object, table, options, fn_callback){    
         db_ref.get_db_object().connect(db_url, function(err, db) {
             if(err){ console.log(err); }
             else{
@@ -103,7 +96,6 @@ module.exports = {
                     if(err){ console.log(err); }
                     else{
                         post_insert_procedure(db, document, insert_object, table, options);
-                        console.log("made it 2");
                         fn_callback({ id: insert_object._id });
                     }
                 });
@@ -112,9 +104,7 @@ module.exports = {
     },
     
     update_record_in_db: function(insert_object, table, options, existing_object_id, fn_callback){
-                
-        console.log("update function called.");
-        
+    
         db_ref.get_db_object().connect(db_url, function(err, db) {
             if(err){ console.log(err); }
             else{
@@ -125,7 +115,6 @@ module.exports = {
                     if(err){ console.log(err); }
                     else{
                         post_insert_procedure(db, document, insert_object, table, options);
-                        console.log("made it 2");
                         fn_callback({ id: insert_object._id });
                     }
                 });
