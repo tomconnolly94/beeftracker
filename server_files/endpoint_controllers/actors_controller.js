@@ -38,7 +38,7 @@ module.exports = {
                 sort_query_content[sort_field_name] = -1;
             }
             
-            if(query_parameters.match_similar_name){ match_query = { name: { $regex : query_parameters.match_similar_name, $options: "i" } } }
+            if(query_parameters.match_name){ match_query = { name: { $regex : query_parameters.match_name, $options: "i" } } }
             
         }
             

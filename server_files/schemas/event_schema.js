@@ -12,7 +12,12 @@ var event_schema = new Schema({
     description: String,
     links: { },
     categories: [ Number ],
-    hit_count: Number,
+    hit_count: {
+        total: Number, 
+        last_day: Number,
+        last_two_days: Number,
+        last_week: Number
+    },
     gallery_items: [{
         media_type: String,
         link: String,

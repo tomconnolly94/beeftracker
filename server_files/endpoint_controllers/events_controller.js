@@ -19,7 +19,7 @@ var event_projection = {
         "description": 1,
         "links": 1,
         "categories": 1,
-        "hit_count": 1,
+        "hit_counts": 1,
         "gallery": 1,
         "thumbnail_img_title": 1,
         "rating": 1,
@@ -130,7 +130,12 @@ var format_event_data = function(request, response){
         date_added: new Date(),
         description: submission_data.description,
         links: submission_data.links,
-        hit_count: 0,
+        hit_counts: {
+            total: 0,
+            last_day: 0,
+            last_two_days: 0,
+            last_week: 0
+        },
         gallery_items: submission_data.gallery_items,
         categories: submission_data.categories,
         img_title_thumbnail: "",
@@ -157,17 +162,39 @@ var check_end_or_next = function(event, item, next){
 module.exports = {
     
     findEvents: function(request, response){
-        
+        console.log(request.query);
         var query_parameters = request.query;
-        var match_query = {};
+        var match_query_content = {};
+        var sort_query_content = {};
+        var query_present = Object.keys(query_parameters).length === 0 && query_parameters.constructor === Object ? false : true; //check if request comes with query
         
-        /*if(query_parameters.all_names){
-            match_query.
-        }
-        else if(query_parameters.nickname){
+        if(query_present){
             
-        }*/
+            var sort_field_name;
+            
+            if(query_parameters.increasing_order == "name"){ sort_field_name = "name"; }
+            else if(query_parameters.increasing_order == "rating" || query_parameters.decreasing_order == "rating"){ sort_field_name = "rating"; }
+            else if(query_parameters.increasing_order == "popularity" || query_parameters.decreasing_order == "popularity"){ sort_field_name = "hit_count"; }
+            else if(query_parameters.increasing_order == "currently_trending" || query_parameters.increasing_order == "currently_trending"){ sort_field_name = "hit_counts.last_two_days"; }
+            else{ query_present = false; }// if no valid queries provided, disallow a sort query
+
+            if(query_parameters.increasing_order){
+                sort_query_content[sort_field_name] = 1;
+            }
+            else if(query_parameters.decreasing_order){
+                sort_query_content[sort_field_name] = -1;
+            }
+            
+            if(query_parameters.match_title){ match_query_content = { name: { $regex : query_parameters.match_title, $options: "i" } } }
+            else if(query_parameters.match_actor){ match_query_content = { name: { $regex : query_parameters.match_actor, $options: "i" } } }
+            else if(query_parameters.match_category){ match_query_content = { name: { $regex : query_parameters.match_category, $options: "i" } } }
+            
+        }
         
+        console.log(sort_query_content);
+        console.log(match_query_content);
+        
+        if(false){
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
             else{
@@ -177,8 +204,8 @@ module.exports = {
                 
                 console.log(qry);*/
                 
-                db.collection(db_ref.get_current_event_table()).aggregate([
-                    { $match: match_query },
+                var aggregate_array = [
+                    { $match: match_query_content },
                     { $unwind : "$aggressors"},
                     { $lookup : {
                         from: db_ref.get_current_actor_table(),
@@ -194,7 +221,9 @@ module.exports = {
                         as: "targets" 
                     }}, 
                     event_projection
-                ]).toArray(function(queryErr, docs) {
+                ]
+                
+                db.collection(db_ref.get_current_event_table(aggregate_array)).aggregate().toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
                     else{
                         response.status(200).send( { actors : docs } );
@@ -202,6 +231,7 @@ module.exports = {
                 });            
             }
         });
+        }
     },
     
     findEvent: function(request, response){
