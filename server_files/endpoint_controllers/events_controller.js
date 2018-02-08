@@ -167,16 +167,18 @@ module.exports = {
         var match_query_content = {};
         var sort_query_content = {};
         var query_present = Object.keys(query_parameters).length === 0 && query_parameters.constructor === Object ? false : true; //check if request comes with query
+        var limit_query_content;
         
         if(query_present){
             
+            //deal with $sort queries
             var sort_field_name;
             
-            if(query_parameters.increasing_order == "name"){ sort_field_name = "name"; }
-            else if(query_parameters.increasing_order == "rating" || query_parameters.decreasing_order == "rating"){ sort_field_name = "rating"; }
-            else if(query_parameters.increasing_order == "popularity" || query_parameters.decreasing_order == "popularity"){ sort_field_name = "hit_count"; }
-            else if(query_parameters.increasing_order == "currently_trending" || query_parameters.increasing_order == "currently_trending"){ sort_field_name = "hit_counts.last_two_days"; }
-            else{ query_present = false; }// if no valid queries provided, disallow a sort query
+            if(query_parameters.increasing_order == "name"){ sort_field_name = "name"; };
+            else if(query_parameters.increasing_order == "rating" || query_parameters.decreasing_order == "rating"){ sort_field_name = "rating"; };
+            else if(query_parameters.increasing_order == "popularity" || query_parameters.decreasing_order == "popularity"){ sort_field_name = "hit_count"; };
+            else if(query_parameters.increasing_order == "currently_trending" || query_parameters.increasing_order == "currently_trending"){ sort_field_name = "hit_counts.last_two_days"; };
+            else{ query_present = false; };// if no valid queries provided, disallow a sort query
 
             if(query_parameters.increasing_order){
                 sort_query_content[sort_field_name] = 1;
@@ -185,25 +187,23 @@ module.exports = {
                 sort_query_content[sort_field_name] = -1;
             }
             
-            if(query_parameters.match_title){ match_query_content = { name: { $regex : query_parameters.match_title, $options: "i" } } }
-            else if(query_parameters.match_actor){ match_query_content = { name: { $regex : query_parameters.match_actor, $options: "i" } } }
-            else if(query_parameters.match_category){ match_query_content = { name: { $regex : query_parameters.match_category, $options: "i" } } }
+            //deal with $match queries
+            if(query_parameters.match_title){ match_query_content = { title: { $regex : query_parameters.match_title, $options: "i" } } };
+            else if(query_parameters.match_actor){ match_query_content = { name: { $regex : query_parameters.match_actor, $options: "i" } } };
+            else if(query_parameters.match_category){ match_query_content = { name: { $regex : query_parameters.match_category, $options: "i" } } };
+            
+            //deal with $limit query
+            if(query_parameters.limit){ limit_query_content = query_parameters.limit };
             
         }
         
         console.log(sort_query_content);
         console.log(match_query_content);
         
-        if(false){
+        //if(false){
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
-            else{
-                //code to create a qry string that matches NEAR to query string
-                /*var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
-                var qry = "{ \"" + field_name + "\" : " + end + " }";
-                
-                console.log(qry);*/
-                
+            else{                
                 var aggregate_array = [
                     { $match: match_query_content },
                     { $unwind : "$aggressors"},
@@ -221,17 +221,32 @@ module.exports = {
                         as: "targets" 
                     }}, 
                     event_projection
-                ]
+                ];
                 
+                if(Object.keys(sort_query_content).length > 0){
+                    aggregate_array.$sort = sort_query_content;
+                }
+                
+                if(Object.keys(limit_query_content).length > 0){
+                    aggregate_array.$limit = limit_query_content;
+                }
+                
+                console.log(aggregate_array);
+                   
                 db.collection(db_ref.get_current_event_table(aggregate_array)).aggregate().toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
                     else{
-                        response.status(200).send( { actors : docs } );
+                    if(docs && docs.length > 0){
+                        response.status(200).send( docs );
+                    }
+                    else{
+                        response.status(404).send( { message: "Events not found."} );
+                    }
                     }
                 });            
             }
         });
-        }
+        //}
     },
     
     findEvent: function(request, response){

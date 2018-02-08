@@ -22,8 +22,8 @@ module.exports = {
         return "subscriber_details_v0_3";
     },
     
-    get_splash_zone_table: function(){
-        return "splash_zone_refs";
+    get_featured_events_table: function(){
+        return "featured_events";
     },
     
     get_scraped_events_dump_table: function(){

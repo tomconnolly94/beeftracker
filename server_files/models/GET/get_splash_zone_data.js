@@ -7,7 +7,6 @@ module.exports = {
     execute : function(request, response) {
     
         var url = process.env.MONGODB_URI;
-        var identifier = request.params.actor_id;
 
         db_ref.get_db_object().connect(url, function(err, db) {
             if(err){ console.log(err); }
