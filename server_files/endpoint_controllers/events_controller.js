@@ -174,11 +174,11 @@ module.exports = {
             //deal with $sort queries
             var sort_field_name;
             
-            if(query_parameters.increasing_order == "name"){ sort_field_name = "name"; };
-            else if(query_parameters.increasing_order == "rating" || query_parameters.decreasing_order == "rating"){ sort_field_name = "rating"; };
-            else if(query_parameters.increasing_order == "popularity" || query_parameters.decreasing_order == "popularity"){ sort_field_name = "hit_count"; };
-            else if(query_parameters.increasing_order == "currently_trending" || query_parameters.increasing_order == "currently_trending"){ sort_field_name = "hit_counts.last_two_days"; };
-            else{ query_present = false; };// if no valid queries provided, disallow a sort query
+            if(query_parameters.increasing_order == "name"){ sort_field_name = "name"; }
+            else if(query_parameters.increasing_order == "rating" || query_parameters.decreasing_order == "rating"){ sort_field_name = "rating"; }
+            else if(query_parameters.increasing_order == "popularity" || query_parameters.decreasing_order == "popularity"){ sort_field_name = "hit_count"; }
+            else if(query_parameters.increasing_order == "currently_trending" || query_parameters.increasing_order == "currently_trending"){ sort_field_name = "hit_counts.last_two_days"; }
+            else{ query_present = false; }// if no valid queries provided, disallow a sort query
 
             if(query_parameters.increasing_order){
                 sort_query_content[sort_field_name] = 1;
@@ -188,12 +188,12 @@ module.exports = {
             }
             
             //deal with $match queries
-            if(query_parameters.match_title){ match_query_content = { title: { $regex : query_parameters.match_title, $options: "i" } } };
-            else if(query_parameters.match_actor){ match_query_content = { name: { $regex : query_parameters.match_actor, $options: "i" } } };
-            else if(query_parameters.match_category){ match_query_content = { name: { $regex : query_parameters.match_category, $options: "i" } } };
+            if(query_parameters.match_title){ match_query_content = { title: { $regex : query_parameters.match_title, $options: "i" } } }
+            else if(query_parameters.match_actor){ match_query_content = { name: { $regex : query_parameters.match_actor, $options: "i" } } }
+            else if(query_parameters.match_category){ match_query_content = { name: { $regex : query_parameters.match_category, $options: "i" } } }
             
             //deal with $limit query
-            if(query_parameters.limit){ limit_query_content = query_parameters.limit };
+            if(query_parameters.limit){ limit_query_content = query_parameters.limit }
             
         }
         

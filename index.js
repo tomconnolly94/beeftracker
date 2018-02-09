@@ -109,6 +109,23 @@ app.use('/', require('./server_files/page_routes'));
 // ### Endpoint route configuration ###
 app.use('/api', require('./server_files/endpoint_routing'));
 
+var jade = require('pug');
+app.get('/jade_template/', function(req, res){
+    
+    var jade_string = `div
+    h1 title
+    h2 { name }
+    `
+    var options = {};
+    
+    // Compile jade file to a function
+    var fn = jade.compileClient(jade_string, options);
+    
+    var html = fn();
+    
+    console.log(html)
+    res.send(html)
+});
 
 
 
