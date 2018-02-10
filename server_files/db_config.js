@@ -68,5 +68,13 @@ module.exports = {
     
     get_comments_table: function(){
         return "comments";
+    },
+    
+    get_event_update_requests_table: function(){
+        return "event_update_requests";
+    },
+    
+    get_actor_update_requests_table: function(){
+        return "event_update_requests";
     }
 }

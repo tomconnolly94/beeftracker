@@ -13,16 +13,11 @@ module.exports = {
         var match_query = {};
         var sort_query_content = {};
         var query_present = Object.keys(query_parameters).length === 0 && query_parameters.constructor === Object ? false : true; //check if request comes with query
-        
-        var response_function = function(queryErr, response, docs){
-            if(queryErr){ console.log(queryErr); }
-            else{
-                response.status(200).send( docs );
-            }
-        };
-        
+        var limit_query_content = 30; //max amount of records to return
+                
         if(query_present){
             
+            //deal with $sort queries
             var sort_field_name;
             
             if(query_parameters.increasing_order == "date_added"){ sort_field_name = "date_added"; }
@@ -38,88 +33,61 @@ module.exports = {
                 sort_query_content[sort_field_name] = -1;
             }
             
+            //deal with $match query
             if(query_parameters.match_name){ match_query = { name: { $regex : query_parameters.match_name, $options: "i" } } }
             
-        }
+            //deal with $limit query
+            if(query_parameters.limit){ limit_query_content = query_parameters.limit }
             
-        if(sort_field_name){ //run this clause only if a sort query is present
-            db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-                if(err){ console.log(err); }
-                else{
-
-                    db.collection(db_ref.get_current_actor_table()).aggregate([
-                        { $match: match_query },
-                        { $sort: sort_query_content },
-                        { $unwind :  { "path" : "$associated_actors", "preserveNullAndEmptyArrays": true  }},
-                        { $lookup : { 
-                            from: db_ref.get_current_actor_table(),
-                            localField: "associated_actors",
-                            foreignField: "_id",
-                            as: "associated_actors" }}, 
-                        { $group : { 
-                            _id: "$_id", 
-                            name: { "$max": "$name" },
-                            date_of_origin: { "$max": "$date_of_origin" },
-                            place_of_origin: { "$max": "$place_of_origin" },
-                            description: { "$max": "$description" },
-                            associated_actors: { "$max": "$associated_actors" },
-                            data_sources: { "$max": "$data_sources" },
-                            also_known_as: { "$max": "$also_known_as" },
-                            img_title: { "$max": "$img_title"},
-                            classification: { "$max": "$classification" },
-                            variable_field_values: { "$max": "$variable_field_values" },
-                            links: { "$max": "$links" },
-                            date_added: { "$max": "$date_added" },
-                            name_lower: { "$max": "$name_lower" },
-                            also_known_as_lower: { "$max": "$also_known_as_lower" }
-                        }}
-                       ]).toArray(function(queryErr, docs) {
-                        response_function(queryErr, response, docs);
-                    });            
-                }
-            });
         }
-        else{
-            db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-                if(err){ console.log(err); }
-                else{
-                    //code to create a qry string that matches NEAR to query string
-                    /*var end = "{ \"$regex\": \"" + identifier + "\", \"$options\": \"i\" }";
-                    var qry = "{ \"" + field_name + "\" : " + end + " }";
 
-                    console.log(qry);*/
-                    
-                    db.collection(db_ref.get_current_actor_table()).aggregate([
-                        { $match: match_query },
-                        { $unwind :  { "path" : "$associated_actors", "preserveNullAndEmptyArrays": true  }},
-                        { $lookup : { 
-                            from: db_ref.get_current_actor_table(),
-                            localField: "associated_actors",
-                            foreignField: "_id",
-                            as: "associated_actors" }}, 
-                        { $group : { 
-                            _id: "$_id", 
-                            name: { "$max": "$name" },
-                            date_of_origin: { "$max": "$date_of_origin" },
-                            place_of_origin: { "$max": "$place_of_origin" },
-                            description: { "$max": "$description" },
-                            associated_actors: { "$max": "$associated_actors" },
-                            data_sources: { "$max": "$data_sources" },
-                            also_known_as: { "$max": "$also_known_as" },
-                            img_title: { "$max": "$img_title"},
-                            classification: { "$max": "$classification" },
-                            variable_field_values: { "$max": "$variable_field_values" },
-                            links: { "$max": "$links" },
-                            date_added: { "$max": "$date_added" },
-                            name_lower: { "$max": "$name_lower" },
-                            also_known_as_lower: { "$max": "$also_known_as_lower" }
-                        }}
-                       ]).toArray(function(queryErr, docs) {
-                        response_function(queryErr, response, docs);
-                    });            
+        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
+            if(err){ console.log(err); }
+            else{
+
+                var aggregate_array = [
+                    { $match: match_query },
+                    { $unwind :  { "path" : "$associated_actors", "preserveNullAndEmptyArrays": true  }},
+                    { $lookup : { 
+                        from: db_ref.get_current_actor_table(),
+                        localField: "associated_actors",
+                        foreignField: "_id",
+                        as: "associated_actors" }}, 
+                    { $group : { 
+                        _id: "$_id", 
+                        name: { "$max": "$name" },
+                        date_of_origin: { "$max": "$date_of_origin" },
+                        place_of_origin: { "$max": "$place_of_origin" },
+                        description: { "$max": "$description" },
+                        associated_actors: { "$max": "$associated_actors" },
+                        data_sources: { "$max": "$data_sources" },
+                        also_known_as: { "$max": "$also_known_as" },
+                        img_title: { "$max": "$img_title"},
+                        classification: { "$max": "$classification" },
+                        variable_field_values: { "$max": "$variable_field_values" },
+                        links: { "$max": "$links" },
+                        date_added: { "$max": "$date_added" },
+                        name_lower: { "$max": "$name_lower" },
+                        also_known_as_lower: { "$max": "$also_known_as_lower" }
+                    }}
+                ];
+
+                if(Object.keys(sort_query_content).length > 0){
+                    aggregate_array.$sort = sort_query_content;
                 }
-            });
-        }
+
+                if(Object.keys(limit_query_content).length > 0){
+                    aggregate_array.$limit = limit_query_content;
+                }
+
+                db.collection(db_ref.get_current_actor_table()).aggregate(aggregate_array).toArray(function(queryErr, docs) {
+                    if(queryErr){ console.log(queryErr); }
+                    else{
+                        response.status(200).send( docs );
+                    }
+                });            
+            }
+        });
     },
     
     findActor: function(request, response){
