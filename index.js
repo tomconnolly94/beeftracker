@@ -119,12 +119,12 @@ app.get('/jade_template/', function(req, res){
     var options = {};
     
     // Compile jade file to a function
-    var fn = jade.compileClient(jade_string, options);
+    var fn = jade.compile(jade_string, options);
     
     var html = fn();
     
     console.log(html)
-    res.send(html)
+    res.send(fn)
 });
 
 
