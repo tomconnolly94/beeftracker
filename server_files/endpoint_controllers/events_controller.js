@@ -27,7 +27,39 @@ var event_projection = {
     }
 }
 
-var format_event_data = function(request, response){
+
+var check_end_or_next = function(event, item, next){
+    //if last item, exit loop, else carry on to next iteration
+    if(event.gallery_items[event.gallery_items.length-1].link == item.link){
+        next(null, loop.END_LOOP);
+    }
+    else{
+        next();
+    }
+}
+
+module.exports = {
+    
+    event_projection: {
+        $project: {
+            "title": 1,
+            "aggressors": 1,
+            "targets": 1,
+            "event_date": 1,
+            "date_added": 1,
+            "description": 1,
+            "links": 1,
+            "categories": 1,
+            "hit_counts": 1,
+            "gallery": 1,
+            "thumbnail_img_title": 1,
+            "rating": 1,
+            "data_sources": 1
+    
+        }
+    },
+    
+    format_event_data: function(request, response){
     
     var submission_data = JSON.parse(request.body.data); //get form data
     var date = submission_data.date.split('/'); //split date by delimeter into "DD", "MM" and "YYYY"
@@ -147,27 +179,49 @@ var format_event_data = function(request, response){
     });
     
     return event_insert;
-}
-
-var check_end_or_next = function(event, item, next){
-    //if last item, exit loop, else carry on to next iteration
-    if(event.gallery_items[event.gallery_items.length-1].link == item.link){
-        next(null, loop.END_LOOP);
-    }
-    else{
-        next();
-    }
-}
-
-module.exports = {
+},
     
+    handle_gallery_items: function(items, cloudinary_folder, callback){
+        //use an asynchronous loop to cycle through gallery items, if item is an image, save image to cloudinary and update gallery item link
+            loop(event_insert.gallery_items, function(item, next){
+                
+                if(item.media_type == "image"){
+                    
+                    var file_name = item.link;
+                    var file_buffer;
+                    var requires_download = true;
+                    
+                    if(item.file){
+                        file_name = item.file.originalname;
+                        file_buffer = item.file.buffer;
+                        requires_download = false;
+                    }
+                                        
+                    storage_interface.upload_image(requires_download, cloudinary_folder, file_name, file_buffer, false, function(img_dl_title){
+
+                        item.link = img_dl_title;
+                        
+                        if(item.main_graphic){
+                            storage_interface.upload_image(requires_download, cloudinary_folder, file_name, file_buffer, true, function(img_dl_title){
+                                thumbnail_img = img_dl_title;
+                                check_end_or_next(event_insert, item, next);
+                            });
+                        }
+                        else{
+                            check_end_or_next(event_insert, item, next);
+                        }
+                    });
+                }
+            }, callback );
+    },
+
     findEvents: function(request, response){
-        console.log(request.query);
+        
         var query_parameters = request.query;
         var match_query_content = {};
         var sort_query_content = {};
         var query_present = Object.keys(query_parameters).length === 0 && query_parameters.constructor === Object ? false : true; //check if request comes with query
-        var limit_query_content;
+        var limit_query_content = 30; //max amount of records to return
         
         if(query_present){
             
@@ -196,9 +250,6 @@ module.exports = {
             if(query_parameters.limit){ limit_query_content = query_parameters.limit }
             
         }
-        
-        console.log(sort_query_content);
-        console.log(match_query_content);
         
         //if(false){
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
@@ -277,26 +328,23 @@ module.exports = {
                         as: "targets" 
                     }},
                     event_projection
-                   ]).toArray(function(queryErr, docs) {
-                if(queryErr){ console.log(queryErr); }
-                else{
-                    if(docs && docs.length > 0){
-                        response.status(200).send( docs[0] );
-                    }
+                ]).toArray(function(queryErr, docs) {
+                    if(queryErr){ console.log(queryErr); }
                     else{
-                        response.status(404).send( { message: "Event not found."} );
+                        if(docs && docs.length > 0){
+                            response.status(200).send( docs[0] );
+                        }
+                        else{
+                            response.status(404).send( { message: "Event not found."} );
+                        }
                     }
-                }
                 });            
             }
         });
     },
     
     createEvent: function(request, response){
-        
-        //extract data for use later
-        var url = process.env.MONGODB_URI; //get db uri
-        
+                
         var event_insert = format_event_data(request, response);
         
         if(test_mode){
@@ -316,37 +364,7 @@ module.exports = {
             
             var thumbnail_img;
             
-            //use an asynchronous loop to cycle through gallery items, if item is an image, save image to cloudinary and update gallery item link
-            loop(event_insert.gallery_items, function(item, next){
-                
-                if(item.media_type == "image"){
-                    
-                    var file_name = item.link;
-                    var file_buffer;
-                    var requires_download = true;
-                    
-                    if(item.file){
-                        file_name = item.file.originalname;
-                        file_buffer = item.file.buffer;
-                        requires_download = false;
-                    }
-                                        
-                    storage_interface.upload_image(requires_download, "events", file_name, file_buffer, false, function(img_dl_title){
-
-                        item.link = img_dl_title;
-                        
-                        if(item.main_graphic){
-                            storage_interface.upload_image(requires_download, "events", file_name, file_buffer, true, function(img_dl_title){
-                                thumbnail_img = img_dl_title;
-                                check_end_or_next(event_insert, item, next);
-                            });
-                        }
-                        else{
-                            check_end_or_next(event_insert, item, next);
-                        }
-                    });
-                }
-            }, function(){
+            this.handle_gallery_items(event_insert.gallery_items, "events", thumbnail_img, function(){
                 
                 event_insert.img_title_thumbnail = thumbnail_img;
                 
@@ -378,7 +396,6 @@ module.exports = {
     updateEvent: function(request, response){
         
         //extract data for use later
-        var url = process.env.MONGODB_URI; //get db uri
         var event_id = request.params.event_id;
         
         console.log(request.body);

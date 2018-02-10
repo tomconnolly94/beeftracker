@@ -109,22 +109,17 @@ app.use('/', require('./server_files/page_routes'));
 // ### Endpoint route configuration ###
 app.use('/api', require('./server_files/endpoint_routing'));
 
+
+
+//code to simulate sending a jade template (as a javscript function) to the client for it to be rendered with data 
 var jade = require('pug');
+
 app.get('/jade_template/', function(req, res){
+        
+    // Compile the template to a function string
+    var jsFunctionString = jade.compileFileClient('tmp_jade_tmp.jade', {name: "fancyTemplateFun"});
     
-    var jade_string = `div
-    h1 title
-    h2 { name }
-    `
-    var options = {};
-    
-    // Compile jade file to a function
-    var fn = jade.compile(jade_string, options);
-    
-    var html = fn();
-    
-    console.log(html)
-    res.send(fn)
+    res.send(jsFunctionString)
 });
 
 

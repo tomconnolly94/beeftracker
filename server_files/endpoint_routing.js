@@ -56,18 +56,21 @@ router.route('/event-categories').get(event_categories_controller.getEventCatego
 router.route('/event-categories').post(event_categories_controller.createEventCategory);//built, written, tested
 
 // Events endpoints
-router.route('/events').get(event_controller.findEvents);//built, written, not tested
-router.route('/events/:event_id').get(event_controller.findEvent);//built, written, not tested
-router.route('/events').post(memoryUpload, event_controller.createEvent);//built, written, not tested, needs auth
-router.route('/events/:event_id').put(memoryUpload, event_controller.updateEvent);//built, written, not tested, needs auth
-router.route('/events/:event_id').delete(event_controller.deleteEvent);//built, written, not tested, needs auth
+router.route('/events').get(event_controller.findEvents);//built, written, tested
+router.route('/events/:event_id').get(event_controller.findEvent);//built, written, tested
+router.route('/events').post(memoryUpload, event_controller.createEvent);//built, written, tested, needs auth
+router.route('/events/:event_id').put(memoryUpload, event_controller.updateEvent);//built, written, tested, needs auth
+router.route('/events/:event_id').delete(event_controller.deleteEvent);//built, written, tested, needs auth
 
 //Peripheral events endpoints
-router.route('/events/from-beef-chain/:beef_chain_id').get(event_peripherals_controller.findEventsFromBeefChain);//built, not written, not tested
-router.route('/events/featured').get(event_peripherals_controller.findFeaturedEvents);//built, not written, not tested
-router.route('/events/related-to-event/:event_id').get(event_peripherals_controller.findEventsRelatedToEvent);//built, not written, not tested
-router.route('/events/related-to-actactor/:actor_id').get(event_peripherals_controller.findEventsRelatedToActor);//built, not written, not tested
-router.route('/events/create_update_request').put(event_controller.updateEvent);//built, not written, not tested
+router.route('/events/from-beef-chain/:beef_chain_id').get(event_peripherals_controller.findEventsFromBeefChain);//built, written, not tested
+router.route('/events/featured').get(event_peripherals_controller.findFeaturedEvents);//built, written, not tested
+router.route('/events/related-to-event/:event_id').get(event_peripherals_controller.findEventsRelatedToEvent);//built, written, not tested
+router.route('/events/related-to-actactor/:actor_id').get(event_peripherals_controller.findEventsRelatedToActor);//built, written, not tested
+
+//Update request endpoints
+router.route('/update_request/event/:event_id').post(update_request_controller.createEventUpdateRequest);//built, not written, not tested
+router.route('/update_request/actor/:actor_id').post(update_request_controller.createActorUpdateRequest);//built, not written, not tested
 
 //Users endpoints
 router.route('/users').post(users_controller.createUser);//built, not written, not tested
