@@ -1,8 +1,11 @@
-//controller dependencies
+//external dependencies
 var BSON = require('bson');
 var loop = require("async-looper");
 
-var db_ref = require("../db_config.js");
+//internal dependencies
+var db_ref = require("../config/db_config.js");
+
+//objects
 var event_projection = require("./events_controller.js").event_projection;
 
 module.exports = {

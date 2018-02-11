@@ -1,10 +1,10 @@
 //get database reference object
-var db_ref = require("./db_config.js");
+var db_ref = require("../config/db_config.js");
 //var BSON = require('bson');
 var bodyParser = require("body-parser");
 var jwt = require("jsonwebtoken");
 var os = require("os");
-var cookie_parser = require('./cookie_parsing.js');
+var cookie_parser = require('../tools/cookie_parsing.js');
 
 //configure testing mode, if set: true, record will be collected, printed but not sent to db and no email notification will be sent.
 var test_mode = false;

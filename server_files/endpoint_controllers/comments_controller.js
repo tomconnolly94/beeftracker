@@ -1,6 +1,10 @@
-//controller dependencies
-var db_ref = require("../db_config.js");
+//external dependencies
 var BSON = require("bson");
+
+//internal dependencies
+var db_ref = require("../config/db_config.js");
+
+//objects
 var Comment = require("../schemas/comment_schema");
 
 module.exports = {

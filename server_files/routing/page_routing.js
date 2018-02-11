@@ -2,8 +2,8 @@
 var router = require('express').Router();
 
 //model dependencies
-var db_ref = require("./db_config.js"); //get database reference object
-var token_authentication = require("./token_authentication.js"); //get token authentication object
+var db_ref = require("../config/db_config.js"); //get database reference object
+var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
 
 if(process.env.DEPLOYMENT_ENV == "heroku_production"){ //only apply https redirect if deployed on a heroku server
     /* Detect any http requests, if found, redirect to https, otherwise continue to other routes */

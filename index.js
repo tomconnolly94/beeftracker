@@ -9,7 +9,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-// ### Create all the modules that are needed to run this server ###
+// ### External Dependencies ###
 var express = require('express'); //server library
 var app = express();
 var bodyParser = require('body-parser'); //library to assist with parsing data to readable content
@@ -17,13 +17,14 @@ var methodOverride = require('method-override');
 var path = require('path');
 var sitemap_generator = require('sitemap');
 var mime = require('mime-types');
-var storage_ref = require("./server_files/storage_config.js");
 var multer = require('multer'); //library to assist with file storage
-var morgan = require("morgan");
-var token_authentication = require("./server_files/token_authentication.js"); //get token authentication object
+var morgan = require("morgan"); //library to provide more detailed logs
+var jade = require('pug');
+
+// ### Internal Dependencies ###
+var storage_ref = require("./server_files/config/storage_config.js");
 
 // ## Storage method configuration ##
-console.log("Storage Method: " + storage_ref.get_upload_method());
 if(storage_ref.get_upload_method() == "cloudinary"){
     var memoryStorage = multer.memoryStorage();
     var memoryUpload = multer({
@@ -55,6 +56,7 @@ else if(storage_ref.get_upload_method() == "local"){
     var upload_event_img = multer({storage: storage_event}); //build upload handlers
     var upload_actor_img = multer({storage: storage_actor}); //build upload handlers
 }
+console.log("Storage Method: " + storage_ref.get_upload_method());
 
 // ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({
@@ -76,6 +78,7 @@ sitemap = sitemap_generator.createSitemap ({
 app.set('port', (process.env.PORT || 5000));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
+//app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride());
@@ -104,10 +107,13 @@ app.use('/bower_components', express.static(__dirname + '/bower_components/')); 
 app.use('/partials', express.static(__dirname + '/views/partials/')); //route to reference css scripts
 
 // ### Page route configuration file ###
-app.use('/', require('./server_files/page_routes'));
+app.use('/', require('./server_files/routing/page_routing'));
 
 // ### Endpoint route configuration ###
-app.use('/api', require('./server_files/endpoint_routing'));
+app.use('/api', require('./server_files/routing/endpoint_routing'));
+
+// ### Jade templates route configuration ###
+app.use('/template', require('./server_files/routing/template_routing'));
 
 
 
@@ -124,6 +130,7 @@ app.get('/jade_template/', function(req, res){
 
 
 
+/*
 
 // ### GET endpoints ###
 app.get('/get_event_categories/', require('./server_files/models/GET/get_event_categories.js').execute); //handle retrieval of possible event categories
@@ -169,6 +176,7 @@ app.post('/deauth_user/', require('./server_files/models/POST/authentication/dea
 app.post('/register_user/', require('./server_files/models/POST/user_profile/register_user.js').execute); //take new user data and save it
 app.post('/update_user_info/', token_authentication.authenticate_admin_user_token, require('./server_files/models/POST/user_profile/update_user_information.js').execute); //update any field of an existing user
 app.post('/reset_lost_password/', require('./server_files/models/POST/user_profile/reset_lost_password.js').execute); //update any field of an existing user
+*/
 
 // ### Search engine information/verification files ###
 app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/verification_files/google3fc5d5a06ad26a53.html'); }); //google verification

@@ -1,5 +1,9 @@
-//controller dependencies
-var db_ref = require("../db_config.js");
+//external dependencies
+
+//internal dependencies
+var db_ref = require("../config/db_config.js");
+
+//objects
 var EventCategory = require("../schemas/event_category_schema");
 
 module.exports = {

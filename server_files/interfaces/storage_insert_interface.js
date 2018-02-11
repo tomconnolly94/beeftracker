@@ -1,7 +1,7 @@
 //file to hold all functions involving the server's interfacing with the file storage system
 //config remote file storage
 var cloudinary = require('cloudinary');
-var storage_ref = require("../storage_config.js");
+var storage_ref = require("../config/storage_config.js");
 var dl_request = require("request");
 var datauri = require("datauri");
 var path = require("path");

@@ -1,5 +1,5 @@
 //file to hold all functions involving the server's interfacing with the database
-var db_ref = require("../db_config.js");
+var db_ref = require("../config/db_config.js");
 var nodemailer = require('nodemailer');
 var async = require("async");
 var BSON = require('bson');

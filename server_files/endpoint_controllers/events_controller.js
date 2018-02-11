@@ -1,10 +1,14 @@
-//controller dependencies
-var db_ref = require("../db_config.js");
-var storage_ref = require("../storage_config.js");
-var storage_interface = require('../interfaces/storage_insert_interface.js');
-var db_interface = require('../interfaces/db_insert_interface.js');
+//external dependencies
 var loop = require("async-looper");
 var BSON = require('bson');
+
+//internal dependencies
+var db_ref = require("../config/db_config.js");
+var storage_ref = require("../config/storage_config.js");
+var storage_interface = require('../interfaces/storage_insert_interface.js');
+var db_interface = require('../interfaces/db_insert_interface.js');
+
+//objects
 var Event = require("../schemas/event_schema");
 var EventContribution = require("../schemas/event_contribution_schema").model;
 
@@ -26,7 +30,6 @@ var event_projection = {
         "data_sources": 1
     }
 }
-
 
 var check_end_or_next = function(event, item, next){
     //if last item, exit loop, else carry on to next iteration

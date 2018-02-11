@@ -1,6 +1,7 @@
-//controller dependencies
+//external dependencies
 
-var db_ref = require("../db_config.js");
+//internal dependencies
+var db_ref = require("../config/db_config.js");
 var event_projection = require("./events_controller.js").event_projection;
 var format_event_data = require("./events_controller.js").format_event_data;
 var handle_gallery_items = require("./events_controller.js").handle_gallery_items;

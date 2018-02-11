@@ -4,17 +4,18 @@ var router = express.Router();
 var multer = require('multer');
 
 //beeftracker dependencies
-var token_authentication = require("./token_authentication.js"); //get token authentication object
+var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
 
 //include endpoint controllers
-var activity_logs_controller = require('./endpoint_controllers/activity_logs_controller');
-var actor_controller = require('./endpoint_controllers/actors_controller');
-var administration_data_controller = require('./endpoint_controllers/administration_data_controller');
-var comments_controller = require('./endpoint_controllers/comments_controller');
-var event_categories_controller = require('./endpoint_controllers/event_categories_controller');
-var event_controller = require('./endpoint_controllers/events_controller');
-var event_peripherals_controller = require('./endpoint_controllers/events_peripherals_controller');
-var users_controller = require('./endpoint_controllers/users_controller');
+var activity_logs_controller = require('../endpoint_controllers/activity_logs_controller');
+var actor_controller = require('../endpoint_controllers/actors_controller');
+var administration_data_controller = require('../endpoint_controllers/administration_data_controller');
+var comments_controller = require('../endpoint_controllers/comments_controller');
+var event_categories_controller = require('../endpoint_controllers/event_categories_controller');
+var event_controller = require('../endpoint_controllers/events_controller');
+var event_peripherals_controller = require('../endpoint_controllers/events_peripherals_controller');
+var update_request_controller = require('../endpoint_controllers/update_request_controller');
+var users_controller = require('../endpoint_controllers/users_controller');
 
 var memoryStorage = multer.memoryStorage();
 var memoryUpload = multer({
