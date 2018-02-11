@@ -7,6 +7,7 @@ var db_ref = require("../config/db_config.js");
 var storage_ref = require("../config/storage_config.js");
 var storage_interface = require('../interfaces/storage_insert_interface.js');
 var db_interface = require('../interfaces/db_insert_interface.js');
+var handle_gallery_items = require('./shared_endpoint_controller_functions/record_formatting.js').handle_gallery_items;
 
 //objects
 var Event = require("../schemas/event_schema");
@@ -62,19 +63,13 @@ module.exports = {
         }
     },
     
-    format_event_data: function(request, response){
+    format_event_data: function(submission_data){
     
-    var submission_data = JSON.parse(request.body.data); //get form data
     var date = submission_data.date.split('/'); //split date by delimeter into "DD", "MM" and "YYYY"
     var aggressor_ids = []; //create array to store target_ids
     var target_ids = []; //create array to store target_ids
     var gallery_items_formatted = [];
-    var files;
-
-    if(request.files){ //check if the user submitted a file via a file explorer
-        files = request.files;
-    }
-
+        
     //format target_ids array
     for(var i = 0; i < submission_data.aggressors.length; i++){
         aggressor_ids.push(BSON.ObjectID.createFromHexString(submission_data.aggressors[i]));
@@ -83,54 +78,6 @@ module.exports = {
     //format target_ids array
     for(var i = 0; i < submission_data.targets.length; i++){
         target_ids.push(BSON.ObjectID.createFromHexString(submission_data.targets[i]));
-    }
-
-    for(var i = 0; i < submission_data.gallery_items.length; i++){
-
-        var gallery_item = submission_data.gallery_items[i];
-
-        /*
-        gallery_item.media_type == "video_embed" || 
-        gallery_item.media_type == "wikipedia_link" || 
-        gallery_item.media_type == "website_link" || 
-        gallery_item.media_type == "twitter_embed" || 
-        gallery_item.media_type == "soundcloud_embed" 
-            no pre-processing is needed
-        */
-
-        if(gallery_item.media_type == "image"){
-
-            for(var j = 0; j < files.length; j++){
-                if(gallery_item.link == files[j].originalname){
-                    gallery_item.file = files[j];
-                }
-            }
-        }            
-        if(gallery_item.media_type =="instagram_embed"){
-            gallery_item.link = gallery_item.link.split('?')[0];
-        }
-        else if(gallery_item.media_type == "youtube_embed"){
-
-            if(gallery_item.link.indexOf("embed") == -1){
-                var video_id = gallery_item.link.split('v=')[1];
-                var ampersandPosition = video_id.indexOf('&');
-                if(ampersandPosition != -1) {
-                    video_id = video_id.substring(0, ampersandPosition);
-                }
-                submission_data.gallery_items[i].link = "https://www.youtube.com/embed/" + video_id;
-            }
-        }
-        else if(gallery_item.media_type == "spotify_embed"){
-            if(gallery_item.link.indexOf("spotify:track") > 0){
-                var video_id = gallery_item.link.split("track:")[1];
-                submission_data.gallery_items[i].link = "https://embed.spotify.com/?uri=spotify%3Atrack%3A" + video_id;
-            }
-            else if(gallery_item.link.indexOf("embed") == -1){
-
-                var video_id = submission_data.gallery_items[i].link.split('track/')[1];
-                submission_data.gallery_items[i].link = "https://embed.spotify.com/?uri=spotify%3Atrack%3A" + video_id;
-            }
-        }
     }
 
     //create initial contribution record
@@ -183,40 +130,6 @@ module.exports = {
     
     return event_insert;
 },
-    
-    handle_gallery_items: function(items, cloudinary_folder, callback){
-        //use an asynchronous loop to cycle through gallery items, if item is an image, save image to cloudinary and update gallery item link
-            loop(event_insert.gallery_items, function(item, next){
-                
-                if(item.media_type == "image"){
-                    
-                    var file_name = item.link;
-                    var file_buffer;
-                    var requires_download = true;
-                    
-                    if(item.file){
-                        file_name = item.file.originalname;
-                        file_buffer = item.file.buffer;
-                        requires_download = false;
-                    }
-                                        
-                    storage_interface.upload_image(requires_download, cloudinary_folder, file_name, file_buffer, false, function(img_dl_title){
-
-                        item.link = img_dl_title;
-                        
-                        if(item.main_graphic){
-                            storage_interface.upload_image(requires_download, cloudinary_folder, file_name, file_buffer, true, function(img_dl_title){
-                                thumbnail_img = img_dl_title;
-                                check_end_or_next(event_insert, item, next);
-                            });
-                        }
-                        else{
-                            check_end_or_next(event_insert, item, next);
-                        }
-                    });
-                }
-            }, callback );
-    },
 
     findEvents: function(request, response){
         
@@ -348,7 +261,15 @@ module.exports = {
     
     createEvent: function(request, response){
                 
-        var event_insert = format_event_data(request, response);
+        var submission_data = JSON.parse(request.body.data); //get form data
+        var files;
+
+        if(request.files){ //check if the user submitted a file via a file explorer
+            files = request.files;
+        }
+
+        //format event record for insertion
+        var event_insert = module.exports.format_event_data(submission_data);
         
         if(test_mode){
             console.log("test mode is on.");
@@ -365,11 +286,7 @@ module.exports = {
         }
         else{
             
-            var thumbnail_img;
-            
-            this.handle_gallery_items(event_insert.gallery_items, "events", thumbnail_img, function(){
-                
-                event_insert.img_title_thumbnail = thumbnail_img;
+            handle_gallery_items(event_insert.gallery_items, "events", files, function(){
                 
                 //remove file objects to avoid adding file buffer to the db
                 for(var i = 0; i < event_insert.gallery_items.length; i++){
@@ -378,7 +295,8 @@ module.exports = {
                     }
                     
                     if(event_insert.gallery_items[i].main_graphic){
-                        event_insert.img_title_fullsize = event_insert.gallery_items[i].link;
+                        event_insert.img_title_fullsize = event_insert.gallery_items[i].link; //save fullsize main graphic ref
+                        event_insert.img_title_thumbnail = event_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
                     }
                 }
                 console.log(event_insert);
@@ -401,9 +319,15 @@ module.exports = {
         //extract data for use later
         var event_id = request.params.event_id;
         
-        console.log(request.body);
-        
-        var event_insert = format_event_data(request, response);
+        var submission_data = JSON.parse(request.body.data); //get form data
+        var files;
+
+        if(request.files){ //check if the user submitted a file via a file explorer
+            files = request.files;
+        }
+
+        //format event record for insertion
+        var event_insert = module.exports.format_event_data(submission_data);
         
         if(test_mode){
             console.log("test mode is on.");

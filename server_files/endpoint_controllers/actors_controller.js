@@ -5,11 +5,47 @@ var db_ref = require("../config/db_config.js");
 var storage_ref = require("../config/storage_config.js");
 var storage_interface = require('../interfaces/storage_insert_interface.js');
 var db_interface = require('../interfaces/db_insert_interface.js');
+var handle_gallery_items = require('./shared_endpoint_controller_functions/record_formatting.js').handle_gallery_items;
 
 //objects
 var Actor = require('../schemas/actor_schema');
 
-module.exports = {
+
+var test_mode = false;
+
+var format_actor_data = function(submission_data){
+    
+    //format data for db insertion
+    var date_of_origin = submission_data.date_of_origin.split('/');
+    var also_known_as_lower = [];
+
+    for(var i = 0; i < submission_data.also_known_as.length; i++){
+        also_known_as_lower[i] = submission_data.also_known_as[i].toLowerCase();
+    }
+
+
+    //format object for insertion into pending db
+    var actor_insert = new Actor({        
+        name: submission_data.name,
+        date_of_origin: new Date(date_of_origin[2], date_of_origin[1]-1, date_of_origin[0]),
+        place_of_origin: submission_data.place_of_origin,
+        description: submission_data.description,
+        associated_actors: submission_data.associated_actors,
+        data_sources: submission_data.data_sources,
+        also_known_as: submission_data.also_known_as,
+        img_title: submission_data.img_title,
+        classification: submission_data.classification,
+        variable_field_values: submission_data.variable_field_values,
+        links: submission_data.links,
+        date_added: new Date(),
+        name_lower: submission_data.name.toLowerCase(),
+        also_known_as_lower: also_known_as_lower
+    });
+    
+    return actor_insert;
+}
+
+module.exports = {    
     
     findActors: function(request, response){
         
@@ -148,87 +184,47 @@ module.exports = {
     
     createActor: function(request, response){
         
-        //extract data for use later
-        var db_url = process.env.MONGODB_URI; //get db uri
-        var file;
-        var test_mode = false;
-        
-        if(request.file){
-            file = request.file; //get submitted image
-        }
-        
-        if(typeof request.body =='object'){
-            // It is JSON
-            submission_data = request.body;
-        }
-        else{
-            submission_data = JSON.parse(request.body);
-        }
-        
-        //format data for db insertion
-        var date_of_origin = submission_data.date_of_origin.split('/');
-        var also_known_as_lower = [];
-        
-        for(var i = 0; i < submission_data.also_known_as.length; i++){
-            also_known_as_lower[i] = submission_data.also_known_as[i].toLowerCase();
-        }
-       
-        
-        //format object for insertion into pending db
-        var actor_insert = new Actor({        
-            name: submission_data.name,
-            date_of_origin: new Date(date_of_origin[2], date_of_origin[1]-1, date_of_origin[0]),
-            place_of_origin: submission_data.place_of_origin,
-            description: submission_data.description,
-            associated_actors: submission_data.associated_actors,
-            data_sources: submission_data.data_sources,
-            also_known_as: submission_data.also_known_as,
-            img_title: submission_data.img_title,
-            classification: submission_data.classification,
-            variable_field_values: submission_data.variable_field_values,
-            links: submission_data.links,
-            date_added: new Date(),
-            name_lower: submission_data.name.toLowerCase(),
-            also_known_as_lower: also_known_as_lower
-        });
+        var submission_data = JSON.parse(request.body.data); //get form data
+        var files;
 
-        console.log(actor_insert);
+        if(request.files){
+            files = request.files; //get submitted image
+        }
+        
+        var actor_insert = format_actor_data(submission_data);
 
         if(test_mode){
             console.log("test mode is on.");
             console.log(actor_insert);
         }
         else{
-            
-            var db_options = {
-                send_email_notification: true,
-                email_notification_text: "Actor",
-                add_to_scraped_confirmed_table: false
-            };
-            
-            var cloudinary_options = { 
-                unique_filename: true, 
-                folder: storage_ref.get_actor_images_folder()
-            };
-                                    
-            if(file){
-                storage_interface.upload_image(false, "actors", file.originalname, file.buffer, false, function(img_dl_title){
-                    actor_insert.img_title = img_dl_title;
-                    db_interface.insert_record_into_db(actor_insert, db_ref.get_current_actor_table(), db_options, function(id){
-                        response.status(201).send(id);
-                    });
-                });
-            }
-            else{
-                if(submission_data.img_title.length > 0){
-                    storage_interface.upload_image(true, "actors", submission_data.img_title, null, false, function(img_dl_title){
-                        actor_insert.img_title = img_dl_title;
-                        db_interface.insert_record_into_db(actor_insert, db_ref.get_current_actor_table(), db_options, function(id){
-                            response.status(201).send(id);
-                        });
-                    });            
+                        
+            handle_gallery_items(actor_insert.gallery_items, "actors", files, function(){
+                
+                //remove file objects to avoid adding file buffer to the db
+                for(var i = 0; i < actor_insert.gallery_items.length; i++){
+                    if(actor_insert.gallery_items[i].file){
+                        actor_insert.gallery_items[i].file = null;
+                    }
+                    
+                    if(actor_insert.gallery_items[i].main_graphic){
+                        actor_insert.img_title_fullsize = actor_insert.gallery_items[i].link; //save fullsize main graphic ref
+                        actor_insert.img_title_thumbnail = actor_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
+                        
+                    }
                 }
-            }
+                console.log(actor_insert);
+                
+                var db_options = {
+                    send_email_notification: true,
+                    email_notification_text: "Beef",
+                    add_to_scraped_confirmed_table: request.body.data.record_origin == "scraped" ? true : false
+                };
+
+                db_interface.insert_record_into_db(actor_insert, db_ref.get_current_event_table(), db_options, function(id){
+                    response.status(201).send(id);
+                });
+            });
         }
     },
     
