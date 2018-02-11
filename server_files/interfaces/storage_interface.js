@@ -1,11 +1,13 @@
-//file to hold all functions involving the server's interfacing with the file storage system
-//config remote file storage
+//external dependencies
 var cloudinary = require('cloudinary');
-var storage_ref = require("../config/storage_config.js");
 var dl_request = require("request");
 var datauri = require("datauri");
 var path = require("path");
 var fs = require('fs');
+var loop = require("async-looper");
+
+//internal dependencies
+var storage_ref = require("../config/storage_config.js");
 
 var cloudinary_options = { 
     unique_filename: true, 
@@ -101,13 +103,94 @@ module.exports = {
     
     delete_image: function(folder, img_title, callback){
         
-        console.log(folder + "/" + img_title);
-        
         storage_ref.get_upload_object().uploader.destroy(folder + "/" + img_title, function (result) {
             if(result.error){ console.log(result.error); }
             else{
                 callback();
             }
         });
-    }
+    },
+        
+    //format gallery items for db storage, also store them in the provided folder on the file server
+    async_loop_upload_items: function(items, file_server_folder, files, callback){
+        
+        var loop_count = 0;
+        
+        //use an asynchronous loop to cycle through gallery items, if item is an image, save image to cloudinary and update gallery item link
+        loop(items, function(item, next){
+
+            if(item.media_type == "image"){
+
+                var file_name = item.link;
+                var file_buffer;
+                var requires_download = true;
+
+                if(item.file){
+                    file_name = item.file.originalname;
+                    file_buffer = item.file.buffer;
+                    requires_download = false;
+                }
+
+                module.exports.upload_image(requires_download, file_server_folder, file_name, file_buffer, false, function(img_dl_title){
+
+                    item.link = img_dl_title;
+
+                    loop_count++;
+                    
+                    if(item.main_graphic){
+                        module.exports.upload_image(requires_download, file_server_folder, file_name, file_buffer, true, function(img_dl_title){
+                            item.thumbnail_img_title = img_dl_title;
+                            
+                            if(loop_count == items.length){
+                                next(null, loop.END_LOOP);
+                            }
+                            else{
+                                next();
+                            }
+                                
+                        });
+                    }
+                    else{
+                        if(loop_count == items.length){
+                            next(null, loop.END_LOOP);
+                        }
+                        else{
+                            next();
+                        }
+                    }
+                });
+            }
+        }, function(){
+            callback(items);
+        });
+    },
+    
+    //format gallery items for db storage, also store them in the provided folder on the file server
+    async_loop_remove_items: function(items, file_server_folder, callback){
+        
+        var loop_count = 0;
+                
+        //use an asynchronous loop to cycle through gallery items, if item is an image, save image to cloudinary and update gallery item link
+        loop(items, function(item, next){
+
+            if(item.media_type == "image"){
+                
+                console.log("DELETING: " + item.link);
+
+                module.exports.delete_image(file_server_folder, item.link, function(){
+                    loop_count++;
+                    
+                    if(loop_count == items.length){
+                        next(null, loop.END_LOOP);
+                    }
+                    else{
+                        next();
+                    }
+                });
+            }
+        }, function(){
+            callback(items);
+        });
+    }    
+    
 }

@@ -32,8 +32,8 @@ router.route('/activity-logs/actors/:actor_id').get(activity_logs_controller.fin
 //Actors endpoints
 router.route('/actors').get(actor_controller.findActors);//built, written, tested, needs query handling
 router.route('/actors/:actor_id').get(actor_controller.findActor);//built, written, tested
-router.route('/actors').post(actor_controller.createActor);//built, written, tested
-router.route('/actors/:actor_id').put(actor_controller.updateActor);//built, written, tested, needs auth
+router.route('/actors').post(memoryUpload, actor_controller.createActor);//built, written, tested
+router.route('/actors/:actor_id').put(memoryUpload, actor_controller.updateActor);//built, written, tested, needs auth
 router.route('/actors/:actor_id').delete(actor_controller.deleteActor);//built, written, tested, needs auth
 
 //Actor fields config endpoints

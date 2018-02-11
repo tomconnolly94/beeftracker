@@ -5,9 +5,9 @@ var BSON = require('bson');
 //internal dependencies
 var db_ref = require("../config/db_config.js");
 var storage_ref = require("../config/storage_config.js");
-var storage_interface = require('../interfaces/storage_insert_interface.js');
+var storage_interface = require('../interfaces/storage_interface.js');
 var db_interface = require('../interfaces/db_insert_interface.js');
-var handle_gallery_items = require('./shared_endpoint_controller_functions/record_formatting.js').handle_gallery_items;
+var format_embeddable_items = require('../tools/formatting.js').format_embeddable_items;
 
 //objects
 var Event = require("../schemas/event_schema");
@@ -16,6 +16,7 @@ var EventContribution = require("../schemas/event_contribution_schema").model;
 var test_mode = false;
 var event_projection = {
     $project: {
+        "_id": 1,
         "title": 1,
         "aggressors": 1,
         "targets": 1,
@@ -30,7 +31,7 @@ var event_projection = {
         "rating": 1,
         "data_sources": 1
     }
-}
+};
 
 var check_end_or_next = function(event, item, next){
     //if last item, exit loop, else carry on to next iteration
@@ -285,8 +286,12 @@ module.exports = {
             response.status(200).send({message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_insert });
         }
         else{
+            //find gallery items that need their embedding links generated
+            event_insert.gallery_items = format_embeddable_items(event_insert.gallery_items, files);
             
-            handle_gallery_items(event_insert.gallery_items, "events", files, function(){
+            storage_interface.async_loop_upload_items(event_insert.gallery_items, "events", files, function(items){
+                
+                event_insert.gallery_items = items;
                 
                 //remove file objects to avoid adding file buffer to the db
                 for(var i = 0; i < event_insert.gallery_items.length; i++){
@@ -317,7 +322,8 @@ module.exports = {
     updateEvent: function(request, response){
         
         //extract data for use later
-        var event_id = request.params.event_id;
+        var existing_object_id = request.params.event_id;
+        var existing_event_id_object = BSON.ObjectID.createFromHexString(existing_object_id);
         
         var submission_data = JSON.parse(request.body.data); //get form data
         var files;
@@ -344,62 +350,76 @@ module.exports = {
         }
         else{
             
-            var thumbnail_img;
+            //find gallery items that need their embedding links generated
+            event_insert.gallery_items = format_embeddable_items(event_insert.gallery_items, files);
             
-            //use an asynchronous loop to cycle through gallery items, if item is an image, save image to cloudinary and update gallery item link
-            loop(event_insert.gallery_items, function(item, next){
+            storage_interface.async_loop_upload_items(event_insert.gallery_items, "events", files, function(items){
                 
-                if(item.media_type == "image"){
-                    
-                    var file_name = item.link;
-                    var file_buffer;
-                    var requires_download = true;
-                    
-                    if(item.file){
-                        file_name = item.file.originalname;
-                        file_buffer = item.file.buffer;
-                        requires_download = false;
-                    }
-                    
-                    storage_interface.upload_image(requires_download, "events", file_name, file_buffer, false, function(img_dl_title){
-                        
-                        item.link = img_dl_title;
-                        
-                        if(item.main_graphic){
-                            storage_interface.upload_image(requires_download, "events", file_name, file_buffer, true, function(img_dl_title){
-                                event_insert.thumbnail_img_title = img_dl_title;
-                                check_end_or_next(event_insert, item, next);
-                            });
-                        }
-                        else{
-                            check_end_or_next(event_insert, item, next);
-                        }
-                    });
-                }
-            }, function(){
+                event_insert.gallery_items = items;
                 
-                event_insert.img_title_thumbnail = thumbnail_img;
-                                
                 //remove file objects to avoid adding file buffer to the db
-                for(var i = 0; i < event_insert.gallery_items.length; i++){                
+                for(var i = 0; i < event_insert.gallery_items.length; i++){
                     if(event_insert.gallery_items[i].file){
                         event_insert.gallery_items[i].file = null;
                     }
                     
                     if(event_insert.gallery_items[i].main_graphic){
-                        event_insert.img_title_fullsize = event_insert.gallery_items[i].link;
+                        event_insert.img_title_fullsize = event_insert.gallery_items[i].link; //save fullsize main graphic ref
+                        event_insert.img_title_thumbnail = event_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
+                        
                     }
                 }
-                console.log(event_insert);
                 
                 var db_options = {
                     send_email_notification: true,
                     email_notification_text: "Beef",
                     add_to_scraped_confirmed_table: request.body.data.record_origin == "scraped" ? true : false
                 };
+                
+                db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
+                    if(err){ console.log(err); }
+                    else{
+                
+                        //get the pre-update event object to sort gallery items
+                        db.collection(db_ref.get_current_event_table()).find({ _id: existing_event_id_object } ).toArray(function(queryErr, original_event) {
+                            
+                            original_event = original_event[0];
 
-                db_interface.update_record_in_db(event_insert, db_ref.get_current_event_table(), db_options, event_id, function(id){
-                    response.status(200).send(id);
+                            //call to update the db record
+                            db_interface.update_record_in_db(event_insert, db_ref.get_current_event_table(), db_options, existing_object_id, function(document){
+                                
+                                var gallery_items_to_remove = [];
+                                console.log(event_insert);
+                                console.log(original_event);
+                                
+                                //if new thumbnail doesnt match the existing one the new image will have been uploaded so remove the old file
+                                if(event_insert.img_title_thumbnail != original_event.img_title_thumbnail){
+                                    gallery_items_to_remove.push({link: original_event.img_title_thumbnail, media_type: "image"});
+                                }
+
+                                //if new gallery_item doesnt match the existing one the new image will have been uploaded so remove the old file
+                                for(var i = 0; i < original_event.gallery_items.length; i++){
+                                    var gallery_item_found = false;
+                                    for(var j = 0; j < event_insert.gallery_items.length; j++){
+                                        if(original_event.gallery_items[i].link == event_insert.gallery_items[j].link){
+                                            gallery_item_found = true;
+                                        }
+                                    }
+                                    if(!gallery_item_found){
+                                        gallery_items_to_remove.push(original_event.gallery_items[i]);
+                                    }
+                                }
+                                
+                                if(gallery_items_to_remove.length > 0){
+                                    //remove all old gallery_items
+                                    storage_interface.async_loop_remove_items(gallery_items_to_remove, "events", function(items){
+                                        console.log("finish")
+                                    });
+                                }
+                                response.status(200).send(existing_object_id);
+                            });
+                        });
+                    }
                 });
             });
         }
@@ -421,18 +441,10 @@ module.exports = {
                         if(event_obj){
                             
                             //add thumbnail image to list
-                            event_obj.gallery_items.push({link: event_obj.img_title_thumbnail});
-                
-                            console.log(event_obj.gallery_items);
-                            console.log(event_obj);
-                            
-                            loop(event_obj.gallery_items, function(item, next){
-
-                                storage_interface.delete_image("events", item.link, function(img_dl_title){
-                                    check_end_or_next(event_obj, item, next);
-                                });
-                            }, function(){
-                                db.collection(db_ref.get_current_event_table()).deleteOne({ _id: event_id_object }, function(queryErr, docs) {
+                            event_obj.gallery_items.push({link: event_obj.img_title_thumbnail, media_type: "image"});
+                                            
+                            storage_interface.async_loop_remove_items(event_obj.gallery_items, "events", function(){
+                                 db.collection(db_ref.get_current_event_table()).deleteOne({ _id: event_id_object }, function(queryErr, docs) {
                                     if(queryErr){ console.log(queryErr); }
                                     else{
                                         response.status(200).send( docs[0] );
