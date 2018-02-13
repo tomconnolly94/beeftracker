@@ -2,20 +2,38 @@
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
-var event_projection = require("./events_controller.js").event_projection;
+var storage_interface = require('../interfaces/storage_interface.js');
+var db_interface = require('../interfaces/db_insert_interface.js');
+var format_embeddable_items = require('../tools/formatting.js').format_embeddable_items;
 var format_event_data = require("./events_controller.js").format_event_data;
-var handle_gallery_items = require("./events_controller.js").handle_gallery_items;
+var format_event_data = require("./actors_controller.js").format_event_data;
 
 module.exports = {
     
-    createEventUpdateRequest: function(request, response){
+    createUpdateRequest: function(request, response){
         
-        var event_insert = format_event_data(request, response);
+        var incoming_data = request.body;    
+        var files = request.files;    
+        var submission_data = incoming_data.data;
+        var insert_object;
+        var object_type;
+        
+        if(incoming_data.event){
+            insert_object = format_event_data(submission_data);
+            object_type = "events";
+        }
+        else{
+            insert_object = format_actor_data(submission_data);
+            object_type = "actors";
+        }
         var thumbnail_img;        
         
-        handle_gallery_items(event_insert.gallery_items, "event_update_requests", thumbnail_img, function(){
+        //find gallery items that need their embedding links generated
+        insert_object.gallery_items = format_embeddable_items(event_insert.gallery_items, files);
+
+        storage_interface.async_loop_upload_items(insert_object.gallery_items, "update_requests/" + object_type, files, function(items){
             
-            event_insert.img_title_thumbnail = thumbnail_img;
+            event_insert.gallery_items = items;
 
             //remove file objects to avoid adding file buffer to the db
             for(var i = 0; i < event_insert.gallery_items.length; i++){
@@ -24,7 +42,8 @@ module.exports = {
                 }
 
                 if(event_insert.gallery_items[i].main_graphic){
-                    event_insert.img_title_fullsize = event_insert.gallery_items[i].link;
+                    event_insert.img_title_fullsize = event_insert.gallery_items[i].link; //save fullsize main graphic ref
+                    event_insert.img_title_thumbnail = event_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
                 }
             }
             console.log(event_insert);
@@ -39,11 +58,5 @@ module.exports = {
                 response.status(201).send(id);
             });
         });
-    },
-    
-    createActorUpdateRequest: function(request, response){
-    
-    
     }
-
 }

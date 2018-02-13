@@ -12,9 +12,6 @@ module.exports = {
     
     execute : function(request, response) {
 
-        //extract data for use later
-        var db_url = process.env.MONGODB_URI; //get db uri
-        
         //set all cookies to expire immediately
         response.cookie( "auth", "0", { expires: new Date(0), httpOnly: true });
         response.cookie( "logged_in", "false", { expires: new Date(0)});

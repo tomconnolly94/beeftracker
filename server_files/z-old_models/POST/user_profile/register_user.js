@@ -4,9 +4,6 @@ var db_ref = require("../../../db_config.js");
 var hashing = require("../../../hashing.js");
 var bodyParser = require("body-parser");
 
-//configure testing mode, if set: true, record will be collected, printed but not sent to db and no email notification will be sent.
-var test_mode = false;
-
 //check for duplicate username or email address before allowing user to register
 var check_details_against_user_table = function(db, user_details, insert_object, response, callback){
     
@@ -35,14 +32,13 @@ module.exports = {
     execute : function(request, response) {
 
         //extract data for use later
-        var db_url = process.env.MONGODB_URI; //get db uri
         var user_details = request.body; //get form data
         
         //cookie config
         var cookies_http_only = true;
         var cookies_secure = process.env.DEPLOYMENT_ENV == "heroku_production" ? true : false; //use secure cookies when on heroku server, dont use when 
         
-        db_ref.get_db_object().connect(db_url, function(err, db) {
+        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
             else{
                 

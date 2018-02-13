@@ -76,9 +76,9 @@ sitemap = sitemap_generator.createSitemap ({
 
 // ### Configure node variables ###
 app.set('port', (process.env.PORT || 5000));
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-//app.set('view engine', 'pug');
+app.set('views', __dirname + '/public/templates');
+//app.set('view engine', 'ejs');
+app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride());
@@ -95,13 +95,13 @@ if(storage_ref.get_upload_method() == "local"){
     app.use('/actor_images', express.static(__dirname + '/public/assets/images/actors/')); //route to reference images
     app.use('/event_images', express.static(__dirname + '/public/assets/images/events/')); //route to reference images
 }
-//app.use('/background_images', express.static(__dirname + '/public/assets/images/backgrounds/')); //route to reference images
 app.use('/logo', express.static(__dirname + '/public/assets/images/logo/')); //route to reference images
 app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //route to reference css scripts
 app.use('/js', express.static(__dirname + '/public/javascript/')); //route to reference controller scripts
 app.use('/modules', express.static(__dirname + '/node_modules/')); //route to reference client libraries
 app.use('/bower_components', express.static(__dirname + '/bower_components/')); //route to reference css scripts
 app.use('/controllers', express.static(__dirname + '/public/components/')); //route to reference controller scripts
+//app.use('/background_images', express.static(__dirname + '/public/assets/images/backgrounds/')); //route to reference images
 //app.use('/controllers', express.static(__dirname + '/public/controllers/')); //route to reference controller scripts
 //app.use('/directives', express.static(__dirname + '/public/directives/')); //route to reference controller scripts
 //app.use('/partials', express.static(__dirname + '/views/partials/')); //route to reference css scripts
@@ -112,8 +112,11 @@ app.use('/', require('./server_files/routing/page_routing'));
 // ### Endpoint routes configuration ###
 app.use('/api', require('./server_files/routing/endpoint_routing'));
 
-// ### Component routes configuration ###
-app.use('/template', require('./server_files/routing/template_routing'));
+// ### Rendered component routes configuration ###
+app.use('/templates', require('./server_files/routing/template_routing')); //routes send rendered HTML
+
+// ### Component rendering function routes configuration ###
+app.use('/template_functions', require('./server_files/routing/template_function_routing')); //routes send javascript functions which render HTML on the client side
 
 
 /*

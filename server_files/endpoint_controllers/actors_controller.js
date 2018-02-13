@@ -36,39 +36,39 @@ var actor_projection = {
     }
 }
 
-var format_actor_data = function(submission_data){
-    
-    //format data for db insertion
-    var date_of_origin = submission_data.date_of_origin.split('/');
-    var also_known_as_lower = [];
-
-    for(var i = 0; i < submission_data.also_known_as.length; i++){
-        also_known_as_lower[i] = submission_data.also_known_as[i].toLowerCase();
-    }
-
-    //format object for insertion into pending db
-    var actor_insert = new Actor({        
-        name: submission_data.name,
-        date_of_origin: new Date(date_of_origin[2], date_of_origin[1]-1, date_of_origin[0]),
-        place_of_origin: submission_data.place_of_origin,
-        description: submission_data.description,
-        associated_actors: submission_data.associated_actors,
-        data_sources: submission_data.data_sources,
-        also_known_as: submission_data.also_known_as,
-        img_title: submission_data.img_title,
-        classification: submission_data.classification,
-        variable_field_values: submission_data.variable_field_values,
-        links: submission_data.links,
-        gallery_items: submission_data.gallery_items,
-        date_added: new Date(),
-        name_lower: submission_data.name.toLowerCase(),
-        also_known_as_lower: also_known_as_lower
-    });
-    
-    return actor_insert;
-}
-
 module.exports = {    
+    
+    format_actor_data: function(submission_data){
+    
+        //format data for db insertion
+        var date_of_origin = submission_data.date_of_origin.split('/');
+        var also_known_as_lower = [];
+
+        for(var i = 0; i < submission_data.also_known_as.length; i++){
+            also_known_as_lower[i] = submission_data.also_known_as[i].toLowerCase();
+        }
+
+        //format object for insertion into pending db
+        var actor_insert = new Actor({        
+            name: submission_data.name,
+            date_of_origin: new Date(date_of_origin[2], date_of_origin[1]-1, date_of_origin[0]),
+            place_of_origin: submission_data.place_of_origin,
+            description: submission_data.description,
+            associated_actors: submission_data.associated_actors,
+            data_sources: submission_data.data_sources,
+            also_known_as: submission_data.also_known_as,
+            img_title: submission_data.img_title,
+            classification: submission_data.classification,
+            variable_field_values: submission_data.variable_field_values,
+            links: submission_data.links,
+            gallery_items: submission_data.gallery_items,
+            date_added: new Date(),
+            name_lower: submission_data.name.toLowerCase(),
+            also_known_as_lower: also_known_as_lower
+        });
+
+        return actor_insert;
+    },
     
     findActors: function(request, response){
         
@@ -200,7 +200,7 @@ module.exports = {
             files = request.files; //get submitted image
         }
         
-        var actor_insert = format_actor_data(submission_data);
+        var actor_insert = module.exports.format_actor_data(submission_data);
 
         if(test_mode){
             console.log("test mode is on.");
@@ -254,7 +254,7 @@ module.exports = {
             files = request.files; //get submitted image
         }
         
-        var actor_insert = format_actor_data(submission_data);
+        var actor_insert = module.exports.format_actor_data(submission_data);
 
         if(test_mode){
             console.log("test mode is on.");

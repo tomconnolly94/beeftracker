@@ -17,7 +17,7 @@ module.exports = {
         var email_address = request.body.email_address; //get form data
         
 
-        db_ref.get_db_object().connect(db_url, function(err, db) {
+        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
             else{
 

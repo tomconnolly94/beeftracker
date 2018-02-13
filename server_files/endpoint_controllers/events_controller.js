@@ -46,92 +46,77 @@ var check_end_or_next = function(event, item, next){
 
 module.exports = {
     
-    event_projection: {
-        $project: {
-            "title": 1,
-            "aggressors": 1,
-            "targets": 1,
-            "event_date": 1,
-            "date_added": 1,
-            "description": 1,
-            "links": 1,
-            "categories": 1,
-            "hit_counts": 1,
-            "gallery": 1,
-            "thumbnail_img_title": 1,
-            "rating": 1,
-            "data_sources": 1
-    
-        }
-    },
-    
     format_event_data: function(submission_data){
     
-    var date = submission_data.date.split('/'); //split date by delimeter into "DD", "MM" and "YYYY"
-    var aggressor_ids = []; //create array to store target_ids
-    var target_ids = []; //create array to store target_ids
-    var gallery_items_formatted = [];
-        
-    //format target_ids array
-    for(var i = 0; i < submission_data.aggressors.length; i++){
-        aggressor_ids.push(BSON.ObjectID.createFromHexString(submission_data.aggressors[i]));
-    }
+        var date = submission_data.date.split('/'); //split date by delimeter into "DD", "MM" and "YYYY"
+        var aggressor_ids = []; //create array to store target_ids
+        var target_ids = []; //create array to store target_ids
+        var gallery_items_formatted = [];
 
-    //format target_ids array
-    for(var i = 0; i < submission_data.targets.length; i++){
-        target_ids.push(BSON.ObjectID.createFromHexString(submission_data.targets[i]));
-    }
-
-    //create initial contribution record
-    var submission_data_keys = Object.keys(submission_data);
-    var contribution_collection = [];
-
-    for(var i = 0; i < submission_data_keys.length; i++){
-
-        if(submission_data_keys[i] != "user_id" && submission_data_keys[i] !="record_origin"){
-            var record = {
-                field: submission_data_keys[i],
-                addition: submission_data[submission_data_keys[i]],
-                removal: ""
-            }
-            contribution_collection.push(record);
+        //format target_ids array
+        for(var i = 0; i < submission_data.aggressors.length; i++){
+            aggressor_ids.push(BSON.ObjectID.createFromHexString(submission_data.aggressors[i]));
         }
-    }
 
-    var initial_event_contribution = EventContribution({
-        user: BSON.ObjectID.createFromHexString(submission_data.user_id),
-        date_of_submission: new Date(),
-        date_of_approval: null,
-        contribution_details: contribution_collection 
-    });
+        //format target_ids array
+        for(var i = 0; i < submission_data.targets.length; i++){
+            target_ids.push(BSON.ObjectID.createFromHexString(submission_data.targets[i]));
+        }
 
-    //format beef event record for insertion
-    var event_insert = new Event({
-        title: submission_data.title,
-        aggressors: aggressor_ids,
-        targets: target_ids,
-        event_date: new Date(date[2],date[1]-1,date[0]+1),
-        date_added: new Date(),
-        description: submission_data.description,
-        links: submission_data.links,
-        hit_counts: {
-            total: 0,
-            last_day: 0,
-            last_two_days: 0,
-            last_week: 0
-        },
-        gallery_items: submission_data.gallery_items,
-        categories: submission_data.categories,
-        img_title_thumbnail: "",
-        img_title_fullsize: "",
-        rating: 0,
-        data_sources: submission_data.data_sources,
-        contributions: [ initial_event_contribution ],
-        record_origin: submission_data.record_origin
-    });
-    
-    return event_insert;
-},
+        //create initial contribution record
+        var submission_data_keys = Object.keys(submission_data);
+        var contribution_collection = [];
+
+        for(var i = 0; i < submission_data_keys.length; i++){
+
+            if(submission_data_keys[i] != "user_id" && submission_data_keys[i] !="record_origin"){
+                var record = {
+                    field: submission_data_keys[i],
+                    addition: submission_data[submission_data_keys[i]],
+                    removal: ""
+                }
+                contribution_collection.push(record);
+            }
+        }
+
+        var initial_event_contribution = EventContribution({
+            user: BSON.ObjectID.createFromHexString(submission_data.user_id),
+            date_of_submission: new Date(),
+            date_of_approval: null,
+            contribution_details: contribution_collection 
+        });
+
+        //format beef event record for insertion
+        var event_insert = new Event({
+            title: submission_data.title,
+            aggressors: aggressor_ids,
+            targets: target_ids,
+            event_date: new Date(date[2],date[1]-1,date[0]+1),
+            date_added: new Date(),
+            description: submission_data.description,
+            links: submission_data.links,
+            hit_counts: {
+                total: 0,
+                last_day: 0,
+                last_two_days: 0,
+                last_week: 0
+            },
+            gallery_items: submission_data.gallery_items,
+            categories: submission_data.categories,
+            img_title_thumbnail: "",
+            img_title_fullsize: "",
+            rating: 0,
+            data_sources: submission_data.data_sources,
+            contributions: [ initial_event_contribution ],
+            record_origin: submission_data.record_origin,
+            featured: false
+        });
+        
+        //add _id field if it exists
+        if(submission_data._id){ event_insert._id = submission._id; }
+
+        return event_insert;
+    },
 
     findEvents: function(request, response){
         
@@ -140,6 +125,7 @@ module.exports = {
         var sort_query_content = {};
         var query_present = Object.keys(query_parameters).length === 0 && query_parameters.constructor === Object ? false : true; //check if request comes with query
         var limit_query_content = 30; //max amount of records to return
+        var query_table = db_ref.get_current_event_table();
         
         if(query_present){
             
@@ -160,13 +146,14 @@ module.exports = {
             }
             
             //deal with $match queries
-            if(query_parameters.match_title){ match_query_content = { title: { $regex : query_parameters.match_title, $options: "i" } } }
+            if(query_parameters.featured){ match_query_content = { featured: true } }
+            else if(query_parameters.match_title){ match_query_content = { title: { $regex : query_parameters.match_title, $options: "i" } } }
             else if(query_parameters.match_actor){ match_query_content = { name: { $regex : query_parameters.match_actor, $options: "i" } } }
             else if(query_parameters.match_category){ match_query_content = { name: { $regex : query_parameters.match_category, $options: "i" } } }
             
             //deal with $limit query
             if(query_parameters.limit){ limit_query_content = query_parameters.limit }
-            
+                        
         }
         
         //if(false){
@@ -192,6 +179,8 @@ module.exports = {
                     event_projection
                 ];
                 
+                console.log(aggregate_array);
+                
                 if(Object.keys(sort_query_content).length > 0){
                     aggregate_array.$sort = sort_query_content;
                 }
@@ -202,7 +191,7 @@ module.exports = {
                 
                 console.log(aggregate_array);
                    
-                db.collection(db_ref.get_current_event_table(aggregate_array)).aggregate().toArray(function(queryErr, docs) {
+                db.collection(db_ref.get_current_event_table()).aggregate(aggregate_array).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
                     else{
                     if(docs && docs.length > 0){

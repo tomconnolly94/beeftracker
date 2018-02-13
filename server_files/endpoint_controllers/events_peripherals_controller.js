@@ -53,51 +53,6 @@ module.exports = {
         });
     },
     
-    findFeaturedEvents: function(request, response){
-        
-        var url = process.env.MONGODB_URI;
-
-        db_ref.get_db_object().connect(url, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-
-                db.collection(db_ref.get_featured_events_table()).aggregate([
-                    { $match: { } },
-                    { $lookup : { 
-                        from: db_ref.get_current_event_table(),
-                        localField: "_id",
-                        foreignField: "_id",
-                        as: "resolved_event" }
-                    }, 
-                    { $unwind: {
-                        path: "$resolved_event",
-                        preserveNullAndEmptyArrays: true
-                      }
-                    }, 
-                    { $lookup : { 
-                        from: db_ref.get_current_actor_table(),
-                        localField: "resolved_event.aggressor",
-                        foreignField: "_id",
-                        as: "resolved_event.aggressor_object" }
-                    },
-                    { $group: {
-                        _id : "$_id",
-                        resolved_event: { $first: "$resolved_event" }
-                    }
-                    },
-                    { $sort : { order : -1} }
-                ]).sort({ order : -1 }).toArray(function(queryErr, docs) {
-                    console.log(docs[0]._id)
-                    console.log(docs[1]._id)
-                    console.log(docs[2]._id)
-                    console.log(docs[3]._id)
-                    
-                    response.send( docs );
-                });
-            }
-        });
-    },
-    
     findEventsRelatedToEvent: function(request, response){
         
         var event_id = request.params.event_id;
