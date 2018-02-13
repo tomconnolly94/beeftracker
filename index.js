@@ -95,39 +95,25 @@ if(storage_ref.get_upload_method() == "local"){
     app.use('/actor_images', express.static(__dirname + '/public/assets/images/actors/')); //route to reference images
     app.use('/event_images', express.static(__dirname + '/public/assets/images/events/')); //route to reference images
 }
-app.use('/background_images', express.static(__dirname + '/public/assets/images/backgrounds/')); //route to reference images
+//app.use('/background_images', express.static(__dirname + '/public/assets/images/backgrounds/')); //route to reference images
 app.use('/logo', express.static(__dirname + '/public/assets/images/logo/')); //route to reference images
-app.use('/modules', express.static(__dirname + '/node_modules/')); //route to reference client libraries
-app.use('/require_scripts', express.static(__dirname + '/public/require_scripts/')); //route to reference libraries like angular
-app.use('/controllers', express.static(__dirname + '/public/controllers/')); //route to reference controller scripts
-app.use('/directives', express.static(__dirname + '/public/directives/')); //route to reference controller scripts
-app.use('/js', express.static(__dirname + '/public/javascript/')); //route to reference controller scripts
 app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //route to reference css scripts
+app.use('/js', express.static(__dirname + '/public/javascript/')); //route to reference controller scripts
+app.use('/modules', express.static(__dirname + '/node_modules/')); //route to reference client libraries
 app.use('/bower_components', express.static(__dirname + '/bower_components/')); //route to reference css scripts
-app.use('/partials', express.static(__dirname + '/views/partials/')); //route to reference css scripts
+app.use('/controllers', express.static(__dirname + '/public/components/')); //route to reference controller scripts
+//app.use('/controllers', express.static(__dirname + '/public/controllers/')); //route to reference controller scripts
+//app.use('/directives', express.static(__dirname + '/public/directives/')); //route to reference controller scripts
+//app.use('/partials', express.static(__dirname + '/views/partials/')); //route to reference css scripts
 
-// ### Page route configuration file ###
+// ### Page routes configuration file ###
 app.use('/', require('./server_files/routing/page_routing'));
 
-// ### Endpoint route configuration ###
+// ### Endpoint routes configuration ###
 app.use('/api', require('./server_files/routing/endpoint_routing'));
 
-// ### Jade templates route configuration ###
+// ### Component routes configuration ###
 app.use('/template', require('./server_files/routing/template_routing'));
-
-
-
-//code to simulate sending a jade template (as a javscript function) to the client for it to be rendered with data 
-var jade = require('pug');
-
-app.get('/jade_template/', function(req, res){
-        
-    // Compile the template to a function string
-    var jsFunctionString = jade.compileFileClient('tmp_jade_tmp.jade', {name: "fancyTemplateFun"});
-    
-    res.send(jsFunctionString)
-});
-
 
 
 /*

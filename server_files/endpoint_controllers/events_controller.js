@@ -29,7 +29,8 @@ var event_projection = {
         "gallery": 1,
         "thumbnail_img_title": 1,
         "rating": 1,
-        "data_sources": 1
+        "data_sources": 1,
+        "beef_chain_ids": 1
     }
 };
 
@@ -307,7 +308,7 @@ module.exports = {
                 console.log(event_insert);
                 
                 var db_options = {
-                    send_email_notification: true,
+                    send_email_notification: false,
                     email_notification_text: "Beef",
                     add_to_scraped_confirmed_table: request.body.data.record_origin == "scraped" ? true : false
                 };

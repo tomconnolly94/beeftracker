@@ -1,0 +1,15 @@
+h1 This is a Jade template
+h2 By #{author}
+
+p hello hello hello
+p hello hello hello
+p hello hello hello
+p hello hello hello
+
+div
+    ul
+      - for(var prop in categories)
+        li 
+            p #{prop}: #{categories[prop]}
+        
+script(src="http://localhost:5000/controllers/carousel/carousel_controller.js")

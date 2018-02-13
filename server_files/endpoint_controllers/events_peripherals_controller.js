@@ -22,7 +22,7 @@ module.exports = {
                 var beef_chain_id_object = BSON.ObjectID.createFromHexString(beef_chain_id);
                 
                 db.collection(db_ref.get_current_event_table()).aggregate([
-                    { $match: { beef_chain_id: beef_chain_id_object } },
+                    { $match: { beef_chain_ids: beef_chain_id_object } },
                     { $unwind : "$aggressors"},
                     { $lookup : {
                         from: db_ref.get_current_actor_table(),
@@ -42,7 +42,7 @@ module.exports = {
                 if(queryErr){ console.log(queryErr); }
                 else{
                     if(docs && docs.length > 0){
-                        response.status(200).send( docs[0] );
+                        response.status(200).send( docs );
                     }
                     else{
                         response.status(404).send( { message: "Event not found."} );
@@ -124,10 +124,10 @@ module.exports = {
                             
                             //use an asynchronous loop to cycle through gallery items, if item is an image, save image to cloudinary and update gallery item link
                             loop(actors, function(actor_id, next){
-                                var events = this.findEventsRelatedToActor({ params: { actor_id: actor_id } });
+                                var new_events = module.exports.findEventsRelatedToActor({ params: { actor_id: actor_id } });
                                 
                                 if(!events.message){
-                                    events.concat(events);
+                                    events.concat(new_events);
                                 }
                                 
                                 loop_count++;
