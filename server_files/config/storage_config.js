@@ -18,8 +18,6 @@ cloudinary.config({
 
 //var upload_method = "local";
 var upload_method = "cloudinary";
-var event_images_folder = "events";
-var actor_images_folder = "actors";
         
 module.exports = {
     
@@ -32,10 +30,18 @@ module.exports = {
     },
     
     get_event_images_folder: function(){
-        return event_images_folder;
+        return "events";
     },
     
     get_actor_images_folder: function(){
-        return actor_images_folder;
+        return "actors";
+    },
+    
+    get_user_images_folder: function(){
+        return "user_profiles";
+    },
+    
+    get_update_requests_folder: function(){
+        return "update_requests";
     }
 }

@@ -72,10 +72,10 @@ router.route('/events/related-to-actor/:actor_id').get(event_peripherals_control
 router.route('/update_request').post(update_request_controller.createUpdateRequest);//built, not written, not tested
 
 //Users endpoints
-router.route('/users/:user_id').get(token_authentication.authenticate_user_token, users_controller.getUserDetails);//built, not written, not tested, needs specific user or admin auth
-router.route('/users').post(memoryUpload, users_controller.createUser);//built, written, not tested
+router.route('/users/:user_id').get(token_authentication.authenticate_user_token, users_controller.getUser);//built, written, manually tested, needs specific user or admin auth
+router.route('/users').post(memoryUpload, users_controller.createUser);//built, written, manually tested
 router.route('/users/:user_id').put(token_authentication.authenticate_admin_user_token, users_controller.updateUser);//built, not written, not tested, needs specific user or admin auth
-router.route('/users/:user_id').delete(token_authentication.authenticate_admin_user_token, users_controller.deleteUser);//built, not written, not tested, needs specific user or admin auth
+router.route('/users/:user_id').delete(token_authentication.authenticate_admin_user_token, users_controller.deleteUser);//built, written, manually tested, needs specific user or admin auth
 
 //Authentication endpoints
 router.route('/authenticate').post(users_controller.authenticateUser);//built, written, not tested

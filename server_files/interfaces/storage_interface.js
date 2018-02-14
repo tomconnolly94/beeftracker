@@ -60,6 +60,7 @@ module.exports = {
             delete cloudinary_options.width;
             delete cloudinary_options.height;
         }
+        
         if(image_requires_download){ //if image is provided in post TODO: remove this, it is possible to force cloudinary to download image straight to server
             
             var img_url = img_title.split("?")[0];

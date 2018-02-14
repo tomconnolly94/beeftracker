@@ -1,9 +1,12 @@
 //external dependencies
 var jwt = require("jsonwebtoken");
 var os = require("os");
+var BSON = require("bson");
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
+var storage_ref = require("../config/storage_config.js");
+var storage_interface = require('../interfaces/storage_interface.js');;
 var hashing = require("../tools/hashing.js");
 
 //cookie config
@@ -12,8 +15,80 @@ var cookies_secure = process.env.DEPLOYMENT_ENV == "heroku_production" ? true : 
         
 module.exports = {
     
-    getUserDetails: function(request, response){
-        response.status(200).send({message: "ok."})
+    getUser: function(request, response){
+        
+        console.log(request.params)
+        var user_id = request.params.user_id;
+        var user_id_object = BSON.ObjectID.createFromHexString(user_id);
+        var user_projection;
+        
+        console.log(request.user_is_admin);
+        
+        if(request.user_is_admin){ //return more data about a user if the request is coming from an admin
+            user_projection = { //admin user projection
+                $project: {
+                    "_id": 1,
+                    "username": 1,
+                    "first_name": 1,
+                    "last_name": 1,
+                    "email_address": 1,
+                    "d_o_b": 1,
+                    "img_title": 1,
+                    "ip_addresses": 1,
+                    "date_created": 1,
+                    "last_seen": 1,
+                    "admin": 1,
+                    "viewed_beef_ids": 1,
+                    "submitted_beef_ids": 1,
+                    "submitted_actor_ids": 1,
+                    "country": 1,
+                    "contribution_score": 1
+                }
+            }
+        }
+        else{
+            user_projection = { //non admin user projection
+                $project: {
+                    "_id": 1,
+                    "username": 1,
+                    "first_name": 1,
+                    "last_name": 1,
+                    "email_address": 1,
+                    "d_o_b": 1,
+                    "img_title": 1,
+                    "date_created": 1,
+                    "img_title": 1,
+                    "admin": 1,
+                    "country": 1,
+                    "contribution_score": 1
+                }
+            }            
+        }
+        
+        console.log(user_projection)
+        
+        
+        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
+            if(err){ console.log(err); }
+            else{
+                db.collection(db_ref.get_user_details_table()).aggregate([
+                    { $match: { _id: user_id_object } },
+                    user_projection
+                ]).toArray(function(err, users){
+                    
+                    if(err){ console.log(err);}
+                    else{
+                        console.log(users);
+                        if(users.length < 1){
+                            response.status(404).send({ failed: true, message: "Could not find user."});
+                        }
+                        else{
+                            response.status(200).send(users[0]);
+                        }
+                    }
+                });
+            }
+        });
     },
     
     createUser: function(request, response){
@@ -32,10 +107,10 @@ module.exports = {
 
                     if(auth_arr.length > 0){
                         if(auth_arr[0].username == user_details.username){
-                            response.status(400).send({success: false, message: "Username is taken."});
+                            response.status(400).send({failed: true, message: "Username is taken."});
                         }
                         else{
-                            response.status(400).send({success: false, message: "Email is taken."});
+                            response.status(400).send({failed: true, message: "Email is taken."});
                         }
                     }
                     else{
@@ -74,55 +149,79 @@ module.exports = {
                     admin: user_details.admin
                 };
                 
-                if(user_details.admin){ //if admin, check pending registered admin users table, to ensure a user hasnt previously requested admin registration with similar details
-                
-                    db.collection(db_ref.get_pending_registered_admin_users_table()).aggregate([{ $match: { $or: [ { username: user_details.username}, { email_address: user_details.email_address } ] } }]).toArray(function(err, auth_arr){
-                        if(err){ console.log(err); }
-                        else{
-                            if(auth_arr.length > 0){
-                                if(auth_arr[0].username == user_details.username){
-                                    response.send({success: false, message: "Username is taken."});
-                                }
-                                else{
-                                    response.send({success: false, message: "Email is taken."});
-                                }
-                            }
-                            else{                                
-                                check_details_against_user_table(db, user_details, insert_object, response, function(){
-                                    
-                                    //insert new user record
-                                    db.collection(db_ref.get_pending_registered_admin_users_table()).insert(insert_object, function(err, document){
-                                        if(err){ console.log(err); }
-                                        else{
-                                            response.send({success: true, message: "Registration complete, requires approval from an existing admin."});
-                                        }
-                                    });
-                                });
-                            }
-                        }
-                    });
+                var image_requires_download = true;
+
+                if(files[0]){
+                    image_requires_download = false;
                 }
-                else{
-                    check_details_against_user_table(db, user_details, insert_object, response, function(){
-                        
-                        //add extra fields if not an admin user
-                        insert_object.viewed_beef_ids = [];
-                        insert_object.submitted_beef_ids = [];
-                        insert_object.submitted_actor_ids = [];
-                        insert_object.country = user_details.country;
-                        insert_object.contribution_score = 0;
-                        
-                        //insert new user record
-                        db.collection(db_ref.get_user_details_table()).insert(insert_object, function(err, document){
+                
+                //make sure username and email are both not taken
+                check_details_against_user_table(db, user_details, insert_object, response, function(){
+                    
+                    if(user_details.admin){ //if admin, check pending registered admin users table, to ensure a user hasnt previously requested admin registration with similar details
+
+                        db.collection(db_ref.get_pending_registered_admin_users_table()).aggregate([{ $match: { $or: [ { username: user_details.username}, { email_address: user_details.email_address } ] } }]).toArray(function(err, auth_arr){
                             if(err){ console.log(err); }
                             else{
-                                response.send({success: true, message: "Registration complete."});
+                                if(auth_arr.length > 0){
+                                    if(auth_arr[0].username == user_details.username){
+                                        response.status(400).send({failed: true, message: "Username is taken."});
+                                    }
+                                    else{
+                                        response.status(400).send({failed: true, message: "Email is taken."});
+                                    }
+                                }
+                                else{
+                                    storage_interface.upload_image(image_requires_download, storage_ref.get_user_images_folder(), insert_object.img_title, files[0], false, function(img_title){
+
+                                        insert_object.img_title_fullsize = img_title;
+
+                                        storage_interface.upload_image(image_requires_download, storage_ref.get_user_images_folder(), insert_object.img_title, files[0], true, function(thumbnail_img_title){
+
+                                            insert_object.img_title_thumbnail = thumbnail_img_title;
+                                            //insert new user record
+                                            db.collection(db_ref.get_pending_registered_admin_users_table()).insert(insert_object, function(err, document){
+                                                if(err){ console.log(err); }
+                                                else{
+                                                    response.send({failed: false, message: "Registration complete, requires approval from an existing admin."});
+                                                }
+                                            });
+                                        });
+                                    });
+                                }
                             }
                         });
-                    });
-                }
+                    }
+                    else{
+                                
+                        storage_interface.upload_image(image_requires_download, storage_ref.get_user_images_folder(), insert_object.img_title, files[0].buffer, false, function(img_title){
+                            
+                            insert_object.img_title_fullsize = img_title;
+                            
+                            storage_interface.upload_image(image_requires_download, storage_ref.get_user_images_folder(), insert_object.img_title, files[0].buffer, true, function(thumbnail_img_title){
+                                
+                                insert_object.img_title_thumbnail = thumbnail_img_title;
+
+                                //add extra fields if not an admin user
+                                insert_object.viewed_beef_ids = [];
+                                insert_object.submitted_beef_ids = [];
+                                insert_object.submitted_actor_ids = [];
+                                insert_object.country = user_details.country;
+                                insert_object.contribution_score = 0;
+
+                                //insert new user record
+                                db.collection(db_ref.get_user_details_table()).insert(insert_object, function(err, document){
+                                    if(err){ console.log(err); }
+                                    else{
+                                        response.send({failed: false, message: "Registration complete."});
+                                    }
+                                });
+                            });
+                        });
+                    }
+                });
             }
-        });        
+        });
     },
     
     updateUser: function(request, response){
@@ -132,9 +231,36 @@ module.exports = {
     },
     
     deleteUser: function(request, response){
-        console.log("test completed 3.");
-        console.log(request.body);
-        response.send({test: "complete 4"});
+        
+        //extract data
+        var user_id = request.params.user_id;
+
+        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
+            if(err){ console.log(err); }
+            else{
+                var user_id_object = BSON.ObjectID.createFromHexString(user_id);
+                
+                db.collection(db_ref.get_user_details_table()).findOne({ _id: user_id_object }, function(queryErr, user_obj) {
+                    if(queryErr){ console.log(queryErr); }
+                    else{
+                        if(user_obj){
+                            storage_interface.delete_image(storage_ref.get_user_images_folder(), user_obj.img_title_fullsize, function(img_title){
+                            
+                                storage_interface.delete_image(storage_ref.get_user_images_folder(), user_obj.img_title_thumbnail, function(thumbnail_img_title){
+                                
+                                     db.collection(db_ref.get_user_details_table()).deleteOne({ _id: user_id_object }, function(queryErr, docs) {
+                                        if(queryErr){ console.log(queryErr); }
+                                        else{
+                                            response.status(200).send( {failed: false, message: "User has been deleted."} );
+                                        }
+                                    });
+                                });
+                            });
+                        }
+                    }
+                });
+            }
+        });
     },
     
     authenticateUser: function(request, response){
@@ -151,7 +277,7 @@ module.exports = {
                 db.collection(db_ref.get_user_details_table()).aggregate([{ $match: { username: auth_details.username } }]).toArray(function(err, auth_arr){
                     if(err){ console.log(err); }
                     else if(auth_arr.length < 1){                            
-                        response.send({auth_success: false, message: "User not found."});
+                        response.send({auth_failed: true, message: "User not found."});
                     }
                     else{
 
@@ -182,14 +308,14 @@ module.exports = {
                                 response.cookie("logged_in", "true", { expires: new Date(expiry_timestamp), httpOnly: false });
 
                                 //send response with cookies
-                                response.send({ auth_success: true });
+                                response.send({ auth_failed: false });
 
                                 response_sent = true;
                                 break;// ensure loop does not continue
                             }
                         }
                         if(!response_sent){ //if the password hash is not found send a failed auth response
-                            response.send({auth_success: false, message: "Incorrect Password."});
+                            response.send({auth_failed: true, message: "Incorrect Password."});
                         }
                     }
                 });
@@ -201,7 +327,7 @@ module.exports = {
         //set all cookies to expire immediately
         response.cookie( "auth", "0", { expires: new Date(0), httpOnly: cookies_http_only, secure: cookies_secure });
         response.cookie( "logged_in", "false", { expires: new Date(0), httpOnly: false });
-        response.send({ deauth_success: true});
+        response.send({ deauth_failed: false});
     },
     
     resetUserPassword: function(request, response){
@@ -215,13 +341,14 @@ module.exports = {
                     if(err){ console.log(err); }
                     else{
                         if(auth_arr.length < 1){
-                            response.send({success: false, message: "Email address not found."});
+                            response.send({failed: true, message: "Email address not found."});
                         }
                         else{
                             var existing_user_details = auth_arr[0];
                             
                             //send email with link in it to a page where a user can reset their password
                             
+                            response.send({failed: false, message: "Email address found, endpoint not implemented."});
                         }
                     }
                 });

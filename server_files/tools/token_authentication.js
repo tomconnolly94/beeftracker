@@ -35,9 +35,6 @@ var confirm_auth = function(request, response, token, next){
     response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
     response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
 
-    console.log("token: ");
-    console.log(token);
-
     request.authenticated_user_id = token._id;
 
     next();
@@ -55,7 +52,6 @@ var authentication_procedure = function(request, response, next){
     var body_user_id = request.body.user_id;
 
     var cookies = cookie_parser.parse_cookies(request);
-    console.log(cookies);
     
     if(cookies.auth){
         //verify token to ensure its still valid
@@ -64,15 +60,12 @@ var authentication_procedure = function(request, response, next){
                 console.log(error);
                 reset_auth(response);
             }
-            else{
-                
-                console.log(params_user_id);
-                console.log(body_user_id);
-                console.log(auth_token._id);
-                console.log(auth_token.admin);
-                
+            else{                
                 if((!request.route_requires_admin && ( params_user_id == auth_token._id || body_user_id == auth_token._id ) ) || //route is not admin, ensure provided user_id matches the _id in the auth token
                     auth_token.admin){ //auth_token is admin, allow
+                    
+                    request.user_is_admin = auth_token.admin;
+                    
                     if(auth_token.ip_loc){ //if ip location field is provided, also verify the requests ip address
                         //check if this request's ip address matches the ip address that the user logged in with, ignore if tokens ip_loc is null
                         if(!auth_token.ip_loc || request.headers['x-forwarded-for'] == auth_token.ip_loc ){                    
@@ -83,7 +76,6 @@ var authentication_procedure = function(request, response, next){
                         }
                     }
                     else{
-                        console.log("yo")
                         confirm_auth(request, response, auth_token, next);
                     }
                 }

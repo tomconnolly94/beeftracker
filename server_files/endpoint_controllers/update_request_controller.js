@@ -31,7 +31,7 @@ module.exports = {
         //find gallery items that need their embedding links generated
         insert_object.gallery_items = format_embeddable_items(event_insert.gallery_items, files);
 
-        storage_interface.async_loop_upload_items(insert_object.gallery_items, "update_requests/" + object_type, files, function(items){
+        storage_interface.async_loop_upload_items(insert_object.gallery_items, storage_ref.get_update_requests_folder() + "/" + object_type, files, function(items){
             
             event_insert.gallery_items = items;
 
