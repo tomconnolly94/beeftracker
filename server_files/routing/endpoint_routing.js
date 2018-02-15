@@ -16,6 +16,7 @@ var event_controller = require('../endpoint_controllers/events_controller');
 var event_peripherals_controller = require('../endpoint_controllers/events_peripherals_controller');
 var update_request_controller = require('../endpoint_controllers/update_request_controller');
 var users_controller = require('../endpoint_controllers/users_controller');
+var authentication_controller = require('../endpoint_controllers/authentication_controller');
 
 var memoryStorage = multer.memoryStorage();
 var memoryUpload = multer({
@@ -76,11 +77,11 @@ router.route('/users/:user_id').get(token_authentication.authenticate_user_token
 router.route('/users').post(memoryUpload, users_controller.createUser);//built, written, manually tested
 router.route('/users/:user_id').put(token_authentication.authenticate_admin_user_token, users_controller.updateUser);//built, not written, not tested, needs specific user or admin auth
 router.route('/users/:user_id').delete(token_authentication.authenticate_admin_user_token, users_controller.deleteUser);//built, written, manually tested, needs specific user or admin auth
+router.route('/reset-password').post(users_controller.resetUserPassword);//built, not written, not tested
 
 //Authentication endpoints
-router.route('/authenticate').post(users_controller.authenticateUser);//built, written, not tested
-router.route('/deauthenticate').get(users_controller.deauthenticateUser);//built, written, not tested
-router.route('/reset-password').post(users_controller.resetUserPassword);//built, not written, not tested
+router.route('/authenticate').post(authentication_controller.authenticateUser);//built, written, not tested
+router.route('/deauthenticate').get(authentication_controller.deauthenticateUser);//built, written, not tested
 
 //handle errors
 router.route('/*').get(function(request, response) {response.status(404).send({success: false, message: "endpoint not found"}); });
