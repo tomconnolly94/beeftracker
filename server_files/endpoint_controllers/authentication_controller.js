@@ -10,6 +10,7 @@ var cookies_http_only = true;
 var cookies_secure = process.env.DEPLOYMENT_ENV == "heroku_production" ? true : false; //use secure cookies when on heroku server, dont use when 
         
 module.exports = {
+    
     authenticateUser: function(request, response){
         //extract data for use later
         var db_url = process.env.MONGODB_URI; //get db uri
