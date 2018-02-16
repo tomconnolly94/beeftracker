@@ -16,6 +16,8 @@ if(process.env.DEPLOYMENT_ENV == "heroku_production"){ //only apply https redire
         }
     });
 }
+router.get('/', function(request, response) { response.render('pages/home.jade'); }); //home page
+/*
 router.get('/', function(request, response) { response.render('pages/dynamic_pages/home.ejs'); }); //home page
 router.get('/splash_zone_html/', function(request, response) { response.render('partials/home/splash_zone.ejs'); }); // splash zone directive html
 router.get('/top_events_html/', function(request, response) { response.render('partials/home/top_events_zone.ejs'); }); // top events directive html
@@ -37,6 +39,7 @@ router.get('/recently_added/', token_authentication.authenticate_admin_user_toke
 router.get('/raw_actor_scraping_html/', token_authentication.authenticate_admin_user_token, function(request, response) { response.render('partials/scraping_dump/raw_actor_scraping.ejs'); }); // raw actor scraping page route
 router.get('/broken_fields_stats/', token_authentication.authenticate_admin_user_token, function(request, response) { response.render('pages/admin_pages/scraping_control/broken_fields_stats.ejs'); }); // raw actor scraping page route
 router.get('/admin_login/', function(request, response) { response.render('pages/authentication/admin_login.ejs'); }); // raw actor scraping page route
+*/
 
 router.get('/sitemap', function(req, res) {
     sitemap.toXML( function (err, xml) {
