@@ -21,42 +21,12 @@ var multer = require('multer'); //library to assist with file storage
 var morgan = require("morgan"); //library to provide more detailed logs
 var jade = require('pug');
 
-// ### Internal Dependencies ###
-var storage_ref = require("./server_files/config/storage_config.js");
-
 // ## Storage method configuration ##
-if(storage_ref.get_upload_method() == "cloudinary"){
-    var memoryStorage = multer.memoryStorage();
-    var memoryUpload = multer({
-        storage: memoryStorage,
-        limits: {fileSize: 500000, files: 1}
-    }).single('attachment');
-}
-else if(storage_ref.get_upload_method() == "local"){
-
-    var storage_event = multer.diskStorage({
-      destination: function (req, file, cb) {
-          console.log(file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-        cb(null, "public/assets/images/events/")
-      },
-      filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-      }
-    }); //multer config options
-
-    var storage_actor = multer.diskStorage({
-      destination: function (req, file, cb) {
-        cb(null, "public/assets/images/actors/")
-      },
-      filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-      }
-    }); //multer config options
-
-    var upload_event_img = multer({storage: storage_event}); //build upload handlers
-    var upload_actor_img = multer({storage: storage_actor}); //build upload handlers
-}
-console.log("Storage Method: " + storage_ref.get_upload_method());
+var memoryStorage = multer.memoryStorage();
+var memoryUpload = multer({
+    storage: memoryStorage,
+    limits: {fileSize: 500000, files: 1}
+}).single('attachment');
 
 // ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({
@@ -90,11 +60,6 @@ app.use(function(req, res, next) {
     next();
 });
 
-// ### Directory routes ###
-if(storage_ref.get_upload_method() == "local"){
-    app.use('/actor_images', express.static(__dirname + '/public/assets/images/actors/')); //route to reference images
-    app.use('/event_images', express.static(__dirname + '/public/assets/images/events/')); //route to reference images
-}
 app.use('/logo', express.static(__dirname + '/public/assets/images/logo/')); //route to reference images
 app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //route to reference css scripts
 app.use('/js', express.static(__dirname + '/public/javascript/')); //route to reference controller scripts
