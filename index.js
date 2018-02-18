@@ -60,12 +60,12 @@ app.use(function(req, res, next) {
     next();
 });
 
-app.use('/logo', express.static(__dirname + '/public/assets/images/logo/')); //route to reference images
+app.use('/logo', express.static(__dirname + '/public/assets/images/logo/')); //route to reference logo images
 app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //route to reference css scripts
-app.use('/js', express.static(__dirname + '/public/javascript/')); //route to reference controller scripts
-app.use('/modules', express.static(__dirname + '/node_modules/')); //route to reference client libraries
-app.use('/bower_components', express.static(__dirname + '/bower_components/')); //route to reference css scripts
-app.use('/controllers', express.static(__dirname + '/public/components/')); //route to reference controller scripts
+app.use('/js', express.static(__dirname + '/public/javascript/')); //route to reference javascript files
+app.use('/modules', express.static(__dirname + '/node_modules/')); //route to reference npm library files
+app.use('/bower_components', express.static(__dirname + '/bower_components/')); //route to reference bower library files
+app.use('/controllers', express.static(__dirname + '/public/components/')); //route to reference client side controller scripts
 
 // ### Page routes configuration file ###
 app.use('/', require('./server_files/routing/page_routing'));
