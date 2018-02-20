@@ -63,27 +63,11 @@ module.exports = {
             target_ids.push(BSON.ObjectID.createFromHexString(submission_data.targets[i]));
         }
 
-        //create initial contribution record
-        var submission_data_keys = Object.keys(submission_data);
-        var contribution_collection = [];
-
-        for(var i = 0; i < submission_data_keys.length; i++){
-
-            if(submission_data_keys[i] != "user_id" && submission_data_keys[i] !="record_origin"){
-                var record = {
-                    field: submission_data_keys[i],
-                    addition: submission_data[submission_data_keys[i]],
-                    removal: ""
-                }
-                contribution_collection.push(record);
-            }
-        }
-
         var initial_event_contribution = EventContribution({
             user: BSON.ObjectID.createFromHexString(submission_data.user_id),
             date_of_submission: new Date(),
             date_of_approval: null,
-            contribution_details: contribution_collection 
+            contribution_details: [] 
         });
 
         //format beef event record for insertion
@@ -272,7 +256,6 @@ module.exports = {
                 }
             }
             
-            console.log(event_insert);
             response.status(200).send({message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_insert });
         }
         else{

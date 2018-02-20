@@ -116,50 +116,60 @@ module.exports = {
     async_loop_upload_items: function(items, file_server_folder, files, callback){
         
         var loop_count = 0;
-        
+                
         //use an asynchronous loop to cycle through gallery items, if item is an image, save image to cloudinary and update gallery item link
         loop(items, function(item, next){
 
+            loop_count++;
+            
             if(item.media_type == "image"){
 
                 var file_name = item.link;
                 var file_buffer;
                 var requires_download = true;
-
+                
+                console.log(item)
+                
                 if(item.file){
                     file_name = item.file.originalname;
                     file_buffer = item.file.buffer;
                     requires_download = false;
-                }
-
-                module.exports.upload_image(requires_download, file_server_folder, file_name, file_buffer, false, function(img_dl_title){
-
-                    item.link = img_dl_title;
-
-                    loop_count++;
                     
-                    if(item.main_graphic){
-                        module.exports.upload_image(requires_download, file_server_folder, file_name, file_buffer, true, function(img_dl_title){
-                            item.thumbnail_img_title = img_dl_title;
-                            
+                    module.exports.upload_image(requires_download, file_server_folder, file_name, file_buffer, false, function(img_dl_title){
+
+                        item.link = img_dl_title;
+
+                        if(item.main_graphic){
+                            module.exports.upload_image(requires_download, file_server_folder, file_name, file_buffer, true, function(img_dl_title){
+                                item.thumbnail_img_title = img_dl_title;
+
+                                if(loop_count == items.length){
+                                    next(null, loop.END_LOOP);
+                                }
+                                else{
+                                    next();
+                                }
+
+                            });
+                        }
+                        else{
                             if(loop_count == items.length){
                                 next(null, loop.END_LOOP);
                             }
                             else{
                                 next();
                             }
-                                
-                        });
+                        }
+                    });
+                }
+                else{
+                    if(loop_count == items.length){
+                        next(null, loop.END_LOOP);
                     }
                     else{
-                        if(loop_count == items.length){
-                            next(null, loop.END_LOOP);
-                        }
-                        else{
-                            next();
-                        }
+                        next();
                     }
-                });
+                }
             }
         }, function(){
             callback(items);

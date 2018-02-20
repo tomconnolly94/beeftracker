@@ -5,6 +5,7 @@ var event_contribution_schema = new Schema({
     user: Schema.ObjectId,
     date_of_submission: Date,
     date_of_approval: Date,
+    approving_admin_user_id: Schema.ObjectId,
     contribution_details:[{
         field: String,
         addition: String,
