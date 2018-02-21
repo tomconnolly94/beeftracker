@@ -30,7 +30,8 @@ var event_schema = new Schema({
     beef_chain_ids: [ Schema.ObjectId ],
     data_sources: [ String ],
     contributions: [ ContributionSchema ],
-    featured: Boolean
+    featured: Boolean,
+    tags: [ String ]
 });
 
 module.exports = mongoose.model('Event', event_schema);

@@ -93,7 +93,8 @@ module.exports = {
             data_sources: submission_data.data_sources,
             contributions: [ initial_event_contribution ],
             record_origin: submission_data.record_origin,
-            featured: false
+            featured: false,
+            tags: submission_data.tags
         });
         
         //add _id field if it exists
@@ -339,7 +340,6 @@ module.exports = {
                     if(event_insert.gallery_items[i].main_graphic){
                         event_insert.img_title_fullsize = event_insert.gallery_items[i].link; //save fullsize main graphic ref
                         event_insert.img_title_thumbnail = event_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
-                        
                     }
                 }
                 
@@ -413,6 +413,11 @@ module.exports = {
                     else{
                         if(event_obj){
                             
+                            var beef_chain_id = event_obj.beef_chain_id;
+                            
+                            console.log("beef_chain_id:");
+                            console.log(beef_chain_id);
+                            
                             //add thumbnail image to list
                             event_obj.gallery_items.push({link: event_obj.img_title_thumbnail, media_type: "image"});
                                             
@@ -420,7 +425,9 @@ module.exports = {
                                  db.collection(db_ref.get_current_event_table()).deleteOne({ _id: event_id_object }, function(queryErr, docs) {
                                     if(queryErr){ console.log(queryErr); }
                                     else{
-                                        response.status(200).send( docs[0] );
+                                        db.collection(db_ref.get_beef_chain_table()).deleteOne({ "_id" : beef_chain_id, events: { $size: 1 }, "events.0" : event_id_object }, function(queryErr, beef_chain_docs) {
+                                            response.status(200).send( docs[0] );
+                                        });
                                     }
                                 });
                             });
