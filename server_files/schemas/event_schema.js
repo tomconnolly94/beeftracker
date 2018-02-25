@@ -22,7 +22,8 @@ var event_schema = new Schema({
         media_type: String,
         link: String,
         main_graphic: Boolean,
-        file: {}
+        file: {},
+        file_name: String
     }],
     img_title_thumbnail: String,
     img_title_fullsize: String,

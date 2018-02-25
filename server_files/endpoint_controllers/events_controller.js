@@ -413,10 +413,10 @@ module.exports = {
                     else{
                         if(event_obj){
                             
-                            var beef_chain_id = event_obj.beef_chain_id;
+                            var beef_chain_ids = event_obj.beef_chain_ids;
                             
-                            console.log("beef_chain_id:");
-                            console.log(beef_chain_id);
+                            console.log("beef_chain_ids:");
+                            console.log(beef_chain_ids);
                             
                             //add thumbnail image to list
                             event_obj.gallery_items.push({link: event_obj.img_title_thumbnail, media_type: "image"});
@@ -425,12 +425,15 @@ module.exports = {
                                  db.collection(db_ref.get_current_event_table()).deleteOne({ _id: event_id_object }, function(queryErr, docs) {
                                     if(queryErr){ console.log(queryErr); }
                                     else{
-                                        db.collection(db_ref.get_beef_chain_table()).deleteOne({ "_id" : beef_chain_id, events: { $size: 1 }, "events.0" : event_id_object }, function(queryErr, beef_chain_docs) {
+                                        db.collection(db_ref.get_beef_chain_table()).remove({ "_id" : { $in: beef_chain_ids }, events: { $size: 1 }, "events.0" : event_id_object }, function(queryErr, beef_chain_docs) {
                                             response.status(200).send( docs[0] );
                                         });
                                     }
                                 });
                             });
+                        }
+                        else{
+                            response.status(400).send({ failed: true });
                         }
                     }
                 });
