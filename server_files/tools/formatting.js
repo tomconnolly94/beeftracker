@@ -21,6 +21,7 @@ module.exports = {
                 for(var j = 0; j < files.length; j++){
                     if(gallery_item.link == files[j].originalname){
                         gallery_item.file = files[j];
+                        gallery_item.file_name = files[j].originalname;
                     }
                 }
             }            

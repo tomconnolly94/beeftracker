@@ -13,7 +13,7 @@ var reset_auth = function(response){
     response.cookie("auth", "0", { expires: new Date(0), httpOnly: true });
     response.cookie("logged_in", "false", { expires: new Date(0) });
     //response.render('pages/authentication/admin_login.ejs');
-    response.send({message: "Authentication failed."});
+    response.status(401).send({message: "Authentication failed."});
 }
 
 //confirm authentication, refresh cookie, and let page route continue executing

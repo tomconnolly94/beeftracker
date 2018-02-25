@@ -22,7 +22,8 @@ var event_schema = new Schema({
         media_type: String,
         link: String,
         main_graphic: Boolean,
-        file: {}
+        file: {},
+        file_name: String
     }],
     img_title_thumbnail: String,
     img_title_fullsize: String,
@@ -30,7 +31,8 @@ var event_schema = new Schema({
     beef_chain_ids: [ Schema.ObjectId ],
     data_sources: [ String ],
     contributions: [ ContributionSchema ],
-    featured: Boolean
+    featured: Boolean,
+    tags: [ String ]
 });
 
 module.exports = mongoose.model('Event', event_schema);

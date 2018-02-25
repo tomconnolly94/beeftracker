@@ -63,27 +63,11 @@ module.exports = {
             target_ids.push(BSON.ObjectID.createFromHexString(submission_data.targets[i]));
         }
 
-        //create initial contribution record
-        var submission_data_keys = Object.keys(submission_data);
-        var contribution_collection = [];
-
-        for(var i = 0; i < submission_data_keys.length; i++){
-
-            if(submission_data_keys[i] != "user_id" && submission_data_keys[i] !="record_origin"){
-                var record = {
-                    field: submission_data_keys[i],
-                    addition: submission_data[submission_data_keys[i]],
-                    removal: ""
-                }
-                contribution_collection.push(record);
-            }
-        }
-
         var initial_event_contribution = EventContribution({
             user: BSON.ObjectID.createFromHexString(submission_data.user_id),
             date_of_submission: new Date(),
             date_of_approval: null,
-            contribution_details: contribution_collection 
+            contribution_details: [] 
         });
 
         //format beef event record for insertion
@@ -109,7 +93,8 @@ module.exports = {
             data_sources: submission_data.data_sources,
             contributions: [ initial_event_contribution ],
             record_origin: submission_data.record_origin,
-            featured: false
+            featured: false,
+            tags: submission_data.tags
         });
         
         //add _id field if it exists
@@ -272,7 +257,6 @@ module.exports = {
                 }
             }
             
-            console.log(event_insert);
             response.status(200).send({message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_insert });
         }
         else{
@@ -356,7 +340,6 @@ module.exports = {
                     if(event_insert.gallery_items[i].main_graphic){
                         event_insert.img_title_fullsize = event_insert.gallery_items[i].link; //save fullsize main graphic ref
                         event_insert.img_title_thumbnail = event_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
-                        
                     }
                 }
                 
@@ -430,6 +413,11 @@ module.exports = {
                     else{
                         if(event_obj){
                             
+                            var beef_chain_ids = event_obj.beef_chain_ids;
+                            
+                            console.log("beef_chain_ids:");
+                            console.log(beef_chain_ids);
+                            
                             //add thumbnail image to list
                             event_obj.gallery_items.push({link: event_obj.img_title_thumbnail, media_type: "image"});
                                             
@@ -437,10 +425,15 @@ module.exports = {
                                  db.collection(db_ref.get_current_event_table()).deleteOne({ _id: event_id_object }, function(queryErr, docs) {
                                     if(queryErr){ console.log(queryErr); }
                                     else{
-                                        response.status(200).send( docs[0] );
+                                        db.collection(db_ref.get_beef_chain_table()).remove({ "_id" : { $in: beef_chain_ids }, events: { $size: 1 }, "events.0" : event_id_object }, function(queryErr, beef_chain_docs) {
+                                            response.status(200).send( docs[0] );
+                                        });
                                     }
                                 });
                             });
+                        }
+                        else{
+                            response.status(400).send({ failed: true });
                         }
                     }
                 });

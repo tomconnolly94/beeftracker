@@ -60,7 +60,7 @@ router.route('/event-categories').post(event_categories_controller.createEventCa
 // Events endpoints
 router.route('/events').get(event_controller.findEvents);//built, written, tested
 router.route('/events/:event_id').get(event_controller.findEvent);//built, written, tested
-router.route('/events').post(token_authentication.authenticate_admin_user_token, memoryUpload, event_controller.createEvent);//built, written, tested, needs specific user auth
+router.route('/events').post(/*token_authentication.authenticate_admin_user_token,*/ memoryUpload, event_controller.createEvent);//built, written, tested, needs specific user auth
 router.route('/events/:event_id').put(token_authentication.authenticate_admin_user_token, memoryUpload, event_controller.updateEvent);//built, written, tested, needs admin auth
 router.route('/events/:event_id').delete(token_authentication.authenticate_admin_user_token, event_controller.deleteEvent);//built, written, tested, needs admin auth
 
@@ -70,7 +70,7 @@ router.route('/events/related-to-event/:event_id').get(event_peripherals_control
 router.route('/events/related-to-actor/:actor_id').get(event_peripherals_controller.findEventsRelatedToActor);//built, written, needs manual testing with valid data
 
 //Update request endpoints
-router.route('/update_request').post(update_request_controller.createUpdateRequest);//built, not written, not tested
+router.route('/update-requests').post(memoryUpload, update_request_controller.createUpdateRequest);//built, not written, not tested
 
 //Users endpoints
 router.route('/users/:user_id').get(token_authentication.authenticate_user_token, users_controller.getUser);//built, written, manually tested, needs specific user or admin auth
