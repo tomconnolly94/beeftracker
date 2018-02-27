@@ -20,6 +20,7 @@ var mime = require('mime-types');
 var multer = require('multer'); //library to assist with file storage
 var morgan = require("morgan"); //library to provide more detailed logs
 var jade = require('pug');
+var compression = require('compression');
 
 // ## Storage method configuration ##
 var memoryStorage = multer.memoryStorage();
@@ -59,6 +60,7 @@ app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
     next();
 });
+app.use(compression());
 
 app.use('/logo', express.static(__dirname + '/public/assets/images/logo/')); //route to reference logo images
 app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //route to reference css scripts
@@ -88,4 +90,4 @@ app.get('/robots.txt', function(request, response) { response.sendFile(__dirname
 app.get('/*', function(req, res, next) { res.render("pages/static_pages/error.ejs"); });
 
 // ### Launch application ####
-app.listen(app.get('port'), function() { console.log('Node app is running on port', app.get('port')); });
+app.listen(app.get('port'), function(){ console.log('Node app is running on port', app.get('port'), 'in', process.env.NODE_ENV, 'mode'); });

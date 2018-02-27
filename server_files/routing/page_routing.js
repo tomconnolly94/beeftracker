@@ -5,7 +5,7 @@ var router = require('express').Router();
 var db_ref = require("../config/db_config.js"); //get database reference object
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
 
-if(process.env.DEPLOYMENT_ENV == "heroku_production"){ //only apply https redirect if deployed on a heroku server
+if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if deployed on a heroku server
     /* Detect any http requests, if found, redirect to https, otherwise continue to other routes */
     router.get("*", function(req,res,next){
         if(req.headers["x-forwarded-proto"] != "https"){
@@ -16,7 +16,12 @@ if(process.env.DEPLOYMENT_ENV == "heroku_production"){ //only apply https redire
         }
     });
 }
-router.get('/', function(request, response) { response.render('pages/home.jade'); }); //home page
+router.get('/', function(request, response) {     
+    
+    
+    
+    response.render('pages/home.jade');
+}); //home page
 /*
 router.get('/', function(request, response) { response.render('pages/dynamic_pages/home.ejs'); }); //home page
 router.get('/splash_zone_html/', function(request, response) { response.render('partials/home/splash_zone.ejs'); }); // splash zone directive html

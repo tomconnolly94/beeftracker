@@ -24,17 +24,98 @@ var memoryUpload = multer({
     limits: {fileSize: 500000, files: 2}
 }).any('attachment');
 
-//connect uri suffixes to controllers
+var send_successful_response = function(data){
+    if(data){
+        response.status(200).send(activity_logs);
+    }
+    else{
+        response.status(200).send();
+    }
+}
+
+var send_unsuccessful_response = function(code, error_message){
+    
+    var response_json = {
+        failed: true
+    }
+    
+    if(error_message){
+        response_json.message = error_message;
+    }
+    response.status(code).send(response_json);
+}
+
+//connect uri routes to controllers
 
 //Activity logs endpoints
-router.route('/activity-logs/events/:event_id').get(activity_logs_controller.findActivityLogsFromEvent);//built, written, tested
-router.route('/activity-logs/actors/:actor_id').get(activity_logs_controller.findActivityLogsFromActor);//built, written, tested
+router.route('/activity-logs/events/:event_id').get(function(request, response){
+
+    activity_logs_controller.findActivityLogsFromEvent(request, response, function(activity_logs){
+        if(activity_logs.length > 0){
+            send_successful_response(activity_logs);
+        }
+        else{
+            send_unsuccessful_response(404, "Activity logs not found.");
+        }
+    });
+    
+});//built, written, tested
+router.route('/activity-logs/actors/:actor_id').get(function(){
+
+    activity_logs_controller.findActivityLogsFromActor(request, response, function(activity_logs){ 
+        if(activity_logs.length > 0){
+            send_successful_response(activity_logs);
+        }
+        else{
+            send_unsuccessful_response(404, "Activity logs not found.");
+        }
+    });
+});//built, written, tested
 
 //Actors endpoints
-router.route('/actors').get(actor_controller.findActors);//built, written, tested, needs query handling
-router.route('/actors/:actor_id').get(actor_controller.findActor);//built, written, tested
-router.route('/actors').post(memoryUpload, actor_controller.createActor);//built, written, tested
-router.route('/actors/:actor_id').put(token_authentication.authenticate_admin_user_token, memoryUpload, actor_controller.updateActor);//built, written, tested, needs admin auth
+router.route('/actors').get(function(request, response){
+    actor_controller.findActors(request, response, function(actors){
+        if(actors.length > 0){
+            send_successful_response(actors);
+        }
+        else{
+            send_unsuccessful_response(404, "No actors found.");
+        }
+    });
+    
+});//built, written, tested, needs query handling
+router.route('/actors/:actor_id').get(function(request, response){
+    actor_controller.findActor(request, response, function(actor){
+        if(actor){
+            send_successful_response(actor);
+        }
+        else{
+            send_unsuccessful_response(404, "Actor not found.");
+        }
+    });
+    
+});//built, written, tested
+router.route('/actors').post(memoryUpload, function(request, response){
+    actor_controller.createActor(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(404, data.message);
+        }
+        else{
+            send_successful_response(data);
+        }
+    });
+    
+});//built, written, tested
+router.route('/actors/:actor_id').put(function(request, response){
+    token_authentication.authenticate_admin_user_token, memoryUpload, actor_controller.updateActor(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(404, data.message);
+        }
+        else{
+            send_successful_response(data);
+        }
+    });
+});//built, written, tested, needs admin auth
 router.route('/actors/:actor_id').delete(token_authentication.authenticate_admin_user_token, actor_controller.deleteActor);//built, written, tested, needs admin auth
 
 //Actor fields config endpoints

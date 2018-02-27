@@ -21,7 +21,7 @@ var confirm_auth = function(request, response, token, next){
     if(auto_refresh_auth_token){
         //cookie config
         var cookies_http_only = true;
-        var cookies_secure = process.env.DEPLOYMENT_ENV == "heroku_production" ? true : false; //use secure cookies when on heroku server, dont use when running local server
+        var cookies_secure = process.env.NODE_ENV == "heroku_production" ? true : false; //use secure cookies when on heroku server, dont use when running local server
 
         //refresh token expiry date
         var expiry_timestamp = Math.floor(Date.now() + (1000 * 60 * 60)); //create new exp date

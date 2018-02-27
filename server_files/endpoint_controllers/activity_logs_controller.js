@@ -6,7 +6,7 @@ var db_ref = require("../config/db_config.js");
 
 module.exports = {
     
-    findActivityLogsFromEvent: function(request, response){
+    findActivityLogsFromEvent: function(request, response, callback){
         
         var event_id = request.params.event_id;
         
@@ -45,12 +45,7 @@ module.exports = {
                     //handle error
                     if(err) { console.log(err);}
                     else{
-                        if(docs.length > 0){
-                            response.status(200).send(docs);
-                        }
-                        else{
-                            response.status(404).send({ message: "Activity log not found"});
-                        }
+                        callback(docs);
                     }
                 });
             }
@@ -96,12 +91,7 @@ module.exports = {
                     //handle error
                     if(err) { console.log(err);}
                     else{
-                        if(docs.length > 0){
-                            response.status(200).send( docs );
-                        }
-                        else{
-                            response.status(404).send({ message: "Activity logs not found"});
-                        }
+                        callback(docs);
                     }
                 });
             }

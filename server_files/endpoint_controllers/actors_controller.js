@@ -70,7 +70,7 @@ module.exports = {
         return actor_insert;
     },
     
-    findActors: function(request, response){
+    findActors: function(request, response, callback){
         
         var query_parameters = request.query;
         var match_query = {};
@@ -146,14 +146,14 @@ module.exports = {
                 db.collection(db_ref.get_current_actor_table()).aggregate(aggregate_array).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
                     else{
-                        response.status(200).send( docs );
+                        callback(docs);
                     }
                 });            
             }
         });
     },
     
-    findActor: function(request, response){
+    findActor: function(request, response, callback){
         
         //extract data
         var actor_id = request.params.actor_id;
@@ -177,23 +177,16 @@ module.exports = {
                 ]).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
                     else{
-                        console.log("search completed");
-                        if(docs && docs.length > 0){
-                            response.status(200).send( docs[0] );
-                        }
-                        else{
-                            response.status(404).send( { message: "Actor not found."} );
-                        }
+                        callback(docs[0]);
                     }
                 });            
             }
         });
     },
     
-    createActor: function(request, response){
+    createActor: function(request, response, callback){
                 
         var submission_data = JSON.parse(request.body.data); //get form data
-        console.log(submission_data);
         var files;
 
         if(request.files){
@@ -206,44 +199,49 @@ module.exports = {
             console.log("test mode is on.");
             console.log(actor_insert);
         }
-        else{
-            
-            console.log(actor_insert)
-            
+        else{        
             //find gallery items that need their embedding links generated
             actor_insert.gallery_items = format_embeddable_items(actor_insert.gallery_items, files);
-            
-            storage_interface.async_loop_upload_items(actor_insert.gallery_items, "actors", files, function(items){
-                
-                actor_insert.gallery_items = items;
-                
-                //remove file objects to avoid adding file buffer to the db
-                for(var i = 0; i < actor_insert.gallery_items.length; i++){
-                    if(actor_insert.gallery_items[i].file){
-                        actor_insert.gallery_items[i].file = null;
-                    }
-                    
-                    if(actor_insert.gallery_items[i].main_graphic){
-                        actor_insert.img_title_fullsize = actor_insert.gallery_items[i].link; //save fullsize main graphic ref
-                        actor_insert.img_title_thumbnail = actor_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
-                        
-                    }
-                }
-                
-                var db_options = {
-                    send_email_notification: true,
-                    email_notification_text: "Beef",
-                    add_to_scraped_confirmed_table: request.body.data.record_origin == "scraped" ? true : false
-                };
+            try{
+                storage_interface.async_loop_upload_items(actor_insert.gallery_items, "actors", files, function(items){
 
-                db_interface.insert_record_into_db(actor_insert, db_ref.get_current_actor_table(), db_options, function(id){
-                    response.status(201).send(id);
+                    actor_insert.gallery_items = items;
+
+                    //remove file objects to avoid adding file buffer to the db
+                    for(var i = 0; i < actor_insert.gallery_items.length; i++){
+                        if(actor_insert.gallery_items[i].file){
+                            actor_insert.gallery_items[i].file = null;
+                        }
+
+                        if(actor_insert.gallery_items[i].main_graphic){
+                            actor_insert.img_title_fullsize = actor_insert.gallery_items[i].link; //save fullsize main graphic ref
+                            actor_insert.img_title_thumbnail = actor_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
+                        }
+                    }
+
+                    var db_options = {
+                        send_email_notification: true,
+                        email_notification_text: "Beef",
+                        add_to_scraped_confirmed_table: request.body.data.record_origin == "scraped" ? true : false
+                    };
+
+                    try{
+                        db_interface.insert_record_into_db(actor_insert, db_ref.get_current_actor_table(), db_options, function(id){
+                            callback(id);
+                        });
+                    }
+                    catch(err){
+                        callback({ failed: true, message: "Problem with database."});
+                    }
                 });
-            });
+            }
+            catch(err){
+                callback({ failed: true, message: "Problem with file server."});
+            }
         }
     },
     
-    updateActor: function(request, response){
+    updateActor: function(request, response, callback){
             
         var submission_data = JSON.parse(request.body.data); //get form data
         var existing_object_id = request.params.actor_id;
@@ -297,37 +295,42 @@ module.exports = {
                             
                             original_actor = original_actor[0];
 
-                            //call to update the db record
-                            db_interface.update_record_in_db(actor_insert, db_ref.get_current_actor_table(), db_options, existing_object_id, function(document){
-                                
-                                var gallery_items_to_remove = [];
-                                
-                                //if new thumbnail doesnt match the existing one the new image will have been uploaded so remove the old file
-                                if(document.img_title_thumbnail != original_actor.img_title_thumbnail){
-                                    gallery_items_to_remove.push({link: original_actor.img_title_thumbnail, media_type: "image"});
-                                }
+                            try{
+                                //call to update the db record
+                                db_interface.update_record_in_db(actor_insert, db_ref.get_current_actor_table(), db_options, existing_object_id, function(document){
 
-                                //if new gallery_item doesnt match the existing one the new image will have been uploaded so remove the old file
-                                for(var i = 0; i < original_actor.gallery_items.length; i++){
-                                    var gallery_item_found = false;
-                                    for(var j = 0; j < document.gallery_items.length; j++){
-                                        if(original_actor.gallery_items[i].link == document.gallery_items[j].link){
-                                            gallery_item_found = true;
+                                    var gallery_items_to_remove = [];
+
+                                    //if new thumbnail doesnt match the existing one the new image will have been uploaded so remove the old file
+                                    if(document.img_title_thumbnail != original_actor.img_title_thumbnail){
+                                        gallery_items_to_remove.push({link: original_actor.img_title_thumbnail, media_type: "image"});
+                                    }
+
+                                    //if new gallery_item doesnt match the existing one the new image will have been uploaded so remove the old file
+                                    for(var i = 0; i < original_actor.gallery_items.length; i++){
+                                        var gallery_item_found = false;
+                                        for(var j = 0; j < document.gallery_items.length; j++){
+                                            if(original_actor.gallery_items[i].link == document.gallery_items[j].link){
+                                                gallery_item_found = true;
+                                            }
+                                        }
+                                        if(!gallery_item_found){
+                                            gallery_items_to_remove.push(original_actor.gallery_items[i]);
                                         }
                                     }
-                                    if(!gallery_item_found){
-                                        gallery_items_to_remove.push(original_actor.gallery_items[i]);
+
+                                    if(gallery_items_to_remove.length > 0){
+                                        //remove all old gallery_items
+                                        storage_interface.async_loop_remove_items(gallery_items_to_remove, "actors", function(items){
+                                            console.log("finish")
+                                        });
                                     }
-                                }
-                                
-                                if(gallery_items_to_remove.length > 0){
-                                    //remove all old gallery_items
-                                    storage_interface.async_loop_remove_items(gallery_items_to_remove, "actors", function(items){
-                                        console.log("finish")
-                                    });
-                                }
-                                response.status(200).send(existing_object_id);
-                            });
+                                    callback(existing_object_id);
+                                });
+                            }
+                            catch(err){
+                                    callback({ failed: true, message: "Problem with database."});
+                            }
                         });
                     }
                 });
@@ -335,7 +338,7 @@ module.exports = {
         }
     },
     
-    deleteActor: function(request, response){
+    deleteActor: function(request, response, callback){
         //extract data
         var actor_id = request.params.actor_id;
 
@@ -371,7 +374,7 @@ module.exports = {
         });
     },
     
-    getVariableFieldsConfig: function(request, response){
+    getVariableFieldsConfig: function(request, response, callback){
 
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }

@@ -7,7 +7,7 @@ var hashing = require("../tools/hashing.js");
 
 //cookie config
 var cookies_http_only = true;
-var cookies_secure = process.env.DEPLOYMENT_ENV == "heroku_production" ? true : false; //use secure cookies when on heroku server, dont use when 
+var cookies_secure = process.env.NODE_ENV == "heroku_production" ? true : false; //use secure cookies when on heroku server, dont use when 
         
 module.exports = {
     
