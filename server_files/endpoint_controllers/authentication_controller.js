@@ -11,7 +11,7 @@ var cookies_secure = process.env.NODE_ENV == "heroku_production" ? true : false;
         
 module.exports = {
     
-    authenticateUser: function(request, response){
+    authenticateUser: function(request, response, callback){
         //extract data for use later
         var db_url = process.env.MONGODB_URI; //get db uri
         var auth_details = request.body; //get form data
@@ -25,7 +25,7 @@ module.exports = {
                 db.collection(db_ref.get_user_details_table()).aggregate([{ $match: { username: auth_details.username } }]).toArray(function(err, auth_arr){
                     if(err){ console.log(err); }
                     else if(auth_arr.length < 1){                            
-                        response.send({auth_failed: true, message: "User not found."});
+                        callback({ failed: true, auth_failed: true, message: "User not found."});
                     }
                     else{
 
@@ -56,14 +56,14 @@ module.exports = {
                                 response.cookie("logged_in", "true", { expires: new Date(expiry_timestamp), httpOnly: false });
 
                                 //send response with cookies
-                                response.send({ auth_failed: false });
+                                callback({ auth_failed: false });
 
                                 response_sent = true;
                                 break;// ensure loop does not continue
                             }
                         }
                         if(!response_sent){ //if the password hash is not found send a failed auth response
-                            response.send({auth_failed: true, message: "Incorrect Password."});
+                            callback({ failed: true, auth_failed: true, message: "Incorrect Password."});
                         }
                     }
                 });
@@ -71,7 +71,7 @@ module.exports = {
         });
     },
     
-    deauthenticateUser: function(request, response){
+    deauthenticateUser: function(request, response, callback){
         //set all cookies to expire immediately
         response.cookie( "auth", "0", { expires: new Date(0), httpOnly: cookies_http_only, secure: cookies_secure });
         response.cookie( "logged_in", "false", { expires: new Date(0), httpOnly: false });

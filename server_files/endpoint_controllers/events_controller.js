@@ -103,7 +103,7 @@ module.exports = {
         return event_insert;
     },
 
-    findEvents: function(request, response){
+    findEvents: function(request, response, callback){
         
         var query_parameters = request.query;
         var match_query_content = {};
@@ -163,9 +163,7 @@ module.exports = {
                     }}, 
                     event_projection
                 ];
-                
-                console.log(aggregate_array);
-                
+                                
                 if(Object.keys(sort_query_content).length > 0){
                     aggregate_array.$sort = sort_query_content;
                 }
@@ -173,17 +171,15 @@ module.exports = {
                 if(Object.keys(limit_query_content).length > 0){
                     aggregate_array.$limit = limit_query_content;
                 }
-                
-                console.log(aggregate_array);
                    
                 db.collection(db_ref.get_current_event_table()).aggregate(aggregate_array).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
                     else{
                     if(docs && docs.length > 0){
-                        response.status(200).send( docs );
+                        callback( docs );
                     }
                     else{
-                        response.status(404).send( { message: "Events not found."} );
+                        callback({ failed: true, message: "Events not found." });
                     }
                     }
                 });            
@@ -192,7 +188,7 @@ module.exports = {
         //}
     },
     
-    findEvent: function(request, response){
+    findEvent: function(request, response, callback){
         
         //extract data
         var event_id = request.params.event_id;
@@ -200,7 +196,6 @@ module.exports = {
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
             else{
-                
                 var event_id_object = BSON.ObjectID.createFromHexString(event_id);
                 
                 db.collection(db_ref.get_current_event_table()).aggregate([
@@ -224,10 +219,10 @@ module.exports = {
                     if(queryErr){ console.log(queryErr); }
                     else{
                         if(docs && docs.length > 0){
-                            response.status(200).send( docs[0] );
+                            callback( docs[0] );
                         }
                         else{
-                            response.status(404).send( { message: "Event not found."} );
+                            callback({ failed: true, message: "Event not found."});
                         }
                     }
                 });            
@@ -235,7 +230,7 @@ module.exports = {
         });
     },
     
-    createEvent: function(request, response){
+    createEvent: function(request, response, callback){
                 
         var submission_data = JSON.parse(request.body.data); //get form data
         var files;
@@ -257,7 +252,7 @@ module.exports = {
                 }
             }
             
-            response.status(200).send({message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_insert });
+            callback({ failed: true, test_mode: true, message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_insert });
         }
         else{
             //find gallery items that need their embedding links generated
@@ -287,13 +282,13 @@ module.exports = {
                 };
 
                 db_interface.insert_record_into_db(event_insert, db_ref.get_current_event_table(), db_options, function(id){
-                    response.status(201).send(id);
+                    callback(id);
                 });
             });
         }
     },
     
-    updateEvent: function(request, response){
+    updateEvent: function(request, response, callback){
         
         //extract data for use later
         var existing_object_id = request.params.event_id;
@@ -320,7 +315,7 @@ module.exports = {
             }
             
             console.log(event_insert);
-            response.status(200).send({message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_insert });
+            callback({ failed: true, test_mode: true, message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_insert });
         }
         else{
             
@@ -362,8 +357,6 @@ module.exports = {
                             db_interface.update_record_in_db(event_insert, db_ref.get_current_event_table(), db_options, existing_object_id, function(document){
                                 
                                 var gallery_items_to_remove = [];
-                                console.log(event_insert);
-                                console.log(original_event);
                                 
                                 //if new thumbnail doesnt match the existing one the new image will have been uploaded so remove the old file
                                 if(event_insert.img_title_thumbnail != original_event.img_title_thumbnail){
@@ -389,7 +382,7 @@ module.exports = {
                                         console.log("finish")
                                     });
                                 }
-                                response.status(200).send(existing_object_id);
+                                callback(existing_object_id);
                             });
                         });
                     }
@@ -398,7 +391,7 @@ module.exports = {
         }
     },
     
-    deleteEvent: function(request, response){
+    deleteEvent: function(request, response, callback){
         
         //extract data
         var event_id = request.params.event_id;
@@ -411,13 +404,9 @@ module.exports = {
                 db.collection(db_ref.get_current_event_table()).findOne({ _id: event_id_object }, function(queryErr, event_obj) {
                     if(queryErr){ console.log(queryErr); }
                     else{
-                        if(event_obj){
-                            
+                        if(event_obj){                            
                             var beef_chain_ids = event_obj.beef_chain_ids;
-                            
-                            console.log("beef_chain_ids:");
-                            console.log(beef_chain_ids);
-                            
+                                                        
                             //add thumbnail image to list
                             event_obj.gallery_items.push({link: event_obj.img_title_thumbnail, media_type: "image"});
                                             
@@ -426,14 +415,14 @@ module.exports = {
                                     if(queryErr){ console.log(queryErr); }
                                     else{
                                         db.collection(db_ref.get_beef_chain_table()).remove({ "_id" : { $in: beef_chain_ids }, events: { $size: 1 }, "events.0" : event_id_object }, function(queryErr, beef_chain_docs) {
-                                            response.status(200).send( docs[0] );
+                                            callback( docs[0] );
                                         });
                                     }
                                 });
                             });
                         }
                         else{
-                            response.status(400).send({ failed: true });
+                            callback({ failed: true, message: "Event cannot be found, and so was not deleted." });
                         }
                     }
                 });

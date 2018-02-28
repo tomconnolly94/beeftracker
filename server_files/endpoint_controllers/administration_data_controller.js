@@ -1,26 +1,26 @@
 module.exports = {
     
-    getContactUsData: function(req, response){
+    getContactUsData: function(request, response, callback){
         console.log("test completed 2.");
         response.send({test: "complete 2"});
     },
     
-    getAboutUsData: function(req, response){
+    getAboutUsData: function(request, response, callback){
         console.log("test completed 2.");
         response.send({about_us: "Hello, we are Beeftracker a new company based in news."});
     },
     
-    getPrivacyPolicyData: function(req, response){
+    getPrivacyPolicyData: function(request, response, callback){
         console.log("test completed 2.");
         response.send({test: "complete 2"});
     },
     
-    getTermsAndConditionsData: function(req, response){
+    getTermsAndConditionsData: function(request, response, callback){
         console.log("test completed 2.");
         response.send({test: "complete 2"});
     },
     
-    getDisclaimerData: function(req, response){
+    getDisclaimerData: function(request, response, callback){
         console.log("test completed 2.");
         response.send({test: "complete 2"});
     }

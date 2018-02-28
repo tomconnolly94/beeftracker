@@ -24,16 +24,16 @@ var memoryUpload = multer({
     limits: {fileSize: 500000, files: 2}
 }).any('attachment');
 
-var send_successful_response = function(data){
+var send_successful_response = function(response, code, data){
     if(data){
-        response.status(200).send(activity_logs);
+        response.status(code).send(activity_logs);
     }
     else{
-        response.status(200).send();
+        response.status(code).send();
     }
 }
 
-var send_unsuccessful_response = function(code, error_message){
+var send_unsuccessful_response = function(response, code, error_message){
     
     var response_json = {
         failed: true
@@ -52,10 +52,10 @@ router.route('/activity-logs/events/:event_id').get(function(request, response){
 
     activity_logs_controller.findActivityLogsFromEvent(request, response, function(activity_logs){
         if(activity_logs.length > 0){
-            send_successful_response(activity_logs);
+            send_successful_response(response, activity_logs);
         }
         else{
-            send_unsuccessful_response(404, "Activity logs not found.");
+            send_unsuccessful_response(response, 400, "Activity logs not found.");
         }
     });
     
@@ -64,10 +64,10 @@ router.route('/activity-logs/actors/:actor_id').get(function(){
 
     activity_logs_controller.findActivityLogsFromActor(request, response, function(activity_logs){ 
         if(activity_logs.length > 0){
-            send_successful_response(activity_logs);
+            send_successful_response(response, activity_logs);
         }
         else{
-            send_unsuccessful_response(404, "Activity logs not found.");
+            send_unsuccessful_response(response, 400, "Activity logs not found.");
         }
     });
 });//built, written, tested
@@ -76,10 +76,10 @@ router.route('/activity-logs/actors/:actor_id').get(function(){
 router.route('/actors').get(function(request, response){
     actor_controller.findActors(request, response, function(actors){
         if(actors.length > 0){
-            send_successful_response(actors);
+            send_successful_response(response, actors);
         }
         else{
-            send_unsuccessful_response(404, "No actors found.");
+            send_unsuccessful_response(response, 400, "No actors found.");
         }
     });
     
@@ -87,10 +87,10 @@ router.route('/actors').get(function(request, response){
 router.route('/actors/:actor_id').get(function(request, response){
     actor_controller.findActor(request, response, function(actor){
         if(actor){
-            send_successful_response(actor);
+            send_successful_response(response, actor);
         }
         else{
-            send_unsuccessful_response(404, "Actor not found.");
+            send_unsuccessful_response(response, 400, "Actor not found.");
         }
     });
     
@@ -98,73 +98,334 @@ router.route('/actors/:actor_id').get(function(request, response){
 router.route('/actors').post(memoryUpload, function(request, response){
     actor_controller.createActor(request, response, function(data){
         if(data.failed){
-            send_unsuccessful_response(404, data.message);
+            send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(data);
+            send_successful_response(response, data);
         }
     });
     
 });//built, written, tested
-router.route('/actors/:actor_id').put(function(request, response){
-    token_authentication.authenticate_admin_user_token, memoryUpload, actor_controller.updateActor(request, response, function(data){
+router.route('/actors/:actor_id').put(token_authentication.authenticate_admin_user_token, memoryUpload, function(request, response){
+    actor_controller.updateActor(request, response, function(data){
         if(data.failed){
-            send_unsuccessful_response(404, data.message);
+            send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(data);
+            send_successful_response(response, data);
         }
     });
 });//built, written, tested, needs admin auth
-router.route('/actors/:actor_id').delete(token_authentication.authenticate_admin_user_token, actor_controller.deleteActor);//built, written, tested, needs admin auth
+router.route('/actors/:actor_id').delete(token_authentication.authenticate_admin_user_token, function(request, response){
+    actor_controller.deleteActor(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response);
+        }
+    });
+});//built, written, tested, needs admin auth
 
 //Actor fields config endpoints
-router.route('/actor-variable-fields-config').get(actor_controller.getVariableFieldsConfig);//built, written, tested
+router.route('/actor-variable-fields-config').get(function(request, response){
+    actor_controller.getVariableActorFieldsConfig(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, data);
+        }
+    });
+});//built, written, tested
 
 //Administration data endpoints
-router.route('/contact-us-data').get(administration_data_controller.getContactUsData);//built, not written, not tested
-router.route('/about-us-data').get(administration_data_controller.getAboutUsData);//built, not written, not tested
-router.route('/privacy-policy-data').get(administration_data_controller.getPrivacyPolicyData);//built, not written, not tested
-router.route('/terms-and-conditions-data').get(administration_data_controller.getTermsAndConditionsData);//built, not written, not tested
-router.route('/disclaimer-data').get(administration_data_controller.getDisclaimerData);//built, not written
+router.route('/contact-us-data').get(function(request, response){
+    administration_data_controller.getContactUsData(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response);
+        }
+    });
+});//built, not written, not tested
+router.route('/about-us-data').get(function(request, response){
+    administration_data_controller.getAboutUsData(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response);
+        }
+    });
+});//built, not written, not tested
+router.route('/privacy-policy-data').get(function(request, response){
+    administration_data_controller.getPrivacyPolicyData(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response);
+        }
+    });
+});//built, not written, not tested
+router.route('/terms-and-conditions-data').get(function(request, response){
+    administration_data_controller.getTermsAndConditionsData(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response);
+        }
+    });
+});//built, not written, not tested
+router.route('/disclaimer-data').get(function(request, response){
+    administration_data_controller.getDisclaimerData(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response);
+        }
+    });
+});//built, not written
 
 //Comments endpoints
-router.route('/comments').post(comments_controller.createComment);//built, written, tested, needs specific user auth
-router.route('/comments/events/:event_id').get(comments_controller.findCommentsFromEvent);//built, written, tested
-router.route('/comments/actors/:actor_id').get(comments_controller.findCommentsFromActor);//built, written, tested
-router.route('/comments/:comment_id').delete(token_authentication.authenticate_admin_user_token, comments_controller.deleteComment);//built, written, tested, needs specific user or admin auth
+router.route('/comments').post(function(request, response){
+    comments_controller.createComment(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 201);
+        }
+    });
+});//built, written, tested, needs specific user auth
+router.route('/comments/events/:event_id').get(function(request, response){
+    comments_controller.findCommentsFromEvent(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 200);
+        }
+    });
+});//built, written, tested
+router.route('/comments/actors/:actor_id').get(function(request, response){
+    comments_controller.findCommentsFromActor(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 200);
+        }
+    });
+});//built, written, tested
+router.route('/comments/:comment_id').delete(token_authentication.authenticate_admin_user_token, function(request, response){
+    comments_controller.deleteComment(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 200);
+        }
+    });
+});//built, written, tested, needs specific user or admin auth
 
 // Event categories endpoints
-router.route('/event-categories').get(event_categories_controller.getEventCategories);//built, written, tested
-router.route('/event-categories').post(event_categories_controller.createEventCategory);//built, written, tested
+router.route('/event-categories').get(function(request, response){
+    event_categories_controller.getEventCategories(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 200, data);
+        }
+    });
+});//built, written, tested
+router.route('/event-categories').post(function(request, response){
+    event_categories_controller.createEventCategory(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 201, data);
+        }
+    });
+});//built, written, tested
 
 // Events endpoints
-router.route('/events').get(event_controller.findEvents);//built, written, tested
-router.route('/events/:event_id').get(event_controller.findEvent);//built, written, tested
-router.route('/events').post(/*token_authentication.authenticate_admin_user_token,*/ memoryUpload, event_controller.createEvent);//built, written, tested, needs specific user auth
-router.route('/events/:event_id').put(token_authentication.authenticate_admin_user_token, memoryUpload, event_controller.updateEvent);//built, written, tested, needs admin auth
-router.route('/events/:event_id').delete(token_authentication.authenticate_admin_user_token, event_controller.deleteEvent);//built, written, tested, needs admin auth
+router.route('/events').get(function(request, response){
+    event_controller.findEvents(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 200, data);
+        }
+    });
+});//built, written, tested
+router.route('/events/:event_id').get(function(request, response){
+    event_controller.findEvent(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 200, data);
+        }
+    });
+});//built, written, tested
+router.route('/events').post(/*token_authentication.authenticate_admin_user_token,*/ memoryUpload, function(request, response){
+    event_controller.createEvent(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 201, data);
+        }
+    });
+});//built, written, tested, needs specific user auth
+router.route('/events/:event_id').put(token_authentication.authenticate_admin_user_token, memoryUpload, function(request, response){
+    event_controller.updateEvent(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 204, data);
+        }
+    });
+});//built, written, tested, needs admin auth
+router.route('/events/:event_id').delete(token_authentication.authenticate_admin_user_token, function(request, response){
+    event_controller.deleteEvent(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 200, data);
+        }
+    });
+});//built, written, tested, needs admin auth
 
 //Peripheral events endpoints
-router.route('/events/from-beef-chain/:beef_chain_id').get(event_peripherals_controller.findEventsFromBeefChain);//built, written, tested
-router.route('/events/related-to-event/:event_id').get(event_peripherals_controller.findEventsRelatedToEvent);//built, written, needs manual testing with valid data
-router.route('/events/related-to-actor/:actor_id').get(event_peripherals_controller.findEventsRelatedToActor);//built, written, needs manual testing with valid data
+router.route('/events/from-beef-chain/:beef_chain_id').get(function(request, response){
+    event_peripherals_controller.findEventsFromBeefChain(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, );
+        }
+    });
+});//built, written, tested
+router.route('/events/related-to-event/:event_id').get(function(request, response){
+    event_peripherals_controller.findEventsRelatedToEvent(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, );
+        }
+    });
+});//built, written, needs manual testing with valid data
+router.route('/events/related-to-actor/:actor_id').get(function(request, response){
+    event_peripherals_controller.findEventsRelatedToActor(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, );
+        }
+    });
+});//built, written, needs manual testing with valid data
 
 //Update request endpoints
-router.route('/update-requests').post(memoryUpload, update_request_controller.createUpdateRequest);//built, not written, not tested
+router.route('/update-requests').post(memoryUpload, function(request, response){
+    update_request_controller.createUpdateRequest(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, );
+        }
+    });
+});//built, not written, not tested
 
 //Users endpoints
-router.route('/users/:user_id').get(token_authentication.authenticate_user_token, users_controller.getUser);//built, written, manually tested, needs specific user or admin auth
-router.route('/users').post(memoryUpload, users_controller.createUser);//built, written, manually tested
-router.route('/users/:user_id').put(token_authentication.authenticate_admin_user_token, users_controller.updateUser);//built, not written, not tested, needs specific user or admin auth
-router.route('/users/:user_id').delete(token_authentication.authenticate_admin_user_token, users_controller.deleteUser);//built, written, manually tested, needs specific user or admin auth
-router.route('/reset-password').post(users_controller.resetUserPassword);//built, not written, not tested
+router.route('/users/:user_id').get(token_authentication.authenticate_user_token, function(request, response){
+    users_controller.getUser(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, );
+        }
+    });
+});//built, written, manually tested, needs specific user or admin auth
+router.route('/users').post(memoryUpload, function(request, response){
+    users_controller.createUser(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, );
+        }
+    });
+});//built, written, manually tested
+router.route('/users/:user_id').put(token_authentication.authenticate_admin_user_token, function(request, response){
+    users_controller.updateUser(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, );
+        }
+    });
+});//built, not written, not tested, needs specific user or admin auth
+router.route('/users/:user_id').delete(token_authentication.authenticate_admin_user_token, function(request, response){
+    users_controller.deleteUser(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, );
+        }
+    });
+});//built, written, manually tested, needs specific user or admin auth
+router.route('/reset-password').post(function(request, response){
+    users_controller.resetUserPassword(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, );
+        }
+    });
+});//built, not written, not tested
 
 //Authentication endpoints
-router.route('/authenticate').post(authentication_controller.authenticateUser);//built, written, not tested
-router.route('/deauthenticate').get(authentication_controller.deauthenticateUser);//built, written, not tested
+router.route('/authenticate').post(function(request, response){
+    authentication_controller.authenticateUser(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, );
+        }
+    });
+});//built, written, not tested
+router.route('/deauthenticate').get(function(request, response){
+    authentication_controller.deauthenticateUser(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, );
+        }
+    });
+});//built, written, not tested
 
 //handle errors
-router.route('/*').get(function(request, response) {response.status(404).send({success: false, message: "endpoint not found"}); });
+router.route('/*').get(function(request, response) {response.status(400).send({success: false, message: "endpoint not found"}); });
 
 module.exports = router;

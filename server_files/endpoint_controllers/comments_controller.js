@@ -9,10 +9,9 @@ var Comment = require("../schemas/comment_schema");
 
 module.exports = {
     
-    createComment: function(request, response){
+    createComment: function(request, response, callback){
         
         var comment_data = request.body;
-        console.log(comment_data);
         
         var comment_record = new Comment({
             text: comment_data.text,
@@ -32,14 +31,14 @@ module.exports = {
                     if(err) { console.log(err);}
                     else{
                         console.log(docs)
-                        response.status(201).send({ id: docs.ops[0]._id});
+                        callback({ id: docs.ops[0]._id });
                     }
                 });
             }
         });
     },
     
-    findCommentsFromEvent: function(request, response){
+    findCommentsFromEvent: function(request, response, callback){
         var event_id = request.params.event_id;
         
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
@@ -81,14 +80,14 @@ module.exports = {
                     //handle error
                     if(err) { console.log(err);}
                     else{
-                        response.status(200).send( docs );
+                        callback( docs );
                     }
                 });
             }
         });
     },
     
-    findCommentsFromActor: function(request, response){
+    findCommentsFromActor: function(request, response, callback){
         var actor_id = request.params.actor_id;
         
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
@@ -130,14 +129,14 @@ module.exports = {
                     //handle error
                     if(err) { console.log(err);}
                     else{
-                        response.status(200).send({ comments: docs });
+                        callback(docs);
                     }
                 });
             }
         });
     },
     
-    deleteComment: function(request, response){
+    deleteComment: function(request, response, callback){
         
         var comment_id = request.params.comment_id;
         
@@ -151,7 +150,7 @@ module.exports = {
                     //handle error
                     if(err) { console.log(err);}
                     else{
-                        response.status(200).send();
+                        callback();
                     }
                 });
             }

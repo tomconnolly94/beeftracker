@@ -8,7 +8,7 @@ var EventCategory = require("../schemas/event_category_schema");
 
 module.exports = {
     
-    getEventCategories: function(request, response){
+    getEventCategories: function(request, response, callback){
         
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
@@ -19,7 +19,7 @@ module.exports = {
                     //handle error
                     if(err) { console.log(err);}
                     else{
-                        response.send({ categories: docs });
+                        callback(docs);
                     }
                 });
             }
@@ -46,7 +46,7 @@ module.exports = {
                             //handle error
                             if(err) { console.log(err);}
                             else{
-                                response.send({ success: true, message: "Category created." });
+                                callback({ failed: false, message: "Category created." });
                             }
                         });
                     }

@@ -329,7 +329,7 @@ module.exports = {
                                 });
                             }
                             catch(err){
-                                    callback({ failed: true, message: "Problem with database."});
+                                callback({ failed: true, message: "Problem with database."});
                             }
                         });
                     }
@@ -347,45 +347,60 @@ module.exports = {
             else{
                 var actor_id_object = BSON.ObjectID.createFromHexString(actor_id);
                 
-                db.collection(db_ref.get_current_actor_table()).findOne({ _id: actor_id_object }, function(queryErr, actor_obj) {
-                    if(queryErr){ console.log(queryErr); }
-                    else{
-                        if(actor_obj){
-                            
-                            //add thumbnail image to list
-                            actor_obj.gallery_items.push({link: actor_obj.img_title_thumbnail, media_type: "image"});
-                                                        
-                            storage_interface.async_loop_remove_items(actor_obj.gallery_items, "actors", function(){
-                                
-                                db.collection(db_ref.get_current_actor_table()).deleteOne({ _id: actor_id_object }, function(queryErr, docs) {
-                                    if(queryErr){ console.log(queryErr); }
-                                    else{
-                                        response.status(200).send();
-                                    }
-                                });
-                            });
-                        }
+                try{
+                    db.collection(db_ref.get_current_actor_table()).findOne({ _id: actor_id_object }, function(queryErr, actor_obj) {
+                        if(queryErr){ console.log(queryErr); }
                         else{
-                            response.status(404).send( { message: "Actor not found." });
+                            if(actor_obj){
+
+                                //add thumbnail image to list
+                                actor_obj.gallery_items.push({link: actor_obj.img_title_thumbnail, media_type: "image"});
+
+                                try{
+                                    storage_interface.async_loop_remove_items(actor_obj.gallery_items, "actors", function(){
+
+                                        db.collection(db_ref.get_current_actor_table()).deleteOne({ _id: actor_id_object }, function(queryErr, docs) {
+                                            if(queryErr){ console.log(queryErr); }
+                                            else{
+                                                callback();
+                                            }
+                                        });
+                                    });
+                                }
+                                catch(err){
+                                    callback({ failed: true, message: "Problem with database."});
+                                }
+                            }
+                            else{
+                                callback({ failed: true, message: "Actor not in database."});
+                            }
                         }
-                    }
-                });
+                    });
+                }
+                catch(err){
+                    callback({ failed: true, message: "Problem with database."});
+                }
             }
         });
     },
     
-    getVariableFieldsConfig: function(request, response, callback){
+    getVariableActorFieldsConfig: function(request, response, callback){
 
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
             else{
                 
-                db.collection(db_ref.get_actor_variable_fields_config()).find({}).toArray(function(queryErr, docs) {
-                if(queryErr){ console.log(queryErr); }
-                else{
-                    response.status(200).send( docs );
+                try{
+                    db.collection(db_ref.get_actor_variable_fields_config()).find({}).toArray(function(queryErr, docs) {
+                        if(queryErr){ console.log(queryErr); }
+                        else{
+                            callback(docs);
+                        }
+                    });
                 }
-                });            
+                catch(err){
+                    callback({ failed: true, message: "Problem with database."})
+                }
             }
         });
     }
