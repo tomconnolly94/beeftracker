@@ -1,7 +1,7 @@
-// routes/index.js
+//external dependencies
 var router = require('express').Router();
 
-//model dependencies
+//internal dependencies
 var db_ref = require("../config/db_config.js"); //get database reference object
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
 
