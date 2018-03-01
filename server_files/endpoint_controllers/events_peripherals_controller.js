@@ -10,7 +10,7 @@ var event_projection = require("./events_controller.js").event_projection;
 
 module.exports = {
     
-    findEventsFromBeefChain: function(request, response){
+    findEventsFromBeefChain: function(request, response, callback){
         
         //extract data
         var beef_chain_id = request.params.beef_chain_id;
@@ -42,10 +42,10 @@ module.exports = {
                 if(queryErr){ console.log(queryErr); }
                 else{
                     if(docs && docs.length > 0){
-                        response.status(200).send( docs );
+                        callback( docs );
                     }
                     else{
-                        response.status(404).send( { message: "Event not found."} );
+                        callback({ failed: true, message: "Event not found." });
                     }
                 }
                 });            
@@ -53,7 +53,7 @@ module.exports = {
         });
     },
     
-    findEventsRelatedToEvent: function(request, response){
+    findEventsRelatedToEvent: function(request, response, callback){
         
         var event_id = request.params.event_id;
 
@@ -95,11 +95,11 @@ module.exports = {
                                 }
                                 
                             }, function(){
-                                if(response){ response.status(200).send( events ); }
+                                callback( events );
                             });
                         }
                         else{
-                            response.status(404).send( { message: "Event not found."} );
+                            callback({ failed: true, message: "Event not found." });
                         }
                     }
                 });
@@ -107,7 +107,7 @@ module.exports = {
         });
     },
     
-    findEventsRelatedToActor: function(request, response){
+    findEventsRelatedToActor: function(request, response, callback){
         
         //extract data
         var actor_id = request.params.actor_id;
@@ -138,12 +138,10 @@ module.exports = {
                 if(queryErr){ console.log(queryErr); }
                 else{
                     if(docs && docs.length > 0){
-                        if(response){ response.status(200).send( docs ); }
-                        else{ return docs; }
+                         callback( docs );
                     }
                     else{
-                        if(response){ response.status(404).send( { message: "No events found."} ); }
-                        else{ return { message: "No events found."}; }
+                        callback({ failed: true, message: "No events found." });
                     }
                 }
                 });            

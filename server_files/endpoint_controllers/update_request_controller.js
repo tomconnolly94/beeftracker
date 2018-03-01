@@ -25,9 +25,6 @@ module.exports = {
             files = request.files;
         }
         
-        console.log("###############################");
-        console.log(request.files);
-        
         if(incoming_data.event){
             insert_object = format_event_data(submission_data);
             object_type = "events";
@@ -36,11 +33,7 @@ module.exports = {
             insert_object = format_actor_data(submission_data);
             object_type = "actors";
         }
-        
-        console.log(insert_object);
-        
-        var thumbnail_img;
-        
+                
         var insert = function(insert_object, incoming_data){
             
             db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
@@ -83,7 +76,7 @@ module.exports = {
                             }
 
                             db_interface.insert_record_into_db(insert_wrapper, db_ref.get_event_update_requests_table(), db_options, function(id){
-                                response.status(201).send(id);
+                                callback(id);
                             });
                         }
                     });
@@ -111,7 +104,6 @@ module.exports = {
                         insert_object.img_title_thumbnail = insert_object.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
                     }
                 }
-                console.log(insert_object);
                 insert(insert_object, incoming_data);
             });
         }

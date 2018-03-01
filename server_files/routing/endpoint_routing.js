@@ -26,7 +26,7 @@ var memoryUpload = multer({
 
 var send_successful_response = function(response, code, data){
     if(data){
-        response.status(code).send(activity_logs);
+        response.status(code).send(data);
     }
     else{
         response.status(code).send();
@@ -314,7 +314,7 @@ router.route('/events/from-beef-chain/:beef_chain_id').get(function(request, res
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, );
+            send_successful_response(response, 200, data);
         }
     });
 });//built, written, tested
@@ -324,7 +324,7 @@ router.route('/events/related-to-event/:event_id').get(function(request, respons
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, );
+            send_successful_response(response, 200, data);
         }
     });
 });//built, written, needs manual testing with valid data
@@ -334,7 +334,7 @@ router.route('/events/related-to-actor/:actor_id').get(function(request, respons
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, );
+            send_successful_response(response, 200, data);
         }
     });
 });//built, written, needs manual testing with valid data
@@ -346,7 +346,7 @@ router.route('/update-requests').post(memoryUpload, function(request, response){
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, );
+            send_successful_response(response, 200, data);
         }
     });
 });//built, not written, not tested
@@ -358,7 +358,7 @@ router.route('/users/:user_id').get(token_authentication.authenticate_user_token
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, );
+            send_successful_response(response, 200, data);
         }
     });
 });//built, written, manually tested, needs specific user or admin auth
@@ -368,7 +368,7 @@ router.route('/users').post(memoryUpload, function(request, response){
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, );
+            send_successful_response(response, 200, data);
         }
     });
 });//built, written, manually tested
@@ -378,7 +378,7 @@ router.route('/users/:user_id').put(token_authentication.authenticate_admin_user
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, );
+            send_successful_response(response, 200, data);
         }
     });
 });//built, not written, not tested, needs specific user or admin auth
@@ -388,7 +388,7 @@ router.route('/users/:user_id').delete(token_authentication.authenticate_admin_u
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, );
+            send_successful_response(response, 200, data);
         }
     });
 });//built, written, manually tested, needs specific user or admin auth
@@ -398,7 +398,7 @@ router.route('/reset-password').post(function(request, response){
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, );
+            send_successful_response(response, 200, data);
         }
     });
 });//built, not written, not tested
@@ -410,7 +410,7 @@ router.route('/authenticate').post(function(request, response){
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, );
+            send_successful_response(response, 200, data);
         }
     });
 });//built, written, not tested
@@ -420,7 +420,7 @@ router.route('/deauthenticate').get(function(request, response){
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, );
+            send_successful_response(response, 200, data);
         }
     });
 });//built, written, not tested

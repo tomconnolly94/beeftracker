@@ -11,13 +11,10 @@ module.exports = {
     
     getUser: function(request, response){
         
-        console.log(request.params)
         var user_id = request.params.user_id;
         var user_id_object = BSON.ObjectID.createFromHexString(user_id);
         var user_projection;
-        
-        console.log(request.user_is_admin);
-        
+                
         if(request.user_is_admin){ //return more data about a user if the request is coming from an admin
             user_projection = { //admin user projection
                 $project: {
@@ -59,9 +56,6 @@ module.exports = {
             }            
         }
         
-        console.log(user_projection)
-        
-        
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
             else{
@@ -74,10 +68,10 @@ module.exports = {
                     else{
                         console.log(users);
                         if(users.length < 1){
-                            response.status(404).send({ failed: true, message: "Could not find user."});
+                            callback({ failed: true, message: "Could not find user." });
                         }
                         else{
-                            response.status(200).send(users[0]);
+                            callback(users[0]);
                         }
                     }
                 });
@@ -101,10 +95,10 @@ module.exports = {
 
                     if(auth_arr.length > 0){
                         if(auth_arr[0].username == user_details.username){
-                            response.status(400).send({failed: true, message: "Username is taken."});
+                            callback({failed: true, message: "Username is taken."});
                         }
                         else{
-                            response.status(400).send({failed: true, message: "Email is taken."});
+                            callback({failed: true, message: "Email is taken."});
                         }
                     }
                     else{
@@ -159,10 +153,10 @@ module.exports = {
                             else{
                                 if(auth_arr.length > 0){
                                     if(auth_arr[0].username == user_details.username){
-                                        response.status(400).send({failed: true, message: "Username is taken."});
+                                        callback({failed: true, message: "Username is taken. (admin)"});
                                     }
                                     else{
-                                        response.status(400).send({failed: true, message: "Email is taken."});
+                                        callback({failed: true, message: "Email is taken. (admin)"});
                                     }
                                 }
                                 else{
@@ -177,7 +171,7 @@ module.exports = {
                                             db.collection(db_ref.get_pending_registered_admin_users_table()).insert(insert_object, function(err, document){
                                                 if(err){ console.log(err); }
                                                 else{
-                                                    response.send({failed: false, message: "Registration complete, requires approval from an existing admin."});
+                                                    callback({message: "Registration complete, requires approval from an existing admin."});
                                                 }
                                             });
                                         });
@@ -207,7 +201,7 @@ module.exports = {
                                 db.collection(db_ref.get_user_details_table()).insert(insert_object, function(err, document){
                                     if(err){ console.log(err); }
                                     else{
-                                        response.send({failed: false, message: "Registration complete."});
+                                        callback({message: "Registration complete."});
                                     }
                                 });
                             });
@@ -219,9 +213,8 @@ module.exports = {
     },
     
     updateUser: function(request, response){
-        console.log("test completed 3.");
         console.log(request.body);
-        response.send({test: "complete 4"});
+        response.send({test: "endpoinjt not implemented yet."});
     },
     
     deleteUser: function(request, response){
@@ -245,7 +238,7 @@ module.exports = {
                                      db.collection(db_ref.get_user_details_table()).deleteOne({ _id: user_id_object }, function(queryErr, docs) {
                                         if(queryErr){ console.log(queryErr); }
                                         else{
-                                            response.status(200).send( {failed: false, message: "User has been deleted."} );
+                                            callback({ message: "User has been deleted." });
                                         }
                                     });
                                 });
@@ -268,14 +261,14 @@ module.exports = {
                     if(err){ console.log(err); }
                     else{
                         if(auth_arr.length < 1){
-                            response.send({failed: true, message: "Email address not found."});
+                            callback({ failed: true, message: "Email address not found."});
                         }
                         else{
                             var existing_user_details = auth_arr[0];
                             
                             //send email with link in it to a page where a user can reset their password
                             
-                            response.send({failed: false, message: "Email address found, endpoint not implemented."});
+                            callback({ message: "Email address found, endpoint not yet implemented."});
                         }
                     }
                 });

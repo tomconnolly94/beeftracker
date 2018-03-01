@@ -75,6 +75,6 @@ module.exports = {
         //set all cookies to expire immediately
         response.cookie( "auth", "0", { expires: new Date(0), httpOnly: cookies_http_only, secure: cookies_secure });
         response.cookie( "logged_in", "false", { expires: new Date(0), httpOnly: false });
-        response.send({ deauth_failed: false});
+        callback({});
     }
 }
