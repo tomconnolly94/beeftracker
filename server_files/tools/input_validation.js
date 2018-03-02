@@ -22,6 +22,11 @@ module.exports = {
         request.checkBody("title", "must have a title").notEmpty()
         
         //validate aggressor ids
+        for(let i = 0; i < request.body.aggressors.length; i++) {
+            //request.checkBody([i, 'username'], 'aggressor ids are formatted incorrectly').isEmail();
+            var checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
+            request.checkBody([i, 'aggressors'], 'aggressor ids are formatted incorrectly').match(checkForHexRegExp);
+        }
         request.checkBody("aggressors", "must have an array of aggressor ids").notEmpty()
         
         //validate target ids
