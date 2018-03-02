@@ -21,7 +21,7 @@ var authentication_controller = require('../endpoint_controllers/authentication_
 var memoryStorage = multer.memoryStorage();
 var memoryUpload = multer({
     storage: memoryStorage,
-    limits: {fileSize: 500000, files: 2}
+    limits: {fileSize: 500000, files: 15}
 }).any('attachment');
 
 var send_successful_response = function(response, code, data){
