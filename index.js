@@ -21,7 +21,13 @@ var multer = require('multer'); //library to assist with file storage
 var morgan = require("morgan"); //library to provide more detailed logs
 var jade = require('pug');
 var compression = require('compression');
-var validator = require('express-validator')
+var validation_controller = require("./server_files/validation/validation_controller");
+var validator = require('express-validator');
+
+//configure validator
+app.use(validator({
+    customValidators: validation_controller.get_all_custom_validation_functions()
+}));
 
 
 var memoryStorage = multer.memoryStorage();
@@ -62,7 +68,6 @@ app.use(function(req, res, next) {
     next();
 });
 app.use(compression());
-app.use(validator());
 
 app.use('/logo', express.static(__dirname + '/public/assets/images/logo/')); //route to reference logo images
 app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //route to reference css scripts
@@ -83,7 +88,7 @@ app.use('/templates', require('./server_files/routing/template_routing')); //rou
 // ### Component rendering function routes configuration ###
 app.use('/template_functions', require('./server_files/routing/template_function_routing')); //routes send javascript functions which render HTML on the client side
 
-app.post("/test_form_validation", memoryUpload, require("./server_files/tools/input_validation").validate_event, function(req, res){
+app.post("/test_form_validation", memoryUpload, require("./server_files/validation/event_validation").validate_event, function(req, res){
     console.log(res);
     res.send()
 })
