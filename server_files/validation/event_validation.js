@@ -33,6 +33,46 @@ module.exports = {
                 
                 return (matchesPadded || matchesNonPadded) ? d : null;
             },
+            test_record_origin: function(input){
+                
+                if(input == "scraped" || input == "submission"){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            },
+            test_gallery_items_structure: function(gallery_items){
+                
+                for(var i = 0; i < gallery_items.length; i++){
+                    var gallery_item = gallery_items[i];
+                    
+                    if(gallery_item["media_type"] == 'undefined' || gallery_item["media_type"].length < 1){
+                        return false;
+                    }
+                    else if(gallery_item["link"] == 'undefined' || gallery_item["link"].length < 1){
+                        return false;
+                    }
+                    else if(gallery_item["main_graphic"] == 'undefined'){
+                        return false;
+                    }
+                }
+                return true
+            },
+            test_is_image: function(value, filename) {
+
+                var extension = (path.extname(filename)).toLowerCase();
+                switch (extension) {
+                    case '.jpg':
+                        return '.jpg';
+                    case '.jpeg':
+                        return '.jpeg';
+                    case  '.png':
+                        return '.png';
+                    default:
+                        return false;
+                }
+            }
         }
     },
     
@@ -48,12 +88,13 @@ module.exports = {
 
         console.log("hit validation func");
         console.log(request.body);
+        console.log(request.files);
         
         //validate title
         request.checkBody("title", "No title provided.").notEmpty();
         
         //validate aggressor ids
-        request.checkBody("aggressors", "No aggressor ids provided.").notEmpty()
+        request.checkBody("aggressors", "No aggressor ids provided.").notEmpty();
         request.checkBody("aggressors", "Aggressor ids are not formatted correctly.").test_array_of_mongodb_object_ids("mongodb_ids");
         
         //validate target ids
@@ -61,34 +102,41 @@ module.exports = {
         request.checkBody("targets", "Target ids are not formatted correctly.").test_array_of_mongodb_object_ids("mongodb_ids");
         
         //validate event date
-        request.checkBody("date", "Must have a title").notEmpty();
+        request.checkBody("date", "No date provided.").notEmpty();
         request.checkBody("date", "Date is invalid.").test_valid_date();
         
         //validate description
-        request.checkBody("description", "Must have a title").notEmpty()
+        request.checkBody("description", "No description provided.").notEmpty();
         
         //validate gallery_items
-        request.checkBody("gallery_items", "Must have a title").notEmpty()
+        request.checkBody("gallery_items", "No gallery items provided.").notEmpty();
+        request.checkBody("gallery_items", "No gallery items provided.").test_gallery_items_structure();
         
         //validate categories
-        request.checkBody("categories", "Must have a title").notEmpty()
+        request.checkBody("categories", "No categories provided.").notEmpty();
         
         //validate data_soruces
-        request.checkBody("data_sources", "Must have a title").notEmpty()
+        request.checkBody("data_sources", "No data sources provided.").notEmpty();
         
         //validate record_origin
-        request.checkBody("record_origin", "Must have a title").notEmpty()
+        request.checkBody("record_origin", "No record_origin provided.").notEmpty();
+        request.checkBody("record_origin", "Record origin is invalid.").test_record_origin();
         
         //validate tags
-        request.checkBody("tags", "Must have a title").notEmpty()
+        request.checkBody("tags", "No tags provided.").notEmpty();
+        
+        
+        //validate image files
+        for(var i = 0; i < request.files.length; i++){
+            filename = typeof request.files[i] !== "undefined" ? request.files[i][0].filename : '';
+            request.checkBody('rest_logo', 'Please upload an image Jpeg, Png or Gif').isImage(filename);
+        }
         
         request.getValidationResult().then(function(validationResult){
-            console.log(validationResult);
-            console.log(validationResult.isEmpty());
-            console.log(validationResult.array());
             
-            if(!validationResult.isEmpty()){
-                console.log(validationResult.isEmpty())
+            if(validationResult.array().length > 0 ){
+                console.log(validationResult.isEmpty());
+                console.log(validationResult.array());
                 console.log("validation failed.");
                 response.send({failed: true});
             }

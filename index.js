@@ -29,11 +29,10 @@ app.use(validator({
     customValidators: validation_controller.get_all_custom_validation_functions()
 }));
 
-
 var memoryStorage = multer.memoryStorage();
 var memoryUpload = multer({
     storage: memoryStorage,
-    limits: {fileSize: 500000, files: 15}
+    limits: {fileSize: 500000, files: 2}
 }).any('attachment');
 
 // ## Sitemap generation ###

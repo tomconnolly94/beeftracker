@@ -7,19 +7,17 @@ module.exports = {
     
     get_all_custom_validation_functions: function(){
         
+        //list of validation modules
         var validation_modules_list = [ 
             event_validation_custom_functions 
         ];
         var master_functions_object = {};
         
+        //loop through the validation modules and use the get custom validator functions function to group all the custom validator functions into one object
         for(var i = 0; i < validation_modules_list.length; i++){
             master_functions_object = Object.assign(master_functions_object, validation_modules_list[0]()); //combine all functions into the master functions object
         }
         
-        console.log(master_functions_object);
-        
         return master_functions_object;
     }
-    
-    
 }
