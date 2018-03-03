@@ -1,4 +1,6 @@
 //external dependencies
+var path = require("path");
+
 //internal dependencies
 
 module.exports = {
@@ -128,8 +130,8 @@ module.exports = {
         
         //validate image files
         for(var i = 0; i < request.files.length; i++){
-            filename = typeof request.files[i] !== "undefined" ? request.files[i][0].filename : '';
-            request.checkBody('rest_logo', 'Please upload an image Jpeg, Png or Gif').isImage(filename);
+            var filename = typeof request.files[i] !== "undefined" ? request.files[i].originalname : '';
+            request.checkBody('rest_logo', 'Please upload an image Jpeg, Png or Gif').test_is_image(filename);
         }
         
         request.getValidationResult().then(function(validationResult){
