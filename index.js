@@ -92,16 +92,33 @@ app.post("/test_form_validation", memoryUpload, require("./server_files/validati
     res.send()
 });
 
-var fb_config = require("./server_files/authentication/facebook_auth");
+//external dependencies
+var passport = require("passport");
+var FacebookStrategy = require("passport-facebook");
+
+passport.use(new FacebookStrategy({
+        clientID: process.env.FACEBOOK_API_KEY,
+        clientSecret: process.env.FACEBOOK_API_SECRET,
+        callbackURL: "http://localhost:5000/auth/facebook/callback"
+    },
+    function(accessToken, refreshToken, profile, cb) {
+        console.log("strategy callback");
+        console.log(accessToken, refreshToken, profile);
+    
+        cb(null, profile);
+    }
+));
 
 app.get('/auth/facebook', passport.authenticate('facebook'));
 
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }),
-    function(req, res) {
-        // Successful authentication, redirect home.
-        res.redirect('/');
+app.get('/auth/facebook/callback', passport.authenticate('facebook',
+    function(error, user, info) {
+        console.log(error);
+        console.log(user);
+        console.log(info);
+        console.log("auth callback function");
     }
-);
+));
 
 // ### Search engine information/verification files ###
 app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/verification_files/google3fc5d5a06ad26a53.html'); }); //google verification
@@ -109,7 +126,7 @@ app.get('/BingSiteAuth.xml', function(request, response) { response.sendFile(__d
 app.get('/robots.txt', function(request, response) { response.sendFile(__dirname + '/views/verification_files/robots.txt'); }); //robots config file
 
 // ### Serve an error page on unrecognised uri###
-app.get('/*', function(req, res, next) { res.render("pages/static_pages/error.ejs"); });
+//app.get('/*', function(req, res, next) { res.render("pages/static_pages/error.ejs"); });
 
 // ### Launch application ####
 app.listen(app.get('port'), function(){ console.log('Node app is running on port', app.get('port'), 'in', process.env.NODE_ENV, 'mode'); });
