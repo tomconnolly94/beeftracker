@@ -99,11 +99,29 @@ module.exports = {
                 for(var i = 0; i < numbers.length; i++){
                     var number = numbers[i];
                     
-                    if (number.isNumber()){
-                        continue;
+                    if (isNaN(number)){
+                        return false;
                     } 
                     else {
+                        continue;
+                    }
+                }
+                return true;
+            },
+            test_array_of_strings: function(strings) {
+                
+                if(!Array.isArray(strings)){
+                    return false;
+                }
+
+                for(var i = 0; i < strings.length; i++){
+                    var string = strings[i];
+                    
+                    if (typeof string != "string"){
                         return false;
+                    } 
+                    else {
+                        continue;
                     }
                 }
                 return true;
@@ -111,19 +129,10 @@ module.exports = {
         }
     },
     
-    validate_event: function(request, response, next){
+    validate: function(request, response, next){
         
-        //var submission_data = JSON.parse(request.body.data); //get form data
+        //access form data and reassign it to the request body
         request.body = JSON.parse(request.body.data); //get form data
-        var files;
-
-        if(request.files){ //check if the user submitted a file via a file explorer
-            files = request.files;
-        }
-
-        console.log("hit validation func");
-        console.log(request.body);
-        console.log(request.files);
         
         //validate title
         request.checkBody("title", "No title provided.").notEmpty();
@@ -138,18 +147,18 @@ module.exports = {
         
         //validate event date
         request.checkBody("date", "No date provided.").notEmpty();
-        request.checkBody("date", "Date is invalid.").test_valid_date();
+        request.checkBody("date", "Date is not formatted correctly.").test_valid_date();
         
         //validate description
         request.checkBody("description", "No description provided.").notEmpty();
         
         //validate gallery_items
         request.checkBody("gallery_items", "No gallery items provided.").notEmpty();
-        request.checkBody("gallery_items", "No gallery items provided.").test_gallery_items_structure();
+        request.checkBody("gallery_items", "Gallery items are not formatted correctly.").test_gallery_items_structure();
         
         //validate categories
         request.checkBody("categories", "No categories provided.").notEmpty();
-        request.checkBody('categories', 'Categories must be a number').optional().isNumber();
+        request.checkBody('categories', 'Categories formatted incorrectly.').test_array_of_numbers();
         
         //validate data_soruces
         request.checkBody("data_sources", "No data sources provided.").notEmpty();
@@ -161,6 +170,7 @@ module.exports = {
         
         //validate tags
         request.checkBody("tags", "No tags provided.").notEmpty();
+        request.checkBody("tags", "Tags are not formatted correctly.").test_array_of_strings();
         
         //validate image files
         for(var i = 0; i < request.files.length; i++){

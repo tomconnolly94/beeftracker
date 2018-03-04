@@ -87,7 +87,7 @@ app.use('/templates', require('./server_files/routing/template_routing')); //rou
 // ### Component rendering function routes configuration ###
 app.use('/template_functions', require('./server_files/routing/template_function_routing')); //routes send javascript functions which render HTML on the client side
 
-app.post("/test_form_validation", memoryUpload, require("./server_files/validation/event_validation").validate_event, function(req, res){
+app.post("/test_form_validation", memoryUpload, require("./server_files/validation/event_validation").validate, function(req, res){
     console.log(res);
     res.send()
 })

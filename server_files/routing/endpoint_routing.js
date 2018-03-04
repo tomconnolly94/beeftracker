@@ -6,7 +6,7 @@ var multer = require('multer');
 //beeftracker dependencies
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
 
-//include endpoint controllers
+//endpoint controllers
 var activity_logs_controller = require('../endpoint_controllers/activity_logs_controller');
 var actor_controller = require('../endpoint_controllers/actors_controller');
 var administration_data_controller = require('../endpoint_controllers/administration_data_controller');
@@ -17,6 +17,9 @@ var event_peripherals_controller = require('../endpoint_controllers/events_perip
 var update_request_controller = require('../endpoint_controllers/update_request_controller');
 var users_controller = require('../endpoint_controllers/users_controller');
 var authentication_controller = require('../endpoint_controllers/authentication_controller');
+
+//input validation functions
+var event_data_validator = require("../validation/event_validation");
 
 var memoryStorage = multer.memoryStorage();
 var memoryUpload = multer({
@@ -32,7 +35,6 @@ var send_successful_response = function(response, code, data){
         response.status(code).send();
     }
 }
-
 var send_unsuccessful_response = function(response, code, error_message){
     
     var response_json = {
@@ -45,7 +47,7 @@ var send_unsuccessful_response = function(response, code, error_message){
     response.status(code).send(response_json);
 }
 
-//connect uri routes to controllers
+//connect uri routes to controllers - middleware ordering = auth function (optional) -> multer file formatting function (optional) -> data validation function (optional) -> endpoint controller function
 
 //Activity logs endpoints
 router.route('/activity-logs/events/:event_id').get(function(request, response){
@@ -93,7 +95,6 @@ router.route('/actors/:actor_id').get(function(request, response){
             send_unsuccessful_response(response, 400, "Actor not found.");
         }
     });
-    
 });//built, written, tested
 router.route('/actors').post(memoryUpload, function(request, response){
     actor_controller.createActor(request, response, function(data){
@@ -276,7 +277,7 @@ router.route('/events/:event_id').get(function(request, response){
         }
     });
 });//built, written, tested
-router.route('/events').post(/*token_authentication.authenticate_admin_user_token,*/ memoryUpload, function(request, response){
+router.route('/events').post(token_authentication.authenticate_admin_user_token, memoryUpload, event_data_validator.validate, function(request, response){
     event_controller.createEvent(request, response, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
