@@ -1,5 +1,6 @@
 //external dependencies
 var path = require("path");
+var valid_url = require('valid-url');
 
 //internal dependencies
 
@@ -61,7 +62,7 @@ module.exports = {
                 }
                 return true
             },
-            test_is_image: function(value, filename) {
+            test_image: function(value, filename) {
 
                 var extension = (path.extname(filename)).toLowerCase();
                 switch (extension) {
@@ -74,6 +75,38 @@ module.exports = {
                     default:
                         return false;
                 }
+            },
+            test_array_of_urls: function(urls) {
+
+                for(var i = 0; i < urls.length; i++){
+                    var url = urls[i];
+                    
+                    if (valid_url.isUri(url)){
+                        continue;
+                    } 
+                    else {
+                        return false;
+                    }
+                }
+                return true;
+            },
+            test_array_of_numbers: function(numbers) {
+                
+                if(!Array.isArray(numbers)){
+                    return false;
+                }
+
+                for(var i = 0; i < numbers.length; i++){
+                    var number = numbers[i];
+                    
+                    if (number.isNumber()){
+                        continue;
+                    } 
+                    else {
+                        return false;
+                    }
+                }
+                return true;
             }
         }
     },
@@ -116,9 +149,11 @@ module.exports = {
         
         //validate categories
         request.checkBody("categories", "No categories provided.").notEmpty();
+        request.checkBody('categories', 'Categories must be a number').optional().isNumber();
         
         //validate data_soruces
         request.checkBody("data_sources", "No data sources provided.").notEmpty();
+        request.checkBody("data_sources", "Data sources are improperly formatted.").test_array_of_urls();
         
         //validate record_origin
         request.checkBody("record_origin", "No record_origin provided.").notEmpty();
@@ -127,11 +162,10 @@ module.exports = {
         //validate tags
         request.checkBody("tags", "No tags provided.").notEmpty();
         
-        
         //validate image files
         for(var i = 0; i < request.files.length; i++){
             var filename = typeof request.files[i] !== "undefined" ? request.files[i].originalname : '';
-            request.checkBody('rest_logo', 'Please upload an image Jpeg, Png or Gif').test_is_image(filename);
+            request.checkBody('file', 'Please upload an image Jpeg, Png or Gif').test_image(filename);
         }
         
         request.getValidationResult().then(function(validationResult){
