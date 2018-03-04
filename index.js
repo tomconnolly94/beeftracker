@@ -90,7 +90,18 @@ app.use('/template_functions', require('./server_files/routing/template_function
 app.post("/test_form_validation", memoryUpload, require("./server_files/validation/event_validation").validate, function(req, res){
     console.log(res);
     res.send()
-})
+});
+
+var fb_config = require("./server_files/authentication/facebook_auth");
+
+app.get('/auth/facebook', passport.authenticate('facebook'));
+
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }),
+    function(req, res) {
+        // Successful authentication, redirect home.
+        res.redirect('/');
+    }
+);
 
 // ### Search engine information/verification files ###
 app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/verification_files/google3fc5d5a06ad26a53.html'); }); //google verification
