@@ -77,4 +77,5 @@ module.exports = {
         response.cookie( "logged_in", "false", { expires: new Date(0), httpOnly: false });
         callback({});
     }
+    
 }

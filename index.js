@@ -87,38 +87,15 @@ app.use('/templates', require('./server_files/routing/template_routing')); //rou
 // ### Component rendering function routes configuration ###
 app.use('/template_functions', require('./server_files/routing/template_function_routing')); //routes send javascript functions which render HTML on the client side
 
+
+//################################################################################## TESTING AREA START
+
 app.post("/test_form_validation", memoryUpload, require("./server_files/validation/event_validation").validate, function(req, res){
     console.log(res);
     res.send()
 });
 
-//external dependencies
-var passport = require("passport");
-var FacebookStrategy = require("passport-facebook");
-
-passport.use(new FacebookStrategy({
-        clientID: process.env.FACEBOOK_API_KEY,
-        clientSecret: process.env.FACEBOOK_API_SECRET,
-        callbackURL: "http://localhost:5000/auth/facebook/callback"
-    },
-    function(accessToken, refreshToken, profile, cb) {
-        console.log("strategy callback");
-        console.log(accessToken, refreshToken, profile);
-    
-        cb(null, profile);
-    }
-));
-
-app.get('/auth/facebook', passport.authenticate('facebook'));
-
-app.get('/auth/facebook/callback', passport.authenticate('facebook',
-    function(error, user, info) {
-        console.log(error);
-        console.log(user);
-        console.log(info);
-        console.log("auth callback function");
-    }
-));
+//################################################################################## TESTING AREA END
 
 // ### Search engine information/verification files ###
 app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/verification_files/google3fc5d5a06ad26a53.html'); }); //google verification

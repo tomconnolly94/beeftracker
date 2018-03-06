@@ -1,5 +1,6 @@
 //routing dependencies
 var express = require('express');
+//var app = express();
 var router = express.Router();
 var multer = require('multer');
 
@@ -425,6 +426,9 @@ router.route('/deauthenticate').get(function(request, response){
         }
     });
 });//built, written, not tested
+
+// ### Component rendering function routes configuration ###
+router.use('/auth', require('./authentication_routing')); //routes send javascript functions which render HTML on the client side
 
 //handle errors
 router.route('/*').get(function(request, response) {response.status(400).send({success: false, message: "endpoint not found"}); });
