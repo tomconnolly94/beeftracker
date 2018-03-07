@@ -9,7 +9,7 @@ var hashing = require("../tools/hashing.js");
         
 module.exports = {
     
-    getUser: function(request, response){
+    getUser: function(request, response, callback){
         
         var user_id = request.params.user_id;
         var user_id_object = BSON.ObjectID.createFromHexString(user_id);
@@ -79,14 +79,14 @@ module.exports = {
         });
     },
     
-    createUser: function(request, response){
+    createUser: function(request, response, callback){
         
         //extract data for use later
         var user_details = JSON.parse(request.body.data); //get form data
         var files = request.files;
         
         //check for duplicate username or email address before allowing user to register
-        var check_details_against_user_table = function(db, user_details, insert_object, response, callback){
+        var check_details_against_user_table = function(db, user_details, insert_object, response, success_callback){
 
             db.collection(db_ref.get_user_details_table()).aggregate([{ $match: { $or: [ { username: user_details.username}, { email_address: user_details.email_address } ] } }]).toArray(function(err, auth_arr){
 
@@ -102,7 +102,7 @@ module.exports = {
                         }
                     }
                     else{
-                        callback();
+                        success_callback();
                     }
                 }
             });
@@ -212,12 +212,12 @@ module.exports = {
         });
     },
     
-    updateUser: function(request, response){
+    updateUser: function(request, response, callback){
         console.log(request.body);
         response.send({test: "endpoinjt not implemented yet."});
     },
     
-    deleteUser: function(request, response){
+    deleteUser: function(request, response, callback){
         
         //extract data
         var user_id = request.params.user_id;
@@ -250,7 +250,7 @@ module.exports = {
         });
     },
     
-    resetUserPassword: function(request, response){
+    resetUserPassword: function(request, response, callback){
         
         var email_address = request.body.email_address; //get form data
         

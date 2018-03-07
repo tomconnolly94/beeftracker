@@ -2,7 +2,7 @@
 var express = require('express')
 var router = express.Router()
 var passport = require("passport");
-var LocalStrategy = require("passport-local").Strategy;
+var LocalStrategy = require("passport-local-token").Strategy;
 
 router.use(passport.initialize());
 
@@ -10,7 +10,7 @@ router.use(passport.initialize());
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
 
 
-passport.serializeUser(function(user, done){
+/*passport.serializeUser(function(user, done){
    console.log("serialize user.");
    done(null, user.id)
 });
@@ -18,17 +18,13 @@ passport.serializeUser(function(user, done){
 passport.deserializeUser(function(id, done){
    console.log("deserialize user.");
     done(id);
-});
+});*/
 
-passport.use(new LocalStrategy({
-        usernameField: 'email',
-        passwordField: 'password'
-    }, 
-    function(email, password, cb) {
+passport.use("local-token", new LocalStrategy(
+    function(token, cb) {
         console.log("strategy callback");
-        console.log(profile);
     
-        cb(null, profile);
+        cb(null, token);
     }
 ));
 
