@@ -33,7 +33,7 @@ router.route('/').post(
         passport.authenticate('local', { session: "false" }, function(err, user, info){
 
             console.log("passport callback");
-        response.json({ message: "local auth successful."})
+            response.json({ message: "local auth successful."})
         })
     }
 );

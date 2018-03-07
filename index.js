@@ -77,7 +77,7 @@ app.use('/controllers', express.static(__dirname + '/public/components/')); //ro
 
 // ### Page routes configuration file ###
 app.use('/', require('./server_files/routing/page_routing'));
-
+ 
 // ### Endpoint routes configuration ###
 app.use('/api', require('./server_files/routing/endpoint_routing'));
 

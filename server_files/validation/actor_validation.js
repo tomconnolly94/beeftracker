@@ -21,6 +21,10 @@ module.exports = {
         request.checkBody("name", "No title provided.").notEmpty();
         
         //validate event date
+        request.checkBody("place_of_origin", "No date provided.").notEmpty();
+        request.checkBody("date_of_origin", "Date is not formatted correctly.").test_valid_date();
+        
+        //validate event date
         request.checkBody("date_of_origin", "No date provided.").notEmpty();
         request.checkBody("date_of_origin", "Date is not formatted correctly.").test_valid_date();
         
