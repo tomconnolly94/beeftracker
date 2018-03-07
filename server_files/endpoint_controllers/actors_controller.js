@@ -57,14 +57,17 @@ module.exports = {
             associated_actors: submission_data.associated_actors,
             data_sources: submission_data.data_sources,
             also_known_as: submission_data.also_known_as,
-            img_title: submission_data.img_title,
             classification: submission_data.classification,
             variable_field_values: submission_data.variable_field_values,
             links: submission_data.links,
             gallery_items: submission_data.gallery_items,
+            img_title_thumbnail: "",
+            img_title_fullsize: "",
+            rating: 0,
             date_added: new Date(),
             name_lower: submission_data.name.toLowerCase(),
-            also_known_as_lower: also_known_as_lower
+            also_known_as_lower: also_known_as_lower,
+            record_origin: submission_data.record_origin
         });
 
         return actor_insert;

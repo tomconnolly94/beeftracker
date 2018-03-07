@@ -19,14 +19,13 @@ module.exports = {
         
         //validate title
         request.checkBody("name", "No title provided.").notEmpty();
-        
-        //validate event date
-        request.checkBody("place_of_origin", "No date provided.").notEmpty();
-        request.checkBody("date_of_origin", "Date is not formatted correctly.").test_valid_date();
-        
+                
         //validate event date
         request.checkBody("date_of_origin", "No date provided.").notEmpty();
         request.checkBody("date_of_origin", "Date is not formatted correctly.").test_valid_date();
+        
+        //validate event date
+        request.checkBody("place_of_origin", "No date provided.").notEmpty();
         
         //validate description
         request.checkBody("description", "No description provided.").notEmpty();
@@ -38,9 +37,19 @@ module.exports = {
         request.checkBody("data_sources", "No data sources provided.").notEmpty();
         request.checkBody("data_sources", "Data sources are improperly formatted.").test_array_of_urls();
         
-        //validate tags
+        //validate nicknames
         request.checkBody("also_known_as", "No alternative names provided.").notEmpty();
         request.checkBody("also_known_as", "Alternative names are not formatted correctly.").test_array_of_strings();
+        
+        //validate nicknames
+        request.checkBody("classification", "No alternative names provided.").notEmpty();
+        
+        //validate nicknames
+        request.checkBody("variable_field_values", "No alternative names provided.").notEmpty();
+        
+        //validate nicknames
+        request.checkBody("links", "No alternative names provided.").notEmpty();
+        request.checkBody("links", "Link items are not formatted correctly.").test_array_of_urls();
         
         //validate gallery_items
         request.checkBody("gallery_items", "No gallery items provided.").notEmpty();

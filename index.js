@@ -68,7 +68,7 @@ app.use(function(req, res, next) {
 });
 app.use(compression());
 
-app.use('/logo', express.static(__dirname + '/public/assets/images/logo/')); //route to reference logo images
+app.use('/logo', express.static(__dirname + '/public/assets/images/logo/v2')); //route to reference logo images
 app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //route to reference css scripts
 app.use('/js', express.static(__dirname + '/public/javascript/')); //route to reference javascript files
 app.use('/modules', express.static(__dirname + '/node_modules/')); //route to reference npm library files
@@ -87,7 +87,6 @@ app.use('/templates', require('./server_files/routing/template_routing')); //rou
 // ### Component rendering function routes configuration ###
 app.use('/template_functions', require('./server_files/routing/template_function_routing')); //routes send javascript functions which render HTML on the client side
 
-
 //################################################################################## TESTING AREA START
 
 app.post("/test_form_validation", memoryUpload, require("./server_files/validation/event_validation").validate, function(req, res){
@@ -101,6 +100,21 @@ app.post("/test_form_validation", memoryUpload, require("./server_files/validati
 app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/verification_files/google3fc5d5a06ad26a53.html'); }); //google verification
 app.get('/BingSiteAuth.xml', function(request, response) { response.sendFile(__dirname + '/views/verification_files/BingSiteAuth.xml'); });
 app.get('/robots.txt', function(request, response) { response.sendFile(__dirname + '/views/verification_files/robots.txt'); }); //robots config file
+app.get('/manifest.webmanifest', function(request, response) { 
+    response.send({
+        "name": "Beeftracker",
+        "short_name": "Beeftracker",
+        "lang": "en-GB",
+        "start_url": "https://www.beeftracker.co.uk/",
+        "display": "standalone",
+        "background_color": "#000000",
+        "theme_color": "#000000",
+        "description": "Beeftracker is a brand new web application designed to bring you the very latest in beef-related news! Visit the site: beeftracker.co.uk.",
+        "icons": [{
+            "src": "logo/beeftracker_new_logo_cropped_small.ico",
+            "sizes": "256x256"
+        }]
+}); //robots config file
 
 // ### Serve an error page on unrecognised uri###
 //app.get('/*', function(req, res, next) { res.render("pages/static_pages/error.ejs"); });

@@ -29,7 +29,8 @@ var actor_schema = new Schema({
     img_title_fullsize: String,
     date_added: Date,
     name_lower: String,
-    also_known_as_lower: [ String ]
+    also_known_as_lower: [ String ],
+    record_origin: String
 });
 
 module.exports = mongoose.model('Actor', actor_schema);
