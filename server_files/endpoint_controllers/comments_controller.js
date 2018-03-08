@@ -9,9 +9,7 @@ var Comment = require("../schemas/comment_schema");
 
 module.exports = {
     
-    createComment: function(request, response, callback){
-        
-        var comment_data = request.body;
+    createComment: function(comment_data, callback){
         
         var comment_record = new Comment({
             text: comment_data.text,
@@ -97,7 +95,7 @@ module.exports = {
 
                 //standard query to match an event and resolve aggressor and targets references
                 db.collection(db_ref.get_comments_table()).aggregate([
-                    { $match: { event_id: event_id_object } },
+                    { $match: { actor_id: actor_id_object } },
                     { $lookup : {
                         from: db_ref.get_user_details_table(),
                         localField: "user",
@@ -129,6 +127,7 @@ module.exports = {
                     //handle error
                     if(err) { console.log(err);}
                     else{
+                        console.log(docs)
                         callback(docs);
                     }
                 });

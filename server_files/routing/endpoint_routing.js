@@ -21,6 +21,8 @@ var authentication_controller = require('../endpoint_controllers/authentication_
 
 //input validation functions
 var event_data_validator = require("../validation/event_validation");
+var actor_data_validator = require("../validation/actor_validation");
+var comment_data_validator = require("../validation/comment_validation");
 
 var memoryStorage = multer.memoryStorage();
 var memoryUpload = multer({
@@ -194,8 +196,11 @@ router.route('/disclaimer-data').get(function(request, response){
 });//built, not written
 
 //Comments endpoints
-router.route('/comments').post(function(request, response){
-    comments_controller.createComment(request, response, function(data){
+router.route('/comments').post(comment_data_validator.validate, function(request, response){
+    
+    var comment_data = request.validated_data;    
+    
+    comments_controller.createComment(comment_data, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
@@ -210,7 +215,7 @@ router.route('/comments/events/:event_id').get(function(request, response){
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, 200);
+            send_successful_response(response, 200, data);
         }
     });
 });//built, written, tested
@@ -220,7 +225,7 @@ router.route('/comments/actors/:actor_id').get(function(request, response){
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, 200);
+            send_successful_response(response, 200, data);
         }
     });
 });//built, written, tested
