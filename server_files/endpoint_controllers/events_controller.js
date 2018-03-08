@@ -230,15 +230,12 @@ module.exports = {
         });
     },
     
-    createEvent: function(request, response, callback){
+    createEvent: function(event_data, event_files, callback){
                 
-        var submission_data = JSON.parse(request.body.data); //get form data
-        var files;
-
-        if(request.files){ //check if the user submitted a file via a file explorer
-            files = request.files;
-        }
-
+        var submission_data = event_data; //get form data
+        var files = event_files;
+        var record_origin = submission_data.record_origin;
+        
         //format event record for insertion
         var event_insert = module.exports.format_event_data(submission_data);
         
@@ -278,7 +275,7 @@ module.exports = {
                 var db_options = {
                     send_email_notification: false,
                     email_notification_text: "Beef",
-                    add_to_scraped_confirmed_table: request.body.data.record_origin == "scraped" ? true : false
+                    add_to_scraped_confirmed_table: record_origin == "scraped" ? true : false
                 };
 
                 db_interface.insert_record_into_db(event_insert, db_ref.get_current_event_table(), db_options, function(id){

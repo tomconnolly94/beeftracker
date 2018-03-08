@@ -100,7 +100,11 @@ router.route('/actors/:actor_id').get(function(request, response){
     });
 });//built, written, tested
 router.route('/actors').post(memoryUpload, function(request, response){
-    actor_controller.createActor(request, response, function(data){
+    
+    var event_data = request.validated_data;
+    var event_files = request.validated_files;
+    
+    actor_controller.createActor(event_data, event_files, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
@@ -284,7 +288,11 @@ router.route('/events/:event_id').get(function(request, response){
     });
 });//built, written, tested
 router.route('/events').post(token_authentication.authenticate_admin_user_token, memoryUpload, event_data_validator.validate, function(request, response){
-    event_controller.createEvent(request, response, function(data){
+    
+    var event_data = request.validated_data;
+    var event_files = request.validated_files;
+    
+    event_controller.createEvent(event_data, event_files, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }

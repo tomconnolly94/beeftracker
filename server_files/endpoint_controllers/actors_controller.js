@@ -187,15 +187,11 @@ module.exports = {
         });
     },
     
-    createActor: function(request, response, callback){
-                
-        var submission_data = JSON.parse(request.body.data); //get form data
-        var files;
-
-        if(request.files){
-            files = request.files; //get submitted image
-        }
-        
+    createActor: function(event_data, event_files, callback){
+             
+        var submission_data = event_data; //get form data
+        var files = event_files;
+        var record_origin = submission_data.record_origin;
         var actor_insert = module.exports.format_actor_data(submission_data);
 
         if(test_mode){
@@ -225,7 +221,7 @@ module.exports = {
                     var db_options = {
                         send_email_notification: true,
                         email_notification_text: "Beef",
-                        add_to_scraped_confirmed_table: request.body.data.record_origin == "scraped" ? true : false
+                        add_to_scraped_confirmed_table: record_origin == "scraped" ? true : false
                     };
 
                     try{

@@ -181,14 +181,13 @@ module.exports = {
         request.getValidationResult().then(function(validationResult){
             
             if(validationResult.array().length > 0 ){
-                console.log(validationResult.isEmpty());
-                console.log(validationResult.array());
                 console.log("validation failed.");
-                response.send({failed: true});
+                response.status(400).send({ failed: true, message: "Validation faled, please format input data properly."});
             }
             else{
                 console.log("validation succeeded.");
-                response.send({failed: false});
+                request.validated_data = request.body;
+                next();
             }
         })
     }
