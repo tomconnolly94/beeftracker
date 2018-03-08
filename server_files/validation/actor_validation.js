@@ -48,7 +48,7 @@ module.exports = {
         request.checkBody("variable_field_values", "No alternative names provided.").notEmpty();
         
         //validate nicknames
-        request.checkBody("links", "No alternative names provided.").notEmpty();
+        request.checkBody("links", "No links provided.").notEmpty();
         request.checkBody("links", "Link items are not formatted correctly.").test_array_of_urls();
         
         //validate gallery_items

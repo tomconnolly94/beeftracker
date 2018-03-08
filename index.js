@@ -24,6 +24,8 @@ var compression = require('compression');
 var validation_controller = require("./server_files/validation/validation_controller");
 var validator = require('express-validator');
 
+console.log(validation_controller.get_all_custom_validation_functions());
+
 //configure validator
 app.use(validator({
     customValidators: validation_controller.get_all_custom_validation_functions()
@@ -89,7 +91,7 @@ app.use('/template_functions', require('./server_files/routing/template_function
 
 //################################################################################## TESTING AREA START
 
-app.post("/test_form_validation", memoryUpload, require("./server_files/validation/event_validation").validate, function(req, res){
+app.post("/test_form_validation", memoryUpload, require("./server_files/validation/comment_validation").validate, function(req, res){
     console.log(res);
     res.send()
 });
@@ -114,6 +116,7 @@ app.get('/manifest.webmanifest', function(request, response) {
             "src": "logo/beeftracker_new_logo_cropped_small.ico",
             "sizes": "256x256"
         }]
+    });
 }); //robots config file
 
 // ### Serve an error page on unrecognised uri###
