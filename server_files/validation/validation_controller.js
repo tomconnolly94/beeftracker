@@ -1,19 +1,27 @@
 //external dependencies
 
 //internal dependencies
-var event_validation_custom_functions = require("./event_validation").get_custom_validation_functions;
 var actor_validation_custom_functions = require("./actor_validation").get_custom_validation_functions;
+var authentication_request_validation_custom_functions = require("./authentication_request_validation").get_custom_validation_functions;
 var comment_validation_custom_functions = require("./comment_validation").get_custom_validation_functions;
+var event_categories_validation_custom_functions = require("./event_categories_validation").get_custom_validation_functions;
+var event_validation_custom_functions = require("./event_validation").get_custom_validation_functions;
+var update_request_validation_custom_functions = require("./update_request_validation").get_custom_validation_functions;
+var user_validation_custom_functions = require("./user_validation").get_custom_validation_functions;
 
 module.exports = {
     
     get_all_custom_validation_functions: function(){
         
         //list of validation modules
-        var validation_modules_list = [ 
-            event_validation_custom_functions,
+        var validation_modules_list = [
             actor_validation_custom_functions,
-            comment_validation_custom_functions
+            authentication_request_validation_custom_functions,
+            comment_validation_custom_functions,
+            event_categories_validation_custom_functions,
+            event_validation_custom_functions,
+            update_request_validation_custom_functions,
+            user_validation_custom_functions
         ];
         var master_functions_object = {};
         
