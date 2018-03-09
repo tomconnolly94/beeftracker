@@ -91,7 +91,7 @@ app.use('/template_functions', require('./server_files/routing/template_function
 
 //################################################################################## TESTING AREA START
 
-app.post("/test_form_validation", memoryUpload, require("./server_files/validation/comment_validation").validate, function(req, res){
+app.post("/test_form_validation", memoryUpload, require("./server_files/validation/authentication_request_validation").validate, function(req, res){
     
     res.status(200).send({ failed: false, message: "validation successful."})
 });

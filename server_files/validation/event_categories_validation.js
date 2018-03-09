@@ -16,21 +16,14 @@ module.exports = {
         console.log(request.body);
                         
         //validate title
-        request.checkBody("event_id", "No event_id provided.").notEmpty();
-        request.checkBody("event_id", "No event_id provided.").notNull();
-        request.checkBody("event_id", "No event_id provided.").test_mongodb_object_id();
+        request.checkBody("cat_id", "No cat_id provided.").notEmpty();
+        request.checkBody("cat_id", "No cat_id provided.").notNull();
+        request.checkBody("cat_id", "cat_id formatted incorrectly.").test_int();        
                 
         //validate event date
-        request.checkBody("actor_id", "No actor_id provided.").notEmpty();
-        request.checkBody("actor_id", "Null actor_id provided.").notNull();
-        request.checkBody("actor_id", "actor_id is formatted incorrectly.").test_mongodb_object_id();
-        
-        //validate event date
-        request.checkBody("text", "No text provided.").notEmpty();
-        
-        //validate event date
-        request.checkBody("user", "No user provided.").notEmpty();
-        request.checkBody("user", "No user provided.").test_mongodb_object_id();
+        request.checkBody("name", "No actor_id provided.").notEmpty();
+        request.checkBody("name", "Null actor_id provided.").notNull();
+        request.checkBody("name", "actor_id is formatted incorrectly.").test_mongodb_object_id();
         
         request.getValidationResult().then(function(validationResult){
             

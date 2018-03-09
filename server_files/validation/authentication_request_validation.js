@@ -16,52 +16,31 @@ module.exports = {
         console.log(request.body);
                         
         //validate title
-        request.checkBody("event_id", "No event_id provided.").notEmpty();
-        request.checkBody("event_id", "No event_id provided.").notNull();
-        request.checkBody("event_id", "No event_id provided.").test_mongodb_object_id();
+        request.checkBody("username", "No username provided.").notEmpty();
+        request.checkBody("username", "Null username provided.").notNull();
+        request.checkBody("username", "Potential HTML code found, please remove this.").detect_xss();
                 
         //validate event date
-        request.checkBody("actor_id", "No actor_id provided.").notEmpty();
-        request.checkBody("actor_id", "Null actor_id provided.").notNull();
-        request.checkBody("actor_id", "actor_id is formatted incorrectly.").test_mongodb_object_id();
+        request.checkBody("password", "No actor_id provided.").notEmpty();
+        request.checkBody("password", "Null actor_id provided.").notNull();
+        request.checkBody("password", "Potential HTML code found, please remove this.").detect_xss();
         
         //validate event date
-        request.checkBody("text", "No text provided.").notEmpty();
-        
-        //validate event date
-        request.checkBody("user", "No user provided.").notEmpty();
-        request.checkBody("user", "No user provided.").test_mongodb_object_id();
-        
+        request.checkBody("requires_admin", "No requires_admin value provided").notEmpty();
+        request.checkBody("requires_admin", "requires_admin value is formatted incorrectly").isBool();
+                
         request.getValidationResult().then(function(validationResult){
             
             if(validationResult.array().length > 0 ){
-                
-                var errors = validationResult.array();
-                var errors_master = [];
-                errors_master.actor_id_errors = [];
-                errors_master.event_id_errors = [];
-                
-                for(var i = 0; i < errors.length; i++){
-                    
-                    var error = errors[i];
-                    errors_master[error.param + "_errors"].push(error);
-                }
-                
-                //only confirm validation if there are more than one errors
-                if(errors_master.actor_id_errors.length > 0 && errors_master.event_id_errors.length == 0 || errors_master.event_id_errors.length > 0 && errors_master.actor_id_errors.length == 0){
-                    console.log("validation succeeded.");
-                    request.validated_data = request.body;
-                    next();
-                }
-                else{
-                    console.log("validation failed.");
-                    response.status(400).send({ failed: true, message: "Validation faled, please format input data properly."});
-                }
-            }
-            else{
                 console.log("validation failed.");
+                console.log(validationResult.array());
                 response.status(400).send({ failed: true, message: "Validation faled, please format input data properly."});
             }
-        })
+            else{
+                console.log("validation succeeded.");
+                request.validated_data = request.body;
+                next();
+            }
+        });
     }
 };

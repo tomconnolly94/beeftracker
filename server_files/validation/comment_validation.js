@@ -1,7 +1,4 @@
 //external dependencies
-var path = require("path");
-var valid_url = require('valid-url');
-var sanitizer = require('sanitizer');
 
 //internal dependencies
 
@@ -9,38 +6,7 @@ module.exports = {
     
     get_custom_validation_functions: function(){
         return {
-            test_mongodb_object_id: function(input){
-                if(!input){
-                    return false;
-                }
-                
-                var checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
-
-                if(input.match(checkForHexRegExp)){
-                    return true;
-                }
-                else{
-                    return false;
-                }
-            },
-            notNull: function(input){
-                if(input){
-                    return true;
-                }
-                else{
-                    return false;
-                }
-            },
-            detect_xss: function(input){
-                var sanitised_input = sanitizer.escape(input);
-                
-                if(input === sanitised_input){
-                    return true;
-                }
-                else{
-                    return false;
-                }
-            }
+            
         }
     },
     
@@ -50,12 +16,12 @@ module.exports = {
         
         //validate title
         request.checkBody("event_id", "No event_id provided.").notEmpty();
-        request.checkBody("event_id", "No event_id provided.").notNull();
+        request.checkBody("event_id", "No event_id provided.").not_null();
         request.checkBody("event_id", "No event_id provided.").test_mongodb_object_id();
                 
         //validate event date
         request.checkBody("actor_id", "No actor_id provided.").notEmpty();
-        request.checkBody("actor_id", "Null actor_id provided.").notNull();
+        request.checkBody("actor_id", "Null actor_id provided.").not_null();
         request.checkBody("actor_id", "actor_id is formatted incorrectly.").test_mongodb_object_id();
         
         //validate event date
