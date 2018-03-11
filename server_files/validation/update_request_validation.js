@@ -17,12 +17,12 @@ module.exports = {
                         
         //validate title
         request.checkBody("event_id", "No event_id provided.").notEmpty();
-        request.checkBody("event_id", "No event_id provided.").notNull();
+        request.checkBody("event_id", "Null event_id provided.").not_null();
         request.checkBody("event_id", "No event_id provided.").test_mongodb_object_id();
                 
         //validate event date
         request.checkBody("actor_id", "No actor_id provided.").notEmpty();
-        request.checkBody("actor_id", "Null actor_id provided.").notNull();
+        request.checkBody("actor_id", "Null actor_id provided.").not_null();
         request.checkBody("actor_id", "actor_id is formatted incorrectly.").test_mongodb_object_id();
         
         //validate event date
@@ -30,7 +30,8 @@ module.exports = {
         
         //validate event date
         request.checkBody("user", "No user provided.").notEmpty();
-        request.checkBody("user", "No user provided.").test_mongodb_object_id();
+        request.checkBody("user", "Null user provided.").not_null();
+        request.checkBody("user", "User is not formatted correctly.").test_mongodb_object_id();
         
         request.getValidationResult().then(function(validationResult){
             

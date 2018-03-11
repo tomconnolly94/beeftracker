@@ -80,6 +80,6 @@ module.exports = {
                 request.validated_data = request.body;
                 next();
             }
-        })
+        });
     }
 };

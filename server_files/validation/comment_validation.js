@@ -28,9 +28,10 @@ module.exports = {
         request.checkBody("text", "No text provided.").notEmpty();
         request.checkBody("text", "Potential HTML code found, please remove this.").detect_xss();
         
-        //validate event date
+        //validate user id
         request.checkBody("user", "No user provided.").notEmpty();
-        request.checkBody("user", "No user provided.").test_mongodb_object_id();
+        request.checkBody("user", "Null user provided.").not_null();
+        request.checkBody("user", "User is not formatted correctly.").test_mongodb_object_id();
         
         request.getValidationResult().then(function(validationResult){
             
