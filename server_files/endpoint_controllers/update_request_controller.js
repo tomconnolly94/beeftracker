@@ -9,7 +9,7 @@ var db_interface = require('../interfaces/db_insert_interface.js');
 var format_embeddable_items = require('../tools/formatting.js').format_embeddable_items;
 var format_event_data = require("./events_controller.js").format_event_data;
 var format_actor_data = require("./actors_controller.js").format_actor_data;
-var EventContribution = require("../schemas/event_contribution_schema.js").model
+var EventContribution = require("../schemas/event_contribution_schema.js").model;
 
 module.exports = {
     

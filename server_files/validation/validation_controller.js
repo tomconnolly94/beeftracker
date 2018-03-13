@@ -209,7 +209,7 @@ var master_functions_object = {
         }
         return true;
     },
-    isBool: function(input){
+    is_bool: function(input){
         
         if(typeof input === "boolean"){
             return true;
