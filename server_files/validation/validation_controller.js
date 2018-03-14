@@ -43,17 +43,35 @@ var master_functions_object = {
     },
     test_record_origin: function(input){
 
-        if(input == "scraped" || input == "submission"){
+        if(input == "scraped" || input == "submitted"){
             return true;
         }
         else{
             return false;
         }
     },
-    test_gallery_items_structure: function(gallery_items){
-
+    test_gallery_items_structure: function(gallery_items, files){
+        
+        if(gallery_items.length != files.length){
+            return false;
+        }
+        
         for(var i = 0; i < gallery_items.length; i++){
+            
             var gallery_item = gallery_items[i];
+            var gallery_item_found_in_files = false;
+            
+            //loop through files to make sure the gallery item link is included
+            for(var j = 0; j < files.length; j++){
+                if(gallery_item.link == files[j].originalname){
+                    gallery_item_found_in_files = true;
+                    break;
+                }
+            }
+            
+            if(!gallery_item_found_in_files){
+                return false;
+            }
 
             if(gallery_item["media_type"] == 'undefined' || gallery_item["media_type"].length < 1){
                 return false;
@@ -97,7 +115,7 @@ var master_functions_object = {
     },
     test_int: function(number) {
 
-        if (isNaN(number)){
+        if (isNaN(number) || number !== parseInt(number, 10)){
             return false;
         } 
         else {
@@ -155,11 +173,11 @@ var master_functions_object = {
         }
     },
     not_null: function(input){
-        if(input){
-            return true;
+        if(input == null || input == undefined){
+            return false;
         }
         else{
-            return false;
+            return true;
         }
     },
     detect_xss: function(input){
@@ -212,6 +230,15 @@ var master_functions_object = {
     is_bool: function(input){
         
         if(typeof input === "boolean"){
+            return true;
+        }
+        else{
+            return false;
+        }
+    },
+    is_string: function(input){
+        
+        if(typeof input === "string"){
             return true;
         }
         else{

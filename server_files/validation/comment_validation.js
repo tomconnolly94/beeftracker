@@ -15,22 +15,24 @@ module.exports = {
         console.log(request.body);
         
         //validate title
-        request.checkBody("event_id", "No event_id provided.").notEmpty();
-        request.checkBody("event_id", "No event_id provided.").not_null();
+        request.checkBody("event_id", "Field is empty").notEmpty();
+        request.checkBody("event_id", "Field is null.").not_null();
         request.checkBody("event_id", "No event_id provided.").test_mongodb_object_id();
                 
         //validate event date
-        request.checkBody("actor_id", "No actor_id provided.").notEmpty();
-        request.checkBody("actor_id", "Null actor_id provided.").not_null();
+        request.checkBody("actor_id", "Field is empty").notEmpty();
+        request.checkBody("actor_id", "Field is null.").not_null();
         request.checkBody("actor_id", "actor_id is formatted incorrectly.").test_mongodb_object_id();
         
         //validate event date
-        request.checkBody("text", "No text provided.").notEmpty();
+        request.checkBody("text", "Field is empty").notEmpty();
+        request.checkBody("text", "Field is null.").not_null();
+        request.checkBody("text", "Field is not a string.").is_string();
         request.checkBody("text", "Potential HTML code found, please remove this.").detect_xss();
         
         //validate user id
-        request.checkBody("user", "No user provided.").notEmpty();
-        request.checkBody("user", "Null user provided.").not_null();
+        request.checkBody("user", "Field is empty").notEmpty();
+        request.checkBody("user", "Field is null.").not_null();
         request.checkBody("user", "User is not formatted correctly.").test_mongodb_object_id();
         
         request.getValidationResult().then(function(validationResult){

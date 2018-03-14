@@ -16,19 +16,21 @@ module.exports = {
         console.log(request.body);
                         
         //validate title
-        request.checkBody("username", "No username provided.").notEmpty();
-        request.checkBody("username", "Null username provided.").not_null();
+        request.checkBody("username", "Field is empty").notEmpty();
+        request.checkBody("username", "Field is null.").not_null();
+        request.checkBody("username", "username provided is not a string.").is_string();
         request.checkBody("username", "Potential HTML code found, please remove this.").detect_xss();
                 
         //validate event date
-        request.checkBody("password", "No actor_id provided.").notEmpty();
-        request.checkBody("password", "Null actor_id provided.").not_null();
+        request.checkBody("password", "Field is empty").notEmpty();
+        request.checkBody("password", "Field is null.").not_null();
+        request.checkBody("password", "username provided is not a string.").is_string();
         request.checkBody("password", "Potential HTML code found, please remove this.").detect_xss();
         
         //validate event date
-        request.checkBody("requires_admin", "No requires_admin value provided").notEmpty();
-        request.checkBody("requires_admin", "Null requires_admin value provided").not_null();
-        request.checkBody("requires_admin", "requires_admin value is formatted incorrectly").isBool();
+        request.checkBody("requires_admin", "Field is empty").notEmpty();
+        request.checkBody("requires_admin", "Field is null.").not_null();
+        request.checkBody("requires_admin", "Field is not boolean.").is_bool();
                 
         request.getValidationResult().then(function(validationResult){
             

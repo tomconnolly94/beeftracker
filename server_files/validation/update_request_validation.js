@@ -3,6 +3,8 @@ var path = require("path");
 var valid_url = require('valid-url');
 
 //internal dependencies
+var actor_data_validator = require("../validation/actor_validation");
+var event_data_validator = require("../validation/event_validation");
 
 module.exports = {
     
@@ -14,55 +16,55 @@ module.exports = {
     validate: function(request, response, next){
         console.log("validator started.");
         console.log(request.body);
+        
+        request.body = JSON.parse(request.body.data); //get form data
                         
         //validate title
-        request.checkBody("event_id", "No event_id provided.").notEmpty();
-        request.checkBody("event_id", "Null event_id provided.").not_null();
-        request.checkBody("event_id", "No event_id provided.").test_mongodb_object_id();
-                
-        //validate event date
-        request.checkBody("actor_id", "No actor_id provided.").notEmpty();
-        request.checkBody("actor_id", "Null actor_id provided.").not_null();
-        request.checkBody("actor_id", "actor_id is formatted incorrectly.").test_mongodb_object_id();
+        request.checkBody("user_id", "Field is empty.").notEmpty();
+        request.checkBody("user_id", "Field is null.").not_null();
+        request.checkBody("user_id", "No event_id provided.").test_mongodb_object_id();
         
-        //validate event date
-        request.checkBody("text", "No text provided.").notEmpty();
+        console.log(request.body.type);
         
-        //validate event date
-        request.checkBody("user", "No user provided.").notEmpty();
-        request.checkBody("user", "Null user provided.").not_null();
-        request.checkBody("user", "User is not formatted correctly.").test_mongodb_object_id();
+        //validate type
+        request.checkBody("type", "Field is empty").notEmpty();
+        request.checkBody("type", "Field is null.").not_null();
+        request.checkBody("type", "Field is not a string.").is_string();
+        request.checkBody("type", "Potential HTML code found, please remove this.").detect_xss();
         
-        request.getValidationResult().then(function(validationResult){
-            
-            if(validationResult.array().length > 0 ){
-                
-                var errors = validationResult.array();
-                var errors_master = [];
-                errors_master.actor_id_errors = [];
-                errors_master.event_id_errors = [];
-                
-                for(var i = 0; i < errors.length; i++){
-                    
-                    var error = errors[i];
-                    errors_master[error.param + "_errors"].push(error);
+        var inspect_errors = function(request, response, next){
+            request.getValidationResult().then(function(validationResult){
+
+                if(validationResult.array().length > 0 ){
+                    console.log("validation failed.");
+                    console.log(validationResult.array());
+                    response.status(400).send({ failed: true, message: "Validation failed, please format input data properly."});
                 }
-                
-                //only confirm validation if there are more than one errors
-                if(errors_master.actor_id_errors.length > 0 && errors_master.event_id_errors.length == 0 || errors_master.event_id_errors.length > 0 && errors_master.actor_id_errors.length == 0){
+                else{
                     console.log("validation succeeded.");
                     request.validated_data = request.body;
                     next();
                 }
-                else{
-                    console.log("validation failed.");
-                    response.status(400).send({ failed: true, message: "Validation faled, please format input data properly."});
-                }
-            }
-            else{
-                console.log("validation failed.");
-                response.status(400).send({ failed: true, message: "Validation faled, please format input data properly."});
-            }
-        })
+            });
+        }
+        
+        var full_object = request.body;
+        request.body = request.body.data;
+        
+        //determine which kind of data to validate
+        if(full_object.type == "event"){
+            event_data_validator.validate(request, response, function(){
+                inspect_errors(request, response, next);
+            });
+        }
+        else if(full_object.type == "actor"){
+            actor_data_validator.validate(request, response, function(){
+                inspect_errors(request, response, next);
+            });
+        }
+        else{
+            console.log("validation failed.");
+            response.status(400).send({ failed: true, message: "Validation failed, please format input data properly."});
+        }
     }
 };
