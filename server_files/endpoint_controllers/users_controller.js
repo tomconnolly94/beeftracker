@@ -79,14 +79,14 @@ module.exports = {
         });
     },
     
-    createUser: function(request, response, callback){
+    createUser: function(user_details, files, headers, callback){
         
         //extract data for use later
         var user_details = JSON.parse(request.body.data); //get form data
         var files = request.files;
         
         //check for duplicate username or email address before allowing user to register
-        var check_details_against_user_table = function(db, user_details, insert_object, response, success_callback){
+        var check_details_against_user_table = function(db, user_details, insert_object, success_callback){
 
             db.collection(db_ref.get_user_details_table()).aggregate([{ $match: { $or: [ { username: user_details.username}, { email_address: user_details.email_address } ] } }]).toArray(function(err, auth_arr){
 
@@ -115,8 +115,8 @@ module.exports = {
                 var password_data = hashing.hash_password(user_details.password);
                 var ip_address = null;
                 //if client provides an ip address, create new jsonwebtoken with it and store as cookie
-                if(request.headers['x-forwarded-for']){
-                    ip_address = request.headers['x-forwarded-for'];
+                if(headers['x-forwarded-for']){
+                    ip_address = headers['x-forwarded-for'];
                 }                     
                 
                 //prepare date of birth
@@ -144,7 +144,7 @@ module.exports = {
                 }
                 
                 //make sure username and email are both not taken
-                check_details_against_user_table(db, user_details, insert_object, response, function(){
+                check_details_against_user_table(db, user_details, insert_object, function(){
                     
                     if(user_details.admin){ //if admin, check pending registered admin users table, to ensure a user hasnt previously requested admin registration with similar details
 
@@ -212,9 +212,9 @@ module.exports = {
         });
     },
     
-    updateUser: function(request, response, callback){
-        console.log(request.body);
-        response.send({test: "endpoinjt not implemented yet."});
+    updateUser: function(user_details, files, headers, callback){
+        console.log(user_details);
+        response.send({test: "endpoint not implemented yet."});
     },
     
     deleteUser: function(request, response, callback){

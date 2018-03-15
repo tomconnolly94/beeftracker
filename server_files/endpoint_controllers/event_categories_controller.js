@@ -26,7 +26,7 @@ module.exports = {
         });
     },
     
-    createEventCategory: function(request, response){
+    createEventCategory: function(event_category_data){
         
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }

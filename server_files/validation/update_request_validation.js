@@ -42,7 +42,11 @@ module.exports = {
                 }
                 else{
                     console.log("validation succeeded.");
-                    request.validated_data = request.body;
+                    request.locals.validated_data = {
+                        user_id: request.body.user_id,
+                        type: request.body.type,
+                        data: request.body.data
+                    };
                     next();
                 }
             });

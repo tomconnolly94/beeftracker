@@ -11,7 +11,7 @@ var cookies_secure = process.env.NODE_ENV == "heroku_production" ? true : false;
         
 module.exports = {
     
-    authenticateUser: function(request, response, callback){
+    authenticateUser: function(auth_details, headers, response, callback){
         //extract data for use later
         var db_url = process.env.MONGODB_URI; //get db uri
         var auth_details = request.body; //get form data
@@ -56,7 +56,7 @@ module.exports = {
                                 response.cookie("logged_in", "true", { expires: new Date(expiry_timestamp), httpOnly: false });
 
                                 //send response with cookies
-                                callback({ auth_failed: false });
+                                callback({ auth_failed: false }, { auth_token: auth_token, expiry_timestamp: expiry_timestamp, cookies_http_only: cookies_http_only, cookies_secure: cookies_secure });
 
                                 response_sent = true;
                                 break;// ensure loop does not continue

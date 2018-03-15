@@ -231,13 +231,12 @@ module.exports = {
     },
     
     createEvent: function(event_data, event_files, callback){
-                
-        var submission_data = event_data; //get form data
+    
         var files = event_files;
         var record_origin = submission_data.record_origin;
         
         //format event record for insertion
-        var event_insert = module.exports.format_event_data(submission_data);
+        var event_insert = module.exports.format_event_data(event_data);
         
         if(test_mode){
             console.log("test mode is on.");
@@ -285,21 +284,15 @@ module.exports = {
         }
     },
     
-    updateEvent: function(request, response, callback){
+    updateEvent: function(event_data, event_files, existing_object_id, callback){
+        
+        var files = event_files;
         
         //extract data for use later
-        var existing_object_id = request.params.event_id;
         var existing_event_id_object = BSON.ObjectID.createFromHexString(existing_object_id);
-        
-        var submission_data = JSON.parse(request.body.data); //get form data
-        var files;
-
-        if(request.files){ //check if the user submitted a file via a file explorer
-            files = request.files;
-        }
 
         //format event record for insertion
-        var event_insert = module.exports.format_event_data(submission_data);
+        var event_insert = module.exports.format_event_data(event_data);
         
         if(test_mode){
             console.log("test mode is on.");

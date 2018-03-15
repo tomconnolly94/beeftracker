@@ -41,7 +41,12 @@ module.exports = {
             }
             else{
                 console.log("validation succeeded.");
-                request.validated_data = request.body;
+                request.locals.validated_data = 
+                request.locals.validated_data = {
+                    username: request.body.username,
+                    password: request.body.password,
+                    requires_admin: request.body.requires_admin
+                };
                 next();
             }
         });

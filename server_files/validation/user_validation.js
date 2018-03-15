@@ -74,7 +74,15 @@ module.exports = {
             }
             else{
                 console.log("validation succeeded.");
-                request.validated_data = request.body;
+                request.locals.validated_data = {
+                    username: request.body.username,
+                    first_name: request.body.first_name,
+                    last_name: request.body.last_name,
+                    email: request.body.email,
+                    d_o_b: request.body.d_o_b,
+                    gallery_items: request.body.gallery_items,
+                    country: request.body.country
+                };
                 next();
             }
         });

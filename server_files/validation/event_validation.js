@@ -90,7 +90,19 @@ module.exports = {
             }
             else{
                 console.log("validation succeeded.");
-                request.validated_data = request.body;
+                request.locals.validated_data = {
+                    title: request.body.title,
+                    aggressors: request.body.aggressors,
+                    targets: request.body.targets,
+                    date: request.body.date,
+                    description: request.body.description,
+                    links: request.body.links,
+                    gallery_items: request.body.gallery_items,
+                    categories: request.body.categories,
+                    data_sources: request.body.data_sources,
+                    record_origin: request.body.record_origin,
+                    tags: request.body.tags,
+                };
                 next();
             }
         });

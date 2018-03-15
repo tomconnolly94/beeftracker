@@ -39,6 +39,8 @@ module.exports = {
         request.checkBody("description", "Potential HTML code found, please remove this.").detect_xss();
         
         //validate target ids
+        request.checkBody("associated_actors", "Field is empty").notEmpty();
+        request.checkBody("associated_actors", "Field is null.").not_null();
         request.checkBody("associated_actors", "Associated actors ids are not formatted correctly.").optional().test_array_of_mongodb_object_ids("mongodb_ids");
         
         //validate data_soruces
@@ -95,7 +97,20 @@ module.exports = {
             }
             else{
                 console.log("validation succeeded.");
-                request.validated_data = request.body;
+                request.locals.validated_data = {
+                    name: request.body.name,
+                    date_of_origin: request.body.date_of_origin,
+                    place_of_origin: request.body.place_of_origin,
+                    description: request.body.description,
+                    associated_actors: request.body.associated_actors,
+                    data_sources: request.body.data_sources,
+                    also_known_as: request.body.also_known_as,
+                    classification: request.body.classification,
+                    variable_field_values: request.body.variable_field_values,
+                    links: request.body.links,
+                    gallery_items: request.body.gallery_items,
+                    record_origin: request.body.record_origin
+                }
                 next();
             }
         });

@@ -35,7 +35,10 @@ module.exports = {
             }
             else{
                 console.log("validation succeeded.");
-                request.validated_data = request.body;
+                request.validated_data = {
+                    cat_id: request.body.cat_id,
+                    name: request.body.name
+                };
                 next();
             }
         });

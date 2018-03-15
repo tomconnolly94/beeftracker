@@ -240,17 +240,12 @@ module.exports = {
         }
     },
     
-    updateActor: function(request, response, callback){
-            
-        var submission_data = JSON.parse(request.body.data); //get form data
+    updateActor: function(event_data, event_files, callback){
+             
+        var submission_data = event_data; //get form data
+        var files = event_files;
         var existing_object_id = request.params.actor_id;
-        var existing_actor_id_object = BSON.ObjectID.createFromHexString(existing_object_id);
-        var files;
-
-        if(request.files){
-            files = request.files; //get submitted image
-        }
-        
+        var existing_actor_id_object = BSON.ObjectID.createFromHexString(existing_object_id);        
         var actor_insert = module.exports.format_actor_data(submission_data);
 
         if(test_mode){

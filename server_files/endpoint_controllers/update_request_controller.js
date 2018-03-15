@@ -13,17 +13,11 @@ var EventContribution = require("../schemas/event_contribution_schema.js").model
 
 module.exports = {
     
-    createUpdateRequest: function(request, response, callback){
+    createUpdateRequest: function(incoming_data, files, callback){
         
-        var incoming_data = JSON.parse(request.body.data);    
-        var files;
-        var submission_data = incoming_data.update_data;
+        var submission_data = incoming_data.data;
         var object_type;
         var insert_object;
-        
-        if(request.files){
-            files = request.files;
-        }
         
         if(incoming_data.event){
             insert_object = format_event_data(submission_data);

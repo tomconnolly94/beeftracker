@@ -20,9 +20,13 @@ var users_controller = require('../endpoint_controllers/users_controller');
 var authentication_controller = require('../endpoint_controllers/authentication_controller');
 
 //input validation functions
-var event_data_validator = require("../validation/event_validation");
 var actor_data_validator = require("../validation/actor_validation");
+var authentication_request_validator = require("../validation/authentication_request_validation");
 var comment_data_validator = require("../validation/comment_validation");
+var event_categories_data_validator = require("../validation/event_categories_validation");
+var event_data_validator = require("../validation/event_validation");
+var update_request_validator = require("../validation/update_request_validation");
+var user_data_validator = require("../validation/user_validation");
 
 var memoryStorage = multer.memoryStorage();
 var memoryUpload = multer({
@@ -99,10 +103,10 @@ router.route('/actors/:actor_id').get(function(request, response){
         }
     });
 });//built, written, tested
-router.route('/actors').post(memoryUpload, function(request, response){
+router.route('/actors').post(memoryUpload, actor_data_validator.validate, function(request, response){
     
-    var event_data = request.validated_data;
-    var event_files = request.validated_files;
+    var event_data = request.locals.validated_data;
+    var event_files = request.files;
     
     actor_controller.createActor(event_data, event_files, function(data){
         if(data.failed){
@@ -114,8 +118,12 @@ router.route('/actors').post(memoryUpload, function(request, response){
     });
     
 });//built, written, tested
-router.route('/actors/:actor_id').put(token_authentication.authenticate_admin_user_token, memoryUpload, function(request, response){
-    actor_controller.updateActor(request, response, function(data){
+router.route('/actors/:actor_id').put(token_authentication.authenticate_admin_user_token, memoryUpload, actor_data_validator.validate, function(request, response){
+    
+    var event_data = request.locals.validated_data;
+    var event_files = request.files;
+    
+    actor_controller.updateActor(event_data, event_files, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
@@ -202,7 +210,7 @@ router.route('/disclaimer-data').get(function(request, response){
 //Comments endpoints
 router.route('/comments').post(comment_data_validator.validate, function(request, response){
     
-    var comment_data = request.validated_data;    
+    var comment_data = request.locals.validated_data;    
     
     comments_controller.createComment(comment_data, function(data){
         if(data.failed){
@@ -255,8 +263,11 @@ router.route('/event-categories').get(function(request, response){
         }
     });
 });//built, written, tested
-router.route('/event-categories').post(function(request, response){
-    event_categories_controller.createEventCategory(request, response, function(data){
+router.route('/event-categories').post(event_categories_data_validator.validate, function(request, response){
+    
+    var event_category_data = request.locals.validated_data;
+    
+    event_categories_controller.createEventCategory(event_category_data, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
@@ -287,10 +298,10 @@ router.route('/events/:event_id').get(function(request, response){
         }
     });
 });//built, written, tested
-router.route('/events').post(token_authentication.authenticate_admin_user_token, memoryUpload, event_data_validator.validate, function(request, response){
+router.route('/events').post(token_authentication.authenticate_admin_user_token, memoryUpload, event_data_validator.validate, event_data_validator.validate, function(request, response){
     
-    var event_data = request.validated_data;
-    var event_files = request.validated_files;
+    var event_data = request.locals.validated_data;
+    var event_files = request.files;
     
     event_controller.createEvent(event_data, event_files, function(data){
         if(data.failed){
@@ -301,8 +312,13 @@ router.route('/events').post(token_authentication.authenticate_admin_user_token,
         }
     });
 });//built, written, tested, needs specific user auth
-router.route('/events/:event_id').put(token_authentication.authenticate_admin_user_token, memoryUpload, function(request, response){
-    event_controller.updateEvent(request, response, function(data){
+router.route('/events/:event_id').put(token_authentication.authenticate_admin_user_token, memoryUpload, event_data_validator.validate, function(request, response){
+    
+    var event_data = request.locals.validated_data;
+    var event_files = request.files;
+    var existing_event_id = request.params.event_id;
+    
+    event_controller.updateEvent(event_data, event_files, existing_event_id, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
@@ -355,8 +371,12 @@ router.route('/events/related-to-actor/:actor_id').get(function(request, respons
 });//built, written, needs manual testing with valid data
 
 //Update request endpoints
-router.route('/update-requests').post(memoryUpload, function(request, response){
-    update_request_controller.createUpdateRequest(request, response, function(data){
+router.route('/update-requests').post(memoryUpload, update_request_validator.validate, function(request, response){
+    
+    var data = request.locals.validated_data
+    var files = request.files;
+    
+    update_request_controller.createUpdateRequest(data, files, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
@@ -377,8 +397,13 @@ router.route('/users/:user_id').get(token_authentication.authenticate_user_token
         }
     });
 });//built, written, manually tested, needs specific user or admin auth
-router.route('/users').post(memoryUpload, function(request, response){
-    users_controller.createUser(request, response, function(data){
+router.route('/users').post(memoryUpload, user_data_validator.validate, function(request, response){
+    
+    var user_details = request.locals.validated_data;
+    var files = request.files;
+    var headers = request.headers;
+    
+    users_controller.createUser(user_details, files, headers, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
@@ -387,8 +412,13 @@ router.route('/users').post(memoryUpload, function(request, response){
         }
     });
 });//built, written, manually tested
-router.route('/users/:user_id').put(token_authentication.authenticate_admin_user_token, function(request, response){
-    users_controller.updateUser(request, response, function(data){
+router.route('/users/:user_id').put(token_authentication.authenticate_admin_user_token, user_data_validator.validate, function(request, response){
+    
+    var user_details = request.locals.validated_data;
+    var files = request.files;
+    var headers = request.headers;
+    
+    users_controller.updateUser(user_details, files, headers, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
@@ -419,12 +449,20 @@ router.route('/reset-password').post(function(request, response){
 });//built, not written, not tested
 
 //Authentication endpoints
-router.route('/authenticate').post(function(request, response){
-    authentication_controller.authenticateUser(request, response, function(data){
+router.route('/authenticate').post(authentication_request_validator.validate, function(request, response){
+    
+    var auth_details = request.locals.validate_data;
+    var headers = request.headers;
+    
+    authentication_controller.authenticateUser(auth_details, headers, function(data, cookie_details){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
+            //set auth token for verification and logged_in token so client javascript knows how to behave
+            response.cookie("auth", cookie_details.auth_token, { expires: new Date(cookie_details.expiry_timestamp), httpOnly: cookie_details.cookies_http_only, secure: cookie_details.cookies_secure });
+            response.cookie("logged_in", "true", { expires: new Date(cookie_details.expiry_timestamp), httpOnly: false });
+
             send_successful_response(response, 200, data);
         }
     });
