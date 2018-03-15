@@ -24,8 +24,6 @@ var compression = require('compression');
 var validation_controller = require("./server_files/validation/validation_controller");
 var validator = require('express-validator');
 
-console.log(validation_controller.get_all_custom_validation_functions());
-
 //configure validator
 app.use(validator({
     customValidators: validation_controller.get_all_custom_validation_functions()

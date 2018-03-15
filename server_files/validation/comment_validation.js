@@ -59,6 +59,7 @@ module.exports = {
                 //only confirm validation if there are more than one errors
                 if((errors_master.actor_id_errors.length > 0 && errors_master.event_id_errors.length == 0 || errors_master.event_id_errors.length > 0 && errors_master.actor_id_errors.length == 0) && non_id_errors.length == 0){
                     console.log("validation succeeded.");
+                    request.locals = {};
                     request.locals.validated_data = {
                         event_id: request.body.event_id,
                         actor_id: request.body.actor_id,

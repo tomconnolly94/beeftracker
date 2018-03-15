@@ -113,6 +113,20 @@ var master_functions_object = {
         }
         return true;
     },
+    test_array_of_links: function(links) {
+
+        for(var i = 0; i < links.length; i++){
+            var url = links[i].url;
+
+            if (valid_url.isUri(url)){
+                continue;
+            } 
+            else {
+                return false;
+            }
+        }
+        return true;
+    },
     test_int: function(number) {
 
         if (isNaN(number) || number !== parseInt(number, 10)){
@@ -226,6 +240,32 @@ var master_functions_object = {
             }
         }
         return true;
+    },
+    detect_xss_in_array_of_objects_keys_and_fields: function(objects){
+        
+        for(var j = 0; j < objects.length; j++){
+            
+            var object = objects[j];
+            
+            var keys = Object.keys(objects);
+
+            for(var i = 0; i < keys.length; i++){
+
+                var key = keys[i];
+                var field = object[key];
+
+                var sanitised_key = sanitizer.escape(key);
+                var sanitised_field = sanitizer.escape(field);
+
+                if(key === sanitised_key && field === sanitised_field){
+                    continue;
+                }
+                else{
+                    return false;
+                }
+            }
+            return true;
+        }
     },
     is_bool: function(input){
         

@@ -10,7 +10,11 @@ var event_schema = new Schema({
     event_date: Date,
     date_added: Date,
     description: String,
-    links: { },
+    links : [{
+        _id : { id: false },
+        title : String,
+        url : String
+    }],
     categories: [ Number ],
     hit_count: {
         total: Number, 
@@ -19,6 +23,7 @@ var event_schema = new Schema({
         last_week: Number
     },
     gallery_items: [{
+        _id : { id: false },
         media_type: String,
         link: String,
         main_graphic: Boolean,

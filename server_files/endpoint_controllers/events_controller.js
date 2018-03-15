@@ -15,23 +15,25 @@ var EventContribution = require("../schemas/event_contribution_schema").model;
 
 var test_mode = false;
 var event_projection = {
-    $project: {
-        "_id": 1,
-        "title": 1,
-        "aggressors": 1,
-        "targets": 1,
-        "event_date": 1,
-        "date_added": 1,
-        "description": 1,
-        "links": 1,
-        "categories": 1,
-        "hit_counts": 1,
-        "gallery": 1,
-        "thumbnail_img_title": 1,
-        "rating": 1,
-        "data_sources": 1,
-        "beef_chain_ids": 1
-    }
+    "_id": 1,
+    "title": 1,
+    "aggressors": 1,
+    "targets": 1,
+    "event_date": 1,
+    "date_added": 1,
+    "description": 1,
+    "links": 1,
+    "categories": 1,
+    "hit_counts": 1,
+    "gallery_items": 1,
+    "img_title_thumbnail": 1,
+    "img_title_fullsize": 1,
+    "rating": 1,
+    "data_sources": 1,
+    "beef_chain_ids": 1,
+    "contributions": 1,
+    "tags": 1,
+    featured: 1
 };
 
 var check_end_or_next = function(event, item, next){
@@ -53,6 +55,8 @@ module.exports = {
         var target_ids = []; //create array to store target_ids
         var gallery_items_formatted = [];
 
+        console.log(submission_data);
+        
         //format target_ids array
         for(var i = 0; i < submission_data.aggressors.length; i++){
             aggressor_ids.push(BSON.ObjectID.createFromHexString(submission_data.aggressors[i]));
@@ -214,11 +218,12 @@ module.exports = {
                         foreignField: "_id",
                         as: "targets" 
                     }},
-                    event_projection
+                    { $project: event_projection }
                 ]).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
                     else{
                         if(docs && docs.length > 0){
+                            console.log(docs[0]);
                             callback( docs[0] );
                         }
                         else{
@@ -233,7 +238,7 @@ module.exports = {
     createEvent: function(event_data, event_files, callback){
     
         var files = event_files;
-        var record_origin = submission_data.record_origin;
+        var record_origin = event_data.record_origin;
         
         //format event record for insertion
         var event_insert = module.exports.format_event_data(event_data);

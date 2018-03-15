@@ -149,7 +149,7 @@ module.exports = {
                     //handle error
                     if(err) { console.log(err);}
                     else{
-                        callback();
+                        callback({});
                     }
                 });
             }

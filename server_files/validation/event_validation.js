@@ -45,7 +45,8 @@ module.exports = {
         //validate data_soruces
         request.checkBody("links", "Field is empty").notEmpty();
         request.checkBody("links", "Field is null.").not_null();
-        request.checkBody("links", "Potential HTML code found, please remove this.").detect_xss_in_object_keys_and_fields();
+        request.checkBody("links", "Potential HTML code found, please remove this.").detect_xss_in_array_of_objects_keys_and_fields();
+        request.checkBody("links", "Not an array of links.").test_array_of_links();
         
         //validate gallery_items
         request.checkBody("gallery_items", "Field is empty").notEmpty();
@@ -62,6 +63,11 @@ module.exports = {
         request.checkBody("data_sources", "Field is null.").not_null();
         request.checkBody("data_sources", "Potential HTML code found, please remove this.").detect_xss_in_string_array();
         request.checkBody("data_sources", "Data sources are improperly formatted.").test_array_of_urls();
+        
+        //validate user id
+        request.checkBody("user_id", "Field is empty").notEmpty();
+        request.checkBody("user_id", "Field is null.").not_null();
+        request.checkBody("user_id", "Field is not mongodb id.").test_mongodb_object_id();
         
         //validate record_origin
         request.checkBody("record_origin", "Field is empty").notEmpty();
@@ -90,6 +96,7 @@ module.exports = {
             }
             else{
                 console.log("validation succeeded.");
+                request.locals = {};
                 request.locals.validated_data = {
                     title: request.body.title,
                     aggressors: request.body.aggressors,
@@ -100,6 +107,7 @@ module.exports = {
                     gallery_items: request.body.gallery_items,
                     categories: request.body.categories,
                     data_sources: request.body.data_sources,
+                    user_id: request.body.user_id,
                     record_origin: request.body.record_origin,
                     tags: request.body.tags,
                 };

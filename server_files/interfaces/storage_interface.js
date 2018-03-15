@@ -128,8 +128,6 @@ module.exports = {
                 var file_buffer;
                 var requires_download = true;
                 
-                console.log(item)
-                
                 if(item.file){
                     file_name = item.file.originalname;
                     file_buffer = item.file.buffer;

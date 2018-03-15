@@ -42,6 +42,7 @@ module.exports = {
                 }
                 else{
                     console.log("validation succeeded.");
+                    request.locals = {};
                     request.locals.validated_data = {
                         user_id: request.body.user_id,
                         type: request.body.type,

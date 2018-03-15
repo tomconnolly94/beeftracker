@@ -12,6 +12,8 @@ module.exports = {
     
     validate: function(request, response, next){
         
+        console.log("validation started.")
+        
         //access form data and reassign it to the request body
         request.body = JSON.parse(request.body.data); //get form data
         
@@ -38,12 +40,7 @@ module.exports = {
         request.checkBody("description", "username provided is not a string.").is_string();
         request.checkBody("description", "Potential HTML code found, please remove this.").detect_xss();
         
-        //validate target ids
-        request.checkBody("associated_actors", "Field is empty").notEmpty();
-        request.checkBody("associated_actors", "Field is null.").not_null();
-        request.checkBody("associated_actors", "Associated actors ids are not formatted correctly.").optional().test_array_of_mongodb_object_ids("mongodb_ids");
-        
-        //validate data_soruces
+        //validate data_sources
         request.checkBody("data_sources", "Field is empty").notEmpty();
         request.checkBody("data_sources", "Field is null.").not_null();
         request.checkBody("data_sources", "Potential HTML code found, please remove this.").detect_xss_in_string_array();
@@ -68,8 +65,8 @@ module.exports = {
         //validate nicknames
         request.checkBody("links", "Field is empty").notEmpty();
         request.checkBody("links", "Field is null.").not_null();
-        request.checkBody("links", "Potential HTML code found, please remove this.").detect_xss_in_object_keys_and_fields();
-        request.checkBody("links", "Not an array of urls.").test_array_of_urls();
+        request.checkBody("links", "Potential HTML code found, please remove this.").detect_xss_in_array_of_objects_keys_and_fields();
+        request.checkBody("links", "Not an array of links.").test_array_of_links();
         
         //validate gallery_items
         request.checkBody("gallery_items", "Field is empty").notEmpty();
@@ -97,6 +94,7 @@ module.exports = {
             }
             else{
                 console.log("validation succeeded.");
+                request.locals = {};
                 request.locals.validated_data = {
                     name: request.body.name,
                     date_of_origin: request.body.date_of_origin,
@@ -110,7 +108,7 @@ module.exports = {
                     links: request.body.links,
                     gallery_items: request.body.gallery_items,
                     record_origin: request.body.record_origin
-                }
+                };
                 next();
             }
         });

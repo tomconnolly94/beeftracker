@@ -61,7 +61,7 @@ router.route('/activity-logs/events/:event_id').get(function(request, response){
 
     activity_logs_controller.findActivityLogsFromEvent(request, response, function(activity_logs){
         if(activity_logs.length > 0){
-            send_successful_response(response, activity_logs);
+            send_successful_response(response, 200, activity_logs);
         }
         else{
             send_unsuccessful_response(response, 400, "Activity logs not found.");
@@ -73,7 +73,7 @@ router.route('/activity-logs/actors/:actor_id').get(function(){
 
     activity_logs_controller.findActivityLogsFromActor(request, response, function(activity_logs){ 
         if(activity_logs.length > 0){
-            send_successful_response(response, activity_logs);
+            send_successful_response(response, 200, activity_logs);
         }
         else{
             send_unsuccessful_response(response, 400, "Activity logs not found.");
@@ -85,7 +85,7 @@ router.route('/activity-logs/actors/:actor_id').get(function(){
 router.route('/actors').get(function(request, response){
     actor_controller.findActors(request, response, function(actors){
         if(actors.length > 0){
-            send_successful_response(response, actors);
+            send_successful_response(response, 200, actors);
         }
         else{
             send_unsuccessful_response(response, 400, "No actors found.");
@@ -96,7 +96,7 @@ router.route('/actors').get(function(request, response){
 router.route('/actors/:actor_id').get(function(request, response){
     actor_controller.findActor(request, response, function(actor){
         if(actor){
-            send_successful_response(response, actor);
+            send_successful_response(response, 200, actor);
         }
         else{
             send_unsuccessful_response(response, 400, "Actor not found.");
@@ -105,15 +105,15 @@ router.route('/actors/:actor_id').get(function(request, response){
 });//built, written, tested
 router.route('/actors').post(memoryUpload, actor_data_validator.validate, function(request, response){
     
-    var event_data = request.locals.validated_data;
-    var event_files = request.files;
-    
-    actor_controller.createActor(event_data, event_files, function(data){
+    var data = request.locals.validated_data;
+    var files = request.files;
+        
+    actor_controller.createActor(data, files, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, data);
+            send_successful_response(response, 201, data);
         }
     });
     
@@ -128,7 +128,7 @@ router.route('/actors/:actor_id').put(token_authentication.authenticate_admin_us
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, data);
+            send_successful_response(response, 200, data);
         }
     });
 });//built, written, tested, needs admin auth
@@ -138,7 +138,7 @@ router.route('/actors/:actor_id').delete(token_authentication.authenticate_admin
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response);
+            send_successful_response(response, 200);
         }
     });
 });//built, written, tested, needs admin auth
@@ -150,7 +150,7 @@ router.route('/actor-variable-fields-config').get(function(request, response){
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, data);
+            send_successful_response(response, 200, data);
         }
     });
 });//built, written, tested
@@ -162,7 +162,7 @@ router.route('/contact-us-data').get(function(request, response){
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response);
+            send_successful_response(response, 200);
         }
     });
 });//built, not written, not tested
@@ -172,7 +172,7 @@ router.route('/about-us-data').get(function(request, response){
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response);
+            send_successful_response(response, 200);
         }
     });
 });//built, not written, not tested
@@ -182,7 +182,7 @@ router.route('/privacy-policy-data').get(function(request, response){
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response);
+            send_successful_response(response, 200);
         }
     });
 });//built, not written, not tested
@@ -192,7 +192,7 @@ router.route('/terms-and-conditions-data').get(function(request, response){
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response);
+            send_successful_response(response, 200);
         }
     });
 });//built, not written, not tested
@@ -202,7 +202,7 @@ router.route('/disclaimer-data').get(function(request, response){
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response);
+            send_successful_response(response, 200);
         }
     });
 });//built, not written
@@ -217,7 +217,7 @@ router.route('/comments').post(comment_data_validator.validate, function(request
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, 201);
+            send_successful_response(response, 201, data);
         }
     });
 });//built, written, tested, needs specific user auth
@@ -298,7 +298,7 @@ router.route('/events/:event_id').get(function(request, response){
         }
     });
 });//built, written, tested
-router.route('/events').post(token_authentication.authenticate_admin_user_token, memoryUpload, event_data_validator.validate, event_data_validator.validate, function(request, response){
+router.route('/events').post(token_authentication.authenticate_admin_user_token, memoryUpload, event_data_validator.validate, function(request, response){
     
     var event_data = request.locals.validated_data;
     var event_files = request.files;

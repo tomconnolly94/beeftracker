@@ -47,14 +47,14 @@ module.exports = {
         for(var i = 0; i < submission_data.also_known_as.length; i++){
             also_known_as_lower[i] = submission_data.also_known_as[i].toLowerCase();
         }
-
+        
         //format object for insertion into pending db
-        var actor_insert = new Actor({        
+        var actor_insert = new Actor({
             name: submission_data.name,
             date_of_origin: new Date(date_of_origin[2], date_of_origin[1]-1, date_of_origin[0]),
             place_of_origin: submission_data.place_of_origin,
             description: submission_data.description,
-            associated_actors: submission_data.associated_actors,
+            associated_actors: [],
             data_sources: submission_data.data_sources,
             also_known_as: submission_data.also_known_as,
             classification: submission_data.classification,
@@ -187,13 +187,11 @@ module.exports = {
         });
     },
     
-    createActor: function(event_data, event_files, callback){
-             
-        var submission_data = event_data; //get form data
-        var files = event_files;
+    createActor: function(submission_data, files, callback){
+                
         var record_origin = submission_data.record_origin;
         var actor_insert = module.exports.format_actor_data(submission_data);
-
+        
         if(test_mode){
             console.log("test mode is on.");
             console.log(actor_insert);
@@ -356,7 +354,7 @@ module.exports = {
                                         db.collection(db_ref.get_current_actor_table()).deleteOne({ _id: actor_id_object }, function(queryErr, docs) {
                                             if(queryErr){ console.log(queryErr); }
                                             else{
-                                                callback();
+                                                callback({});
                                             }
                                         });
                                     });

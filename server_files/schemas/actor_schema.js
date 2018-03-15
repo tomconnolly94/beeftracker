@@ -12,14 +12,14 @@ var actor_schema = new Schema({
     also_known_as: [ String ],
     img_title: String,
     classification: String,
-    variable_field_values: {},	
-    links : [
-        {
-            link_name : String,
-            link : String
-        }
-    ],
+    variable_field_values: {},
+    links : [{
+        _id : { id: false },
+        title : String,
+        url : String
+    }],
     gallery_items: [{
+        _id : { id: false },
         media_type: String,
         link: String,
         main_graphic: Boolean,

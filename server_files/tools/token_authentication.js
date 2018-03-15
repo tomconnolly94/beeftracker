@@ -6,6 +6,7 @@ var jwt = require("jsonwebtoken");
 var os = require("os");
 var cookie_parser = require('../tools/cookie_parsing.js');
 
+var auth_disabled = true;
 var auto_refresh_auth_token = false;
 
 //delete all auth cookies and redirect to login page
@@ -95,10 +96,20 @@ var authentication_procedure = function(request, response, next){
 module.exports = {
     
     authenticate_user_token : function(request, response, next) {
-        authentication_procedure(request, response, next);
+        if(auth_disabled){
+            next();
+        }
+        else{
+            authentication_procedure(request, response, next);
+        }
     },
     authenticate_admin_user_token : function(request, response, next) {
-        request.route_requires_admin = true; //set field requiring the token has auth field set to true
-        authentication_procedure(request, response, next);
+        if(auth_disabled){
+            next();
+        }
+        else{
+            request.route_requires_admin = true; //set field requiring the token has auth field set to true
+            authentication_procedure(request, response, next);
+        }
     }
 }

@@ -19,8 +19,10 @@ module.exports = {
             if(err){ console.log(err); }
             else{
                 
+                console.log(beef_chain_id)
                 var beef_chain_id_object = BSON.ObjectID.createFromHexString(beef_chain_id);
                 
+                console.log(beef_chain_id_object)
                 db.collection(db_ref.get_current_event_table()).aggregate([
                     { $match: { beef_chain_ids: beef_chain_id_object } },
                     { $unwind : "$aggressors"},
@@ -36,8 +38,8 @@ module.exports = {
                         localField: "targets",
                         foreignField: "_id",
                         as: "targets" 
-                    }},
-                    event_projection
+                    }},/*
+                    { $project: { event_projection } }*/
                    ]).toArray(function(queryErr, docs) {
                 if(queryErr){ console.log(queryErr); }
                 else{
