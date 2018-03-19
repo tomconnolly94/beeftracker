@@ -242,17 +242,10 @@ module.exports = {
         
         //format event record for insertion
         var event_insert = module.exports.format_event_data(event_data);
-        
+                
         if(test_mode){
             console.log("test mode is on.");
-            
-            //remove file objects to avoid clogging up the console
-            for(var i = 0; i < event_insert.gallery_items.length; i++){ 
-                if(event_insert.gallery_items[i].file){
-                    event_insert.gallery_items[i].file = null;
-                }
-            }
-            
+                        
             callback({ failed: true, test_mode: true, message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_insert });
         }
         else{
@@ -274,6 +267,7 @@ module.exports = {
                         event_insert.img_title_thumbnail = event_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
                     }
                 }
+                console.log("###############");
                 console.log(event_insert);
                 
                 var db_options = {
