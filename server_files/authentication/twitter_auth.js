@@ -1,10 +1,13 @@
 //external dependencies
-var express = require('express')
+var express = require('express');
+var session = require('express-session');
 var router = express.Router()
 var passport = require("passport");
-var FacebookStrategy = require("passport-facebook").Strategy;
+var TwitterStrategy = require("passport-twitter").Strategy;
 
 router.use(passport.initialize());
+router.use(session({ secret: 'SECRET' })); // session secret
+router.use(passport.session()); // persistent login sessions
 
 //internal dependencies
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
@@ -22,11 +25,11 @@ passport.deserializeUser(function(id, done){
     done(id);
 });
 
-passport.use(new FacebookStrategy({
-        clientID: process.env.FACEBOOK_API_KEY,
-        clientSecret: process.env.FACEBOOK_API_SECRET,
-        callbackURL: "http://localhost:5000/api/auth/facebook/callback",
-        profileFields: ["id", "name", "displayName", "photos", "email"],
+passport.use(new TwitterStrategy({
+        consumerKey: process.env.TWITTER_API_KEY,
+        consumerSecret: process.env.TWITTER_API_SECRET,
+        callbackURL: "http://localhost:5000/api/auth/twitter/callback",
+        profileFields: ["id", "name", "displayName", "photos"],
         passReqToCallback: true
     },
   function(request, accessToken, refreshToken, profile, done) {
@@ -39,7 +42,7 @@ passport.use(new FacebookStrategy({
             else{
                                     
                 db.collection(db_ref.get_user_details_table()).aggregate([
-                    { $match: { email_address: profile.emails[0].value } }                        
+                    { $match: { username: profile.username } }                        
                 ]).toArray(function(err, users){
                     if(err){ console.log(err);}
                     else{
@@ -47,13 +50,13 @@ passport.use(new FacebookStrategy({
                         if(users.length == 0){
 
                             var user_details = { 
-                                username: profile.emails[0].value,
-                                first_name: profile.name.givenName,
-                                last_name: profile.name.familyName,
-                                email_address: profile.emails[0].value,
+                                username: profile.username,
+                                first_name: profile.displayName.split(" ")[0],
+                                last_name: profile.displayName.split(" ")[profile.displayName.split(" ").length],
+                                email_address: null,
                                 img_title: profile.photos[0].value,
                                 admin: false,
-                                registration_method: "facebook"
+                                registration_method: "twitter"
                             }
                             
                             //assign user_details to request
@@ -92,9 +95,9 @@ passport.use(new FacebookStrategy({
     }
 ));
 
-router.route('/').get(passport.authenticate('facebook', { scope: "email", session: "false" }));
+router.route('/').get(passport.authenticate('twitter', { session: "false" }));
 
-router.route('/callback').get(passport.authenticate('facebook'), function(request, response){
+router.route('/callback').get(passport.authenticate('twitter'), function(request, response){
     
     console.log(request.locals);
     
@@ -102,7 +105,7 @@ router.route('/callback').get(passport.authenticate('facebook'), function(reques
         
         response.cookie("bftkr_auth", "0", { expires: new Date(0), httpOnly: true });
         response.cookie("bftkr_logged_in", "false", { expires: new Date(0) });
-        response.status(200).send({ failed: false, message: "Successful Facebook authentication." });
+        response.status(200).send({ failed: false, message: "Successful Twitter authentication." });
     });
 });
 

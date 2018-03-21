@@ -6,7 +6,7 @@ var jwt = require("jsonwebtoken");
 var os = require("os");
 var cookie_parser = require('../tools/cookie_parsing.js');
 
-var auth_disabled = true;
+var auth_disabled = false;
 var auto_refresh_auth_token = false;
 
 //delete all auth cookies and redirect to login page

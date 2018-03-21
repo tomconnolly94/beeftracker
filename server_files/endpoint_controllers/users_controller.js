@@ -81,10 +81,6 @@ module.exports = {
     
     createUser: function(user_details, files, headers, callback){
         
-        //extract data for use later
-        var user_details = JSON.parse(request.body.data); //get form data
-        var files = request.files;
-        
         //check for duplicate username or email address before allowing user to register
         var check_details_against_user_table = function(db, user_details, insert_object, success_callback){
 
@@ -112,15 +108,29 @@ module.exports = {
             if(err){ console.log(err); }
             else{
                 
-                var password_data = hashing.hash_password(user_details.password);
                 var ip_address = null;
+                var password_data = { 
+                    hashed_password: null,
+                    salt: null
+                }
+                
                 //if client provides an ip address, create new jsonwebtoken with it and store as cookie
-                if(headers['x-forwarded-for']){
+                if(headers && headers['x-forwarded-for']){
                     ip_address = headers['x-forwarded-for'];
                 }                     
                 
+                //generate password if its provided
+                if(user_details.password){
+                    password_data = hashing.hash_password(user_details.password);
+                }
+                
+                var birth_date;
+                
                 //prepare date of birth
-                var birth_date = user_details.d_o_b.split("/");
+                if(user_details.d_o_b){
+                    var split_birth_date = user_details.d_o_b.split("/");
+                    birth_date = new Date(split_birth_date[2], split_birth_date[1]-1, split_birth_date[0])
+                }
                 
                 var insert_object = { 
                     username: user_details.username,
@@ -129,18 +139,21 @@ module.exports = {
                     email_address: user_details.email_address,
                     hashed_password: password_data.hashed_password, 
                     salt: password_data.salt,
-                    d_o_b: new Date(birth_date[2], birth_date[1]-1, birth_date[0]),
+                    d_o_b: birth_date,
                     img_title: user_details.img_title,
                     ip_addresses: ip_address ? [ ip_address ] : [ ],
                     date_created: new Date(),
                     last_seen: new Date(),
-                    admin: user_details.admin
+                    admin: user_details.admin,
+                    registration_method: user_details.registration_method
                 };
                 
                 var image_requires_download = true;
+                var file_buffer;
 
-                if(files[0]){
+                if(files && files[0]){
                     image_requires_download = false;
+                    file_buffer = files[0];
                 }
                 
                 //make sure username and email are both not taken
@@ -171,7 +184,7 @@ module.exports = {
                                             db.collection(db_ref.get_pending_registered_admin_users_table()).insert(insert_object, function(err, document){
                                                 if(err){ console.log(err); }
                                                 else{
-                                                    callback({message: "Registration complete, requires approval from an existing admin."});
+                                                    callback({ user_id: document.ops[0]._id, message: "Registration complete, requires approval from an existing admin." });
                                                 }
                                             });
                                         });
@@ -182,11 +195,11 @@ module.exports = {
                     }
                     else{
                                 
-                        storage_interface.upload_image(image_requires_download, storage_ref.get_user_images_folder(), insert_object.img_title, files[0].buffer, false, function(img_title){
+                        storage_interface.upload_image(image_requires_download, storage_ref.get_user_images_folder(), insert_object.img_title, file_buffer, false, function(img_title){
                             
                             insert_object.img_title_fullsize = img_title;
                             
-                            storage_interface.upload_image(image_requires_download, storage_ref.get_user_images_folder(), insert_object.img_title, files[0].buffer, true, function(thumbnail_img_title){
+                            storage_interface.upload_image(image_requires_download, storage_ref.get_user_images_folder(), insert_object.img_title, file_buffer, true, function(thumbnail_img_title){
                                 
                                 insert_object.img_title_thumbnail = thumbnail_img_title;
 
@@ -201,7 +214,8 @@ module.exports = {
                                 db.collection(db_ref.get_user_details_table()).insert(insert_object, function(err, document){
                                     if(err){ console.log(err); }
                                     else{
-                                        callback({message: "Registration complete."});
+                                        console.log(document);
+                                        callback({ user_id: document.ops[0]._id, message: "Registration complete."});
                                     }
                                 });
                             });

@@ -63,7 +63,12 @@ module.exports = {
         
         if(image_requires_download){ //if image is provided in post TODO: remove this, it is possible to force cloudinary to download image straight to server
             
-            var img_url = img_title.split("?")[0];
+            var img_url = img_title;
+            
+            if(img_url.indexOf("fbcdn.net") == -1){
+                img_url = img_url.split("?")[0];
+            }
+            
             if(!img_url.includes("http")){
                 img_url = "http:" + img_title;
             }
@@ -83,6 +88,7 @@ module.exports = {
                 });
             }
             else if(storage_ref.get_upload_method() == "cloudinary"){
+                console.log(img_url);
 
                 upload_to_cloudinary(img_url, function(dl_img_title){
                     callback(dl_img_title);

@@ -11,13 +11,13 @@ var token_authentication = require("../tools/token_authentication.js"); //get to
 var activity_logs_controller = require('../endpoint_controllers/activity_logs_controller');
 var actor_controller = require('../endpoint_controllers/actors_controller');
 var administration_data_controller = require('../endpoint_controllers/administration_data_controller');
+var authentication_controller = require('../endpoint_controllers/authentication_controller');
 var comments_controller = require('../endpoint_controllers/comments_controller');
 var event_categories_controller = require('../endpoint_controllers/event_categories_controller');
 var event_controller = require('../endpoint_controllers/events_controller');
 var event_peripherals_controller = require('../endpoint_controllers/events_peripherals_controller');
 var update_request_controller = require('../endpoint_controllers/update_request_controller');
 var users_controller = require('../endpoint_controllers/users_controller');
-var authentication_controller = require('../endpoint_controllers/authentication_controller');
 
 //input validation functions
 var actor_data_validator = require("../validation/actor_validation");
