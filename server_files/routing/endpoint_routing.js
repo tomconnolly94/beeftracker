@@ -417,13 +417,14 @@ router.route('/users').post(memoryUpload, user_data_validator.validate, function
         }
     });
 });//built, written, manually tested
-router.route('/users/:user_id').put(token_authentication.authenticate_admin_user_token, user_data_validator.validate, function(request, response){
+router.route('/users/:user_id').put(memoryUpload, token_authentication.authenticate_admin_user_token, user_data_validator.validate, function(request, response){
     
     var user_details = request.locals.validated_data;
+    var user_id = request.params.user_id;
     var files = request.files;
     var headers = request.headers;
     
-    users_controller.updateUser(user_details, files, headers, function(data){
+    users_controller.updateUser(user_details, files, headers, user_id, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }

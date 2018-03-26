@@ -307,75 +307,77 @@ module.exports = {
             callback({ failed: true, test_mode: true, message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_insert });
         }
         else{
-            
-            //find gallery items that need their embedding links generated
-            event_insert.gallery_items = format_embeddable_items(event_insert.gallery_items, files);
-            
-            storage_interface.async_loop_upload_items(event_insert.gallery_items, "events", files, function(items){
-                
-                event_insert.gallery_items = items;
-                
-                //remove file objects to avoid adding file buffer to the db
-                for(var i = 0; i < event_insert.gallery_items.length; i++){
-                    if(event_insert.gallery_items[i].file){
-                        event_insert.gallery_items[i].file = null;
-                    }
-                    
-                    if(event_insert.gallery_items[i].main_graphic){
-                        event_insert.img_title_fullsize = event_insert.gallery_items[i].link; //save fullsize main graphic ref
-                        event_insert.img_title_thumbnail = event_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
-                    }
-                }
-                
-                var db_options = {
-                    send_email_notification: true,
-                    email_notification_text: "Beef",
-                    add_to_scraped_confirmed_table: request.body.data.record_origin == "scraped" ? true : false
-                };
-                
-                db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-                    if(err){ console.log(err); }
-                    else{
-                
-                        //get the pre-update event object to sort gallery items
-                        db.collection(db_ref.get_current_event_table()).find({ _id: existing_event_id_object } ).toArray(function(queryErr, original_event) {
-                            
+            var db_options = {
+                send_email_notification: true,
+                email_notification_text: "Beef",
+                add_to_scraped_confirmed_table: request.body.data.record_origin == "scraped" ? true : false
+            };
+
+            db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
+                if(err){ console.log(err); }
+                else{
+
+                    //get the pre-update event object to sort gallery items
+                    db.collection(db_ref.get_current_event_table()).find({ _id: existing_event_id_object } ).toArray(function(queryErr, original_event) {
+                        if(err){ console.log(err); }
+                        else{
                             original_event = original_event[0];
 
-                            //call to update the db record
-                            db_interface.update_record_in_db(event_insert, db_ref.get_current_event_table(), db_options, existing_object_id, function(document){
-                                
-                                var gallery_items_to_remove = [];
-                                
-                                //if new thumbnail doesnt match the existing one the new image will have been uploaded so remove the old file
-                                if(event_insert.img_title_thumbnail != original_event.img_title_thumbnail){
-                                    gallery_items_to_remove.push({link: original_event.img_title_thumbnail, media_type: "image"});
+                            //find gallery items that need their embedding links generated
+                            event_insert.gallery_items = format_embeddable_items(event_insert.gallery_items, files);
+
+                            storage_interface.async_loop_upload_items(event_insert.gallery_items, "events", files, function(items){
+
+                                event_insert.gallery_items = items;
+
+                                //remove file objects to avoid adding file buffer to the db
+                                for(var i = 0; i < event_insert.gallery_items.length; i++){
+                                    if(event_insert.gallery_items[i].file){
+                                        event_insert.gallery_items[i].file = null;
+                                    }
+
+                                    if(event_insert.gallery_items[i].main_graphic){
+                                        event_insert.img_title_fullsize = event_insert.gallery_items[i].link; //save fullsize main graphic ref
+                                        event_insert.img_title_thumbnail = event_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
+                                    }
                                 }
 
-                                //if new gallery_item doesnt match the existing one the new image will have been uploaded so remove the old file
-                                for(var i = 0; i < original_event.gallery_items.length; i++){
-                                    var gallery_item_found = false;
-                                    for(var j = 0; j < event_insert.gallery_items.length; j++){
-                                        if(original_event.gallery_items[i].link == event_insert.gallery_items[j].link){
-                                            gallery_item_found = true;
+
+                                //call to update the db record
+                                db_interface.update_record_in_db(event_insert, db_ref.get_current_event_table(), db_options, existing_object_id, function(document){
+
+                                    var gallery_items_to_remove = [];
+
+                                    //if new thumbnail doesnt match the existing one the new image will have been uploaded so remove the old file
+                                    if(event_insert.img_title_thumbnail != original_event.img_title_thumbnail){
+                                        gallery_items_to_remove.push({link: original_event.img_title_thumbnail, media_type: "image"});
+                                    }
+
+                                    //if new gallery_item doesnt match the existing one the new image will have been uploaded so remove the old file
+                                    for(var i = 0; i < original_event.gallery_items.length; i++){
+                                        var gallery_item_found = false;
+                                        for(var j = 0; j < event_insert.gallery_items.length; j++){
+                                            if(original_event.gallery_items[i].link == event_insert.gallery_items[j].link){
+                                                gallery_item_found = true;
+                                            }
+                                        }
+                                        if(!gallery_item_found){
+                                            gallery_items_to_remove.push(original_event.gallery_items[i]);
                                         }
                                     }
-                                    if(!gallery_item_found){
-                                        gallery_items_to_remove.push(original_event.gallery_items[i]);
+
+                                    if(gallery_items_to_remove.length > 0){
+                                        //remove all old gallery_items
+                                        storage_interface.async_loop_remove_items(gallery_items_to_remove, "events", function(items){
+                                            console.log("finish")
+                                        });
                                     }
-                                }
-                                
-                                if(gallery_items_to_remove.length > 0){
-                                    //remove all old gallery_items
-                                    storage_interface.async_loop_remove_items(gallery_items_to_remove, "events", function(items){
-                                        console.log("finish")
-                                    });
-                                }
-                                callback(existing_object_id);
+                                    callback(existing_object_id);
+                                });
                             });
-                        });
-                    }
-                });
+                        }
+                    });
+                }
             });
         }
     },
