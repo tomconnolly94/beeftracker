@@ -6,6 +6,7 @@ var db_ref = require("../config/db_config.js");
 var storage_ref = require("../config/storage_config.js");
 var storage_interface = require('../interfaces/storage_interface.js');
 var hashing = require("../tools/hashing.js");
+var random_id = require("random-id");
         
 module.exports = {
     
@@ -369,9 +370,7 @@ module.exports = {
         });
     },
     
-    resetUserPassword: function(request, response, callback){
-        
-        var email_address = request.body.email_address; //get form data
+    requestRes: function(email_address, callback){
         
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
@@ -385,8 +384,42 @@ module.exports = {
                         else{
                             var existing_user_details = auth_arr[0];
                             
-                            //send email with link in it to a page where a user can reset their password
+                            //generate unique token
+                            var identification_token = random_id(20);
                             
+                            //insert reset request token into the database to be accessed and checked later
+                            
+                            
+                            
+                            //send email with link in it to a page where a user can reset their password
+                            var transporter = nodemailer.createTransport({
+                                service: 'Gmail',
+                                auth: {
+                                    user: process.env.SERVER_EMAIL_ADDRESS,
+                                    pass: process.env.SERVER_EMAIL_PASSWORD
+                                }
+                            });
+                            
+                            var reset_url = "http://beeftracker.co.uk/reset-my-password/" + identification_token;
+
+                            //config mail options
+                            var mailOptions = {
+                                from: 'noreply@beeftracker.com', // sender address
+                                to: email_address, // list of receivers
+                                subject: "Beeftracker password reset", // Subject line
+                                //text: text //, // plaintext body
+                                html: '<b>Reset link</b> <a href=' + reset_url + '>Reset</a>' // You can choose to send an HTML body instead
+                            };
+
+                            //send email notifying beeftracker account new submisson
+                            transporter.sendMail(mailOptions, function(error, info){
+                                if(error){ console.log(error); }
+                                else{
+                                    console.log('Message sent: ' + info.response);
+                                    //callback({ id: insert_object._id });
+                                    //callback(null);
+                                };
+                            });
                             callback({ message: "Email address found, endpoint not yet implemented."});
                         }
                     }

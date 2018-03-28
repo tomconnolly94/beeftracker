@@ -443,8 +443,11 @@ router.route('/users/:user_id').delete(token_authentication.authenticate_admin_u
         }
     });
 });//built, written, manually tested, needs specific user or admin auth
-router.route('/reset-password').post(function(request, response){
-    users_controller.resetUserPassword(request, response, function(data){
+router.route('/request-password-reset').post(function(request, response){
+    
+    var email_address = request.locals.validated_data.email_address; //get form data
+        
+    users_controller.resetUserPassword(email_address, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
