@@ -16,11 +16,16 @@ module.exports = {
         console.log(request.body);
         
         //validate email_address
-        request.checkBody("email_address", "Field is empty").notEmpty();
-        request.checkBody("email_address", "Field is null.").not_null();
-        request.checkBody("email_address", "Field is not a string.").is_string();
-        request.checkBody("email_address", "Field is not an email.").isEmail();
-        request.checkBody("email_address", "Potential HTML code found, please remove this.").detect_xss();
+        request.checkBody("id_token", "Field is empty").notEmpty();
+        request.checkBody("id_token", "Field is null.").not_null();
+        request.checkBody("id_token", "Field is not a string.").is_string();
+        request.checkBody("id_token", "Potential HTML code found, please remove this.").detect_xss();
+        
+        //validate password
+        request.checkBody("password", "Field is empty").notEmpty();
+        request.checkBody("password", "Field is null.").not_null();
+        request.checkBody("password", "Field is not a string.").is_string();
+        request.checkBody("password", "Potential HTML code found, please remove this.").detect_xss();
         
         request.getValidationResult().then(function(validationResult){
             

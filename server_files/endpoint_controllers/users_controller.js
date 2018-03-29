@@ -1,5 +1,6 @@
 //external dependencies
 var BSON = require("bson");
+var nodemailer = require('nodemailer');
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
@@ -370,7 +371,7 @@ module.exports = {
         });
     },
     
-    requestRes: function(email_address, callback){
+    requestPasswordReset: function(email_address, callback){
         
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
@@ -385,11 +386,17 @@ module.exports = {
                             var existing_user_details = auth_arr[0];
                             
                             //generate unique token
-                            var identification_token = random_id(20);
+                            var id_token = random_id(40);
+                            
+                            var insert_object = {
+                                user_email: email_address,
+                                id_token: id_token
+                            };
                             
                             //insert reset request token into the database to be accessed and checked later
-                            
-                            
+                            db.collection(db_ref.get_password_reset_request_table()).update({ user_email: email_address }, insert_object, {upsert: true}, function(err, document){
+                                console.log("Password reset request document inserted.")
+                            });
                             
                             //send email with link in it to a page where a user can reset their password
                             var transporter = nodemailer.createTransport({
@@ -400,7 +407,7 @@ module.exports = {
                                 }
                             });
                             
-                            var reset_url = "http://beeftracker.co.uk/reset-my-password/" + identification_token;
+                            var reset_url = "https://beeftracker.co.uk/reset-my-password/" + id_token;
 
                             //config mail options
                             var mailOptions = {
@@ -420,6 +427,40 @@ module.exports = {
                                     //callback(null);
                                 };
                             });
+                            callback({ message: "Email address found, endpoint not yet implemented."});
+                        }
+                    }
+                });
+            }
+        });
+    },
+    
+    executePasswordReset: function(id_token, new_password, callback){
+        
+        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
+            if(err){ console.log(err); }
+            else{
+                db.collection(db_ref.get_password_reset_request_table()).findOneAndDelete({ id_token: id_token}).toArray(function(err, password_reset_documents){
+                    if(err){ console.log(err); }
+                    else{
+                        if(password_reset_documents.length < 1){
+                            callback({ failed: true, message: "Password reset request not found."});
+                        }
+                        else{
+                            var password_reset_request = password_reset_documents[0];
+                            
+                            password_data = hashing.hash_password(new_password);
+                            
+                            var insert_object = {
+                                hashed_password: password_data.hashed_password,
+                                salt: password_data.salt
+                            };
+                            
+                            //insert reset request token into the database to be accessed and checked later
+                            db.collection(db_ref.get_password_reset_request_table()).update({ user_email: email_address }, { $set: insert_object } , function(err, document){
+                                console.log("Password reset request document inserted.")
+                            });
+                            
                             callback({ message: "Email address found, endpoint not yet implemented."});
                         }
                     }

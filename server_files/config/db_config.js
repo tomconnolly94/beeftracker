@@ -76,5 +76,9 @@ module.exports = {
     
     get_actor_update_requests_table: function(){
         return "event_update_requests";
+    },
+    
+    get_password_reset_request_table: function(){
+        return "user_password_reset_requests";
     }
 }

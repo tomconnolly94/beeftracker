@@ -23,8 +23,10 @@ var users_controller = require('../endpoint_controllers/users_controller');
 var actor_data_validator = require("../validation/actor_validation");
 var authentication_request_validator = require("../validation/authentication_request_validation");
 var comment_data_validator = require("../validation/comment_validation");
+var email_data_validator = require("../validation/email_validation");
 var event_categories_data_validator = require("../validation/event_categories_validation");
 var event_data_validator = require("../validation/event_validation");
+var password_reset_data_validator = require("../validation/password_reset_validation");
 var update_request_validator = require("../validation/update_request_validation");
 var user_data_validator = require("../validation/user_validation");
 
@@ -35,12 +37,7 @@ var memoryUpload = multer({
 }).any('attachment');
 
 var send_successful_response = function(response, code, data){
-    console.log("success reached.");
-    console.log(response);
-    console.log(code);
-    console.log(data);
     if(data){
-        console.log("success reached2.")
         response.status(code).send(data);
     }
     else{
@@ -443,11 +440,25 @@ router.route('/users/:user_id').delete(token_authentication.authenticate_admin_u
         }
     });
 });//built, written, manually tested, needs specific user or admin auth
-router.route('/request-password-reset').post(function(request, response){
+router.route('/users/request-password-reset').post(email_data_validator.validate, function(request, response){
     
     var email_address = request.locals.validated_data.email_address; //get form data
         
-    users_controller.resetUserPassword(email_address, function(data){
+    users_controller.requestPasswordReset(email_address, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 200, data);
+        }
+    });
+});//built, not written, not tested
+router.route('/users/execute-password-reset').post(password_reset_data_validator.validate, function(request, response){
+    
+    var id_token = request.locals.validated_data.id_token; //get form data
+    var new_password = request.locals.validated_data.password; //get form data
+        
+    users_controller.executePasswordReset(id_token, new_password, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
@@ -460,7 +471,7 @@ router.route('/request-password-reset').post(function(request, response){
 //Authentication endpoints
 router.route('/authenticate').post(authentication_request_validator.validate, function(request, response){
     
-    var auth_details = request.locals.validate_data;
+    var auth_details = request.locals.validated_data;
     var headers = request.headers;
     
     authentication_controller.authenticateUser(auth_details, headers, function(data, cookie_details){

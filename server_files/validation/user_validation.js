@@ -24,26 +24,32 @@ module.exports = {
         request.checkBody("username", "Field is not a string.").is_string();
         request.checkBody("username", "Potential HTML code found, please remove this.").detect_xss();
         
-        //validate username
+        //validate first name
         request.checkBody("first_name", "Field is empty").notEmpty();
         request.checkBody("first_name", "Field is null.").not_null();
         request.checkBody("first_name", "Field is not a string.").is_string();
         request.checkBody("first_name", "Potential HTML code found, please remove this.").detect_xss();
         
-        //validate username
+        //validate last name
         request.checkBody("last_name", "Field is empty").notEmpty();
         request.checkBody("last_name", "Field is null.").not_null();
         request.checkBody("last_name", "Field is not a string.").is_string();
         request.checkBody("last_name", "Potential HTML code found, please remove this.").detect_xss();
         
-        //validate username
+        //validate password
+        request.checkBody("password", "Field is empty").notEmpty();
+        request.checkBody("password", "Field is null.").not_null();
+        request.checkBody("password", "Field is not a string.").is_string();
+        request.checkBody("password", "Potential HTML code found, please remove this.").detect_xss();
+        
+        //validate email
         request.checkBody("email_address", "Field is empty").notEmpty();
         request.checkBody("email_address", "Field is null.").not_null();
         request.checkBody("email_address", "Field is not a string.").is_string();
         request.checkBody("email_address", "Field is not an email.").isEmail();
         request.checkBody("email_address", "Potential HTML code found, please remove this.").detect_xss();
         
-        //validate event date
+        //validate date
         request.checkBody("d_o_b", "Field is empty").notEmpty();
         request.checkBody("d_o_b", "Field is null.").not_null();
         request.checkBody("d_o_b", "d_o_b is formatted incorrectly.").test_valid_date();

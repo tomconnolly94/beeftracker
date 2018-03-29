@@ -43,8 +43,33 @@ router.get('/scraping_dump/', token_authentication.authenticate_admin_user_token
 router.get('/recently_added/', token_authentication.authenticate_admin_user_token, function(request, response) { response.render('pages/admin_pages/site_config/recently_confirmed.ejs'); }); // about_us page
 router.get('/raw_actor_scraping_html/', token_authentication.authenticate_admin_user_token, function(request, response) { response.render('partials/scraping_dump/raw_actor_scraping.ejs'); }); // raw actor scraping page route
 router.get('/broken_fields_stats/', token_authentication.authenticate_admin_user_token, function(request, response) { response.render('pages/admin_pages/scraping_control/broken_fields_stats.ejs'); }); // raw actor scraping page route
-router.get('/admin_login/', function(request, response) { response.render('pages/authentication/admin_login.ejs'); }); // raw actor scraping page route
-*/
+router.get('/admin_login/', function(request, response) { response.render('pages/authentication/admin_login.ejs'); }); // raw actor scraping page route*/
+router.get('/reset-my-password/:id_token', function(request, response) { 
+    
+    var id_token = request.params.id_token;
+    
+    db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            db.collection(db_ref.get_password_reset_request_table()).find({ id_token: id_token}).toArray(function(err, auth_arr){
+                if(err){ console.log(err); }
+                else{
+                    
+                    if(auth_arr.length == 1){
+                        console.log("valid");
+                        //response.render('pages/'); //serve page that allows user to set a new password
+                    }
+                    else{
+                        console.log("invalid");
+                        //response.render('pages/'); //serve 'token is invalid' page
+                    }
+                }
+            });
+        }
+    });
+
+}); // raw actor scraping page route
+
 
 router.get('/sitemap', function(req, res) {
     sitemap.toXML( function (err, xml) {
