@@ -1,6 +1,4 @@
-include ../../layouts/mini_vertical_beef_list.jade
-
-mixin featured-beefs-section(data)
+mixin featured-beef-section(data)
     +section('Featured', 'Beefs', '')(class="categories-browser-section")
         div.row.featured-beefs-section
             div.primary-featured-beef
@@ -11,5 +9,3 @@ mixin featured-beefs-section(data)
                         +medium-beef-thumbnail(data[1].title, data[1].image_url, data[1].category, data[1]._id, data[1].event_date)(class="beef-category-#{data[1].category.toLowerCase()}")
                     div.secondary-featured-beef
                         +medium-beef-thumbnail(data[2].title, data[2].image_url, data[2].category, data[2]._id, data[2].event_date)(class="beef-category-#{data[2].category.toLowerCase()}")
-
-

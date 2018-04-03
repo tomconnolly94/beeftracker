@@ -1,21 +1,22 @@
-mixin mini-vertical-beefs(data)
+mixin mini-vertical-beef(data)
     div.mini-vertical-list(class!=attributes.class)
         div.col-md-12
             each item in data
-                div.vertical-list-item.beef-category-music
+            
+                div.vertical-list-item.beef-category-music(class=item == data[2] ? "hidden_on_lg" : "")
+                    
                     div.vertical-list-item-thumbnail
-                        a(href="#")= item.title
+                        a(href="/#{item.type}/#{item.id}") 
                             img(src=item.image_url)
                     div.vertical-list-item-details
-                        h3
-                            a(href="#")= 
+                        h3  #{item.title}
+                            a(href="/#{item.type}/#{item.id}")
                         ul.beef-info
-                                li 01/01/2018
+                                li item.date
                                 li
                                     span.fas.fa-comments &nbsp;&nbsp;
-                                    | 24
+                                    | item.comments.length
                                 li
                                     span.beefometer.small.two-beefs
                         p.
                             Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-
