@@ -1,0 +1,7 @@
+#upload_gallery_item_modal {
+    .preview-pane {
+        img {
+            @extend .img-fluid;
+        }
+    }
+}

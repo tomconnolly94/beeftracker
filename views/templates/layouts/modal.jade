@@ -1,0 +1,18 @@
+mixin modal(title, url, show_footer, submit_button_label)
+    div.modal(tabindex="-1", role="dialog", id!=attributes.id, class!=attributes.class)
+        div.modal-dialog(role="document", class=attributes.large_modal ? 'modal-lg' : '')
+            div.modal-content
+                div.modal-header
+                    h5.modal-title
+                        = title
+                    button.close(type="button", data-dismiss="modal", aria-label="Close")
+                        span(aria-hidden="true") &times;
+                form(method="POST", url=url)
+                    div.modal-body
+                        if block
+                        block
+                    if show_footer
+                        div.modal-footer
+                            button(type="submit").btn.btn-primary
+                                = submit_button_label
+                            button(type="button", data-dismiss="modal").btn.btn-secondary Close

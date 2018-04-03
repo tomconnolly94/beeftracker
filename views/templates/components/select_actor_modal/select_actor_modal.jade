@@ -1,0 +1,47 @@
+include ../layouts/modal.jade
+
+
+
+mixin select-actor-modal-js()
+    script.
+        $(function() {
+            $('#select_actor').select2({
+                placeholder: 'Select actor ',
+                theme: 'classic',
+                width: "100%"
+            });
+            $('#selector_actor_modal #add_new_actor').click(function() {
+                $('#selector_actor_modal').modal('hide');
+                $('#add_actor_modal').modal({
+                    show: true
+                });
+            });
+        });
+
+mixin select-actor-modal()
+    +modal('Select Actor', '#', false)(id="selector_actor_modal", large_modal=false)
+        div.row
+            div.col-md-12
+                //- div.form-row
+                //-     div.form-group.col-md-12
+                //-         label(for="login_email") Email
+                //-         input(type="email").form-control#login_email
+                //- div.form-row
+                //-     div.form-group.col-md-12
+                //-         label(for="login_password") Password
+                //-         input(type="password").form-control#login_password
+                div.form-row
+                    div.form-group.col-md-12
+                        select#select_actor.form-control(name="select_actor")
+                            option(value="wiley") Wiley
+                            option(value="donald_trump") Donald Trump
+                            option(value="eminem") Eminem
+                            option(value="obama") Obama
+                div.form-row
+                    div.col-md-12
+                        a#add_new_actor(href="#") Add New Actor
+                div.form-row
+                    div.form-group.col-md-12
+                        div.btn-group(role="group").float-right
+                            button(type="button", data-dismiss="modal").btn.btn-secondary Cancel
+                            button(type="button").btn.btn-primary Select

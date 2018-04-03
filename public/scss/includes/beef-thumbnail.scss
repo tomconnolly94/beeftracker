@@ -1,0 +1,125 @@
+.beef-thumbnail {
+    position: relative;
+	margin-bottom:20px;
+    display: block;
+    color: #fff;
+    height: 215px;
+    overflow: hidden;
+    @include media-breakpoint-only(xs) {
+        margin-left: -13%;
+        margin-right:-12%;
+    }
+
+    &.large {
+        height: 300px;
+    }
+
+    &.x-large {
+
+        height: 450px;
+
+    }
+
+    &.hide-category {
+       .category-name {
+        display: none;
+       }
+    }
+
+
+    &:hover {
+        color: #fff;
+    }
+
+	img {
+		width: 100%;
+		height: 100%;
+        user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-drag: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+	}
+
+    &:before {
+        background: -owg-linear-gradient(to bottom,rgba(0,0,0,.2) 0,#000 100%);
+        background: -webkit-linear-gradient(to bottom,rgba(0,0,0,.2) 0,#000 100%);
+        background: -moz-linear-gradient(to bottom,rgba(0,0,0,.2) 0,#000 100%);
+        background: -o-linear-gradient(to bottom,rgba(0,0,0,.2) 0,#000 100%);
+        background: linear-gradient(to bottom,rgba(0,0,0,.2) 0,#000 100%);
+        z-index: 0;
+        content: '';
+        height: 100%;
+        left: 0;
+        position: absolute;
+        // top: 0;
+        width: 100%;
+        bottom: 4px;
+    }
+
+    .info-overlay {
+
+        width: 100%;
+        .header-panel {
+            position: absolute;
+            top:0;
+            width: 100%;
+            display: block;
+            .category-name {
+                margin-top: 10px;
+                right:3%;
+                margin-right: 3%;
+                float:right;
+                font-size: 0.8rem;
+                // border-radius: 4px;
+                padding: 2px 10px;
+            }
+        }
+        .footer-panel {
+            position: absolute;
+            bottom: 0;
+            margin-bottom: 0;
+            width: 100%;
+            display: block;
+
+            z-index: 1;
+
+
+            .footer-panel-bg {
+                background-color: #000;
+                opacity: 0.5;
+                position: absolute;
+                display: block;
+                width: 100%;
+                height:100%;
+                z-index: -1;
+                bottom: 4px;
+            }
+
+            .beefometer-container {
+                right: 3%;
+                position: absolute;
+                top: 25px;
+                display: inline-block;
+            }
+            .beef-details {
+                display: inline-block;
+                width:65%;
+                z-index: 2;
+                padding:10px 20px;
+                h4 {
+                    text-decoration: none;
+                    font-size: 14px;
+                    color: #fff;
+                    margin:0;
+                }
+
+                span.date {
+                    color: #fff;
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}

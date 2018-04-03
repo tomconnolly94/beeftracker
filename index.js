@@ -29,12 +29,6 @@ app.use(validator({
     customValidators: validation_controller.get_all_custom_validation_functions()
 }));
 
-var memoryStorage = multer.memoryStorage();
-var memoryUpload = multer({
-    storage: memoryStorage,
-    limits: {fileSize: 500000, files: 2}
-}).any('attachment');
-
 // ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({
     hostname: 'http://www.beeftracker.co.uk',
@@ -68,12 +62,14 @@ app.use(function(req, res, next) {
 });
 app.use(compression());
 
-app.use('/logo', express.static(__dirname + '/public/assets/images/logo/v2')); //route to reference logo images
-app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //route to reference css scripts
+app.use('/logo', express.static(__dirname + '/public/assets/images/logo/v3')); //route to reference logo images
+app.use('/images', express.static(__dirname + '/public/assets/images/other_graphics')); //route to reference logo images
+app.use('/stylesheets', express.static(__dirname + '/public/css/')); //route to reference css scripts
+app.use('/webfonts', express.static(__dirname + '/public/fonts/')); //route to reference css scripts
 app.use('/js', express.static(__dirname + '/public/javascript/')); //route to reference javascript files
 app.use('/modules', express.static(__dirname + '/node_modules/')); //route to reference npm library files
 app.use('/bower_components', express.static(__dirname + '/bower_components/')); //route to reference bower library files
-app.use('/controllers', express.static(__dirname + '/public/components/')); //route to reference client side controller scripts
+app.use('/component_controllers', express.static(__dirname + '/views/templates/components/')); //route to reference client side controller scripts
 
 // ### Page routes configuration file ###
 app.use('/', require('./server_files/routing/page_routing'));

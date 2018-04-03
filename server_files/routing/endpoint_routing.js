@@ -8,16 +8,16 @@ var multer = require('multer');
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
 
 //endpoint controllers
-var activity_logs_controller = require('../endpoint_controllers/activity_logs_controller');
-var actor_controller = require('../endpoint_controllers/actors_controller');
-var administration_data_controller = require('../endpoint_controllers/administration_data_controller');
-var authentication_controller = require('../endpoint_controllers/authentication_controller');
-var comments_controller = require('../endpoint_controllers/comments_controller');
-var event_categories_controller = require('../endpoint_controllers/event_categories_controller');
-var event_controller = require('../endpoint_controllers/events_controller');
-var event_peripherals_controller = require('../endpoint_controllers/events_peripherals_controller');
-var update_request_controller = require('../endpoint_controllers/update_request_controller');
-var users_controller = require('../endpoint_controllers/users_controller');
+var activity_logs_controller = require('../controllers/activity_logs_controller');
+var actor_controller = require('../controllers/actors_controller');
+var administration_data_controller = require('../controllers/administration_data_controller');
+var authentication_controller = require('../controllers/authentication_controller');
+var comments_controller = require('../controllers/comments_controller');
+var event_categories_controller = require('../controllers/event_categories_controller');
+var event_controller = require('../controllers/events_controller');
+var event_peripherals_controller = require('../controllers/events_peripherals_controller');
+var update_request_controller = require('../controllers/update_request_controller');
+var users_controller = require('../controllers/users_controller');
 
 //input validation functions
 var actor_data_validator = require("../validation/actor_validation");
@@ -56,7 +56,13 @@ var send_unsuccessful_response = function(response, code, error_message){
     response.status(code).send(response_json);
 }
 
-//connect uri routes to controllers - middleware ordering = auth function (optional) -> multer file formatting function (optional) -> data validation function (optional) -> endpoint controller function
+/*
+
+    Connection of server routes to controllers - middleware ordering = auth function (optional) -> multer file formatting function (optional) -> data validation function (optional) -> endpoint handler function
+
+    Endpoint handler functions are designed to handle the HTTP request and response, they use controllers to access the data they require
+
+*/
 
 //Activity logs endpoints
 router.route('/activity-logs/events/:event_id').get(function(request, response){

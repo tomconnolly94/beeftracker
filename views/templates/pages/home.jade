@@ -1,1 +1,36 @@
-include ../components/carousel/carousel.jade
+extends ../layouts/layout.jade
+include ../components/trending_beef/trending_beef.jade
+include ../components/add_beef_call_to_action/add_beef_call_to_action.jade
+include ../components/featured_beef/featured_beef.jade
+include ../layouts/horizontal_slider.jade
+
+append scripts
+    +horizontal-slider-js('featured_beefs_slider')
+    +horizontal-slider-js('featured_beefs_slider_full')
+    +horizontal-slider-js('featured_beefs_slider_dark')
+
+append body
+    div.bt-content
+        +featured-beefs-section(grid_data)
+        +section('FEATURED', 'BEEFS', 'fa-tv')
+            div.row
+                each thumbnail_data in grid_data
+                    div.col-lg-4.col-md-6.col-xs-4
+                        +medium-beef-thumbnail(thumbnail_data.title, thumbnail_data.image_url, thumbnail_data.category, thumbnail_data._id, thumbnail_data.event_date)(class="beef-category-#{thumbnail_data.category.toLowerCase()}")
+        +section('HOT', 'BEEFS')
+            +horizontal-slider('featured_beefs_slider', grid_data)
+
+
+append body
+    div.bt-content-full-width.dark
+      div.container
+          +section('HOT', 'BEEFS')
+               +horizontal-slider('featured_beefs_slider_full', grid_data)
+
+append body
+    div.bt-content
+      +section('ANOTHER', 'SECTION')
+          p
+              | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          a.btn.btn-lg.btn-primary(href="#") Add a Beef
+      +add-beef-cta()

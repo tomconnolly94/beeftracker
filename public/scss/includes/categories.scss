@@ -1,0 +1,40 @@
+
+$categories: (
+   ('tech', #c0392b),
+   ('sports', #0083A3),
+   ('music', #8e44ad),
+   ('politics', #27ae60),
+);
+
+
+
+@for $categoryIdx from 1 through length($categories) {
+    $cat-name: nth(nth($categories, $categoryIdx), 1);
+    $cat-color: nth(nth($categories, $categoryIdx), 2);
+
+
+
+
+    .beef-category-#{$cat-name} {
+
+
+
+
+        .category-header-title {
+           color: $cat-color;
+           border-bottom: 2px solid $cat-color;
+        }
+
+        .beef-thumbnail, .vertical-list-item-thumbnail {
+            img {
+                border-bottom: 4px solid $cat-color;
+
+            }
+
+        }
+        .category-name {
+            background-color: $cat-color;
+            color: #fff;
+        }
+    }
+}

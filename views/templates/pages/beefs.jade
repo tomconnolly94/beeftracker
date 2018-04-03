@@ -1,0 +1,35 @@
+extends ../layouts/layout.jade
+include ../components/trending_beef/trending_beef.jade
+include ../components/category_browser/category_browser.jade
+include ../components/pagination/pagination.jade
+
+append body
+    div.bt-content
+      +section('ALL', 'BEEFS', 'fa-tv')
+          div.section-toolbar
+              div.section-toolbar-menu
+                  ul.list-sections
+                      li.active
+                          a(href="#") All
+                      li
+                          a(href="#") New
+                      li
+                          a(href="#") Trending
+                      li
+                          a(href="#") Hot
+                  ul.list-type
+                      li.active
+                          a(href="#")
+                              span.fas.fa-list
+                      li
+                          a(href="#")
+                              span.fas.fa-th
+          div.row
+              each thumbnail_data in grid_data
+                    div.col-lg-4.col-md-6.col-xs-4
+                        +medium-beef-thumbnail(thumbnail_data.title, thumbnail_data.image_url, thumbnail_data.category, thumbnail_data._id, thumbnail_data.event_date)(class="beef-category-#{thumbnail_data.category.toLowerCase()}")
+          div.row
+              div.col-md-12
+                  +pagination()
+      +category-browser-section(grid_data)
+

@@ -1,0 +1,42 @@
+extends ../layouts/layout.jade
+include ../components/trending_beef/trending_beef.jade
+include ../components/add_beef_call_to_action/add_beef_call_to_action.jade
+
+append body
+    div.bt-content
+        +section('CONTACT', 'US', '')
+            form
+                div.form-row
+                    div.form-group.col-md-6
+                        label(for="fullname") Name
+                        input(type="text").form-control#fullname
+                     div.form-group.col-md-6
+                        label(for="email") Email
+                        input(type="email").form-control#email
+                div.form-row
+                    div.form-group.col-md-12
+                        label(for="subject") Subject
+                        input(type="text").form-control#subject
+                div.form-row
+                    div.form-group.col-md-12
+                        label(for="message") Message
+                        textarea.form-control#message
+                button(type="submit").btn.btn-primary.float-right Send
+        +section('STAY IN', 'TOUCH', '')(class="social-media-section")
+            div.row
+                div.col-md-3
+                   a.social-media-item.facebook(href="#")
+                    i.fab.fa-facebook-f
+                div.col-md-3
+                    a.social-media-item.instagram(href="#")
+                        i.fab.fa-instagram
+                div.col-md-3
+                    a.social-media-item.pinterest(href="#")
+                        i.fab.fa-pinterest-p
+                div.col-md-3
+                    a.social-media-item.linkedin(href="#")
+                        i.fab.fa-linkedin-in
+        +trending-beefs-section()
+        +add-beef-cta()
+
+

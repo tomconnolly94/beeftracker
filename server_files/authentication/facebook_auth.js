@@ -9,8 +9,8 @@ router.use(passport.initialize());
 //internal dependencies
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
 var db_ref = require("../config/db_config.js");
-var users_controller = require('../endpoint_controllers/users_controller');
-var authentication_controller = require('../endpoint_controllers/authentication_controller');
+var users_controller = require('../controllers/users_controller');
+var authentication_controller = require('../controllers/authentication_controller');
 
 passport.serializeUser(function(strategy_data, done){
    console.log("serialize user.");

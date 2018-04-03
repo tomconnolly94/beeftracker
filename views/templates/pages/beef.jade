@@ -1,0 +1,126 @@
+extends ../layouts/layout.jade
+include ../components/trending_beef/trending_beef.jade
+include ../components/timeline/timeline.jade
+include ../components/related_beef/related_beef.jade
+include ../components/comment_box/comment_box.jade
+include ../layouts/section.jade
+include ../layouts/masonry_gallery.jade
+
+append body_scripts
+    +masonry-gallery-script()
+    +timeline-section-js()
+    script.
+        //Associated Actors
+        function formatState (state) {
+              if (!state.id || state.element.getAttribute('disabled')) {
+                return state.text;
+              }
+              var $state = $(
+                '<span><img style="width: 48px;" src="'+state.element.getAttribute('image_src') + '" class="img-flag" /> ' + state.text + '</span>'
+              );
+              return $state;
+            };
+
+
+            //Also appears in selector
+            var aaisEl = $(".also-appears-in-select");
+            aaisEl.select2({
+              templateResult: formatState,
+              theme: 'classic',
+                width: "100%",
+                minimumResultsForSearch: -1 //Disable search
+            });
+
+            aaisEl.on('select2:select', function (e) {
+              var actor_id = e.params.data.id;
+              alert("Selected "+actor_id);
+            });
+
+append body
+    div.bt-content
+        div.row.versus-panel
+            div.col-5.beefer
+                div
+                    h4 Trump
+                    a(href="actor.html")
+                        img(src="https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_400x400.jpg").actor-avatar
+
+            div.col-2.versus
+                h4 VS.
+            div.col-5.beefee
+                div
+                    h4 Obama
+                    a(href="actor.html")
+                        img(src="http://cdn.edgecast.steamstatic.com/steamcommunity/public/images/avatars/64/64e8917b85a0f5e20565651119c60f3d8d363898_full.jpg").actor-avatar
+        div.row(style="text-align:center")
+            div.col-md-4.offset-md-4
+                select.form-control.also-appears-in-select
+                    option(selected="selected", disabled="disabled") Also Appears In
+                    option(image_src="https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_400x400.jpg", value="obama_vs_trump") Obama vs. Trump
+                    option(image_src="https://cdn.cnn.com/cnnnext/dam/assets/180217093516-03-donald-trump-0216-exlarge-169.jpg", value="hillary_vs_trump") Hillary vs. Trump
+        div.row
+            +timeline-section()
+
+        div.beef-content.beef-category-music
+            div.beef-content-header
+                div.beef-title
+                    h2
+                        | Trump attacking Obama again
+                        span.beefometer.medium.four-beefs
+                div.beef-content-category
+                    span.category-name Music
+                div.beef-content-contribute
+                    a.btn.btn-primary(href="#") Contribute
+            div.beef-content-container
+                    div.col-md-12.beef-summary
+                        div.beef-thumb
+                            img(src="https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_400x400.jpg", alt="Trump attacking Obama again").float-left
+                            div.beef-content-thumb-border
+                        p.
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        p.
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        +related-beefs()
+                        p.
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        p.
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+                        div.beef-body-content-soundcloud
+                            iframe(height="300", scrolling="no", frameborder="no", allow="autoplay", src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/34019569&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true")
+
+                        p.
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+                        div.beef-body-content-youtube-video
+                            iframe(height="315", scrolling="no", frameborder="no", src="https://www.youtube.com/embed/_CL6n0FJZpk", allow="autoplay; encrypted-media")
+            +section('EXPLORE', 'GALLERY', '')
+                +masonry-gallery-section()
+            +comment-box-section()
+
+

@@ -1,0 +1,21 @@
+mixin mini-vertical-beefs(data)
+    div.mini-vertical-list(class!=attributes.class)
+        div.col-md-12
+            each item in data
+                div.vertical-list-item.beef-category-music
+                    div.vertical-list-item-thumbnail
+                        a(href="#")= item.title
+                            img(src=item.image_url)
+                    div.vertical-list-item-details
+                        h3
+                            a(href="#")= 
+                        ul.beef-info
+                                li 01/01/2018
+                                li
+                                    span.fas.fa-comments &nbsp;&nbsp;
+                                    | 24
+                                li
+                                    span.beefometer.small.two-beefs
+                        p.
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+

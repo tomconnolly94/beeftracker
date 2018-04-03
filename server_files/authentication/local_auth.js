@@ -6,7 +6,7 @@ var LocalStrategy = require("passport-local").Strategy;
 
 //beeftracker dependencies
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
-var authentication_controller = require('../endpoint_controllers/authentication_controller');
+var authentication_controller = require('../controllers/authentication_controller');
 
 router.use(passport.initialize());
 

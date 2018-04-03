@@ -1,0 +1,39 @@
+mixin comment-box-item()
+     div.comment-box-item
+        div.col-md-1.d-none.d-md-block.d-lg-block.d-xl-block
+            img(src="http://www.girardatlarge.com/wp-content/uploads/2013/05/gravatar-60-grey.jpg").img-fluid
+        div.col-md-11
+            div.row
+                div.col-md-12
+                    strong.author John Doe
+                    small.date 10/10/2017 10:30
+                div.col-md-12
+                    p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                      | tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+mixin comment-box()
+    div.row.comment-box
+        div.col-md-12
+            div.row
+                div.col-md-12
+                    p
+                        | You must be logged in to comment.&nbsp;
+                        a(href="#", data-toggle="modal", data-target="#login_modal") Login
+            div.row.new-comment
+                div.col-md-1.d-none.d-md-block.d-lg-block.d-xl-block
+                    img(src="http://www.girardatlarge.com/wp-content/uploads/2013/05/gravatar-60-grey.jpg").img-fluid
+                div.col-md-11
+                    div.row
+                        div.col-md-12
+                            form
+                                div.col-md-12
+                                    textarea.form-control
+                                div.col-md-12
+                                    button.btn.btn-primary.float-right(type="submit") Submit
+            +comment-box-item()
+            +comment-box-item()
+            +comment-box-item()
+            +comment-box-item()
+
+mixin comment-box-section()
+    +section('BEEF', 'COMMENTS', 'fa-comments')
+        +comment-box()

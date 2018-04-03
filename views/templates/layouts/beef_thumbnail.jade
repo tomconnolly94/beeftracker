@@ -1,0 +1,29 @@
+mixin medium-beef-thumbnail(title, image, cat_name, beef_id, event_date)
+    a(href="/beef/#{beef_id}", class!=attributes.class, class!=attributes.beef_thumbnail_class)
+        div.beef-thumbnail(class!=attributes.beef_thumbnail_class)
+            div.info-overlay
+                div.header-panel
+                    span.category-name= cat_name
+                div.footer-panel
+                    //- div.footer-panel-bg &nbsp;
+                    div.beef-details
+                        h4= title
+                        span.date= event_date
+                    div.beefometer-container
+                        div.beefometer.small.four-beefs
+            img(src=image)
+
+
+mixin medium-actor-thumbnail(name, image, cat_name, actor_id, d_o_b)
+    a.beef-thumbnail(href="/actor/#{actor_id}", class!=attributes.class)
+            div.info-overlay
+                div.header-panel
+                    span.category-name= cat_name
+                div.footer-panel
+                    //- div.footer-panel-bg &nbsp;
+                    div.beef-details
+                        h4= name
+                        span.date= d_o_b
+                    div.beefometer-container
+                        div.beefometer.small.four-beefs
+            img(src=image)

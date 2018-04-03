@@ -1,0 +1,18 @@
+//- Page section mixin
+//- @title1: First section of the title colored in black
+//- @title2 Second part of the title to be colored in brand colour
+//- @icon Fontawesome icon class to use i.e. fa-gear
+
+mixin section(title1, title2, icon)
+	section.col-md-12(class!=attributes.class)
+		div.row.title
+			h2.col-10
+				= title1
+				span
+					= title2
+			span.col-2.icon.fas(class!=icon)
+		div.row.content
+			div.col-md-12
+				if block
+				block
+

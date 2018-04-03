@@ -1,0 +1,7 @@
+include ../../layouts/vertical_beef_list.jade
+include ../pagination/pagination.jade
+
+mixin trending-beefs-section()
+    +section('TRENDING', 'BEEFS', 'fa-chart-line')
+        +vertical-beefs()(class="trending-beefs-section")
+        +pagination()
