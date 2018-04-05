@@ -287,7 +287,10 @@ router.route('/event-categories').post(event_categories_data_validator.validate,
 
 // Events endpoints
 router.route('/events').get(function(request, response){
-    event_controller.findEvents(request, response, function(data){
+    
+    var query = request.query;
+    
+    event_controller.findEvents(query, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }

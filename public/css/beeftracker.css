@@ -317,7 +317,7 @@ html {
   margin-right: auto;
   margin-left: auto; }
 
-.row, .section-toolbar, .vertical-list, .vertical-list .vertical-list-item, .mini-vertical-list, .mini-vertical-list .vertical-list-item, .categories-browser-section .categories-browser-header, .add-actor-modal .actor-type-selector .actor-type-row, .comment-box .comment-box-item, .beef-content-header, .beef-content-container {
+.row, .section-toolbar, .vertical-list, .vertical-list .vertical-list-item, .mini-vertical-list, .mini-vertical-list .vertical-list-item, .category-browser-section .category-browser-header, .add-actor-modal .actor-type-selector .actor-type-row, .comment-box .comment-box-item, .beef-content-header, .beef-content-container {
   display: flex;
   flex-wrap: wrap;
   margin-right: -15px;
@@ -333,7 +333,7 @@ html {
 
 .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .beef-content-header .beef-content-contribute, .beef-content-header .beef-content-category, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, nav .main-navbar-nav, .col,
 .col-auto, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .add-actor-modal .actor-type-selector .actor-type-row .actor-type-item, .beef-content-header .beef-title, .beef-content-container .beef-summary, .beef-content-container .beef-content-left-side, .col-sm,
-.col-sm-auto, .col-md-1, .col-md-2, .vertical-list .vertical-list-item .vertical-list-item-view-btn, .mini-vertical-list .vertical-list-item .vertical-list-item-view-btn, .col-md-3, .vertical-list .vertical-list-item .vertical-list-item-thumbnail, .col-md-4, .hiw-container .hiw-title, .hiw-container .hiw-list .hiw-list-item, .featured-beefs-section .secondary-featured-beefs, .col-md-5, .mini-vertical-list .vertical-list-item .vertical-list-item-thumbnail, .col-md-6, .col-md-7, .mini-vertical-list .vertical-list-item .vertical-list-item-details, .col-md-8, .featured-beefs-section .primary-featured-beef, .col-md-9, .vertical-list .vertical-list-item .vertical-list-item-details, .col-md-10, .col-md-11, .col-md-12, .section-toolbar .section-toolbar-menu, .categories-browser-section .categories-browser-header .header-menu, .categories-browser-section .categories-browser-header .header-title, .featured-beefs-section .secondary-featured-beefs .secondary-featured-beef, .beef-content-container .beef-body, .col-md,
+.col-sm-auto, .col-md-1, .col-md-2, .vertical-list .vertical-list-item .vertical-list-item-view-btn, .mini-vertical-list .vertical-list-item .vertical-list-item-view-btn, .col-md-3, .vertical-list .vertical-list-item .vertical-list-item-thumbnail, .col-md-4, .hiw-container .hiw-title, .hiw-container .hiw-list .hiw-list-item, .featured-beefs-section .secondary-featured-beefs, .col-md-5, .mini-vertical-list .vertical-list-item .vertical-list-item-thumbnail, .col-md-6, .col-md-7, .mini-vertical-list .vertical-list-item .vertical-list-item-details, .col-md-8, .featured-beefs-section .primary-featured-beef, .col-md-9, .vertical-list .vertical-list-item .vertical-list-item-details, .col-md-10, .col-md-11, .col-md-12, .section-toolbar .section-toolbar-menu, .category-browser-section .category-browser-header .header-menu, .category-browser-section .category-browser-header .header-title, .featured-beefs-section .secondary-featured-beefs .secondary-featured-beef, .beef-content-container .beef-body, .col-md,
 .col-md-auto, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg,
 .col-lg-auto, .col-xl-1, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl,
 .col-xl-auto {
@@ -621,7 +621,7 @@ html {
   .col-md-11 {
     flex: 0 0 91.66667%;
     max-width: 91.66667%; }
-  .col-md-12, .section-toolbar .section-toolbar-menu, .categories-browser-section .categories-browser-header .header-menu, .categories-browser-section .categories-browser-header .header-title, .featured-beefs-section .secondary-featured-beefs .secondary-featured-beef, .beef-content-header .beef-title, .beef-content-container .beef-summary, .beef-content-container .beef-content-left-side, .beef-content-container .beef-body {
+  .col-md-12, .section-toolbar .section-toolbar-menu, .category-browser-section .category-browser-header .header-menu, .category-browser-section .category-browser-header .header-title, .featured-beefs-section .secondary-featured-beefs .secondary-featured-beef, .beef-content-header .beef-title, .beef-content-container .beef-summary, .beef-content-container .beef-content-left-side, .beef-content-container .beef-body {
     flex: 0 0 100%;
     max-width: 100%; }
   .order-md-first {
@@ -5225,7 +5225,7 @@ section {
     display: none; } }
 
 .mini-vertical-list .vertical-list-item {
-  padding-bottom: 30px; }
+  padding-bottom: 50px; }
   .mini-vertical-list .vertical-list-item ul.beef-info {
     list-style-type: none;
     margin: 0;
@@ -5266,6 +5266,9 @@ section {
   @media (min-width: 768px) and (max-width: 991.98px) {
     .mini-vertical-list .vertical-list-item .vertical-list-item-details p {
       display: none; } }
+  @media (min-width: 992px) and (max-width: 1199.98px) {
+    .mini-vertical-list .vertical-list-item .vertical-list-item-details p {
+      display: none; } }
   .mini-vertical-list .vertical-list-item .vertical-list-item-view-btn .btn {
     bottom: 0;
     margin-bottom: 30%;
@@ -5283,25 +5286,25 @@ section {
   background-color: #c0392b;
   color: #fff; }
 
-.beef-category-sports .category-header-title {
+.beef-category-sport .category-header-title {
   color: #0083A3;
   border-bottom: 2px solid #0083A3; }
 
-.beef-category-sports .beef-thumbnail img, .beef-category-sports .vertical-list-item-thumbnail img {
+.beef-category-sport .beef-thumbnail img, .beef-category-sport .vertical-list-item-thumbnail img {
   border-bottom: 4px solid #0083A3; }
 
-.beef-category-sports .category-name {
+.beef-category-sport .category-name {
   background-color: #0083A3;
   color: #fff; }
 
-.beef-category-music .category-header-title {
+.beef-category-rap .category-header-title {
   color: #8e44ad;
   border-bottom: 2px solid #8e44ad; }
 
-.beef-category-music .beef-thumbnail img, .beef-category-music .vertical-list-item-thumbnail img {
+.beef-category-rap .beef-thumbnail img, .beef-category-rap .vertical-list-item-thumbnail img {
   border-bottom: 4px solid #8e44ad; }
 
-.beef-category-music .category-name {
+.beef-category-rap .category-name {
   background-color: #8e44ad;
   color: #fff; }
 
@@ -5563,37 +5566,37 @@ div#smartwizard:before {
   background-position: center center;
   background-repeat: no-repeat; }
 
-.categories-browser-section .categories-browser-header .header-menu {
+.category-browser-section .category-browser-header .header-menu {
   text-align: center;
   margin-bottom: 10px; }
-  .categories-browser-section .categories-browser-header .header-menu ul {
+  .category-browser-section .category-browser-header .header-menu ul {
     list-style: none;
     padding: 0;
     margin: 0; }
-    .categories-browser-section .categories-browser-header .header-menu ul li {
+    .category-browser-section .category-browser-header .header-menu ul li {
       display: inline-block;
       padding: 5px 10px;
       margin-right: -4px; }
-      .categories-browser-section .categories-browser-header .header-menu ul li a {
+      .category-browser-section .category-browser-header .header-menu ul li a {
         color: #fff;
         font-size: 0.8rem; }
-        .categories-browser-section .categories-browser-header .header-menu ul li a:hover {
+        .category-browser-section .category-browser-header .header-menu ul li a:hover {
           text-decoration: none; }
-      .categories-browser-section .categories-browser-header .header-menu ul li.category-tech {
+      .category-browser-section .category-browser-header .header-menu ul li.category-tech {
         background-color: #c0392b; }
-        .categories-browser-section .categories-browser-header .header-menu ul li.category-tech:hover {
+        .category-browser-section .category-browser-header .header-menu ul li.category-tech:hover {
           background-color: #962d22; }
-      .categories-browser-section .categories-browser-header .header-menu ul li.category-sports {
+      .category-browser-section .category-browser-header .header-menu ul li.category-sport {
         background-color: #0083A3; }
-        .categories-browser-section .categories-browser-header .header-menu ul li.category-sports:hover {
+        .category-browser-section .category-browser-header .header-menu ul li.category-sport:hover {
           background-color: #005a70; }
-      .categories-browser-section .categories-browser-header .header-menu ul li.category-music {
+      .category-browser-section .category-browser-header .header-menu ul li.category-rap {
         background-color: #8e44ad; }
-        .categories-browser-section .categories-browser-header .header-menu ul li.category-music:hover {
+        .category-browser-section .category-browser-header .header-menu ul li.category-rap:hover {
           background-color: #703688; }
-      .categories-browser-section .categories-browser-header .header-menu ul li.category-politics {
+      .category-browser-section .category-browser-header .header-menu ul li.category-politics {
         background-color: #27ae60; }
-        .categories-browser-section .categories-browser-header .header-menu ul li.category-politics:hover {
+        .category-browser-section .category-browser-header .header-menu ul li.category-politics:hover {
           background-color: #1e8449; }
 
 .inline-beef-search-form .form-text.trending a {
@@ -6165,7 +6168,7 @@ header {
         color: #fff; } }
 
 .bt-content-full-width {
-  padding: 0px; }
+  padding: 20px 0px 40px; }
   .bt-content-full-width section {
     padding-top: 15px; }
   .bt-content-full-width.dark {

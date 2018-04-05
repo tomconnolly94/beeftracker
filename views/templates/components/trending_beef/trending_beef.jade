@@ -1,7 +1,8 @@
 include ../../layouts/vertical_beef_list.jade
 include ../pagination/pagination.jade
 
-mixin trending-beefs-section()
+mixin trending-beefs-section(data)
     +section('TRENDING', 'BEEFS', 'fa-chart-line')
-        +vertical-beefs()(class="trending-beefs-section")
+        - var sliced_data = data.slice(0, 3)
+        +vertical-beefs(sliced_data)(class="trending-beefs-section")
         +pagination()

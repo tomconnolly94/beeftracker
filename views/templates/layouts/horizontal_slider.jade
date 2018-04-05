@@ -28,12 +28,12 @@ mixin horizontal-slider-js(slider_id)
             });
         });
 
-mixin horizontal-slider(id, data)
+mixin horizontal-slider(id, data, data_type)
     div.swiper-container(id=id)
         div.swiper-wrapper
             each thumbnail_data in data
                 div.swiper-slide
-                    +medium-beef-thumbnail(thumbnail_data.title, thumbnail_data.image_url, thumbnail_data.category, thumbnail_data._id, thumbnail_data.event_date)(class="beef-category-#{thumbnail_data.category.toLowerCase()}")
+                    +medium-beef-thumbnail(thumbnail_data, data_type)(class="beef-category-#{thumbnail_data.categories[0].name.toLowerCase()}")
         div.swiper-pagination
         div.swiper-button-prev
             span.fas.fa-chevron-left

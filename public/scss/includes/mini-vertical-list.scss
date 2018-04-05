@@ -9,7 +9,7 @@
     
     .vertical-list-item {
         @extend .row;
-        padding-bottom: 30px;
+        padding-bottom: 50px;
 
 
        
@@ -84,6 +84,9 @@
             p {
                 
                 @include media-breakpoint-only(md) {
+                    display: none;
+                }
+                @include media-breakpoint-only(lg) {
                     display: none;
                 }
             }

@@ -1,26 +1,22 @@
-mixin vertical-beefs()
+mixin vertical-beefs(data)
     div.vertical-list(class!=attributes.class)
         div.col-md-12
-            - for (var x = 1; x <= 3; x++)
+            each item in data
                 div.vertical-list-item.beef-category-music
                     div.vertical-list-item-thumbnail
                         div.header-panel
                             span.category-name Music
-                        a(href="#")
-                            img(src="https://cdn.cnn.com/cnnnext/dam/assets/180217093516-03-donald-trump-0216-exlarge-169.jpg")
+                        a(href="/beef/#{item._id}")
+                            img(src=item.image_url)
                     div.vertical-list-item-details
                         h3
-                            a(href="#") Title of Beef goes here
+                            a(href="/#{item.type}/#{item._id}") #{item.title}
                         ul.beef-info
-                                li 01/01/2018
+                                li #{item.event_date}
                                 li
                                     span.fas.fa-comments &nbsp;&nbsp;
-                                    | 24
+                                    | #{item.comments.length}
                                 li
                                     span.beefometer.small.two-beefs
                         p.
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                            consequat.
-
+                            #{item.description.slice(0, 200).trim()}...

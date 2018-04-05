@@ -1,11 +1,11 @@
 //- Add Actor Modal
 //- Bootstrap Modal mixin for adding an actor. Also uses SmartWizard for a step-by-step data entry.
 
-include ../layouts/modal.jade
+include ../../layouts/modal.jade
 
 
 mixin add-actor-modal-js()
-    script(src="components/add_actor_modal/add_actor_modal.js")
+    script(src="component_controllers/add_actor_modal/add_actor_modal.js")
 
 mixin add-actor-modal()
     +modal('Add Actor', '#', false)(id="add_actor_modal", large_modal=true, class="add-actor-modal")

@@ -107,9 +107,8 @@ module.exports = {
         return event_insert;
     },
 
-    findEvents: function(request, response, callback){
-        
-        var query_parameters = request.query;
+    findEvents: function(query_parameters, callback){
+        console.log(query_parameters);
         var match_query_content = {};
         var sort_query_content = {};
         var query_present = Object.keys(query_parameters).length === 0 && query_parameters.constructor === Object ? false : true; //check if request comes with query
@@ -135,7 +134,7 @@ module.exports = {
             }
             
             //deal with $match queries
-            if(query_parameters.featured){ match_query_content = { featured: true } }
+            if(query_parameters.featured != null){ match_query_content = { featured: query_parameters.featured } }
             else if(query_parameters.match_title){ match_query_content = { title: { $regex : query_parameters.match_title, $options: "i" } } }
             else if(query_parameters.match_actor){ match_query_content = { name: { $regex : query_parameters.match_actor, $options: "i" } } }
             else if(query_parameters.match_category){ match_query_content = { name: { $regex : query_parameters.match_category, $options: "i" } } }
@@ -165,17 +164,23 @@ module.exports = {
                         foreignField: "_id",
                         as: "targets" 
                     }}, 
-                    event_projection
+                    { $unwind : "$categories"},
+                    { $lookup : { 
+                        from: db_ref.get_event_categories_table(),
+                        localField: "categories",
+                        foreignField: "cat_id",
+                        as: "categories" 
+                    }}, 
+                    { $project: event_projection }
                 ];
                                 
                 if(Object.keys(sort_query_content).length > 0){
-                    aggregate_array.$sort = sort_query_content;
+                    aggregate_array.push({ $sort: sort_query_content });
                 }
+                aggregate_array.push({ $limit: limit_query_content });
                 
-                if(Object.keys(limit_query_content).length > 0){
-                    aggregate_array.$limit = limit_query_content;
-                }
-                   
+                console.log(aggregate_array);
+                
                 db.collection(db_ref.get_current_event_table()).aggregate(aggregate_array).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
                     else{
@@ -267,8 +272,6 @@ module.exports = {
                         event_insert.img_title_thumbnail = event_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
                     }
                 }
-                console.log("###############");
-                console.log(event_insert);
                 
                 var db_options = {
                     send_email_notification: false,

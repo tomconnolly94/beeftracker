@@ -1,9 +1,15 @@
 //external dependencies
 var router = require("express").Router();
+var async = require("async");
 
 //internal dependencies
 var db_ref = require("../config/db_config.js"); //get database reference object
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
+var globals = require("../config/globals.js")
+
+//endpoint controllers
+var event_controllers = require("../controllers/events_controller.js");
+
 
 if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if deployed on a heroku server
     /* Detect any http requests, if found, redirect to https, otherwise continue to other routes */
@@ -25,42 +31,96 @@ let template_data = {
             image_url: "https://cdn.cnn.com/cnnnext/dam/assets/180217093516-03-donald-trump-0216-exlarge-169.jpg",
             category: "Politics",
             _id: "5a3eac03a9106c0004935803",
-            event_date: "30/30/30"
+            event_date: "30/30/30",
+            description: "Click the button to display the extracted part of the string. Click the button to display the extracted part of the string. Click the button to display the extracted part of the string.",
+            comments: [
+                {
+                    user_id: "5a3eac03a9106c0004935803",
+                    text: "comment 1"
+                },
+                {
+                    user_id: "5a3eac03a9106c0004935803",
+                    text: "comment 1"
+                },
+                {
+                    user_id: "5a3eac03a9106c0004935803",
+                    text: "comment 1"
+                }
+            ]
         },
         {
             title: "IPhone 7 vs. Galaxy S8",
             image_url: "http://ksassets.timeincuk.net/wp/uploads/sites/54/2014/12/iphone-7-vs-galaxy-s8-1.jpg",
             category: "Tech",
             _id: "5a3eac03a9106c0004935803",
-            event_date: "30/30/30"
+            event_date: "30/30/30",
+            description: "Click the button to display the extracted part of the string. Click the button to display the extracted part of the string. Click the button to display the extracted part of the string.",
+            comments: [
+                {
+                    user_id: "5a3eac03a9106c0004935803",
+                    text: "comment 1"
+                },
+                {
+                    user_id: "5a3eac03a9106c0004935803",
+                    text: "comment 1"
+                }
+            ]
         },
         {
             title: "Wiley at it again with Dizzee",
             image_url: "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg",
             category: "Music",
             _id: "5a3eac03a9106c0004935803",
-            event_date: "30/30/30"
+            event_date: "30/30/30",
+            description: "Click the button to display the extracted part of the string. Click the button to display the extracted part of the string. Click the button to display the extracted part of the string.",
+            comments: [
+                {
+                    user_id: "5a3eac03a9106c0004935803",
+                    text: "comment 1"
+                }
+            ]
         },
         {
             title: "Eminem dissing Trump",
             image_url: "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg",
             category: "Music",
             _id: "5a3eac03a9106c0004935803",
-            event_date: "30/30/30"
+            event_date: "30/30/30",
+            description: "Click the button to display the extracted part of the string. Click the button to display the extracted part of the string. Click the button to display the extracted part of the string.",
+            comments: [
+                {
+                    user_id: "5a3eac03a9106c0004935803",
+                    text: "comment 1"
+                }
+            ]
         },
         {
             title: "Apple or Microsoft",
             image_url: "https://i0.wp.com/www.mac-history.net/wp-content/uploads/2011/01/microsoft-vs-apple.jpg?fit=599%2C311",
             category: "Tech",
             _id: "5a3eac03a9106c0004935803",
-            event_date: "30/30/30"
+            event_date: "30/30/30",
+            description: "Click the button to display the extracted part of the string. Click the button to display the extracted part of the string. Click the button to display the extracted part of the string.",
+            comments: [
+                {
+                    user_id: "5a3eac03a9106c0004935803",
+                    text: "comment 1"
+                }
+            ]
         },
         {
             title: "Man U vs Stoke City",
             image_url: "https://metrouk2.files.wordpress.com/2016/09/ac_manuntdvsstoke_comp.jpg?w=748&h=427&crop=1",
             category: "Sports",
             _id: "5a3eac03a9106c0004935803",
-            event_date: "30/30/30"
+            event_date: "30/30/30",
+            description: "Click the button to display the extracted part of the string. Click the button to display the extracted part of the string. Click the button to display the extracted part of the string.",
+            comments: [
+                {
+                    user_id: "5a3eac03a9106c0004935803",
+                    text: "comment 1"
+                }
+            ]
         },
     ]
 };
@@ -113,10 +173,25 @@ let template_data_actors = {
 };
 
 router.get("/", function(request, response) {     
-    
-    //access data from db
-    
-    response.render("pages/home.jade", template_data);
+        
+    async.waterfall([
+        function(callback){
+            event_controllers.findEvents({ limit: 3, featured: true }, function(data){
+                callback(null, { featured_data: data });
+            });
+        },
+        function(data_object, callback){
+            event_controllers.findEvents({ limit: 6, featured: false }, function(data){
+                data_object.grid_data = data;
+                console.log(data_object)
+                callback(null, data_object);
+            });
+        }
+    ], function (error, data_object) {
+        if(error){ console.log(error); }
+        //console.log(data_object);
+        response.render("pages/home.jade", { file_server_url_prefix: globals.file_server_url_prefix, featured_data: data_object.featured_data, grid_data: data_object.grid_data });
+    });
 }); //home page
 
 router.get("/about", function(request, response) { response.render("pages/about.jade"); }); // about_us page
@@ -144,7 +219,11 @@ router.get("/beef/:tagId", function(request, response) {
     
     response.render("pages/beef.jade"); 
 }); //beef page
-router.get("/contact", function(request, response) { response.render("pages/contact.jade"); }); // contact us page
+router.get("/contact", function(request, response) { 
+    
+    response.render("pages/contact.jade", { list_data: template_data.grid_data }); 
+
+}); // contact us page
 
 
 

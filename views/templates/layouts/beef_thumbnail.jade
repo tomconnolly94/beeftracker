@@ -1,17 +1,26 @@
-mixin medium-beef-thumbnail(title, image, cat_name, beef_id, event_date)
+mixin medium-beef-thumbnail(data, data_type, image_resize_params)
+    - var day = data.event_date.getDate();
+    - var monthIndex = data.event_date.getMonth();
+    - var year = data.event_date.getFullYear();
+    - var formatted_date =  day + '/' + monthIndex + '/' + year;
+
+    - var split_server_url_prefix = file_server_url_prefix.split("/");
+    - split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, image_resize_params);
+    - var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
+
     a(href="/beef/#{beef_id}", class!=attributes.class, class!=attributes.beef_thumbnail_class)
         div.beef-thumbnail(class!=attributes.beef_thumbnail_class)
             div.info-overlay
                 div.header-panel
-                    span.category-name= cat_name
+                    span.category-name= data.categories[0].name
                 div.footer-panel
                     //- div.footer-panel-bg &nbsp;
                     div.beef-details
-                        h4= title
-                        span.date= event_date
+                        h4 #{data.title.length > 45 ? data.title.slice(0,45)+ "..." : data.title}
+                        span.date #{formatted_date}
                     div.beefometer-container
                         div.beefometer.small.four-beefs
-            img(src=image)
+            img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + data.img_title_fullsize)
 
 
 mixin medium-actor-thumbnail(name, image, cat_name, actor_id, d_o_b)
