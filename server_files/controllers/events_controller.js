@@ -33,7 +33,7 @@ var event_projection = {
     "beef_chain_ids": 1,
     "contributions": 1,
     "tags": 1,
-    featured: 1
+    "featured": 1
 };
 
 var check_end_or_next = function(event, item, next){
@@ -108,7 +108,7 @@ module.exports = {
     },
 
     findEvents: function(query_parameters, callback){
-        console.log(query_parameters);
+        
         var match_query_content = {};
         var sort_query_content = {};
         var query_present = Object.keys(query_parameters).length === 0 && query_parameters.constructor === Object ? false : true; //check if request comes with query
@@ -123,7 +123,8 @@ module.exports = {
             if(query_parameters.increasing_order == "name"){ sort_field_name = "name"; }
             else if(query_parameters.increasing_order == "rating" || query_parameters.decreasing_order == "rating"){ sort_field_name = "rating"; }
             else if(query_parameters.increasing_order == "popularity" || query_parameters.decreasing_order == "popularity"){ sort_field_name = "hit_count"; }
-            else if(query_parameters.increasing_order == "currently_trending" || query_parameters.increasing_order == "currently_trending"){ sort_field_name = "hit_counts.last_two_days"; }
+            else if(query_parameters.increasing_order == "currently_trending" || query_parameters.decreasing_order == "currently_trending"){ sort_field_name = "hit_counts.last_two_days"; }
+            else if(query_parameters.increasing_order == "date_added" || query_parameters.decreasing_order == "date_added"){ sort_field_name = "date_added"; }
             else{ query_present = false; }// if no valid queries provided, disallow a sort query
 
             if(query_parameters.increasing_order){
@@ -138,6 +139,7 @@ module.exports = {
             else if(query_parameters.match_title){ match_query_content = { title: { $regex : query_parameters.match_title, $options: "i" } } }
             else if(query_parameters.match_actor){ match_query_content = { name: { $regex : query_parameters.match_actor, $options: "i" } } }
             else if(query_parameters.match_category){ match_query_content = { name: { $regex : query_parameters.match_category, $options: "i" } } }
+            else if(query_parameters.match_beef_chain_id){ match_query_content = { beef_chain_ids: query_parameters.match_beef_chain_id} }
             
             //deal with $limit query
             if(query_parameters.limit){ limit_query_content = query_parameters.limit }
@@ -163,23 +165,37 @@ module.exports = {
                         localField: "targets",
                         foreignField: "_id",
                         as: "targets" 
-                    }}, 
+                    }},
                     { $unwind : "$categories"},
                     { $lookup : { 
                         from: db_ref.get_event_categories_table(),
                         localField: "categories",
                         foreignField: "cat_id",
                         as: "categories" 
-                    }}, 
+                    }},
+                    { $unwind : "$beef_chain_ids"},
+                    { $lookup : { 
+                        from: db_ref.get_beef_chain_table(),
+                        localField: "beef_chain_ids",
+                        foreignField: "_id",
+                        as: "beef_chain_ids" 
+                    }},
+                    { $unwind : "$beef_chain_ids.events"},
+                    { $lookup : { 
+                        from: db_ref.get_current_event_table(),
+                        localField: "beef_chain_ids.events",
+                        foreignField: "_id",
+                        as: "beef_chains" 
+                    }},
                     { $project: event_projection }
                 ];
-                                
+                
                 if(Object.keys(sort_query_content).length > 0){
                     aggregate_array.push({ $sort: sort_query_content });
                 }
                 aggregate_array.push({ $limit: limit_query_content });
                 
-                console.log(aggregate_array);
+                //console.log(aggregate_array);
                 
                 db.collection(db_ref.get_current_event_table()).aggregate(aggregate_array).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
@@ -197,10 +213,7 @@ module.exports = {
         //}
     },
     
-    findEvent: function(request, response, callback){
-        
-        //extract data
-        var event_id = request.params.event_id;
+    findEvent: function(event_id, callback){
 
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
@@ -228,7 +241,6 @@ module.exports = {
                     if(queryErr){ console.log(queryErr); }
                     else{
                         if(docs && docs.length > 0){
-                            console.log(docs[0]);
                             callback( docs[0] );
                         }
                         else{

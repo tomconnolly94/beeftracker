@@ -4,11 +4,13 @@ mixin medium-beef-thumbnail(data, data_type, image_resize_params)
     - var year = data.event_date.getFullYear();
     - var formatted_date =  day + '/' + monthIndex + '/' + year;
 
-    - var split_server_url_prefix = file_server_url_prefix.split("/");
-    - split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, image_resize_params);
-    - var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
+    - if(image_resize_params){
+    -   var split_server_url_prefix = file_server_url_prefix.split("/");
+    -   split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, image_resize_params);
+    -   var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
+    - }
 
-    a(href="/beef/#{beef_id}", class!=attributes.class, class!=attributes.beef_thumbnail_class)
+    a(href="/beef/#{data._id}/#{data.beef_chain_ids[0]}", class!=attributes.class, class!=attributes.beef_thumbnail_class)
         div.beef-thumbnail(class!=attributes.beef_thumbnail_class)
             div.info-overlay
                 div.header-panel

@@ -5088,10 +5088,8 @@ section {
       width: 100%;
       display: block; }
       .beef-thumbnail .info-overlay .header-panel .category-name {
-        margin-top: 10px;
         right: 3%;
-        margin-right: 3%;
-        float: right;
+        float: left;
         font-size: 0.8rem;
         padding: 2px 10px; }
     .beef-thumbnail .info-overlay .footer-panel {
@@ -5275,48 +5273,68 @@ section {
     position: absolute;
     right: 30%; }
 
+/*
+$categories: (
+   ('tech', #c0392b),
+   ('sport', #0083A3),
+   //('music', #8e44ad),
+   ('rap', #8e44ad),
+   ('politics', #27ae60),
+);
+*/
 .beef-category-tech .category-header-title {
-  color: #c0392b;
-  border-bottom: 2px solid #c0392b; }
+  color: #000;
+  border-bottom: 2px solid #000; }
 
 .beef-category-tech .beef-thumbnail img, .beef-category-tech .vertical-list-item-thumbnail img {
-  border-bottom: 4px solid #c0392b; }
+  border-bottom: 4px solid #000; }
 
 .beef-category-tech .category-name {
-  background-color: #c0392b;
+  background-color: #000;
   color: #fff; }
 
 .beef-category-sport .category-header-title {
-  color: #0083A3;
-  border-bottom: 2px solid #0083A3; }
+  color: #000;
+  border-bottom: 2px solid #000; }
 
 .beef-category-sport .beef-thumbnail img, .beef-category-sport .vertical-list-item-thumbnail img {
-  border-bottom: 4px solid #0083A3; }
+  border-bottom: 4px solid #000; }
 
 .beef-category-sport .category-name {
-  background-color: #0083A3;
+  background-color: #000;
   color: #fff; }
 
 .beef-category-rap .category-header-title {
-  color: #8e44ad;
-  border-bottom: 2px solid #8e44ad; }
+  color: #000;
+  border-bottom: 2px solid #000; }
 
 .beef-category-rap .beef-thumbnail img, .beef-category-rap .vertical-list-item-thumbnail img {
-  border-bottom: 4px solid #8e44ad; }
+  border-bottom: 4px solid #000; }
 
 .beef-category-rap .category-name {
-  background-color: #8e44ad;
+  background-color: #000;
   color: #fff; }
 
 .beef-category-politics .category-header-title {
-  color: #27ae60;
-  border-bottom: 2px solid #27ae60; }
+  color: #000;
+  border-bottom: 2px solid #000; }
 
 .beef-category-politics .beef-thumbnail img, .beef-category-politics .vertical-list-item-thumbnail img {
-  border-bottom: 4px solid #27ae60; }
+  border-bottom: 4px solid #000; }
 
 .beef-category-politics .category-name {
-  background-color: #27ae60;
+  background-color: #000;
+  color: #fff; }
+
+.beef-category-pop .category-header-title {
+  color: #000;
+  border-bottom: 2px solid #000; }
+
+.beef-category-pop .beef-thumbnail img, .beef-category-pop .vertical-list-item-thumbnail img {
+  border-bottom: 4px solid #000; }
+
+.beef-category-pop .category-name {
+  background-color: #000;
   color: #fff; }
 
 .beefometer.small {
@@ -5583,21 +5601,25 @@ div#smartwizard:before {
         .category-browser-section .category-browser-header .header-menu ul li a:hover {
           text-decoration: none; }
       .category-browser-section .category-browser-header .header-menu ul li.category-tech {
-        background-color: #c0392b; }
+        background-color: #000; }
         .category-browser-section .category-browser-header .header-menu ul li.category-tech:hover {
-          background-color: #962d22; }
+          background-color: black; }
       .category-browser-section .category-browser-header .header-menu ul li.category-sport {
-        background-color: #0083A3; }
+        background-color: #000; }
         .category-browser-section .category-browser-header .header-menu ul li.category-sport:hover {
-          background-color: #005a70; }
+          background-color: black; }
       .category-browser-section .category-browser-header .header-menu ul li.category-rap {
-        background-color: #8e44ad; }
+        background-color: #000; }
         .category-browser-section .category-browser-header .header-menu ul li.category-rap:hover {
-          background-color: #703688; }
+          background-color: black; }
       .category-browser-section .category-browser-header .header-menu ul li.category-politics {
-        background-color: #27ae60; }
+        background-color: #000; }
         .category-browser-section .category-browser-header .header-menu ul li.category-politics:hover {
-          background-color: #1e8449; }
+          background-color: black; }
+      .category-browser-section .category-browser-header .header-menu ul li.category-pop {
+        background-color: #000; }
+        .category-browser-section .category-browser-header .header-menu ul li.category-pop:hover {
+          background-color: black; }
 
 .inline-beef-search-form .form-text.trending a {
   color: #DF3E3E; }

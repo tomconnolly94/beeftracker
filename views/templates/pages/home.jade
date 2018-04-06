@@ -11,26 +11,27 @@ append scripts
 
 append body
     div.bt-content
-        +featured-beef-section(featured_data, "events")
+        +featured-beef-section(featured_data, "events", "c_fill,g_face,h_215,w_350")
         +section('New', 'BEEF', 'fa-tv')
             div.row
                 each thumbnail_data in grid_data
                     div.col-lg-4.col-md-6.col-xs-4
-                        +medium-beef-thumbnail(thumbnail_data, "events", "c_fill,g_face,h_211,w_425")(class="beef-category-#{thumbnail_data.categories[0].name.toLowerCase()}")
+                        +medium-beef-thumbnail(thumbnail_data, "events", "c_fill,g_face,h_215,w_350")(class="beef-category-#{thumbnail_data.categories[0].name.toLowerCase()}")
         //+section('HOT', 'BEEFS')
             //+horizontal-slider('featured_beefs_slider', grid_data, "events")
-
+append body
+    div.bt-content
+        +add-beef-cta()
 
 append body
     div.bt-content-full-width.dark
       div.container
           +section('HOT', 'BEEF')
-               +horizontal-slider('featured_beefs_slider_full', grid_data, "events")
+               +horizontal-slider('featured_beefs_slider_full', slider_data, "events", "c_fill,g_face,h_219,w_340")
 
 append body
     div.bt-content
       +section('ANOTHER', 'SECTION')
           p
               | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          a.btn.btn-lg.btn-primary(href="#") Add a Beef
-      +add-beef-cta()
+          a.btn.btn-lg.btn-primary(href="add_beef") Add a Beef
