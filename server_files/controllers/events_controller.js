@@ -173,20 +173,6 @@ module.exports = {
                         foreignField: "cat_id",
                         as: "categories" 
                     }},
-                    { $unwind : "$beef_chain_ids"},
-                    { $lookup : { 
-                        from: db_ref.get_beef_chain_table(),
-                        localField: "beef_chain_ids",
-                        foreignField: "_id",
-                        as: "beef_chain_ids" 
-                    }},
-                    { $unwind : "$beef_chain_ids.events"},
-                    { $lookup : { 
-                        from: db_ref.get_current_event_table(),
-                        localField: "beef_chain_ids.events",
-                        foreignField: "_id",
-                        as: "beef_chains" 
-                    }},
                     { $project: event_projection }
                 ];
                 
@@ -195,7 +181,7 @@ module.exports = {
                 }
                 aggregate_array.push({ $limit: limit_query_content });
                 
-                //console.log(aggregate_array);
+                console.log(aggregate_array);
                 
                 db.collection(db_ref.get_current_event_table()).aggregate(aggregate_array).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
@@ -218,6 +204,8 @@ module.exports = {
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
             else{
+                console.log(event_id)
+                
                 var event_id_object = BSON.ObjectID.createFromHexString(event_id);
                 
                 db.collection(db_ref.get_current_event_table()).aggregate([
@@ -236,6 +224,48 @@ module.exports = {
                         foreignField: "_id",
                         as: "targets" 
                     }},
+                    { $unwind : "$categories"},
+                    { $lookup : { 
+                        from: db_ref.get_event_categories_table(),
+                        localField: "categories",
+                        foreignField: "cat_id",
+                        as: "categories" 
+                    }},
+                    { $lookup: { 
+                        from: "beef_chains", 
+                        localField: "beef_chain_ids", 
+                        foreignField: "_id", 
+                        as: "beef_chain_ids"  
+                    }}, 
+                    { $unwind: "$beef_chain_ids"}, 
+                    { $lookup: { 
+                        from: "event_data_v4", 
+                        localField: "beef_chain_ids.events", 
+                        foreignField: "_id", 
+                        as: "beef_chain_ids.events"
+                    }},
+                    /*{ $group: {
+                        _id: "$_id", 
+                        beef_chain_ids: { $push: "$beef_chain_ids" },
+                        title: { $first: "$title"},
+                        aggressors: { $addToSet: "$aggressors" },
+                        targets: { $addToSet: "$targets"},
+                        event_date: { $first: "$event_date"},
+                        date_added: { $first: "$date_added"},
+                        description: { $first: "$description"},
+                        links: { $first: "$links"},
+                        categories: { $first: "$categories"},
+                        hit_counts: { $first: "$hit_counts"},
+                        gallery_items: { $first: "$gallery_items"},
+                        img_title_thumbnail: { $first: "$img_title_thumbnail"},
+                        img_title_fullsize: { $first: "$img_title_fullsize"},
+                        rating: { $first: "$rating"},
+                        data_sources: { $first: "$data_sources"},
+                        beef_chain_ids: { $first: "$beef_chain_ids"},
+                        contributions: { $first: "$contributions"},
+                        tags: { $first: "$tags"},
+                        featured: { $first: "$featured"},
+                    }},*/
                     { $project: event_projection }
                 ]).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }

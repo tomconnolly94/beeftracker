@@ -8,8 +8,8 @@ var token_authentication = require("../tools/token_authentication.js"); //get to
 var globals = require("../config/globals.js")
 
 //endpoint controllers
-var event_controllers = require("../controllers/events_controller.js");
-
+var event_controller = require("../controllers/events_controller.js");
+var comment_controller = require("../controllers/comments_controller.js");
 
 if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if deployed on a heroku server
     /* Detect any http requests, if found, redirect to https, otherwise continue to other routes */
@@ -176,19 +176,18 @@ router.get("/", function(request, response) {
         
     async.waterfall([
         function(callback){
-            event_controllers.findEvents({ limit: 3, featured: true }, function(data){
-                console.log(data);
+            event_controller.findEvents({ limit: 3/*, featured: true*/ }, function(data){
                 callback(null, { featured_data: data });
             });
         },
         function(data_object, callback){
-            event_controllers.findEvents({ limit: 6, featured: false }, function(data){
+            event_controller.findEvents({ limit: 6, featured: false }, function(data){
                 data_object.grid_data = data;
                 callback(null, data_object);
             });
         },
         function(data_object, callback){
-            event_controllers.findEvents({ limit: 12, featured: false, increasing_order: "date_added" }, function(data){
+            event_controller.findEvents({ limit: 12, featured: false, increasing_order: "date_added" }, function(data){
                 data_object.slider_data = data;
                 callback(null, data_object);
             });
@@ -218,7 +217,7 @@ router.get("/beef", function(request, response) {
     
     response.render("pages/beefs.jade", template_data); 
 }); //beef page
-router.get("/beef/:event_id/:beef_chain_id", function(request, response) { 
+router.get("/beef/:event_id", function(request, response) { 
 
     //extract data
     var event_id = request.params.event_id;    
@@ -227,19 +226,22 @@ router.get("/beef/:event_id/:beef_chain_id", function(request, response) {
     async.waterfall([
         function(callback){
             //access data from db
-            event_controllers.findEvent(event_id, function(data){
+            event_controller.findEvent(event_id, function(data){
                 callback(null, { event_data: data });
             });
         },
         function(data_object, callback){
-            event_controllers.findEvents({ match_beef_chain_id: beef_chain_id }, function(data){
-                data_object.beef_chain = data;
+            //access data from db
+            comment_controller.findCommentsFromEvent(event_id, function(data){
+                console.log("####################################");
+                console.log(data);
+                data_object.comment_data = data;
                 callback(null, data_object);
             });
         }
     ], function (error, data_object) {
         if(error){ console.log(error); }
-        response.render("pages/beef.jade", { file_server_url_prefix: globals.file_server_url_prefix, event_data: data_object });
+        response.render("pages/beef.jade", { file_server_url_prefix: globals.file_server_url_prefix, event_data: data_object.event_data, comment_data: data_object.comment_data });
     });
     
 }); //beef page

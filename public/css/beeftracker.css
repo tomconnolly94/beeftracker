@@ -5280,6 +5280,7 @@ $categories: (
    //('music', #8e44ad),
    ('rap', #8e44ad),
    ('politics', #27ae60),
+   ('pop', #ce27c3),
 );
 */
 .beef-category-tech .category-header-title {
@@ -5293,6 +5294,13 @@ $categories: (
   background-color: #000;
   color: #fff; }
 
+.beef-category-default .category-header-title {
+  color: #000;
+  border-bottom: 2px solid #000; }
+
+.beef-category-default .beef-thumbnail img, .beef-category-default .vertical-list-item-thumbnail img {
+  border-bottom: 4px solid #000; }
+
 .beef-category-sport .category-header-title {
   color: #000;
   border-bottom: 2px solid #000; }
@@ -5303,6 +5311,13 @@ $categories: (
 .beef-category-sport .category-name {
   background-color: #000;
   color: #fff; }
+
+.beef-category-default .category-header-title {
+  color: #000;
+  border-bottom: 2px solid #000; }
+
+.beef-category-default .beef-thumbnail img, .beef-category-default .vertical-list-item-thumbnail img {
+  border-bottom: 4px solid #000; }
 
 .beef-category-rap .category-header-title {
   color: #000;
@@ -5315,6 +5330,31 @@ $categories: (
   background-color: #000;
   color: #fff; }
 
+.beef-category-default .category-header-title {
+  color: #000;
+  border-bottom: 2px solid #000; }
+
+.beef-category-default .beef-thumbnail img, .beef-category-default .vertical-list-item-thumbnail img {
+  border-bottom: 4px solid #000; }
+
+.beef-category-grime .category-header-title {
+  color: #000;
+  border-bottom: 2px solid #000; }
+
+.beef-category-grime .beef-thumbnail img, .beef-category-grime .vertical-list-item-thumbnail img {
+  border-bottom: 4px solid #000; }
+
+.beef-category-grime .category-name {
+  background-color: #000;
+  color: #fff; }
+
+.beef-category-default .category-header-title {
+  color: #000;
+  border-bottom: 2px solid #000; }
+
+.beef-category-default .beef-thumbnail img, .beef-category-default .vertical-list-item-thumbnail img {
+  border-bottom: 4px solid #000; }
+
 .beef-category-politics .category-header-title {
   color: #000;
   border-bottom: 2px solid #000; }
@@ -5326,6 +5366,13 @@ $categories: (
   background-color: #000;
   color: #fff; }
 
+.beef-category-default .category-header-title {
+  color: #000;
+  border-bottom: 2px solid #000; }
+
+.beef-category-default .beef-thumbnail img, .beef-category-default .vertical-list-item-thumbnail img {
+  border-bottom: 4px solid #000; }
+
 .beef-category-pop .category-header-title {
   color: #000;
   border-bottom: 2px solid #000; }
@@ -5336,6 +5383,13 @@ $categories: (
 .beef-category-pop .category-name {
   background-color: #000;
   color: #fff; }
+
+.beef-category-default .category-header-title {
+  color: #000;
+  border-bottom: 2px solid #000; }
+
+.beef-category-default .beef-thumbnail img, .beef-category-default .vertical-list-item-thumbnail img {
+  border-bottom: 4px solid #000; }
 
 .beefometer.small {
   background: url(../images/beefometers@small.png);
@@ -5612,6 +5666,10 @@ div#smartwizard:before {
         background-color: #000; }
         .category-browser-section .category-browser-header .header-menu ul li.category-rap:hover {
           background-color: black; }
+      .category-browser-section .category-browser-header .header-menu ul li.category-grime {
+        background-color: #000; }
+        .category-browser-section .category-browser-header .header-menu ul li.category-grime:hover {
+          background-color: black; }
       .category-browser-section .category-browser-header .header-menu ul li.category-politics {
         background-color: #000; }
         .category-browser-section .category-browser-header .header-menu ul li.category-politics:hover {
@@ -5698,7 +5756,7 @@ figure.masonry-item img {
   height: 100%;
   object-fit: cover; }
 
-figure.masonry-item.video-item .play-button {
+figure.masonry-item.video-item .play-button, figure.masonry-item.youtube_embed-item .play-button {
   position: absolute;
   color: #fff;
   font-size: 35px;
@@ -5788,7 +5846,7 @@ figure.masonry-item.soundcloud-item .play-button {
     width: 280px;
     left: calc(15% + 7px); }
   .timeline ol li.active .beef-thumbnail {
-    height: 215px !important; }
+    height: 265px !important; }
   .timeline ol li .beef-thumbnail {
     height: 185px !important; }
   .timeline ol li a {
@@ -5800,6 +5858,8 @@ figure.masonry-item.soundcloud-item .play-button {
     white-space: normal;
     color: black;
     background: white; }
+    .timeline ol li a h1 {
+      text-align: "center"; }
     .timeline ol li a::before {
       content: '';
       position: absolute;
@@ -5817,7 +5877,7 @@ figure.masonry-item.soundcloud-item .play-button {
 .timeline ol li:not(:first-child) {
   margin-left: 14px; }
 
-.timeline ol li:not(:last-child)::after {
+.timeline ol li::after {
   content: '';
   position: absolute;
   top: 50%;

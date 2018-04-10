@@ -1,6 +1,6 @@
 mixin timeline-section-js()
     script(src="/component_controllers/timeline/timeline.js")
-mixin timeline-section()
+mixin timeline-section(data)
     +section('EXPLORE', 'TIMELINE', 'fa-clock')
         section.timeline-container
           .arrows
@@ -9,31 +9,15 @@ mixin timeline-section()
                 button.arrow.arrow__next
                   i.fas.fa-chevron-right
           div.timeline
-
+          
             ol
+                each thumbnail_data in data.beef_chain_ids.events
+                    - if(thumbnail_data.title == data.title){
+                        li.active
+                            +medium-beef-thumbnail(thumbnail_data, "events", "c_fill,g_face,h_215,w_350")(class="beef-category-default")
+                    - }
+                    - else{
+                        li
+                            +medium-beef-thumbnail(thumbnail_data, "events", "c_fill,g_face,h_215,w_350")(class="beef-category-default")
+                    - }
                 li
-                    +medium-beef-thumbnail("Eminem dissing Trump", "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg", "Music")(class="beef-category-music")
-                li
-                    +medium-beef-thumbnail("Eminem dissing Trump", "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg", "Music")(class="beef-category-music")
-                li.active
-                    +medium-beef-thumbnail("Eminem dissing Trump", "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg", "Music")(class="beef-category-music")
-                li
-                    +medium-beef-thumbnail("Eminem dissing Trump", "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg", "Music")(class="beef-category-music")
-                li
-                    +medium-beef-thumbnail("Eminem dissing Trump", "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg", "Music")(class="beef-category-music")
-                li
-                    +medium-beef-thumbnail("Eminem dissing Trump", "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg", "Music")(class="beef-category-music")
-                li
-                    +medium-beef-thumbnail("Eminem dissing Trump", "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg", "Music")(class="beef-category-music")
-                li
-                    +medium-beef-thumbnail("Eminem dissing Trump", "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg", "Music")(class="beef-category-music")
-                li
-                    +medium-beef-thumbnail("Eminem dissing Trump", "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg", "Music")(class="beef-category-music")
-                li
-                    +medium-beef-thumbnail("Eminem dissing Trump", "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg", "Music")(class="beef-category-music")
-                li
-                    +medium-beef-thumbnail("Eminem dissing Trump", "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg", "Music")(class="beef-category-music")
-                li
-                    +medium-beef-thumbnail("Eminem dissing Trump", "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg", "Music")(class="beef-category-music")
-
-

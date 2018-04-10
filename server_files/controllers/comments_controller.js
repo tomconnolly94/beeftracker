@@ -36,8 +36,7 @@ module.exports = {
         });
     },
     
-    findCommentsFromEvent: function(request, response, callback){
-        var event_id = request.params.event_id;
+    findCommentsFromEvent: function(event_id, callback){
         
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }

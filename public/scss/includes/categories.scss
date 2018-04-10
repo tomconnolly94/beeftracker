@@ -14,6 +14,7 @@ $categories: (
    ('sport', #000),
    //('music', #8e44ad),
    ('rap', #000),
+   ('grime', #000),
    ('politics', #000),
    ('pop', #000),
 );
@@ -23,13 +24,7 @@ $categories: (
     $cat-name: nth(nth($categories, $categoryIdx), 1);
     $cat-color: nth(nth($categories, $categoryIdx), 2);
 
-
-
-
     .beef-category-#{$cat-name} {
-
-
-
 
         .category-header-title {
            color: $cat-color;
@@ -39,13 +34,24 @@ $categories: (
         .beef-thumbnail, .vertical-list-item-thumbnail {
             img {
                 border-bottom: 4px solid $cat-color;
-
             }
-
         }
         .category-name {
             background-color: $cat-color;
             color: #fff;
+        }
+    }
+    .beef-category-default {
+
+        .category-header-title {
+           color: #000;
+           border-bottom: 2px solid #000;
+        }
+
+        .beef-thumbnail, .vertical-list-item-thumbnail {
+            img {
+                border-bottom: 4px solid $cat-color;
+            }
         }
     }
 }
