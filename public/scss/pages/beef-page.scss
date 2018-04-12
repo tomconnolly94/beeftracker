@@ -168,13 +168,11 @@
                 border-radius: 3px;
             }
         }
-
     }
 
-
-
  .beef-body-content-youtube-video, .beef-body-content-soundcloud  {
-    text-align: center;
+     text-align: center;
+     padding-bottom: 50px;
 
     iframe {
         border:5px solid $brand-primary;
@@ -183,14 +181,9 @@
     }
 }
 
-
     .beef-body {
         @extend .col-md-12;
         padding-top: 20px;
         padding-bottom: 20px;
-
-
-
-
     }
 }

@@ -12,10 +12,8 @@ mixin comment-box-item(data)
 
      div.comment-box-item
         div.col-md-1.d-none.d-md-block.d-lg-block.d-xl-block
-            - if(data.user.img_title && data.user.img_title != "")
-                img(src="http://www.girardatlarge.com/wp-content/uploads/2013/05/gravatar-60-grey.jpg").img-fluid
-            - else
-                img(src=server_url_prefix_with_image_formatting + "/users/" + data.user.img_title).img-fluid
+            //img(src="http://www.girardatlarge.com/wp-content/uploads/2013/05/gravatar-60-grey.jpg").img-fluid
+            img(src=server_url_prefix_with_image_formatting + "/user_profiles/" + data.user.img_title).img-fluid
         div.col-md-11
             div.row
                 div.col-md-12
@@ -47,5 +45,6 @@ mixin comment-box(comments)
                 +comment-box-item(comment)
 
 mixin comment-box-section(data)
-    +section('BEEF', 'COMMENTS', 'fa-comments')
+    //+section('BEEF', 'COMMENTS', 'fa-comments')
+    +section('D', 'ISCUSSION', 'fa-comments')
         +comment-box(data)

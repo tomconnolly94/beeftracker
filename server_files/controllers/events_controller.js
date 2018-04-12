@@ -137,7 +137,7 @@ module.exports = {
             //deal with $match queries
             if(query_parameters.featured != null){ match_query_content = { featured: query_parameters.featured } }
             else if(query_parameters.match_title){ match_query_content = { title: { $regex : query_parameters.match_title, $options: "i" } } }
-            else if(query_parameters.match_actor){ match_query_content = { name: { $regex : query_parameters.match_actor, $options: "i" } } }
+            else if(query_parameters.match_actor){ match_query_content = { $or: [ { aggressors: query_parameters.match_actor }, { targets: query_parameters.match_actor }] } }
             else if(query_parameters.match_category){ match_query_content = { name: { $regex : query_parameters.match_category, $options: "i" } } }
             else if(query_parameters.match_beef_chain_id){ match_query_content = { beef_chain_ids: query_parameters.match_beef_chain_id} }
             
@@ -181,7 +181,7 @@ module.exports = {
                 }
                 aggregate_array.push({ $limit: limit_query_content });
                 
-                console.log(aggregate_array);
+                console.log(match_query_content);
                 
                 db.collection(db_ref.get_current_event_table()).aggregate(aggregate_array).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }

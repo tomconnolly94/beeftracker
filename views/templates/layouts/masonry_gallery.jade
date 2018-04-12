@@ -30,8 +30,8 @@ mixin tile(obj, data_type)
         div.aspect(class="aspect--" + ratio + " " + type)
             div.aspect__inner
                 if obj.type == 'image'
-                    a(data-fancybox="gallery", href=server_url_prefix_with_image_formatting + "/" + data_type + "/" + obj.src)
-                        img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + obj.src, alt=obj.alt)
+                    a(data-fancybox="gallery", href=file_server_url_prefix + "/" + data_type + "/" + obj.src)
+                        img(src=file_server_url_prefix + "/" + data_type + "/" + obj.src, alt=obj.alt)
                 else if obj.type == 'video' || obj.type == 'youtube_embed'
                     a(data-fancybox="gallery", href=obj.url)
                         img(src=obj.youtube_src, obj.alt)

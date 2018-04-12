@@ -14,8 +14,8 @@ module.exports = {
     },
 
     get_current_actor_table: function(){
-        return "actor_data_v0_3";
-        //return "actor_data_v4";
+        //return "actor_data_v0_3";
+        return "actor_data_v4";
     },
     
     get_current_subscriber_details_table: function(){

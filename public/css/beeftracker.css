@@ -4988,8 +4988,6 @@ section {
       font-size: 24px; }
       section .title h2 span {
         color: #DF3E3E; }
-        section .title h2 span:before {
-          content: " "; }
         section .title h2 span:after {
           content: "."; }
     section .title .icon {
@@ -5551,9 +5549,9 @@ form label {
       background: #fff;
       border: 3px solid rgba(0, 0, 0, 0.1);
       border-radius: 50%;
-      height: 64px;
+      height: 120px;
       position: relative;
-      width: 64px; }
+      width: 120px; }
 
 .modal .modal-header {
   border-bottom: 2px solid #000; }
@@ -6190,7 +6188,8 @@ figure.masonry-item.soundcloud-item .play-button {
     .beef-content-container .beef-content-left-side .beef-content-thumb img {
       border-radius: 3px; }
   .beef-content-container .beef-body-content-youtube-video, .beef-content-container .beef-body-content-soundcloud {
-    text-align: center; }
+    text-align: center;
+    padding-bottom: 50px; }
     .beef-content-container .beef-body-content-youtube-video iframe, .beef-content-container .beef-body-content-soundcloud iframe {
       border: 5px solid #DF3E3E;
       border-radius: 5px;

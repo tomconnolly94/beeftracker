@@ -1,16 +1,18 @@
-mixin related-beefs()
+mixin related-beefs(related_events, data_type, image_resize_params)
+
+    - if(image_resize_params){
+    -   var split_server_url_prefix = file_server_url_prefix.split("/");
+    -   split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, image_resize_params);
+    -   var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
+    - }
+    
     div.rounded-mini-thumbs.related-beefs
         h4 Related Beefs
         ul
-            li
-                a(href="#")
-                    img(src="https://peopledotcom.files.wordpress.com/2017/10/michelle-obama-d1.jpg")
-            li
-                a(href="#")
-                    img(src="https://peopledotcom.files.wordpress.com/2017/10/michelle-obama-d1.jpg")
-            li
-                a(href="#")
-                    img(src="https://peopledotcom.files.wordpress.com/2017/10/michelle-obama-d1.jpg")
-            li
-                a(href="#")
-                    img(src="https://peopledotcom.files.wordpress.com/2017/10/michelle-obama-d1.jpg")
+            each related_event in related_events
+                li
+                    a(href="#")
+                        img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + related_event.img_title_fullsize)
+                        div    
+                            p #{related_event.title.slice(0,20)}
+                            p #{related_event.aggressors[0].name.split(" ")[related_event.aggressors[0].name.split(" ").length-1]} v. #{related_event.targets[0].name.split(" ")[related_event.targets[0].name.split(" ").length-1]}

@@ -8,120 +8,137 @@ include ../components/inline_beef_search/inline_beef_search.jade
 
 doctype html
 html(lang="en")
-	head
-		title Beeftracker
-		meta(name="viewport", content="width=device-width, initial-scale=1, shrink-to-fit=no")
-		link(href='/stylesheets/beeftracker.vendors.css', rel='stylesheet')
-		link(href='/stylesheets/beeftracker.css', rel='stylesheet')
-		script(src="/modules/jquery/dist/jquery.min.js")
-		script(src="/js/vendor.min.js")
-		block scripts
-	body
-		header.container.d-none.d-md-block
-			div.row
-				div.col-md-6.offset-md-3
-					a(href="/")
-						img(src='/logo/logo@256.png', alt='Beeftracker')
-				div.col-md-3
-					a.btn.btn-primary.btn-lg.float-right(href="/add_beef")
-						span.fas.fa-star
-						| Add a Beef
-		header.container.d-block.d-md-none
-			div.row
-				div.col-3
-					button.navbar-toggler(type="button", data-toggle="collapse", data-target="#beeftrackerMainNav", aria-controls="navbarSupportedContent", aria-expanded="false", aria-label="Toggle Navigations")
-						span.navbar-toggler-icon.fas.fa-bars
-				div.col-6(style="text-align:center;")
-					a(href="/")
-						img(src='/logo/logo_light@128.png')
+    head
+        title Beeftracker
+        meta(name="viewport", content="width=device-width, initial-scale=1, shrink-to-fit=no")
+        link(href='/stylesheets/beeftracker.vendors.css', rel='stylesheet')
+        link(href='/stylesheets/beeftracker.css', rel='stylesheet')
+        script(src="/modules/jquery/dist/jquery.min.js")
+        script(src="/bower_components/bootstrap/dist/js/bootstrap.bundle.js")
+        //script(src="/js/vendor.min.js")
+        block scripts
+    body
+        header.container.d-none.d-md-block
+            div.row
+                div.col-md-6.offset-md-3
+                    a(href="/")
+                        img(src='/logo/logo@256.png', alt='Beeftracker')
+                div.col-md-3
+                    a.btn.btn-primary.btn-lg.float-right(href="/add-beef")
+                        span.fas.fa-star
+                        | Add a Beef
+        header.container.d-block.d-md-none
+            div.row
+                div.col-3
+                    button.navbar-toggler(type="button", data-toggle="collapse", data-target="#beeftrackerMainNav", aria-controls="navbarSupportedContent", aria-expanded="false", aria-label="Toggle Navigations")
+                        span.navbar-toggler-icon.fas.fa-bars
+            div.col-6(style="text-align:center;")
+                a(href="/")
+                    img(src='/logo/logo_light@128.png')
 
-		nav.navbar.navbar-expand-md
-			div.container
-				div.collapse.navbar-collapse#beeftrackerMainNav
-					ul.navbar-nav.main-navbar-nav
-							li.nav-item.active
-								a.nav-link(href="/") Home
-							li.nav-item
-								a.nav-link(href="/about") About Us
-							li.nav-item
-								a.nav-link(href="/beef") Beef
-							li.nav-item
-								a.nav-link(href="/actors") Actors
-							li.nav-item
-								a.nav-link(href="/contact") Contact Us
-							li.nav-item.d-block.d-md-none
-								a.nav-link(href="/add_beef") Add Beef
-						ul.navbar-nav.social-navbar-nav.d-sm-non
-							li.nav-item.login
-								a.nav-link(href="#", data-toggle="modal", data-target="#login_modal")
-									span.fas.fa-user
-									span.text &nbsp; Login
-							li.nav-item.search
-								a.nav-link(href="#")#open_search
-									span.fas.fa-search
-									span.text &nbsp; Search
-		div.container
-			div.row#beef-search-container(hidden)
-				div.col-md-6.offset-md-3
-					+inline-beef-search
-		block body
-		footer
-			div.footer-logo
-				img(src='/logo/logo_light@256.png', alt='Beeftracker')
-			div.footer-nav
-				ul.footer-nav-items
-					li
-						a(href="#") Terms &amp; Conditions
-					li
-						a(href="#") Privacy Policy
-					li
-						a(href="#") Disclaimer
-				ul.footer-nav-social
-					li
-						a(href="#")
-							span.fab.fa-facebook-f
-					li
-						a(href="#")
-							span.fab.fa-instagram
-					li
-						a(href="#")
-							span.fab.fa-pinterest-p
-					li
-						a(href="#")
-							span.fab.fa-linkedin-in
-			div.footer-copyright
-				p BeefTracker &copy; Copyright 2018. All Rights Reserved.
-		+login-modal()
-		+register-modal()
-		block body_scripts
-		div#fb-root
-		script.
-			(function(d, s, id) {
-				var js, fjs = d.getElementsByTagName(s)[0];
-				if (d.getElementById(id)) return;
-				js = d.createElement(s); js.id = id;
-				js.src = 'https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.12&appId=344505175667327&autoLogAppEvents=1';
-				fjs.parentNode.insertBefore(js, fjs);
-			}(document, 'script', 'facebook-jssdk'));
-		script.
-			$(function() {
-				var open_search_btn = $('#open_search');
-				var beef_search_container = $('#beef-search-container');
-				open_search_btn.click(function() {
-					if (open_search_btn.hasClass('active')) {
-						open_search_btn.removeClass('active');
-						beef_search_container.slideUp();
-						setTimeout(function() {
-							beef_search_container.attr('hidden', 'true');
-						}, 500);
+        nav.navbar.navbar-expand-md
+            div.container
+                div.collapse.navbar-collapse#beeftrackerMainNav
+                    ul.navbar-nav.main-navbar-nav#nav-items
+                        li.nav-item#home
+                            a.nav-link(href="/") Home
+                        li.nav-item#about
+                            a.nav-link(href="/about") About Us
+                        li.nav-item#beef
+                            a.nav-link(href="/beef") Beef
+                        li.nav-item#actors
+                            a.nav-link(href="/actors") Actors
+                        li.nav-item#contact
+                            a.nav-link(href="/contact") Contact Us
+                        li.nav-item.d-block.d-md-none#add-beef
+                            a.nav-link(href="/add-beef") Add Beef
+                    ul.navbar-nav.social-navbar-nav.d-sm-non
+                        li.nav-item.login
+                            a.nav-link(href="#", data-toggle="modal", data-target="#login_modal")
+                                span.fas.fa-user
+                                span.text &nbsp; Login
+                        li.nav-item.search
+                            a.nav-link(href="#")#open_search
+                                span.fas.fa-search
+                                span.text &nbsp; Search
+        div.container
+            div.row#beef-search-container(hidden)
+                div.col-md-6.offset-md-3
+                    +inline-beef-search
+        block body
+        footer
+            div.footer-logo
+                img(src='/logo/logo_light@256.png', alt='Beeftracker')
+            div.footer-nav
+                ul.footer-nav-items
+                    li
+                        a(href="#") Terms &amp; Conditions
+                    li
+                        a(href="#") Privacy Policy
+                    li
+                        a(href="#") Disclaimer
+                ul.footer-nav-social
+                    li
+                        a(href="#")
+                            span.fab.fa-facebook-f
+                    li
+                        a(href="#")
+                            span.fab.fa-instagram
+                    li
+                        a(href="#")
+                            span.fab.fa-pinterest-p
+                    li
+                        a(href="#")
+                            span.fab.fa-linkedin-in
+            div.footer-copyright
+                p BeefTracker &copy; Copyright 2018. All Rights Reserved.
+        +login-modal()
+        +register-modal()
+        block body_scripts
+        div#fb-root
+        script.
+            (function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = 'https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.12&appId=344505175667327&autoLogAppEvents=1';
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        script.
+            $(function() {
+                var open_search_btn = $('#open_search');
+                var beef_search_container = $('#beef-search-container');
+                open_search_btn.click(function() {
+                    if (open_search_btn.hasClass('active')) {
+                        open_search_btn.removeClass('active');
+                        beef_search_container.slideUp();
+                        setTimeout(function() {
+                        beef_search_container.attr('hidden', 'true');
+                        }, 500);
 
-					} else {
-						beef_search_container.hide();
-						open_search_btn.addClass('active');
-						beef_search_container.removeAttr('hidden');
-						beef_search_container.slideDown();
-					}
+                    } else {
+                        beef_search_container.hide();
+                        open_search_btn.addClass('active');
+                        beef_search_container.removeAttr('hidden');
+                        beef_search_container.slideDown();
+                    }
 
-				});
-			});
-
+                });
+            });
+            
+            $(function(){
+                var top_level_path = window.location.href.split("//")[1].split("/")[1];
+                console.log(top_level_path);
+                var nav_items_list = document.getElementById("nav-items");
+                
+                for(var i = 0; i < nav_items_list.children.length; i++){
+                    
+                    var nav_item = nav_items_list.children[i];
+                    
+                    if((top_level_path == "" && nav_item.id == "home") || top_level_path == nav_item.id ){
+                        nav_item.className += " active";
+                    }
+                    
+                    console.log(nav_items_list.children[i]);
+                }
+            });
