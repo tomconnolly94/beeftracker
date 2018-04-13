@@ -1,2 +1,1 @@
-#file to specify python runtime to remote deployment engine
 python-3.6.4
