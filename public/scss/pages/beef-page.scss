@@ -168,29 +168,26 @@
                 border-radius: 3px;
             }
         }
-
     }
 
+    .beef-body-content-youtube-video, .beef-body-content-soundcloud  {
+        text-align: center;
+        padding-bottom: 50px;
 
-
- .beef-body-content-youtube-video, .beef-body-content-soundcloud  {
-    text-align: center;
-
-    iframe {
-        border:5px solid $brand-primary;
-        border-radius: 5px;
-        width: 100%;
+        iframe {
+            border:5px solid $brand-primary;
+            border-radius: 5px;
+            width: 100%;
+        }
+    } 
+    .beef-body-content-image {
+        margin: 0 auto;
+        padding-bottom: 60px;
     }
-}
-
 
     .beef-body {
         @extend .col-md-12;
         padding-top: 20px;
         padding-bottom: 20px;
-
-
-
-
     }
 }

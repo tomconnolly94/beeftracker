@@ -10,11 +10,12 @@ mixin medium-beef-thumbnail(data, data_type, image_resize_params)
     -   var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
     - }
 
-    a(href="/beef/#{data._id}/#{data.beef_chain_ids[0]}", class!=attributes.class, class!=attributes.beef_thumbnail_class)
+    a(href="/beef/#{data.beef_chain_ids[0]}/#{data._id}", class!=attributes.class, class!=attributes.beef_thumbnail_class)
         div.beef-thumbnail(class!=attributes.beef_thumbnail_class)
             div.info-overlay
                 div.header-panel
-                    span.category-name= data.categories[0].name
+                    - if(data.categories[0].name)
+                        span.category-name= data.categories[0].name
                 div.footer-panel
                     //- div.footer-panel-bg &nbsp;
                     div.beef-details

@@ -36,8 +36,7 @@ module.exports = {
         });
     },
     
-    findCommentsFromEvent: function(request, response, callback){
-        var event_id = request.params.event_id;
+    findCommentsFromEvent: function(event_id, callback){
         
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
@@ -59,6 +58,55 @@ module.exports = {
                         "likes": 1,
                         "event_id": 1,
                         "actor_id": 1,
+                        "user": {
+                            $let: {
+                                vars: {
+                                    first_user: {
+                                        "$arrayElemAt": [ "$user", 0 ]
+                                    }
+                                },
+                                in: {
+                                    first_name: "$$first_user.first_name",
+                                    last_name: "$$first_user.last_name",
+                                    img_title: "$$first_user.img_title"
+                                }
+                            }
+                        }
+                    }}
+                ]).toArray(function(err, docs) {
+                    //handle error
+                    if(err) { console.log(err);}
+                    else{
+                        callback( docs );
+                    }
+                });
+            }
+        });
+    },
+    
+    findCommentsFromBeefChain: function(beef_chain_id, callback){
+        
+        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
+            if(err){ console.log(err); }
+            else{
+                var beef_chain_id_object = BSON.ObjectID.createFromHexString(beef_chain_id);
+
+                //standard query to match an event and resolve aggressor and targets references
+                db.collection(db_ref.get_comments_table()).aggregate([
+                    { $match: { beef_chain_id: beef_chain_id_object } },
+                    { $lookup : {
+                        from: db_ref.get_user_details_table(),
+                        localField: "user",
+                        foreignField: "_id",
+                        as: "user" 
+                    }},
+                    { $project: {
+                        "text": 1,
+                        "date_added": 1,
+                        "likes": 1,
+                        "event_id": 1,
+                        "actor_id": 1,
+                        "beef_chain_id": 1,
                         "user": {
                             $let: {
                                 vars: {

@@ -27,9 +27,9 @@ append body
           div.row
               each thumbnail_data in grid_data
                     div.col-lg-4.col-md-6.col-xs-4
-                        +medium-beef-thumbnail(thumbnail_data.title, thumbnail_data.image_url, thumbnail_data.category, thumbnail_data._id, thumbnail_data.event_date)(class="beef-category-#{thumbnail_data.category.toLowerCase()}")
+                        +medium-beef-thumbnail(thumbnail_data, "events", "c_fill,g_face,h_215,w_350")(class="beef-category-#{thumbnail_data.categories[0].name.toLowerCase()}")
           div.row
               div.col-md-12
                   +pagination()
-      +category-browser-section(grid_data)
+      //+category-browser-section(grid_data)
 

@@ -8,8 +8,8 @@ var token_authentication = require("../tools/token_authentication.js"); //get to
 var globals = require("../config/globals.js")
 
 //endpoint controllers
-var event_controllers = require("../controllers/events_controller.js");
-
+var event_controller = require("../controllers/events_controller.js");
+var comment_controller = require("../controllers/comments_controller.js");
 
 if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if deployed on a heroku server
     /* Detect any http requests, if found, redirect to https, otherwise continue to other routes */
@@ -172,35 +172,35 @@ let template_data_actors = {
     ]
 };
 
-router.get("/", function(request, response) {     
-        
-    async.waterfall([
-        function(callback){
-            event_controllers.findEvents({ limit: 3, featured: true }, function(data){
-                console.log(data);
-                console.log(data[0].beef_chain_ids);
-                callback(null, { featured_data: data });
-            });
-        },
-        function(data_object, callback){
-            event_controllers.findEvents({ limit: 6, featured: false }, function(data){
-                data_object.grid_data = data;
-                callback(null, data_object);
-            });
-        },
-        function(data_object, callback){
-            event_controllers.findEvents({ limit: 12, featured: false, increasing_order: "date_added" }, function(data){
-                data_object.slider_data = data;
-                callback(null, data_object);
-            });
-        }
-    ], function (error, data_object) {
-        if(error){ console.log(error); }
-        response.render("pages/home.jade", { file_server_url_prefix: globals.file_server_url_prefix, featured_data: data_object.featured_data, grid_data: data_object.grid_data, slider_data: data_object.slider_data });
+router.get("/", function(request, response){
+    
+    var featured_data_promise = new Promise(function(resolve, reject){
+        event_controller.findEvents({ limit: 3, featured: true, decreasing_order: "date_added" }, function(data){
+            resolve(data);
+        });
     });
-}); //home page
+    var grid_data_promise = new Promise(function(resolve, reject){
+       event_controller.findEvents({ limit: 6, featured: false }, function(data){
+            resolve(data);
+        });
+    });
+    var slider_data_promise = new Promise(function(resolve, reject){
+         event_controller.findEvents({ limit: 12, featured: false, increasing_order: "date_added" }, function(data){
+            resolve(data);
+        });
+    });
 
-router.get("/about", function(request, response) { response.render("pages/about.jade"); }); // about_us page
+    Promise.all([ featured_data_promise, grid_data_promise, slider_data_promise ]).then(function(values) {
+        response.render("pages/home.jade", { file_server_url_prefix: globals.file_server_url_prefix, featured_data: values[0], grid_data: values[1], slider_data: values[2] });
+    }).catch(function(error){
+        console.log(error);
+    });
+    
+    
+}); //home page
+router.get("/about", function(request, response) {
+    response.render("pages/about.jade");
+}); // about_us page
 router.get("/actors", function(request, response) { 
     
     //access data from db
@@ -213,43 +213,62 @@ router.get("/actor/:tagId", function(request, response) {
     
     response.render("pages/dynamic_pages/actor.ejs"); 
 }); //actor page
-router.get("/add_beef", function(request, response) { response.render("pages/add_beef.jade"); }); // submit beefdata page page
+router.get("/add-beef", function(request, response) { response.render("pages/add_beef.jade"); }); // submit beefdata page page
 router.get("/beef", function(request, response) { 
     
+    var events_data_promise = new Promise(function(resolve, reject){
+       event_controller.findEvents({ decreasing_order: "date_added" }, function(data){
+            resolve(data);
+        });
+    });
     
-    response.render("pages/beefs.jade", template_data); 
+    events_data_promise.then(function(data){
+        response.render("pages/beefs.jade", { file_server_url_prefix: globals.file_server_url_prefix, grid_data: data }); 
+    });
+    
+    
 }); //beef page
-router.get("/beef/:event_id/:beef_chain_id", function(request, response) { 
+router.get("/beef/:beef_chain_id/:event_id", function(request, response) { 
 
     //extract data
     var event_id = request.params.event_id;    
-    var beef_chain_id = request.params.beef_chain_id;    
-       
-    async.waterfall([
-        function(callback){
-            //access data from db
-            event_controllers.findEvent(event_id, function(data){
-                callback(null, { event_data: data });
+    var beef_chain_id = request.params.beef_chain_id;
+        
+    var main_event_data_promise = new Promise(function(resolve, reject){
+        event_controller.findEvent(event_id, function(data){
+            //console.log(data);
+            let data_object = { event_data: data };
+            
+            event_controller.findEvents({ match_actor: data_object.event_data.aggressors[0]._id, limit: 5, decreasing_order: "date_added" }, function(data){
+                data_object.related_events = data;
+                resolve(data_object);
             });
-        },
-        function(data_object, callback){
-            event_controllers.findEvents({ match_beef_chain_id: beef_chain_id }, function(data){
-                data_object.beef_chain = data;
-                callback(null, data_object);
-            });
-        }
-    ], function (error, data_object) {
-        if(error){ console.log(error); }
-        response.render("pages/beef.jade", { file_server_url_prefix: globals.file_server_url_prefix, event_data: data_object });
+        });
     });
-    
+    var comment_data_promise = new Promise(function(resolve, reject){
+       comment_controller.findCommentsFromBeefChain(beef_chain_id, function(data){
+            resolve(data);
+        });
+    });
+
+    Promise.all([ main_event_data_promise, comment_data_promise ]).then(function(values) {
+        response.render("pages/beef.jade", { file_server_url_prefix: globals.file_server_url_prefix, event_data: values[0].event_data, comment_data: values[1], related_events: values[0].related_events });
+    }).catch(function(error){
+        console.log(error);
+    });
 }); //beef page
 router.get("/contact", function(request, response) { 
     
-    response.render("pages/contact.jade", { list_data: template_data.grid_data }); 
-
+    var trending_data_promise = new Promise(function(resolve, reject){
+        event_controller.findEvents({ limit: 3, featured: true }, function(data){
+            resolve(data);
+        });
+    });
+    
+    trending_data_promise.then(function(data){
+        response.render("pages/contact.jade", { file_server_url_prefix: globals.file_server_url_prefix, trending_data: data }); 
+    });
 }); // contact us page
-
 
 
 /*
