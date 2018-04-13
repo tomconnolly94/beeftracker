@@ -1,0 +1,2 @@
+#include python beeftracker_scraping requirements
+-r beeftracker_scraping/dependencies/requirements.txt
