@@ -180,10 +180,10 @@ module.exports = {
                         foreignField: "_id",
                         as: "beef_chain_ids" 
                     }},
-                    { $unwind : "$beef_chain_ids.events"},
+                    { $unwind : "$beef_chain_ids[0].events"},
                     { $lookup : { 
                         from: db_ref.get_current_event_table(),
-                        localField: "beef_chain_ids.events",
+                        localField: "beef_chain_ids[0].events[0]",
                         foreignField: "_id",
                         as: "beef_chains" 
                     }},
@@ -207,7 +207,28 @@ module.exports = {
                         callback({ failed: true, message: "Events not found." });
                     }
                     }
-                });            
+                });
+                /*
+                db.collec_a.aggregate([ 
+                    { $match: { 
+                        _id: ObjectId("5ac8e2577451f4f35c3ea8f2") 
+                    }},  
+                    { $lookup: { 
+                        from: "collec_b", 
+                        localField: "b_ref", 
+                        foreignField: "_id", 
+                        as: "b_ref" 
+                    }}, 
+                    { $unwind: "$b_ref" }, 
+                    { $lookup: { 
+                        from: "collec_a", 
+                        localField: "b_ref.a_ref", 
+                        foreignField: "_id", 
+                        as: "b_ref.a_ref" 
+                    } }, 
+                    { $unwind: "$b_ref.a_ref"}  
+                ]).pretty()
+                */
             }
         });
         //}

@@ -178,6 +178,7 @@ router.get("/", function(request, response) {
         function(callback){
             event_controllers.findEvents({ limit: 3, featured: true }, function(data){
                 console.log(data);
+                console.log(data[0].beef_chain_ids);
                 callback(null, { featured_data: data });
             });
         },
