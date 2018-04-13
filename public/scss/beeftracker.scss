@@ -1,0 +1,190 @@
+/*!
+ * Beeftracker (https://www.beeftracker.co.uk)
+ *
+ */
+
+//Vendor
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,50');
+//--Bootstrap
+
+// @import '../../bower_components/bootstrap/scss/bootstrap.scss';
+@import '../../bower_components/bootstrap/scss/bootstrap-reboot.scss';
+@import '../../bower_components/bootstrap/scss/bootstrap-grid.scss';
+@import '../../bower_components/bootstrap/scss/transitions.scss';
+@import '../../bower_components/bootstrap/scss/utilities.scss';
+@import '../../bower_components/bootstrap/scss/print.scss';
+@import '../../bower_components/bootstrap/scss/buttons.scss';
+@import '../../bower_components/bootstrap/scss/nav.scss';
+@import '../../bower_components/bootstrap/scss/navbar.scss';
+@import '../../bower_components/bootstrap/scss/forms.scss';
+@import '../../bower_components/bootstrap/scss/images.scss';
+@import '../../bower_components/bootstrap/scss/modal.scss';
+@import '../../bower_components/bootstrap/scss/close.scss';
+@import '../../bower_components/bootstrap/scss/input-group.scss';
+@import '../../bower_components/bootstrap/scss/list-group.scss';
+
+
+//-*****
+// Beeftracker imports
+//-*****
+@import './includes/variables.scss';
+@import './includes/nav.scss';
+@import './includes/footer.scss';
+@import './includes/section.scss';
+@import './includes/beef-thumbnail.scss';
+@import './includes/swiper.scss';
+@import './includes/vertical-list.scss';
+@import './includes/mini-vertical-list.scss';
+@import './includes/categories.scss';
+@import './includes/beefometer.scss';
+@import './includes/actor.scss';
+@import './includes/forms.scss';
+@import './includes/rounded-mini-thumbs.scss';
+@import './includes/modal.scss';
+@import './includes/smartwizard.override.scss';
+//@Components
+@import './components/trending-beefs-section.scss';
+@import './components/categories-browser.scss';
+@import './components/inline-beef-search.scss';
+@import './components/masonry-grid.scss';
+@import './components/gallery-manager.scss';
+@import './components/timeline.scss';
+@import './components/add-beef-cta.scss';
+@import './components/how-it-works.scss';
+@import './components/pagination.scss';
+@import './components/upload-gallery-item-modal.scss';
+@import './components/featured-beefs.scss';
+@import './components/add-actor-modal.scss';
+@import './components/comment-box.scss';
+//@Pages
+@import './pages/beef-page.scss';
+@import './pages/contact-page.scss';
+
+
+// Global overrides and styles
+
+body {
+    background-color: #ffffff;
+    color: $text-color;
+    font-family: 'Roboto', sans-serif;
+}
+
+a {
+	color: $brand-primary;
+	outline: 0;
+
+	&:hover {
+		text-decoration: none;
+		color: $brand-primary-shadow;
+	}
+
+	&:active {
+
+	}
+}
+
+h1, h2, h3, h4, h5 {
+    color: #000;
+}
+
+p {
+	color: $text-color;
+	font-size: 14px;
+}
+
+header {
+	padding:30px 0;
+	text-align:center;
+	@include media-breakpoint-down(sm) {
+		padding-bottom:0;
+		padding-top: 15px;
+		background-color: #000;
+		color: #fff;
+
+		.navbar-toggler-icon {
+			color: #fff;
+		}
+	}
+}
+
+
+
+.bt-content {
+	@extend .container;
+}
+
+.bt-content-full-width {
+	@extend .container-fluid;
+	 padding: 20px 0px 40px;
+
+	 section {
+	 	padding-top: 15px;
+	 }
+
+	 &.dark {
+	 	background-color: #000;
+
+	 	section {
+	 		.title {
+	 			h2 {
+	 				color: #fff;
+	 			}
+
+	 			.icon {
+	 				color: #fff;
+	 			}
+
+	 			border-bottom: 2px solid #fff;
+	 		}
+	 	}
+
+	 	.swiper-pagination .swiper-pagination-bullet {
+	 		background-color: #fff;
+	 	}
+	 }
+}
+
+
+a.btn {
+	text-decoration: none;
+}
+
+.btn {
+
+	text-transform:uppercase;
+
+	span.fas:first-child {
+		padding-right:5px;
+	}
+
+	&.btn-lg {
+		font-size: 16px;
+		padding: 0.6rem 1rem;
+	}
+
+	&.btn-sm, &.btn-md {
+		font-size: 14px;
+		padding: 0.6rem 1rem;
+	}
+
+
+	&.btn-primary {
+		color: #fff;
+		background-color: $brand-primary;
+		border:1px solid $brand-primary;
+		border-bottom:2px solid $brand-primary-shadow;
+	}
+
+	&.btn-primary:hover,&.btn-primary:active {
+		color: #fff;
+		background-color: $brand-primary-shadow !important;
+		border:1px solid $brand-primary-shadow;
+		border-bottom:2px solid $brand-primary-shadow;
+	}
+}
+
+#beef-search-container {
+	padding: 50px 0;
+}
+
+

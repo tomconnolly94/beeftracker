@@ -1,0 +1,193 @@
+.beef-content {
+    padding-top: 30px;
+
+    @include media-breakpoint-only(xs) {
+        padding-top: 0;
+    }
+}
+
+.beef-content-header {
+
+    @extend .row;
+    .beef-title {
+        @extend .col-md-12;
+        @extend .col-sm-12;
+        h2 {
+            color: #000;
+        }
+
+        .beefometer {
+            display: inline-block;
+            margin-left:10px;
+
+            @include media-breakpoint-only(xs) {
+            margin-left:0;
+            }
+        }
+    }
+
+    .beef-content-contribute {
+        @extend .col-md-6;
+        @extend .col-sm-6;
+        @extend .col-6;
+        text-align: right;
+        .btn {
+            // @extend .float-right;
+        }
+    }
+
+    .beef-content-category {
+        @extend .col-md-6;
+        @extend .col-sm-6;
+        @extend .col-6;
+    }
+
+    .category-name {
+        // border-radius: 4px;
+        padding: 2px 10px;
+        font-size: 0.8rem;
+    }
+}
+
+.beef-content-container {
+    @extend .row;
+    padding-top: 50px;
+
+    @include media-breakpoint-only(xs) {
+        padding-top: 10px;
+    }
+
+
+    .beef-summary {
+        @extend .col-lg-12;
+        @extend .col-md-12;
+        @extend .col-sm-12;
+
+
+        .related-beefs {
+            text-align: center;
+            padding-bottom:20px;
+        }
+
+        .beef-thumb {
+            width: 30%;
+            position: relative;
+            .beef-content-thumb-border {
+                @include media-breakpoint-down(sm) {
+                    display: none;
+                }
+
+                @media (max-width: 1199px) {
+                    height: 240px;
+                    width: 88%;
+                }
+
+
+                @media (max-width: 991px) {
+                    height:170px;
+                    width: 83%;
+                }
+
+                @media (max-width: 667px) {
+                   display: none;
+                }
+
+
+
+                position: absolute;
+                width: 90%;
+                height: 300px;
+                border: 5px solid #DF3E3E;
+                display: block;
+                top: -10px !important;
+                left: 20px;
+                z-index: -1;
+            }
+
+            img {
+                width: 100%;
+
+                padding-right: 30px;
+                @media (max-width: 667px) {
+                   padding-right: 10px;
+                }
+            }
+        }
+    }
+
+    @include media-breakpoint-down(sm) {
+        .beef-content-left-side {
+            .beef-content-thumb {
+                text-align: center;
+
+                .beef-content-thumb-border {
+                    position: absolute;
+                    width:60%;
+                    height:100%;
+                    border: 10px solid $brand-primary;
+                    display: block;
+
+                    top:-20px !important;
+                    left:120px;
+                    z-index: -1;
+                }
+                img {
+                    border-radius: 3px;
+                    width:200px;
+                }
+            }
+        }
+
+
+    }
+
+    .beef-content-left-side {
+        position: relative;
+        @extend .col-lg-3;
+        @extend .col-md-12;
+        @extend .col-sm-12;
+
+        .related-beefs {
+            padding: 10px 0;
+        }
+
+        .beef-content-thumb {
+            .beef-content-thumb-border {
+                position: absolute;
+                width:80%;
+                height:100%;
+                border: 10px solid $brand-primary;
+                display: block;
+
+                top:-20px;
+                left:70px;
+                z-index: -1;
+            }
+            img {
+                @extend .img-fluid;
+                border-radius: 3px;
+            }
+        }
+    }
+
+    .beef-body-content-youtube-video, .beef-body-content-soundcloud  {
+        text-align: center;
+        padding-bottom: 50px;
+
+        iframe {
+            border:5px solid $brand-primary;
+            border-radius: 5px;
+            width: 100%;
+        }
+    } 
+    .beef-body-content-image img{
+        margin: 0 auto;
+        padding-bottom: 60px;
+    }
+
+    .beef-body {
+        @extend .col-md-12;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+}

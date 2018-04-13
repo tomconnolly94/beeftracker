@@ -1,0 +1,25 @@
+.featured-beefs-section {
+    .primary-featured-beef {
+        @extend .col-md-8;
+        .beef-thumbnail {
+
+            &.x-large {
+                @include media-breakpoint-only(sm) {
+                    height:215px;
+                }
+                @include media-breakpoint-only(xs) {
+                    height:215px;
+                }
+            }
+
+        }
+    }
+
+    .secondary-featured-beefs {
+        @extend .col-md-4;
+
+        .secondary-featured-beef {
+            @extend .col-md-12;
+        }
+    }
+}

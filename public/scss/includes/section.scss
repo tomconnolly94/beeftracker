@@ -1,0 +1,113 @@
+section {
+    padding-top:30px;
+    .title {
+        border-bottom: 2px solid #000;
+        margin-left:0;
+        margin-right:0;
+
+
+        h2 {
+            margin-left:0;
+            padding-left:0;
+            color: #000;
+
+
+
+            text-transform:uppercase;
+            font-size:24px;
+            span {
+                color: $brand-primary;
+                &:before {
+                    //content: " ";
+                }
+                &:after {
+                    content: ".";
+                }
+            }
+        }
+
+        .icon {
+            text-align:right;
+            color:$brand-primary;
+            font-size:22px;
+        }
+    }
+    .content {
+        padding-top: 20px;
+
+        @include media-breakpoint-down(xs) {
+                padding:20px 10px;
+            }
+    }
+}
+
+
+.section-toolbar {
+    @extend .row;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .section-toolbar-menu {
+
+        @extend .col-md-12;
+
+        ul.list-sections {
+             display: inline-block;
+            list-style: none;
+            padding:0;
+            margin:0;
+            li {
+                display: inline-block;
+                padding-right: 10px;
+
+                &.active {
+                    a {
+                        font-weight: bold;
+                        border-bottom: 3px solid $brand-primary;
+                    }
+                }
+                a {
+                    color: $text-color;
+                    font-size: 18px;
+                    text-transform: uppercase;
+                    font-weight: 300;
+                    &:hover {
+                        text-decoration: none;
+
+                        border-bottom: 3px solid $brand-primary;
+                    }
+                }
+            }
+        }
+
+        ul.list-type {
+            @extend .float-right;
+            display: inline-block;
+            list-style: none;
+            padding:0;
+            margin:0;
+            li {
+                display: inline-block;
+                padding-right: 10px;
+
+                &.active {
+                    a {
+                        color: $brand-primary;
+                    }
+                }
+
+                &:last-child {
+                    padding-right: 0;
+                }
+
+                a {
+                    color: $brand-primary-shadow;
+
+
+                }
+
+
+            }
+        }
+    }
+}

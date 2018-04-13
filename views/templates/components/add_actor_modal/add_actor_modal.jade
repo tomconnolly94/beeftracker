@@ -1,0 +1,121 @@
+//- Add Actor Modal
+//- Bootstrap Modal mixin for adding an actor. Also uses SmartWizard for a step-by-step data entry.
+
+include ../../layouts/modal.jade
+
+
+mixin add-actor-modal-js()
+    script(src="component_controllers/add_actor_modal/add_actor_modal.js")
+
+mixin add-actor-modal()
+    +modal('Add Actor', '#', false)(id="add_actor_modal", large_modal=true, class="add-actor-modal")
+        form
+            #smartwizard
+              ul
+                li
+                  a(href='#step-1')
+                    | 1
+                    br
+                    small Actor Type
+                li
+                  a(href='#step-2')
+                    | 2
+                    br
+                    small Actor Description
+                li
+                  a(href='#step-3')
+                    | 3
+                    br
+                    small Additional Details
+              div
+                #step-1.actor-type-selector
+                        h4 Select Actor Type
+                        div.actor-type-row
+                            a.actor-type-item(href="#").selected
+                                div.title
+                                    i.fas.fa-user
+                                    h3 Person
+                            a.actor-type-item(href="#")
+                                div.title
+                                    i.fas.fa-music
+                                    h3 Artist
+                        div.actor-type-row
+                            a.actor-type-item(href="#")
+                                div.title
+                                    i.fas.fa-flag
+                                    h3 Country
+                            a.actor-type-item(href="#")
+                                div.title
+                                    i.fas.fa-briefcase
+                                    h3 Business
+                #step-2
+                  div.row
+                    div.col-md-4.photo_box
+                        img(src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1621707c924%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1621707c924%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E").img-thumbnail
+                        input(type="file", name="actor_photo")#actor_photo
+                        label(for="actor_photo").btn.btn-primary Upload Photo
+                    div.col-md-8
+                        div.row
+                            div.col-md-12
+                                div.row
+                                    div.form-group.col-md-6
+                                        label(for="actor_name") Name
+                                        input(type="text").form-control#actor_name
+                                    div.form-group.col-md-6
+                                        label(for="beef_date") Gender
+                                        select.form-control
+                                            option Male
+                                            option Female
+                                            option Other
+                            div.col-md-12
+                                div.row
+                                    div.form-group.col-md-6
+                                        label(for="actor_name") Date of Birth
+                                        input(type="date").form-control#actor_dob
+                                    div.form-group.col-md-6
+                                        label(for="beef_date") Gender
+                                        select.form-control
+                                            option Male
+                                            option Female
+                                            option Other
+                            div.col-md-12
+                                div.row
+                                    div.form-group.col-md-12
+                                        label(for="actor_bio") Bio
+                                        textarea.form-control#actor_bio
+                #step-3
+                    div.row
+                            div.col-md-12
+                                div.row
+                                    div.form-group.col-md-6
+                                        div.row
+                                            div.col-md-12
+                                                label(for="beef_date") Data sources/Links
+                                                .input-group.mb-3
+                                                  input.form-control(type='text', placeholder='', aria-label='', aria-describedby='basic-addon1')
+                                                  .input-group-append
+                                                    button.btn.btn-primary(type='button') Add
+                                            div.col-md-12
+                                                ul.data_sources_list
+                                                    li.list-group-item
+                                                        | http//www.wikipedia.com
+                                                        span.action
+                                                            a(href="#")
+                                                                i.fas.fa-trash
+                                                    li.list-group-item
+                                                        | http//www.facebook.com
+                                                        span.action
+                                                            a(href="#")
+                                                                i.fas.fa-trash
+
+                                    div.form-group.col-md-6
+                                        div.row
+                                            div.col-md-12
+                                                label Associated Actors
+                                            div.col-md-12
+                                                select.form-control.associated-actors-select
+                                                    option(image_src="http://cdn.edgecast.steamstatic.com/steamcommunity/public/images/avatars/64/64e8917b85a0f5e20565651119c60f3d8d363898_full.jpg") Obama
+                                                    option(image_src="https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_400x400.jpg") Trump
+
+
+

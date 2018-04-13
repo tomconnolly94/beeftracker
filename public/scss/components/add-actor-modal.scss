@@ -1,0 +1,118 @@
+.data_sources_list {
+    @extend .list-group;
+    @extend .list-group-flush;
+    padding:0;
+    margin:0;
+    background-color: #fdfdfd;
+    border: 1px solid $brand-primary;
+    border-radius: 5px;
+    .list-group-item {
+        background-color: #fdfdfd;
+
+        &:first-child {
+           border-top-right-radius: 5px;
+           border-top-left-radius: 5px;
+        }
+
+        &:last-child {
+           border-bottom-right-radius: 5px;
+           border-bottom-left-radius: 5px;
+        }
+
+
+        .action {
+            @extend .float-right;
+            color: red;
+        }
+    }
+}
+
+.add-actor-modal {
+
+    .photo_box {
+        text-align: center;
+        input[type="file"]  {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+
+        input[type="file"] + label {
+            // font-size: 1.25em;
+            // font-weight: 700;
+            // color: white;
+            // background-color: black;
+            display: inline-block;
+            margin-top: 20px;
+            // cursor: pointer;
+        }
+        input[type="file"] + label * {
+            pointer-events: none;
+        }
+
+        input[type="file"]:focus + label,
+        input[type="file"] + label:hover {
+            background-color: $brand-primary;
+        }
+    }
+    .actor-type-selector {
+        .actor-type-row {
+            @extend .row;
+
+            .actor-type-item {
+
+
+
+
+                @extend .col-md-3;
+                @extend .col-sm-12;
+
+                &:first-child {
+                    @extend .offset-md-2;
+                }
+
+                &:not(first-child) {
+                    @extend .offset-md-2;
+                }
+
+                height: 130px;
+                background-color: $brand-primary-shadow;
+                color: #fff;
+                border-radius: 5px;
+                text-align: center;
+                display: block;
+                width: 100%;
+                color: #fff;
+                position: relative;
+                margin: 20px 0;
+
+
+                div.title {
+                        transform: translateY(50%);
+                    h3 {
+                        color: #fff !important;
+                        z-index: 100;
+                    }
+
+                    .fas {
+                        font-size: 40px;
+                        opacity: 0.8;
+
+                    }
+                }
+
+
+                &:hover {
+
+                }
+
+                &.selected {
+                    background-color: $brand-primary;
+                }
+            }
+        }
+    }
+}

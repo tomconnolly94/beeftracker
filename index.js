@@ -9,7 +9,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-// ### Create all the modules that are needed to run this server ###
+// ### External Dependencies ###
 var express = require('express'); //server library
 var app = express();
 var bodyParser = require('body-parser'); //library to assist with parsing data to readable content
@@ -17,44 +17,17 @@ var methodOverride = require('method-override');
 var path = require('path');
 var sitemap_generator = require('sitemap');
 var mime = require('mime-types');
-var storage_ref = require("./server_files/storage_config.js");
 var multer = require('multer'); //library to assist with file storage
-var morgan = require("morgan");
-var token_authentication = require("./server_files/token_authentication.js"); //get token authentication object
+var morgan = require("morgan"); //library to provide more detailed logs
+var jade = require('pug');
+var compression = require('compression');
+var validation_controller = require("./server_files/validation/validation_controller");
+var validator = require('express-validator');
 
-// ## Storage method configuration ##
-console.log("Storage Method: " + storage_ref.get_upload_method());
-if(storage_ref.get_upload_method() == "cloudinary"){
-    var memoryStorage = multer.memoryStorage();
-    var memoryUpload = multer({
-        storage: memoryStorage,
-        limits: {fileSize: 500000, files: 1}
-    }).single('attachment');
-}
-else if(storage_ref.get_upload_method() == "local"){
-
-    var storage_event = multer.diskStorage({
-      destination: function (req, file, cb) {
-          console.log(file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-        cb(null, "public/assets/images/events/")
-      },
-      filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-      }
-    }); //multer config options
-
-    var storage_actor = multer.diskStorage({
-      destination: function (req, file, cb) {
-        cb(null, "public/assets/images/actors/")
-      },
-      filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-      }
-    }); //multer config options
-
-    var upload_event_img = multer({storage: storage_event}); //build upload handlers
-    var upload_actor_img = multer({storage: storage_actor}); //build upload handlers
-}
+//configure validator
+app.use(validator({
+    customValidators: validation_controller.get_all_custom_validation_functions()
+}));
 
 // ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({
@@ -74,8 +47,9 @@ sitemap = sitemap_generator.createSitemap ({
 
 // ### Configure node variables ###
 app.set('port', (process.env.PORT || 5000));
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views/templates');
+//app.set('view engine', 'ejs');
+app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride());
@@ -86,75 +60,60 @@ app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
     next();
 });
+app.use(compression());
 
-// ### Directory routes ###
-app.use('/actor_images', express.static(__dirname + '/public/assets/images/actors/')); //route to reference images
-app.use('/event_images', express.static(__dirname + '/public/assets/images/events/')); //route to reference images
-//app.use('/event_images', express.static(__dirname + 'http://res.cloudinary.com/hnwdllmgu/image/upload/v1500713883/')); //route to reference images
-app.use('/background_images', express.static(__dirname + '/public/assets/images/backgrounds/')); //route to reference images
-app.use('/logo', express.static(__dirname + '/public/assets/images/logo/')); //route to reference images
-app.use('/modules', express.static(__dirname + '/node_modules/')); //route to reference client libraries
-app.use('/require_scripts', express.static(__dirname + '/public/require_scripts/')); //route to reference libraries like angular
-app.use('/controllers', express.static(__dirname + '/public/controllers/')); //route to reference controller scripts
-app.use('/directives', express.static(__dirname + '/public/directives/')); //route to reference controller scripts
-app.use('/js', express.static(__dirname + '/public/javascript/')); //route to reference controller scripts
-app.use('/stylesheets', express.static(__dirname + '/public/stylesheets/')); //route to reference css scripts
-app.use('/bower_components', express.static(__dirname + '/bower_components/')); //route to reference css scripts
-app.use('/partials', express.static(__dirname + '/views/partials/')); //route to reference css scripts
+app.use('/logo', express.static(__dirname + '/public/assets/images/logo/v3')); //route to reference logo images
+app.use('/images', express.static(__dirname + '/public/assets/images/other_graphics')); //route to reference logo images
+app.use('/stylesheets', express.static(__dirname + '/public/css/')); //route to reference css scripts
+app.use('/webfonts', express.static(__dirname + '/public/fonts/')); //route to reference css scripts
+app.use('/js', express.static(__dirname + '/public/javascript/')); //route to reference javascript files
+app.use('/modules', express.static(__dirname + '/node_modules/')); //route to reference npm library files
+app.use('/bower_components', express.static(__dirname + '/bower_components/')); //route to reference bower library files
+app.use('/component_controllers', express.static(__dirname + '/views/templates/components/')); //route to reference client side controller scripts
 
-// ### Permanent page routes ###
-app.use('/', require('./server_files/page_routes'));
+// ### Page routes configuration file ###
+app.use('/', require('./server_files/routing/page_routing'));
+ 
+// ### Endpoint routes configuration ###
+app.use('/api', require('./server_files/routing/endpoint_routing'));
 
-// ### Data Models ###
-app.get('/get_event_categories/', require('./server_files/models/GET/get_event_categories.js').execute); //handle retrieval of possible event categories
-app.get('/get_splash_zone_data/', require('./server_files/models/GET/get_splash_zone_data.js').execute); //handle retrieval of splash zone data 
-app.get('/search_actors_by_id/:actor_id', require('./server_files/models/GET/search_actors_by_id.js').execute); //retrieve an actor based on the provided actor_id
-app.get('/search_actors_by_stage_name/:actor_name', require('./server_files/models/GET/search_actors_by_stage_name.js').execute); //retrieve an actor based on the provided stage_name
-app.get('/search_actors_by_all_names/:actor_name', require('./server_files/models/GET/search_actors_by_all_names.js').execute); //retrieve an actor based on the provided stage_name
-app.get('/search_all_actors/', require('./server_files/models/GET/search_all_actors.js').execute); //retrive all actors in the actors table
-app.get('/search_all_events/', require('./server_files/models/GET/search_all_events.js').execute); //retrieve all events in the events table
-app.get('/search_all_related_events_in_timeline_by_id/:event_id', require('./server_files/models/GET/search_all_related_events_in_timeline_by_id.js').execute); //complex, (almost recursive) algorithm to retrieve all events in an event chain based on a provided event_id
-app.get('/search_all/:search_term', require('./server_files/models/GET/search_all.js').execute); //search through event titles and actor stage_names based on a provided search term. (needs work 31/07/17)
-app.get('/search_events_by_event_aggressor/:actor_id', require('./server_files/models/GET/search_events_by_event_aggressor.js').execute); //retrieve all events which have aggressors matching the provided actor_id
-app.get('/search_events_by_id/:event_id', require('./server_files/models/GET/search_events_by_id.js').execute); //retrieve an event based on the provided event_id
-app.get('/search_popular_events/:num_of_events', require('./server_files/models/GET/search_popular_events.js').execute); //retrieve the provided number of events based on which have the most requests
-app.get('/search_recent_events/:num_of_events', require('./server_files/models/GET/search_recent_events.js').execute); //retrieve the provided number of events based on which have been added most recently
-app.get('/search_related_actors_by_id/:actor_id', require('./server_files/models/GET/search_related_actors_by_id.js').execute); //retrieve actors related to a provided actor
-app.get('/get_scraped_events_dump/', token_authentication.authenticate_token, require('./server_files/models/GET/admin/get_scraped_events_dump.js').get_events); //retrieve all scraped events, by the python beeftracker scraping module
-app.get('/get_scraped_events_dump_num/', token_authentication.authenticate_token, require('./server_files/models/GET/admin/get_scraped_events_dump.js').get_num_of_events); //retrieve all scraped events, by the python beeftracker scraping module
-app.get('/scrape_actor/:actor_name', token_authentication.authenticate_token, require('./server_files/models/GET/admin/scrape_and_return_actor_data.js').execute); //use the provided actor name to generate a data dump about that actor
-app.get('/get_broken_fields_stats/', token_authentication.authenticate_token, require('./server_files/models/GET/admin/get_broken_fields_data.js').execute); //use the provided actor name to generate a data dump about that actor
+// ### Rendered component routes configuration ###
+app.use('/templates', require('./server_files/routing/template_routing')); //routes send rendered HTML
 
-// ### DELETE endpoints ###
-app.delete('/discard_scraped_beef_event/', token_authentication.authenticate_token, require('./server_files/models/DELETE/admin/discard_scraped_beef_event.js').execute); //remove data about a scraped beef event by id
+// ### Component rendering function routes configuration ###
+app.use('/template_functions', require('./server_files/routing/template_function_routing')); //routes send javascript functions which render HTML on the client side
 
-// ### POST endpoints ###
-if(storage_ref.get_upload_method() == "cloudinary"){
-    app.post('/submit_beefdata/', memoryUpload, require('./server_files/models/POST/submit_beefdata.js').execute); //organise, verify and insert user provided beef data to database and save provided image file
-    app.post('/submit_actordata/', memoryUpload, require('./server_files/models/POST/submit_actordata.js').execute); //organise, verify and insert user provided actor data to database and save provided image file
-}
-else if(storage_ref.get_upload_method() == "local"){
-    app.post('/submit_beefdata/', upload_event_img.single('attachment'), require('./server_files/models/POST/submit_beefdata.js').execute); //organise, verify and insert user provided beef data to database and save provided image file
-    app.post('/submit_actordata/', upload_actor_img.single('attachment'), require('./server_files/models/POST/submit_actordata.js').execute); //organise, verify and insert user provided actor data to database and save provided image file
-}
+//################################################################################## TESTING AREA START
 
-app.post('/set_splash_zone_events/', token_authentication.authenticate_token, require('./server_files/models/POST/admin/site_config/set_splash_zone_events.js').execute); //set which events will be displayed in the splash zone on the home page
+/*app.post("/test_form_validation", memoryUpload, require("./server_files/validation/user_validation").validate, function(req, res){
+    res.status(200).send({ failed: false, message: "validation successful."})
+});*/
 
-// ## AUTH endpoints ###
-app.post('/auth_user/', require('./server_files/models/POST/authentication/authenticate_user.js').execute); //set which events will be displayed in the splash zone on the home page
-app.post('/deauth_user/', require('./server_files/models/POST/authentication/deauthenticate_user.js').execute); //set which events will be displayed in the splash zone on the home page
-app.post('/register_user/', require('./server_files/models/POST/authentication/register_admin_user.js').execute); //set which events will be displayed in the splash zone on the home page
+//################################################################################## TESTING AREA END
 
 // ### Search engine information/verification files ###
 app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/verification_files/google3fc5d5a06ad26a53.html'); }); //google verification
 app.get('/BingSiteAuth.xml', function(request, response) { response.sendFile(__dirname + '/views/verification_files/BingSiteAuth.xml'); });
 app.get('/robots.txt', function(request, response) { response.sendFile(__dirname + '/views/verification_files/robots.txt'); }); //robots config file
+app.get('/manifest.webmanifest', function(request, response) { 
+    response.send({
+        "name": "Beeftracker",
+        "short_name": "Beeftracker",
+        "lang": "en-GB",
+        "start_url": "https://www.beeftracker.co.uk/",
+        "display": "standalone",
+        "background_color": "#000000",
+        "theme_color": "#000000",
+        "description": "Beeftracker is a brand new web application designed to bring you the very latest in beef-related news! Visit the site: beeftracker.co.uk.",
+        "icons": [{
+            "src": "logo/beeftracker_new_logo_cropped_small.ico",
+            "sizes": "256x256"
+        }]
+    });
+}); //robots config file
 
-// ### Serve an error page on unrecognised url path ###
-app.get('/*', function(req, res, next) { res.render("pages/static_pages/error.ejs"); });
-
-//pages that are not in the current release design but may used later on
-//app.get('/', function(request, response) { response.render('pages/splash'); });
+// ### Serve an error page on unrecognised uri###
+//app.get('/*', function(req, res, next) { res.render("pages/static_pages/error.ejs"); });
 
 // ### Launch application ####
-app.listen(app.get('port'), function() { console.log('Node app is running on port', app.get('port')); });
+app.listen(app.get('port'), function(){ console.log('Node app is running on port', app.get('port'), 'in', process.env.NODE_ENV, 'mode'); });

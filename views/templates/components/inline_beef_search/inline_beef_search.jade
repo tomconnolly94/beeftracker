@@ -1,0 +1,15 @@
+include ../../layouts/mini_vertical_beef_list.jade
+
+mixin inline-beef-search()
+    form.inline-beef-search-form
+        div.row
+            div.col-md-9.col-8
+                input(type="text", placeholder="Search for keyword").form-control
+            div.col-md-3.col-4
+                button(type="submit").btn.btn-primary Search
+        small.form-text.trending.mb-2
+            | Trending Searches &nbsp;
+            a(href="#") Donald Trump
+
+
+

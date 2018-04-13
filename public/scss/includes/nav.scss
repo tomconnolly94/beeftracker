@@ -1,0 +1,123 @@
+#beeftrackerMainNav {
+    position: relative;
+}
+
+nav {
+    &.navbar {
+        padding: 0 0.3rem;
+    }
+
+    .nav-item:not(:last-child) .nav-link {
+        border-right: 1px solid white;
+    }
+
+
+
+    .navbar-toggler-icon {
+        font-size:20px !important;
+    }
+
+    background-color: #000000;
+
+    @include media-breakpoint-down(sm) {
+        .nav-link {
+            border:0 !important;
+        }
+    }
+
+    .nav-item {
+        padding: 0;
+        .nav-link {
+            padding: 0.8rem 1.2rem !important;
+            display:block;
+            color: #ffffff;
+            text-transform:uppercase;
+            font-weight:300;
+            font-size:14px !important;
+            @include media-breakpoint-only(sm) {
+                padding: 1.5rem 1.5rem !important;
+            }
+        }
+
+        &:hover {
+            background-color: #434343;
+        }
+
+        &.active {
+            background-color: #434343;
+            .nav-link {
+
+            }
+        }
+    }
+
+
+    .main-navbar-nav {
+        @extend .col-12;
+        float:none;
+        margin:0 auto;
+        display: block;
+        padding: 0;
+        @include media-breakpoint-up(sm) {
+            text-align: center;
+        }
+        // margin-left: 30px;
+        // padding-left: 80px;
+        @include media-breakpoint-only(sm) {
+                 padding-left: 30px !important;
+                 margin-left: 10px;
+            }
+        li {
+            @include media-breakpoint-up(sm) {
+                display: inline-block;
+                float:none;
+                text-decoration: center;
+            }
+
+        }
+
+          .nav-item:nth-last-child(2) .nav-link {
+        border:0;
+    }
+
+        .nav-item {
+
+
+
+
+
+            .nav-link {
+                // padding: 1rem 1rem !important;
+
+                &.active {
+                    background-color: #434343;
+                }
+            }
+        }
+    }
+
+    .social-navbar-nav {
+        @include media-breakpoint-up(sm) {
+            position: absolute;
+            margin:0;
+            right:0;
+        }
+        .nav-item {
+
+             @include media-breakpoint-up(sm) {
+                span.text {
+                    display: none;
+                }
+             }
+             &.search {
+                background-color: $brand-primary;
+
+            }
+
+            &.login {
+
+            }
+        }
+    }
+
+}

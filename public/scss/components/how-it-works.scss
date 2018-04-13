@@ -1,0 +1,27 @@
+.hiw-container {
+    .hiw-title {
+        @extend .col-md-4;
+        @extend .offset-md-4;
+        text-align: center;
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .hiw-list {
+        padding-top: 30px;
+
+        .hiw-list-item {
+            @extend .col-md-4;
+            margin-bottom: 15px;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+
+}

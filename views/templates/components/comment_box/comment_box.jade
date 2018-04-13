@@ -1,0 +1,50 @@
+mixin comment-box-item(data)
+    - //insert image resizing into the image URL
+    - var split_server_url_prefix = file_server_url_prefix.split("/");
+    - split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, "c_fill,g_face,h_150,w_150");
+    - var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
+
+    - var day = data.date_added.getDate();
+    - var monthIndex = data.date_added.getMonth();
+    - var year = data.date_added.getFullYear();
+    - var formatted_date =  day + '/' + monthIndex + '/' + year;
+    - var formatted_time = data.date_added.getHours() + " " + data.date_added.getMinutes()
+
+     div.comment-box-item
+        div.col-md-1.d-none.d-md-block.d-lg-block.d-xl-block
+            //img(src="http://www.girardatlarge.com/wp-content/uploads/2013/05/gravatar-60-grey.jpg").img-fluid
+            img(src=server_url_prefix_with_image_formatting + "/user_profiles/" + data.user.img_title).img-fluid
+        div.col-md-11
+            div.row
+                div.col-md-12
+                    strong.author #{data.user.first_name} #{data.user.last_name}
+                    small.date #{formatted_date} #{formatted_time}
+                div.col-md-12
+                    p #{data.text}
+                      
+mixin comment-box(comments)
+    div.row.comment-box
+        div.col-md-12
+            div.row
+                div.col-md-12
+                    p
+                        | You must be logged in to comment.&nbsp;
+                        a(href="#", data-toggle="modal", data-target="#login_modal") Login
+            div.row.new-comment
+                div.col-md-1.d-none.d-md-block.d-lg-block.d-xl-block
+                    img(src="http://www.girardatlarge.com/wp-content/uploads/2013/05/gravatar-60-grey.jpg").img-fluid
+                div.col-md-11
+                    div.row
+                        div.col-md-12
+                            form
+                                div.col-md-12
+                                    textarea.form-control
+                                div.col-md-12
+                                    button.btn.btn-primary.float-right(type="submit") Submit
+            each comment in comments
+                +comment-box-item(comment)
+
+mixin comment-box-section(data)
+    //+section('BEEF', 'COMMENTS', 'fa-comments')
+    +section('D', 'ISCUSSION', 'fa-comments')
+        +comment-box(data)

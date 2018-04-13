@@ -1,0 +1,79 @@
+extends ../layouts/layout.jade
+include ../components/trending_beef/trending_beef.jade
+include ../components/timeline/timeline.jade
+include ../components/related_actors/related_actors.jade
+include ../layouts/masonry_gallery.jade
+
+append body_scripts
+    +masonry-gallery-script()
+    +timeline-section-js()
+
+append body
+    div.bt-content
+        div.beef-content.beef-category-music
+            div.beef-content-header
+                div.beef-title
+                    h2
+                        | Richard Kyley Cowie
+                        span.beefometer.medium.four-beefs
+                div.beef-content-category
+                    span.category-name Music
+                div.beef-content-contribute
+                    a.btn.btn-primary(href="#") Contribute
+            div.beef-content-container
+                    div.col-md-12.beef-summary
+                        div.beef-thumb
+                            img(src="https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_400x400.jpg", alt="Trump attacking Obama again").float-left
+                            div.beef-content-thumb-border
+                        ul.actor-attributes
+                            li.actor-attribute
+                                strong.attribute-name Nicknames
+                                span Nickname 1, Nickname 2
+                            li.actor-attribute
+                                strong.attribute-name Nicknames
+                                span Nickname 1, Nickname 2
+                            li.actor-attribute
+                                strong.attribute-name Nicknames
+                                span Nickname 1, Nickname 2
+                            li.actor-attribute
+                                strong.attribute-name Nicknames
+                                span Nickname 1, Nickname 2
+                        p.
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+                        +related-actors()
+                        p.
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        p.
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        p.
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        div.row
+            +timeline-section()
+        +section('EXPLORE', 'GALLERY', '')
+            +masonry-gallery-section()
+
+
+
+
+

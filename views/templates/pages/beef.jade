@@ -1,0 +1,120 @@
+extends ../layouts/layout.jade
+include ../components/trending_beef/trending_beef.jade
+include ../components/timeline/timeline.jade
+include ../components/related_beef/related_beef.jade
+include ../components/comment_box/comment_box.jade
+include ../layouts/section.jade
+include ../layouts/masonry_gallery.jade
+
+append scripts
+    script(src="/bower_components/shufflejs/dist/shuffle.js")
+    script(src="/bower_components/fancybox/dist/jquery.fancybox.js")
+    script(src="/bower_components/select2/dist/js/select2.full.js")
+    script(src="/bower_components/hammerjs/hammer.js")
+
+append body_scripts
+    +masonry-gallery-script()
+    +timeline-section-js()
+    script.
+        //Associated Actors
+        function formatState (state) {
+              if (!state.id || state.element.getAttribute('disabled')) {
+                return state.text;
+              }
+              var $state = $(
+                '<span><img style="width: 48px;" src="'+state.element.getAttribute('image_src') + '" class="img-flag" /> ' + state.text + '</span>'
+              );
+              return $state;
+            };
+
+
+            //Also appears in selector
+            var aaisEl = $(".also-appears-in-select");
+            aaisEl.select2({
+              templateResult: formatState,
+              theme: 'classic',
+                width: "100%",
+                minimumResultsForSearch: -1 //Disable search
+            });
+
+            aaisEl.on('select2:select', function (e) {
+              var actor_id = e.params.data.id;
+              alert("Selected "+actor_id);
+            });
+
+append body
+
+    - //insert image resizing into the image URL
+    - var split_server_url_prefix = file_server_url_prefix.split("/");
+    - split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, "c_fill,g_face,h_150,w_150");
+    - var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
+    
+    - var main_graphic = {};
+    
+    - for(var i = 0; i < event_data.gallery_items.length; i++){
+        - if(event_data.gallery_items[i].main_graphic){
+            - main_graphic = event_data.gallery_items[i];
+        - }
+    - }
+    
+    div.bt-content
+        div.row.versus-panel
+            div.col-5.beefer
+                div
+                    h4 #{event_data.aggressors[0].name}
+                    a(href="/actor/#event_data.aggressors[0]._id")
+                        img(src=server_url_prefix_with_image_formatting + "/actors/" + event_data.aggressors[0].img_title_fullsize).actor-avatar
+
+            div.col-2.versus
+                h4 VS.
+            div.col-5.beefee
+                div
+                    h4 #{event_data.targets[0].name}
+                    a(href="/actor/#event_data.targets[0]._id")
+                        img(src=server_url_prefix_with_image_formatting + "/actors/" + event_data.targets[0].img_title_fullsize).actor-avatar
+        div.row(style="text-align:center")
+            div.col-md-4.offset-md-4
+                select.form-control.also-appears-in-select
+                    option(selected="selected", disabled="disabled") Also Appears In
+                    each aggressor in event_data.aggressors
+                        each target in event_data.targets
+                            //if aggressor != event_data.aggressors[0] && target != event_data.targets[0]
+                            option(image_src=server_url_prefix + "/actors/" + event_data.img_title_fullsize, value="obama_vs_trump") #{aggressor.name} v. #{target.name}
+        div.row
+            +timeline-section(event_data)
+
+        div.beef-content(class="beef-category-#{event_data.categories[0].name.toLowerCase()}")
+            div.beef-content-header
+                div.beef-title
+                    h2
+                        | #{event_data.title}
+                        span.beefometer.medium.four-beefs
+                div.beef-content-category
+                    span.category-name #{event_data.categories[0].name}
+                div.beef-content-contribute
+                    a.btn.btn-primary(href="#") Contribute
+            div.beef-content-container
+                    div.col-md-12.beef-summary
+                        - if(main_graphic.media_type == "soundcloud_embed")
+                            div.beef-body-content-soundcloud
+                                iframe(height="300", scrolling="no", frameborder="no", allow="autoplay", src=main_graphic.link)
+                        - else if(main_graphic.media_type == "youtube_embed")
+                            div.beef-body-content-youtube-video
+                                iframe(height="315", scrolling="no", frameborder="no", src=main_graphic.link, allow="autoplay; encrypted-media")
+                        - else if(main_graphic.media_type == "image")
+                            div.beef-body-content-image.row
+                                img(src=file_server_url_prefix + "/events/" + event_data.img_title_fullsize).float-left
+
+                        //div.beef-thumb
+                            img(src=server_url_prefix_with_image_formatting + "/events/" + event_data.img_title_fullsize).float-left
+                            div.beef-content-thumb-border 
+                        p.
+                            #{event_data.description}
+
+                        +related-beefs(related_events, "events", "c_fill,g_face,h_120,w_120")
+                        
+            +section('EXPLORE', 'GALLERY', '')
+                +masonry-gallery-section(event_data.gallery_items, "events")
+            +comment-box-section(comment_data)
+
+

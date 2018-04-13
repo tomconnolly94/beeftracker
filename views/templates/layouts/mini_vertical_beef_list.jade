@@ -1,0 +1,20 @@
+mixin mini-vertical-beef(data)
+    div.mini-vertical-list(class!=attributes.class)
+        div.col-md-12
+            each item in data
+                div.vertical-list-item.beef-category-music(class=item == data[2] ? "hidden_on_lg" : "")
+                    div.vertical-list-item-thumbnail
+                        a(href="/beef/#{item._id}") 
+                            img(src=item.image_url)
+                    div.vertical-list-item-details
+                        h3
+                            a(href="/#{item.type}/#{item._id}") #{item.title}
+                        ul.beef-info
+                                li #{item.event_date}
+                                li
+                                    span.fas.fa-comments &nbsp;&nbsp;
+                                    //| #{item.comments.length}
+                                li
+                                    span.beefometer.small.two-beefs
+                        p.
+                            #{item.description.slice(0, 90).trim()}...

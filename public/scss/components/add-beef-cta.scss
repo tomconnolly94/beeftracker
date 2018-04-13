@@ -1,0 +1,33 @@
+.add-beef-cta-section {
+    padding: 30px;
+}
+
+.add-beef-cta {
+    background: url(/images/got-beef.jpg) no-repeat;
+    height:300px;
+    padding: 20px;
+    .add-beef-content {
+
+        border: 4px solid #fff;
+
+        height: 100%;
+
+
+
+        div {
+           position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+             text-align: center;
+            h2 {
+                color: #fff;
+                text-align: center;
+            }
+
+            .btn {
+                margin-top: 20px;
+            }
+        }
+    }
+
+}

@@ -1,0 +1,221 @@
+.js-grid {
+  @include media-breakpoint-down(sm) {
+  margin-left: -13%; margin-right: -12%;
+  }
+}
+
+.fancybox-slide {
+  @include media-breakpoint-down(sm) {
+    height:auto;
+
+    twitterwidget {
+          width: 300px !important;
+    }
+  }
+}
+
+/* Bootstrap-style columns */
+.column {
+  position: relative;
+  float: left;
+  min-height: 1px;
+  width: 25%;
+  @include media-breakpoint-only(md) {
+    width: 50%;
+  }
+  @include media-breakpoint-down(sm) {
+    width: 100%;
+  }
+  padding-left: 4px;
+  padding-right: 4px;
+
+  /* Space between tiles */
+  margin-top: 8px;
+}
+
+.col-span {
+  width: 50%;
+   @include media-breakpoint-down(sm) {
+    width: 100%;
+  }
+}
+
+.my-sizer-element {
+  width: 8.33333%;
+}
+
+/* default styles so shuffle doesn't have to set them (it will if they're missing) */
+.my-shuffle {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ensure images take up the same space when they load */
+/* https://vestride.github.io/Shuffle/images */
+.aspect {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+  overflow: hidden;
+}
+
+.aspect__inner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.aspect--16x9 {
+  padding-bottom: 64.25%;
+}
+
+.aspect--9x80 {
+  padding-bottom: calc(115.5% + 8px);
+}
+
+.aspect--32x9 {
+  padding-bottom: calc(32.125% - 3px);
+}
+
+figure.masonry-item {
+
+  img {
+    display: block;
+    width: 100%;
+
+    max-width: none;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &.image-item {
+
+  }
+
+
+  &.video-item, &.youtube_embed-item  {
+
+
+    .play-button {
+      position: absolute;
+      color: #fff;
+      font-size: 35px;
+      top: 40%;
+      z-index: 1000;
+      /* border: 2px solid #000; */
+      background-color: $brand-primary;
+      padding: 10px;
+      left: 40%;
+      border-radius: 10px;
+    }
+
+}
+
+&.tweet-item  {
+  background-color: #0084b4;
+  text-align: center;
+  overflow: hidden;
+  .fa-twitter {
+    padding:20px 10px 10px 10px;
+    color: #fff;
+    font-size: 20px;
+  }
+
+  p {
+    color: #fff;
+     padding: 0 10px;
+  }
+  }
+
+&.soundcloud-item  {
+
+
+    .play-button {
+      position: absolute;
+      color: #fff;
+      font-size: 35px;
+      top: 40%;
+      z-index: 1000;
+      /* border: 2px solid #000; */
+      background-color: #FF2C00;
+      padding: 10px;
+      left: 40%;
+      border-radius: 10px;
+    }
+
+}
+
+}
+
+
+// /* default styles so shuffle doesn't have to set them (it will if they're missing) */
+// .my-shuffle {
+//   position: relative;
+//   overflow: hidden;
+// }
+
+// /* Make vertical gutters the same as the horizontal ones */
+// .image-item {
+//   margin-bottom: 30px;
+// }
+
+// /* Ensure images take up the same space when they load */
+// /* https://vestride.github.io/Shuffle/images */
+// .aspect {
+//   position: relative;
+//   width: 100%;
+//   height: 0;
+//   padding-bottom: 100%;
+//   overflow: hidden;
+// }
+
+// .aspect__inner {
+//   position: absolute;
+//   top: 0;
+//   right: 0;
+//   bottom: 0;
+//   left: 0;
+// }
+
+// .aspect--16x9 {
+
+//   padding-bottom: 56.25%;
+
+// }
+
+// .aspect--9x80 {
+//   padding-bottom: calc(112.5% + 30px);
+// }
+
+// .aspect--32x9 {
+//   padding-bottom: calc(28.125% - 8px);
+// }
+
+// .image-item img {
+//   display: block;
+//   width: 100%;
+//   max-width: none;
+//   height: 100%;
+//   object-fit: cover;
+// }
+
+// .video-item  {
+
+
+//   .play-button {
+//     position: absolute;
+//     color: #fff;
+//     font-size: 35px;
+//     top: 30%;
+//     z-index: 1000;
+//     /* border: 2px solid #000; */
+//     background-color: $brand-primary;
+//     padding: 10px;
+//     left: 45%;
+//     border-radius: 10px;
+//   }
+
+// }

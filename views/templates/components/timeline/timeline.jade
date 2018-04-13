@@ -1,0 +1,23 @@
+mixin timeline-section-js()
+    script(src="/component_controllers/timeline/timeline.js")
+mixin timeline-section(data)
+    +section('EXPLORE', 'TIMELINE', 'fa-clock')
+        section.timeline-container
+          .arrows
+                button.arrow.arrow__prev
+                  i.fas.fa-chevron-left
+                button.arrow.arrow__next
+                  i.fas.fa-chevron-right
+          div.timeline
+          
+            ol
+                each thumbnail_data in data.beef_chain_ids.events
+                    - if(thumbnail_data.title == data.title){
+                        li.active
+                            +medium-beef-thumbnail(thumbnail_data, "events", "c_fill,g_face,h_262,w_315")(class="beef-category-default")
+                    - }
+                    - else{
+                        li
+                            +medium-beef-thumbnail(thumbnail_data, "events", "c_fill,g_face,h_185,w_270")(class="beef-category-default")
+                    - }
+                li

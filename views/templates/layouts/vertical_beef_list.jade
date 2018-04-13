@@ -1,0 +1,29 @@
+mixin vertical-beefs(data, data_type, image_resize_params)
+
+    - if(image_resize_params){
+    -   var split_server_url_prefix = file_server_url_prefix.split("/");
+    -   split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, image_resize_params);
+    -   var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
+    - }
+
+    div.vertical-list(class!=attributes.class)
+        div.col-md-12
+            each item in data
+                div.vertical-list-item.beef-category-music
+                    div.vertical-list-item-thumbnail
+                        div.header-panel
+                            span.category-name Music
+                        a(href="/beef/#{item.beef_chain_ids[0]}/#{item._id}")
+                            img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + item.img_title_fullsize)
+                    div.vertical-list-item-details
+                        h3
+                            a(href="/#{item.type}/#{item._id}") #{item.title}
+                        ul.beef-info
+                                li #{item.event_date}
+                                li
+                                    span.fas.fa-comments &nbsp;&nbsp;
+                                    //| #{item.comments.length}
+                                li
+                                    span.beefometer.small.two-beefs
+                        p.
+                            #{item.description.slice(0, 200).trim()}...

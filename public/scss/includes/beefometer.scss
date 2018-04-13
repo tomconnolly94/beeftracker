@@ -1,0 +1,61 @@
+.beefometer {
+
+    &.small {
+        background: url(../images/beefometers@small.png);
+        height: 14px;
+        display: block;
+        width: 64px;
+        background-repeat: no-repeat;
+        &.one-beefs {
+            background-position: 0 0;
+        }
+
+        &.two-beefs {
+            background-position: 0 -14px;
+        }
+
+        &.three-beefs {
+            background-position: 0 -29px;
+        }
+
+        &.four-beefs {
+            background-position: 0 -43px;
+        }
+
+        &.five-beefs {
+            background-position: 0 -58px;
+        }
+    }
+
+    &.medium {
+        background: url(../images/beefometers@medium.png);
+        height: 23px;
+        display: block;
+        width: 102px;
+        background-repeat: no-repeat;
+        &.one-beefs {
+            background-position: 0 0;
+        }
+
+        &.two-beefs {
+            background-position: 0 -23px;
+        }
+
+        &.three-beefs {
+            background-position: 0 -46px;
+        }
+
+        &.four-beefs {
+            background-position: 0 -69px;
+        }
+
+        &.five-beefs {
+            background-position: 0 -92px;
+        }
+    }
+
+    &.inline {
+        display: inline-block;
+    }
+
+}
