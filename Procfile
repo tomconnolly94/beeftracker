@@ -1,2 +1,2 @@
-pip install -r requirements
+pip install -r beeftracker_scraping/requirements
 web: node index.js
