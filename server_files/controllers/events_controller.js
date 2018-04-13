@@ -181,7 +181,7 @@ module.exports = {
                 }
                 aggregate_array.push({ $limit: limit_query_content });
                 
-                console.log(match_query_content);
+                console.log(aggregate_array);
                 
                 db.collection(db_ref.get_current_event_table()).aggregate(aggregate_array).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }

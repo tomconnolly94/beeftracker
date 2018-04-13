@@ -15,6 +15,7 @@ html(lang="en")
         link(href='/stylesheets/beeftracker.css', rel='stylesheet')
         script(src="/modules/jquery/dist/jquery.min.js")
         script(src="/bower_components/bootstrap/dist/js/bootstrap.bundle.js")
+        script(src="/bower_components/hammerjs/hammer.js")
         //script(src="/js/vendor.min.js")
         block scripts
     body
@@ -128,7 +129,6 @@ html(lang="en")
             
             $(function(){
                 var top_level_path = window.location.href.split("//")[1].split("/")[1];
-                console.log(top_level_path);
                 var nav_items_list = document.getElementById("nav-items");
                 
                 for(var i = 0; i < nav_items_list.children.length; i++){
@@ -138,7 +138,5 @@ html(lang="en")
                     if((top_level_path == "" && nav_item.id == "home") || top_level_path == nav_item.id ){
                         nav_item.className += " active";
                     }
-                    
-                    console.log(nav_items_list.children[i]);
                 }
             });

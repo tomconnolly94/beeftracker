@@ -12,7 +12,8 @@ var gulp        = require('gulp'),
 
 let compiled_css_directory = "public/css";
 let scss_directory = "public/scss/*.scss";
-let compiled_fonts_directory = "public/fonts";
+let compiled_webfonts_directory = "public/fonts";
+let compiled_font_directory = "public/css/font";
 let js_out_directory = "public/javascript/"
 
 
@@ -27,10 +28,11 @@ gulp.task('css', function() {
 
 gulp.task('css_fonts', function() {
   return gulp.src(['node_modules/summernote/dist/font/summernote.ttf', 'node_modules/summernote/dist/font/summernote.woff'])
-    .pipe( gulp.dest(compiled_fonts_directory))
+    .pipe( gulp.dest(compiled_font_directory))
     .pipe( connect.reload() );
 
 });
+/*
 
 gulp.task('js', function() {
   return gulp.src('src/scripts/*.js')
@@ -39,6 +41,7 @@ gulp.task('js', function() {
     .pipe( gulp.dest(js_out_directory))
     .pipe( connect.reload());
 });
+*/
 
 /*
 gulp.task('templates', function() {
@@ -60,9 +63,9 @@ gulp.task('templates', function() {
 
 gulp.task('icons', function() {
     return gulp.src('./bower_components/components-font-awesome/webfonts/**.*')
-        .pipe(gulp.dest(compiled_fonts_directory));
+        .pipe(gulp.dest(compiled_webfonts_directory));
 });
-
+/*
 gulp.task('vendor_js', function() {
  gulp.src([
     './bower_components/jquery/dist/jquery.js'
@@ -98,7 +101,7 @@ gulp.task('vendor_js', function() {
     .pipe( concat('vendor.min.js'))
     .pipe( gulp.dest('build/scripts/'))
     .pipe( connect.reload());
-});
+});*/
 /*
 gulp.task('server', function() {
   connect.server({
@@ -127,5 +130,5 @@ gulp.task('html', function () {
 
 // Default Task
 //gulp.task('build', ['js', 'vendor_js', 'css', 'css_fonts', 'images', 'templates', 'icons']);
-gulp.task('build', ['js', 'vendor_js', 'css', 'css_fonts', 'icons']);
+gulp.task('build', ['css', 'css_fonts', 'icons']);
 //gulp.task('default', ['js', 'vendor_js', 'css', 'css_fonts', 'images', 'templates', 'icons', 'server','watch']);
