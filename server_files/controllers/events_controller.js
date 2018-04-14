@@ -182,13 +182,13 @@ module.exports = {
                         foreignField: "_id", 
                         as: "beef_chain_ids"  
                     }}, 
-                    { $unwind: "$beef_chain_ids"}, 
+                    /*{ $unwind: "$beef_chain_ids"}, 
                     { $lookup: { 
                         from: "event_data_v4", 
                         localField: "beef_chain_ids.events", 
                         foreignField: "_id", 
                         as: "beef_chain_ids.events"
-                    }},
+                    }},*/
                     { $unwind: "$beef_chain_ids"}, 
                     { $group: {
                         _id: "$_id", 
