@@ -11,7 +11,7 @@ mixin timeline-section(data)
           div.timeline
           
             ol
-                each thumbnail_data in data.beef_chain_ids.events
+                each thumbnail_data in data.beef_chain_ids[0].events
                     - if(thumbnail_data.title == data.title){
                         li.active
                             +medium-beef-thumbnail(thumbnail_data, "events", "c_fill,g_face,h_262,w_315")(class="beef-category-default")

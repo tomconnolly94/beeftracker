@@ -23,108 +23,6 @@ if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if 
     });
 }
 
-
-let template_data = {
-    grid_data: [
-        {
-            title: "Trump calls Obama an Idiot",
-            image_url: "https://cdn.cnn.com/cnnnext/dam/assets/180217093516-03-donald-trump-0216-exlarge-169.jpg",
-            category: "Politics",
-            _id: "5a3eac03a9106c0004935803",
-            event_date: "30/30/30",
-            description: "Click the button to display the extracted part of the string. Click the button to display the extracted part of the string. Click the button to display the extracted part of the string.",
-            comments: [
-                {
-                    user_id: "5a3eac03a9106c0004935803",
-                    text: "comment 1"
-                },
-                {
-                    user_id: "5a3eac03a9106c0004935803",
-                    text: "comment 1"
-                },
-                {
-                    user_id: "5a3eac03a9106c0004935803",
-                    text: "comment 1"
-                }
-            ]
-        },
-        {
-            title: "IPhone 7 vs. Galaxy S8",
-            image_url: "http://ksassets.timeincuk.net/wp/uploads/sites/54/2014/12/iphone-7-vs-galaxy-s8-1.jpg",
-            category: "Tech",
-            _id: "5a3eac03a9106c0004935803",
-            event_date: "30/30/30",
-            description: "Click the button to display the extracted part of the string. Click the button to display the extracted part of the string. Click the button to display the extracted part of the string.",
-            comments: [
-                {
-                    user_id: "5a3eac03a9106c0004935803",
-                    text: "comment 1"
-                },
-                {
-                    user_id: "5a3eac03a9106c0004935803",
-                    text: "comment 1"
-                }
-            ]
-        },
-        {
-            title: "Wiley at it again with Dizzee",
-            image_url: "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg",
-            category: "Music",
-            _id: "5a3eac03a9106c0004935803",
-            event_date: "30/30/30",
-            description: "Click the button to display the extracted part of the string. Click the button to display the extracted part of the string. Click the button to display the extracted part of the string.",
-            comments: [
-                {
-                    user_id: "5a3eac03a9106c0004935803",
-                    text: "comment 1"
-                }
-            ]
-        },
-        {
-            title: "Eminem dissing Trump",
-            image_url: "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg",
-            category: "Music",
-            _id: "5a3eac03a9106c0004935803",
-            event_date: "30/30/30",
-            description: "Click the button to display the extracted part of the string. Click the button to display the extracted part of the string. Click the button to display the extracted part of the string.",
-            comments: [
-                {
-                    user_id: "5a3eac03a9106c0004935803",
-                    text: "comment 1"
-                }
-            ]
-        },
-        {
-            title: "Apple or Microsoft",
-            image_url: "https://i0.wp.com/www.mac-history.net/wp-content/uploads/2011/01/microsoft-vs-apple.jpg?fit=599%2C311",
-            category: "Tech",
-            _id: "5a3eac03a9106c0004935803",
-            event_date: "30/30/30",
-            description: "Click the button to display the extracted part of the string. Click the button to display the extracted part of the string. Click the button to display the extracted part of the string.",
-            comments: [
-                {
-                    user_id: "5a3eac03a9106c0004935803",
-                    text: "comment 1"
-                }
-            ]
-        },
-        {
-            title: "Man U vs Stoke City",
-            image_url: "https://metrouk2.files.wordpress.com/2016/09/ac_manuntdvsstoke_comp.jpg?w=748&h=427&crop=1",
-            category: "Sports",
-            _id: "5a3eac03a9106c0004935803",
-            event_date: "30/30/30",
-            description: "Click the button to display the extracted part of the string. Click the button to display the extracted part of the string. Click the button to display the extracted part of the string.",
-            comments: [
-                {
-                    user_id: "5a3eac03a9106c0004935803",
-                    text: "comment 1"
-                }
-            ]
-        },
-    ]
-};
-
 let template_data_actors = {
     grid_data: [
         {
@@ -181,7 +79,7 @@ router.get("/", function(request, response){
     });
     var grid_data_promise = new Promise(function(resolve, reject){
        event_controller.findEvents({ limit: 6, featured: false }, function(data){
-            resolve(data);
+           resolve(data);
         });
     });
     var slider_data_promise = new Promise(function(resolve, reject){
@@ -236,7 +134,6 @@ router.get("/beef/:beef_chain_id/:event_id", function(request, response) {
         
     var main_event_data_promise = new Promise(function(resolve, reject){
         event_controller.findEvent(event_id, function(data){
-            //console.log(data);
             let data_object = { event_data: data };
             
             event_controller.findEvents({ match_actor: data_object.event_data.aggressors[0]._id, limit: 5, decreasing_order: "date_added" }, function(data){

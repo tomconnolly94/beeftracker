@@ -80,8 +80,6 @@ append body
                         each target in event_data.targets
                             //if aggressor != event_data.aggressors[0] && target != event_data.targets[0]
                             option(image_src=server_url_prefix + "/actors/" + event_data.img_title_fullsize, value="obama_vs_trump") #{aggressor.name} v. #{target.name}
-        div.row
-            +timeline-section(event_data)
 
         div.beef-content(class="beef-category-#{event_data.categories[0].name.toLowerCase()}")
             div.beef-content-header
@@ -113,7 +111,10 @@ append body
 
                         +related-beefs(related_events, "events", "c_fill,g_face,h_120,w_120")
                         
-            +section('EXPLORE', 'GALLERY', '')
+        div.row
+            +timeline-section(event_data)
+                        
+            +section('G', 'ALLERY', '')
                 +masonry-gallery-section(event_data.gallery_items, "events")
             +comment-box-section(comment_data)
 

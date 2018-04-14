@@ -32,7 +32,7 @@ nav {
             display:block;
             color: #ffffff;
             text-transform:uppercase;
-            font-weight:300;
+            /*font-weight:300;*/
             font-size:14px !important;
             @include media-breakpoint-only(sm) {
                 padding: 1.5rem 1.5rem !important;
