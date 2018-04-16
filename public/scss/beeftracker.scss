@@ -113,6 +113,10 @@ header {
 	@extend .container;
 }
 
+header.container{
+    max-width:100%;
+}
+
 .bt-content-full-width {
 	@extend .container-fluid;
 	 padding: 20px 0px 40px;

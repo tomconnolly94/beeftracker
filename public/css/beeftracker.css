@@ -6257,6 +6257,9 @@ header {
       header .navbar-toggler-icon {
         color: #fff; } }
 
+header.container, header.bt-content {
+  max-width: 100%; }
+
 .bt-content-full-width {
   padding: 20px 0px 40px; }
   .bt-content-full-width section {
