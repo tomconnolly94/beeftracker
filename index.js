@@ -71,6 +71,11 @@ app.use('/modules', express.static(__dirname + '/node_modules/')); //route to re
 app.use('/bower_components', express.static(__dirname + '/bower_components/')); //route to reference bower library files
 app.use('/component_controllers', express.static(__dirname + '/views/templates/components/')); //route to reference client side controller scripts
 
+
+app.get("/service_worker", function(request, response){
+    response.sendFile(__dirname + "/public/javascript/service_worker.js")
+})
+
 // ### Page routes configuration file ###
 app.use('/', require('./server_files/routing/page_routing'));
  
@@ -107,7 +112,7 @@ app.get('/manifest.webmanifest', function(request, response) {
             "sizes": "256x256"
         }]
     });
-}); //robots config file
+}); //web app manifest
 
 // ### Serve an error page on unrecognised uri###
 //app.get('/*', function(req, res, next) { res.render("pages/static_pages/error.ejs"); });
