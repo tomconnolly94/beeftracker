@@ -2,6 +2,9 @@
   @include media-breakpoint-down(sm) {
   margin-left: -13%; margin-right: -12%;
   }
+    @include media-breakpoint-down(xs) {
+  margin-left: -13%; margin-right: -5%;
+  }
 }
 
 .fancybox-slide {
