@@ -1,0 +1,23 @@
+mixin gallery-manager()
+    div.col-md-4.gallery-manager-add-item
+        a(href="#", data-toggle="modal", data-target="#upload_gallery_item_modal")
+            i.fas.fa-plus
+    each gallery_item in gallery_items
+        div.col-md-4.gallery-manager-item
+            a(href="#").remove-gallery-item
+                i.fas.fa-trash.fa
+            img(src=gallery_item.url)
+    //div.col-md-4.gallery-manager-item
+        a(href="#").remove-gallery-item
+            i.fas.fa-trash.fa
+        img(src="https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/12/29/15/wiley-2.jpg")
+    //div.col-md-4.gallery-manager-item
+        a(href="#").remove-gallery-item
+            i.fas.fa-trash.fa
+        img(src="https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/12/29/15/wiley-2.jpg")
+    //div.col-md-4.gallery-manager-item
+        a(href="#").remove-gallery-item
+            i.fas.fa-trash.fa
+        img(src="https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/12/29/15/wiley-2.jpg")
+        
++gallery-manager()
