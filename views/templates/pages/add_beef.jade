@@ -3,6 +3,7 @@ include ../components/trending_beef/trending_beef.jade
 include ../components/upload_gallery_item_modal/upload_gallery_item_modal.jade
 include ../components/select_actor_modal/select_actor_modal.jade
 include ../components/add_actor_modal/add_actor_modal.jade
+include ../components/gallery_manager/gallery_manager.jade
 
 append scripts
     script.
@@ -65,15 +66,22 @@ append body
                     div.row.versus-panel
                         div.col-5.beefer
                             div
-                                h4 &nbsp;
-                                a(href="#", data-toggle="modal", data-target="#selector_actor_modal").selector
+                                h4#beefer_name &nbsp;
+                                a(href="#", data-toggle="modal", data-target="#selector_actor_modal", id="select_actor_beefer").selector
+                                    img(src="", style="display:none;").actor-avatar
                                     i.fas.fa-plus
                         div.col-2.versus
                             h4 VS.
                         div.col-5.beefee
                             div
+                                h4#beefee_name &nbsp;
+                                a(href="#", data-toggle="modal", data-target="#selector_actor_modal", id="select_actor_beefee").selector
+                                    img(src="", style="display:none;").actor-avatar
+                                    i.fas.fa-plus
+                        //div.col-5.beefee
+                            div
                                 h4 Obama
-                                a(href="actor.html")
+                                a(href="actor.html").selector
                                     img(src="http://cdn.edgecast.steamstatic.com/steamcommunity/public/images/avatars/64/64e8917b85a0f5e20565651119c60f3d8d363898_full.jpg").actor-avatar
                     div.row
                         div.col-12
@@ -92,30 +100,14 @@ append body
                                 div.form-group.col-md-6
                                     label(for="beef_tags") Tags
                                     select#beef_tags.form-control(name="beef_tags", multiple="multiple")
+                                    
                             div.form-row
                                 div.form-group.col-md-12
                                     label(for="beef_content_summernote") What happened?
                                     textarea.form-control#beef_content_summernote
+                                    
                             div.form-row
                                 div.form-group.col-md-12
                                     h2 Gallery
-                            div.row.gallery-manager
-                                div.col-md-4.gallery-manager-add-item
-                                    a(href="#", data-toggle="modal", data-target="#upload_gallery_item_modal")
-                                        i.fas.fa-plus
-                                div.col-md-4.gallery-manager-item
-                                    a(href="#").remove-gallery-item
-                                        i.fas.fa-trash.fa
-                                    img(src="https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/12/29/15/wiley-2.jpg")
-                                div.col-md-4.gallery-manager-item
-                                    a(href="#").remove-gallery-item
-                                        i.fas.fa-trash.fa
-                                    img(src="https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/12/29/15/wiley-2.jpg")
-                                div.col-md-4.gallery-manager-item
-                                    a(href="#").remove-gallery-item
-                                        i.fas.fa-trash.fa
-                                    img(src="https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/12/29/15/wiley-2.jpg")
-                                div.col-md-4.gallery-manager-item
-                                    a(href="#").remove-gallery-item
-                                        i.fas.fa-trash.fa
-                                    img(src="https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/12/29/15/wiley-2.jpg")
+                            div.row.gallery-manager#gallery_manager
+                                +gallery-manager()

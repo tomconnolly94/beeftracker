@@ -25,20 +25,22 @@ self.addEventListener('install', function(event) {
     event.waitUntil(
         caches.open(CACHE_NAME).then(function(cache) {
             return cache.addAll(urls_to_cache);
-        });
-    );
+        })
+    )
 });
 
 self.addEventListener('activate', function(event) {
     event.waitUntil(
         caches.open(CACHE_NAME).then(function(cache) {
             return cache
-        });
-    );
+        })
+    )
 });
 
 self.addEventListener('fetch', function(event) {
     event.respondWith(
+        
+        
         caches.match(event.request).then(function(response) {
             // Cache hit - return response
             if (response) {
@@ -46,6 +48,17 @@ self.addEventListener('fetch', function(event) {
             }
             
             return fetch(event.request);
-        });
-    );
+        }).catch(function(response){
+            console.log("match faield, catch");
+            
+            var url_split = event.request.url.split("/");
+
+            if(url_split[3] == "beef"){
+                caches.open(CACHE_NAME).then(function(cache) {
+                    
+                    return cache.add("/" + url_split[3] + "/" + url_split[3]);
+                })
+            }
+        })
+    )
 });

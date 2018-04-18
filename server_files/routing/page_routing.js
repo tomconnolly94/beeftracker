@@ -8,6 +8,7 @@ var token_authentication = require("../tools/token_authentication.js"); //get to
 var globals = require("../config/globals.js")
 
 //endpoint controllers
+var actor_controller = require("../controllers/actors_controller.js");
 var event_controller = require("../controllers/events_controller.js");
 var comment_controller = require("../controllers/comments_controller.js");
 
@@ -111,7 +112,18 @@ router.get("/actor/:tagId", function(request, response) {
     
     response.render("pages/dynamic_pages/actor.ejs"); 
 }); //actor page
-router.get("/add-beef", function(request, response) { response.render("pages/add_beef.jade"); }); // submit beefdata page page
+router.get("/add-beef", function(request, response) {
+
+    var actor_data_promise = new Promise(function(resolve, reject){
+        actor_controller.findActors({ increasing_order: "name" }, function(data){
+            resolve(data);
+        });
+    });
+    
+    actor_data_promise.then(function(data){
+        response.render("pages/add_beef.jade", { file_server_url_prefix: globals.file_server_url_prefix, actor_data: data, gallery_items: [] }); 
+    });
+}); // submit beefdata page page
 router.get("/beef", function(request, response) { 
     
     var events_data_promise = new Promise(function(resolve, reject){
@@ -122,9 +134,7 @@ router.get("/beef", function(request, response) {
     
     events_data_promise.then(function(data){
         response.render("pages/beefs.jade", { file_server_url_prefix: globals.file_server_url_prefix, grid_data: data }); 
-    });
-    
-    
+    });    
 }); //beef page
 router.get("/beef/:beef_chain_id/:event_id", function(request, response) { 
 
@@ -202,7 +212,6 @@ router.get("/reset-my-password/:id_token", function(request, response) {
     });
 
 }); // raw actor scraping page route
-
 
 router.get("/sitemap", function(req, res) {
     sitemap.toXML( function (err, xml) {

@@ -43,39 +43,41 @@
 
     a.selector {
 
+        background: #fff;
+        border: 3px solid transparentize(#000, .9);
+        border-radius: 50%;
+        height: 150px;
+        position: relative;
+        width: 150px;
+        display: inline-block;
+        -webkit-box-shadow: 1px 1px 43px 2px rgba(0,0,0,0.45);
+        -moz-box-shadow: 1px 1px 43px 2px rgba(0,0,0,0.45);
+        box-shadow: 1px 1px 43px 2px rgba(0,0,0,0.45);
+        text-align: center;
+        background-color: $brand-primary;
+        color: #fff;
 
-            background: #fff;
-            border: 3px solid transparentize(#000, .9);
-            border-radius: 50%;
-            height: 150px;
-            position: relative;
-            width: 150px;
-            display: inline-block;
-            -webkit-box-shadow: 1px 1px 43px 2px rgba(0,0,0,0.45);
-            -moz-box-shadow: 1px 1px 43px 2px rgba(0,0,0,0.45);
-            box-shadow: 1px 1px 43px 2px rgba(0,0,0,0.45);
-            text-align: center;
-            background-color: $brand-primary;
-            color: #fff;
+        &:hover {
+            background-color: $brand-primary-shadow;
+        }
 
-            &:hover {
-                background-color: $brand-primary-shadow;
-            }
+        i {
 
-            i {
+           position: relative;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 40px
+        }
 
-               position: relative;
-              top: 50%;
-              transform: translateY(-50%);
-              font-size: 40px
-            }
+         @include media-breakpoint-only(xs) {
+            height: 64px;
+            width: 64px;
+        }
 
-             @include media-breakpoint-only(xs) {
-                height: 64px;
-                width: 64px;
-            }
-
-
+        img {
+            top:-3px;
+            left:-3px;
+        }
 
     }
 
@@ -129,6 +131,10 @@
             // padding-right: 20px;
             color:  #000;
         }
+    }
+    
+    h4 {
+        min-height: 48px;
     }
 
     .versus {

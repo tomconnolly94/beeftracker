@@ -73,13 +73,13 @@ module.exports = {
         return actor_insert;
     },
     
-    findActors: function(request, response, callback){
+    findActors: function(query_parameters, callback){
         
-        var query_parameters = request.query;
+        //var query_parameters = request.query;
         var match_query = {};
         var sort_query_content = {};
         var query_present = Object.keys(query_parameters).length === 0 && query_parameters.constructor === Object ? false : true; //check if request comes with query
-        var limit_query_content = 30; //max amount of records to return
+        var limit_query_content = null;//30; //max amount of records to return
                 
         if(query_present){
             
@@ -90,6 +90,8 @@ module.exports = {
             else if(query_parameters.decreasing_order == "date_added"){ sort_field_name = "date_added"; }
             else if(query_parameters.increasing_order == "popularity"){ sort_field_name = "popularity"; }
             else if(query_parameters.decreasing_order == "popularity"){ sort_field_name = "popularity"; }
+            else if(query_parameters.increasing_order == "name"){ sort_field_name = "name"; }
+            else if(query_parameters.decreasing_order == "name"){ sort_field_name = "name"; }
             else{ query_present = false; }// if no valid queries provided, disallow a sort query
 
             if(query_parameters.increasing_order){
@@ -128,7 +130,7 @@ module.exports = {
                         associated_actors: { "$max": "$associated_actors" },
                         data_sources: { "$max": "$data_sources" },
                         also_known_as: { "$max": "$also_known_as" },
-                        img_title: { "$max": "$img_title"},
+                        img_title_fullsize: { "$max": "$img_title_fullsize"},
                         classification: { "$max": "$classification" },
                         variable_field_values: { "$max": "$variable_field_values" },
                         links: { "$max": "$links" },
@@ -142,7 +144,7 @@ module.exports = {
                     aggregate_array.$sort = sort_query_content;
                 }
 
-                if(Object.keys(limit_query_content).length > 0){
+                if(limit_query_content && Object.keys(limit_query_content).length > 0){
                     aggregate_array.$limit = limit_query_content;
                 }
 

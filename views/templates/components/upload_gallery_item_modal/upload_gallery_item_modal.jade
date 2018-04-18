@@ -9,7 +9,7 @@ mixin upload-gallery-item-modal-js()
                 placeholder: 'Select an Upload Type',
                 theme: 'classic',
                 width: "100%",
-                minimumResultsForSearch: Infinity
+                minimumResultsForSearch: -1
             });
         });
 
@@ -17,7 +17,7 @@ mixin upload-gallery-item-modal()
     +modal('Upload', '#', false)(id="upload_gallery_item_modal", large_modal=true)
         div.row
             div.col-md-6
-                form
+                //form
                     //- div.form-row
                     //-     div.form-group.col-md-12
                     //-         label(for="login_email") Email
@@ -26,30 +26,34 @@ mixin upload-gallery-item-modal()
                     //-     div.form-group.col-md-12
                     //-         label(for="login_password") Password
                     //-         input(type="password").form-control#login_password
-                    div.form-row
-                        div.form-group.col-md-12
-                            label(for="upload_type") What are you adding?
-                            select#upload_type.form-control(name="upload_type")
-                                option(value="photo") Photo
-                                option(value="youtube") YouTube Video
-                                option(value="soundcloud") SoundCloud Clip
-                         div.form-group.col-md-12
-                            label(for="youtube_video_link") YouTube Link
-                            input(type="text").form-control#youtube_video_link
-                    div.form-row
-                         div.form-group.col-md-12
-                            label(for="soundcloud_link") Soundcloud Link
-                            input(type="text").form-control#soundcloud_link
-                    div.form-row
-                        div.form-group.col-md-12
-                            label(for="soundcloud_link") Browse and Select photo
-                            input.form-control(type="file", name="gallery-upload-file")
-                    div.form-check
-                            input.form-check-input(type="checkbox", value="")#set_as_cover
-                            label.form-check-label(for="set_as_cover") Set as cover
-                    div.form-row
-                        div.form-group.col-md-12
-                            button(type="submit").btn.btn-primary.float-right Add
+                div.form-row.row
+                    div.form-group.col-md-12
+                        label(for="upload_type") What are you adding?
+                        select#upload_type.form-control(name="upload_type")
+                            option(value=null, selected="true", disabled="disabled") Select Type
+                            option(value="photo") Photo
+                            option(value="youtube") YouTube Video
+                            option(value="soundcloud") SoundCloud Link
+                     div.form-group.col-md-12#youtube_input_div(style="display:none;")
+                        label(for="youtube_video_link") YouTube Link
+                        input(type="text").form-control#youtube_video_link
+                div.form-row
+                     div.form-group.col-md-12#soundcloud_input_div(style="display:none;")
+                        label(for="soundcloud_link") Soundcloud Link
+                        input(type="text").form-control#soundcloud_link
+                div.form-row
+                    div.form-group.col-md-12#photo_input_div(style="display:none;")
+                        label(for="photo_link") Browse and Select photo
+                        input.form-control#photo_link(type="file", name="gallery-upload-file")
+                div.form-check#set_as_cover(style="display:none;")
+                        input.form-check-input(type="checkbox", value="")#set_as_cover
+                        label.form-check-label(for="set_as_cover") Set as cover
+                div.form-row
+                    div.form-group.col-md-12
+                        button(disabled).btn.btn-primary.float-right#media_submit_button Add
             div.col-md-6
                 div.preview-pane
-                    img(src="https://i0.wp.com/www.mac-history.net/wp-content/uploads/2011/01/microsoft-vs-apple.jpg?fit=599%2C311")
+                    img(id="media_preview", src="")
+
+        append scripts
+            script(src="/component_controllers/upload_gallery_item_modal/upload_gallery_item_modal_controller.js")

@@ -1,14 +1,13 @@
 include ../../layouts/modal.jade
 
-
-
 mixin select-actor-modal-js()
     script.
         $(function() {
             $('#select_actor').select2({
                 placeholder: 'Select actor ',
                 theme: 'classic',
-                width: "100%"
+                width: "100%",
+                dropdownParent: $("#selector_actor_modal")
             });
             $('#selector_actor_modal #add_new_actor').click(function() {
                 $('#selector_actor_modal').modal('hide');
@@ -19,6 +18,12 @@ mixin select-actor-modal-js()
         });
 
 mixin select-actor-modal()
+    
+    - //insert image resizing into the image URL
+    - var split_server_url_prefix = file_server_url_prefix.split("/");
+    - split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, "c_fill,g_face,h_150,w_150");
+    - var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
+    
     +modal('Select Actor', '#', false)(id="selector_actor_modal", large_modal=false)
         div.row
             div.col-md-12
@@ -33,10 +38,12 @@ mixin select-actor-modal()
                 div.form-row
                     div.form-group.col-md-12
                         select#select_actor.form-control(name="select_actor")
-                            option(value="wiley") Wiley
-                            option(value="donald_trump") Donald Trump
-                            option(value="eminem") Eminem
-                            option(value="obama") Obama
+                            option(value=null, selected="true", disabled="disabled") Select Actor 
+                            each actor in actor_data
+                                option(value=actor._id, x-actor-image-link=server_url_prefix_with_image_formatting + "/actors/" + actor.img_title_fullsize, x-actor-name=actor.name) #{actor.name}
+                            //option(value="donald_trump") Donald Trump
+                            //option(value="eminem") Eminem
+                            //option(value="obama") Obama
                 div.form-row
                     div.col-md-12
                         a#add_new_actor(href="#") Add New Actor
@@ -44,4 +51,7 @@ mixin select-actor-modal()
                     div.form-group.col-md-12
                         div.btn-group(role="group").float-right
                             button(type="button", data-dismiss="modal").btn.btn-secondary Cancel
-                            button(type="button").btn.btn-primary Select
+                            button(type="button", id="select_actor_modal_submit").btn.btn-primary Select
+    append scripts
+        script(src="/component_controllers/select_actor_modal/select_actor_modal_controller.js")
+
