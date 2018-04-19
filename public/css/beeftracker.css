@@ -5042,7 +5042,7 @@ section {
   margin-bottom: 20px;
   display: block;
   color: #fff;
-  height: 275px;
+  height: 215px;
   overflow: hidden; }
   @media (max-width: 575.98px) {
     .beef-thumbnail {
@@ -5803,7 +5803,7 @@ figure.masonry-item.soundcloud-item .play-button {
 
 .gallery-manager .gallery-manager-add-item {
   padding-bottom: 20px;
-  min-height: 300px; }
+  min-height: 250px; }
   .gallery-manager .gallery-manager-add-item a {
     border: 5px solid #DF3E3E;
     display: block;
@@ -6031,6 +6031,14 @@ figure.masonry-item.soundcloud-item .play-button {
 
 @media (max-width: 575.98px) {
   .featured-beefs-section .primary-featured-beef .beef-thumbnail.x-large {
+    height: 270px; } }
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .featured-beefs-section .secondary-featured-beefs .secondary-featured-beef .beef-thumbnail {
+    height: 270px; } }
+
+@media (max-width: 575.98px) {
+  .featured-beefs-section .secondary-featured-beefs .secondary-featured-beef .beef-thumbnail {
     height: 270px; } }
 
 .data_sources_list {
@@ -6285,7 +6293,8 @@ a.btn {
   text-decoration: none; }
 
 .btn {
-  text-transform: uppercase; }
+  text-transform: uppercase;
+  margin: 2px; }
   .btn span.fas:first-child {
     padding-right: 5px; }
   .btn.btn-lg {

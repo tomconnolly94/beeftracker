@@ -25,6 +25,8 @@ self.addEventListener('install', function(event) {
     event.waitUntil(
         caches.open(CACHE_NAME).then(function(cache) {
             return cache.addAll(urls_to_cache);
+        }).catch(function() {
+            // Do nothing.
         })
     )
 });
@@ -33,14 +35,14 @@ self.addEventListener('activate', function(event) {
     event.waitUntil(
         caches.open(CACHE_NAME).then(function(cache) {
             return cache
+        }).catch(function() {
+            // Do nothing.
         })
     )
 });
 
 self.addEventListener('fetch', function(event) {
     event.respondWith(
-        
-        
         caches.match(event.request).then(function(response) {
             // Cache hit - return response
             if (response) {

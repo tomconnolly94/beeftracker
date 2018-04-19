@@ -4,7 +4,7 @@ mixin gallery-manager()
             i.fas.fa-plus
     each gallery_item in gallery_items
         div.col-md-4.gallery-manager-item
-            a(href="#").remove-gallery-item
+            a(href="#").remove-gallery-item#remove_gallery_item
                 i.fas.fa-trash.fa
             img(src=gallery_item.url)
     //div.col-md-4.gallery-manager-item

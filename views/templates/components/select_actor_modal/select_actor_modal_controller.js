@@ -22,7 +22,8 @@ $(function(){
         $("#select_actor_" + actor_type + " i").hide();
         $("#" + actor_type + "_name").text(actor_name);
         
-        $('#select_actor').val(null).trigger('change');
+        //$('#select_actor').val(null).trigger('change');
+        $('#select_actor').eq(0).prop('selected',true);
         $("#selector_actor_modal").modal("hide");
         $(".select2-search__field").attr("tabindex", "1");
     });
