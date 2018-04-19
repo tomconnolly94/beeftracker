@@ -20,7 +20,7 @@
 
         .secondary-featured-beef {
             @extend .col-md-12;
-            .beef-thumbnail {
+            /*.beef-thumbnail {
 
                 @include media-breakpoint-only(sm) {
                     height:270px;
@@ -28,7 +28,7 @@
                 @include media-breakpoint-only(xs) {
                     height:270px;
                 }
-            }
+            }*/
         }
     }
 }

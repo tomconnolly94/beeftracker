@@ -5,11 +5,17 @@
     color: #fff;
     height: 215px;
     overflow: hidden;
+    
+    @include media-breakpoint-only(sm) {
+        height:270px;
+    }
+
     @include media-breakpoint-only(xs) {
         margin-left: -13%;
         margin-right:-12%;
+        height: 270px;
     }
-
+    
     &.large {
         height: 300px;
     }
