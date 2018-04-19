@@ -1,5 +1,5 @@
 .swiper-container {
-    height:250px;
+    height:290px;
 
     @include media-breakpoint-only(xs) {
         margin-left: -13%;
@@ -10,18 +10,15 @@
 
      .beef-thumbnail {
         overflow: visible;
-             @include media-breakpoint-only(xs) {
-        margin-left: 0;
-        margin-right: 0;
+            @include media-breakpoint-only(xs) {
+                margin-left: 0;
+                margin-right: 0;
+            }
 
-
-
-    }
-
-    &:before {
+        &:before {
             bottom: 0;
         }
-        }
+    }
 }
 
 
@@ -54,19 +51,16 @@
     font-size: 30px;
     text-align: center;
 
-  //   transform: skew(-14deg);
-  // -webkit-transform: skew(-14deg);
-  // -moz-transform: skew(-14deg);
-  @media (hover: hover) {
-    &:hover {
-
-           color: $brand-primary;
-        opacity: 1;
-        background:0;
-
-
+    //   transform: skew(-14deg);
+    // -webkit-transform: skew(-14deg);
+    // -moz-transform: skew(-14deg);
+    @media (hover: hover) {
+        &:hover {
+            color: $brand-primary;
+            opacity: 1;
+            background:0;
+        }
     }
-}
 }
 
 .swiper-button-prev {

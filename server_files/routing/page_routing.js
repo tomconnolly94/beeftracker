@@ -11,6 +11,7 @@ var globals = require("../config/globals.js")
 var actor_controller = require("../controllers/actors_controller.js");
 var event_controller = require("../controllers/events_controller.js");
 var comment_controller = require("../controllers/comments_controller.js");
+var category_controller = require("../controllers/event_categories_controller.js");
 
 if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if deployed on a heroku server
     /* Detect any http requests, if found, redirect to https, otherwise continue to other routes */
@@ -132,8 +133,20 @@ router.get("/beef", function(request, response) {
         });
     });
     
-    events_data_promise.then(function(data){
-        response.render("pages/beefs.jade", { file_server_url_prefix: globals.file_server_url_prefix, grid_data: data }); 
+    var category_event_data_promise = new Promise(function(resolve, reject){
+       event_controller.findEvents({ match_category: 1, limit: 6 }, function(data){
+           resolve(data);
+        });
+    });
+    
+    var categories_promise = new Promise(function(resolve, reject){
+       category_controller.getEventCategories(function(data){
+           resolve(data);
+        });
+    });
+    
+    Promise.all([ events_data_promise, category_event_data_promise, categories_promise ]).then(function(data){
+        response.render("pages/beefs.jade", { file_server_url_prefix: globals.file_server_url_prefix, grid_data: data[0], category_event_data: data[1], categories: data[2] }); 
     });    
 }); //beef page
 router.get("/beef/:beef_chain_id/:event_id", function(request, response) { 

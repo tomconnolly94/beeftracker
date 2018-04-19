@@ -17,6 +17,7 @@ $categories: (
    ('grime', #000),
    ('politics', #000),
    ('pop', #000),
+   ('other', #000),
 );
 
 
@@ -36,6 +37,7 @@ $categories: (
                 border-bottom: 4px solid $cat-color;
             }
         }
+        
         .category-name {
             background-color: $cat-color;
             color: #fff;

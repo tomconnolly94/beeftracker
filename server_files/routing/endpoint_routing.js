@@ -289,6 +289,7 @@ router.route('/event-categories').post(event_categories_data_validator.validate,
 router.route('/events').get(function(request, response){
     
     var query = request.query;
+    //console.log(query);
     
     event_controller.findEvents(query, function(data){
         if(data.failed){

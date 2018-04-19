@@ -138,11 +138,11 @@ module.exports = {
             if(query_parameters.featured != null){ match_query_content = { featured: query_parameters.featured } }
             else if(query_parameters.match_title){ match_query_content = { title: { $regex : query_parameters.match_title, $options: "i" } } }
             else if(query_parameters.match_actor){ match_query_content = { $or: [ { aggressors: query_parameters.match_actor }, { targets: query_parameters.match_actor }] } }
-            else if(query_parameters.match_category){ match_query_content = { name: { $regex : query_parameters.match_category, $options: "i" } } }
+            else if(query_parameters.match_category){ match_query_content = { categories: typeof query_parameters.match_category == "string" ? parseInt(query_parameters.match_category) : query_parameters.match_category } }
             else if(query_parameters.match_beef_chain_id){ match_query_content = { beef_chain_ids: query_parameters.match_beef_chain_id} }
             
             //deal with $limit query
-            if(query_parameters.limit){ limit_query_content = query_parameters.limit }
+            if(query_parameters.limit){ limit_query_content = typeof query_parameters.limit == "string" ? parseInt(query_parameters.limit) : query_parameters.limit }
                         
         }
         
@@ -219,7 +219,7 @@ module.exports = {
                 }
                 aggregate_array.push({ $limit: limit_query_content });
                 
-//                /console.log(aggregate_array);
+                //console.log(aggregate_array);
                 
                 db.collection(db_ref.get_current_event_table()).aggregate(aggregate_array).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }

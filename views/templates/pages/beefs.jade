@@ -5,31 +5,32 @@ include ../components/pagination/pagination.jade
 
 append body
     div.bt-content
-      +section('ALL', 'BEEFS', 'fa-tv')
-          div.section-toolbar
-              div.section-toolbar-menu
-                  ul.list-sections
-                      li.active
-                          a(href="#") All
-                      li
-                          a(href="#") New
-                      li
-                          a(href="#") Trending
-                      li
-                          a(href="#") Hot
-                  ul.list-type
-                      li.active
-                          a(href="#")
-                              span.fas.fa-list
-                      li
-                          a(href="#")
-                              span.fas.fa-th
-          div.row
-              each thumbnail_data in grid_data
+        +section('ALL', 'BEEFS', 'fa-tv')
+            div.section-toolbar
+                div.section-toolbar-menu
+                    ul.list-sections
+                        li.active
+                            a(href="#") All
+                        li
+                            a(href="#") New
+                        li
+                            a(href="#") Trending
+                        li
+                            a(href="#") Hot
+                    ul.list-type
+                        li.active
+                            a(href="#")
+                                span.fas.fa-list
+                        li
+                            a(href="#")
+                                span.fas.fa-th
+            div.row
+                each thumbnail_data in grid_data
                     div.col-lg-4.col-md-6.col-xs-4
                         +medium-beef-thumbnail(thumbnail_data, "events", "c_fill,g_face,h_215,w_350")(class="beef-category-#{thumbnail_data.categories[0].name.toLowerCase()}")
-          div.row
-              div.col-md-12
-                  +pagination()
-      //+category-browser-section(grid_data)
+            div.row
+                div.col-md-12
+                    +pagination()
+        
+        +category-browser-section(grid_data)
 

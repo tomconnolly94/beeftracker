@@ -333,7 +333,7 @@ html {
 
 .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .beef-content-header .beef-content-contribute, .beef-content-header .beef-content-category, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, nav .main-navbar-nav, .col,
 .col-auto, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .add-actor-modal .actor-type-selector .actor-type-row .actor-type-item, .beef-content-header .beef-title, .beef-content-container .beef-summary, .beef-content-container .beef-content-left-side, .col-sm,
-.col-sm-auto, .col-md-1, .col-md-2, .vertical-list .vertical-list-item .vertical-list-item-view-btn, .mini-vertical-list .vertical-list-item .vertical-list-item-view-btn, .col-md-3, .vertical-list .vertical-list-item .vertical-list-item-thumbnail, .col-md-4, .hiw-container .hiw-title, .hiw-container .hiw-list .hiw-list-item, .featured-beefs-section .secondary-featured-beefs, .col-md-5, .mini-vertical-list .vertical-list-item .vertical-list-item-thumbnail, .col-md-6, .col-md-7, .mini-vertical-list .vertical-list-item .vertical-list-item-details, .col-md-8, .featured-beefs-section .primary-featured-beef, .col-md-9, .vertical-list .vertical-list-item .vertical-list-item-details, .col-md-10, .col-md-11, .col-md-12, .section-toolbar .section-toolbar-menu, .category-browser-section .category-browser-header .header-menu, .category-browser-section .category-browser-header .header-title, .featured-beefs-section .secondary-featured-beefs .secondary-featured-beef, .beef-content-container .beef-body, .col-md,
+.col-sm-auto, .col-md-1, .col-md-2, .vertical-list .vertical-list-item .vertical-list-item-view-btn, .mini-vertical-list .vertical-list-item .vertical-list-item-view-btn, .col-md-3, .vertical-list .vertical-list-item .vertical-list-item-thumbnail, .col-md-4, .hiw-container .hiw-title, .hiw-container .hiw-list .hiw-list-item, .featured-beefs-section .secondary-featured-beefs, .col-md-5, .col-md-6, .mini-vertical-list .vertical-list-item .vertical-list-item-thumbnail, .mini-vertical-list .vertical-list-item .vertical-list-item-details, .col-md-7, .col-md-8, .featured-beefs-section .primary-featured-beef, .col-md-9, .vertical-list .vertical-list-item .vertical-list-item-details, .col-md-10, .col-md-11, .col-md-12, .section-toolbar .section-toolbar-menu, .category-browser-section .category-browser-header .header-menu, .category-browser-section .category-browser-header .header-title, .featured-beefs-section .secondary-featured-beefs .secondary-featured-beef, .beef-content-container .beef-body, .col-md,
 .col-md-auto, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg,
 .col-lg-auto, .col-xl-1, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl,
 .col-xl-auto {
@@ -600,13 +600,13 @@ html {
   .col-md-4, .hiw-container .hiw-title, .hiw-container .hiw-list .hiw-list-item, .featured-beefs-section .secondary-featured-beefs {
     flex: 0 0 33.33333%;
     max-width: 33.33333%; }
-  .col-md-5, .mini-vertical-list .vertical-list-item .vertical-list-item-thumbnail {
+  .col-md-5 {
     flex: 0 0 41.66667%;
     max-width: 41.66667%; }
-  .col-md-6, .beef-content-header .beef-content-contribute, .beef-content-header .beef-content-category {
+  .col-md-6, .mini-vertical-list .vertical-list-item .vertical-list-item-thumbnail, .mini-vertical-list .vertical-list-item .vertical-list-item-details, .beef-content-header .beef-content-contribute, .beef-content-header .beef-content-category {
     flex: 0 0 50%;
     max-width: 50%; }
-  .col-md-7, .mini-vertical-list .vertical-list-item .vertical-list-item-details {
+  .col-md-7 {
     flex: 0 0 58.33333%;
     max-width: 58.33333%; }
   .col-md-8, .featured-beefs-section .primary-featured-beef {
@@ -5095,6 +5095,9 @@ section {
         float: left;
         font-size: 0.8rem;
         padding: 2px 10px; }
+        @media (min-width: 576px) and (max-width: 767.98px) {
+          .beef-thumbnail .info-overlay .header-panel .category-name {
+            margin: 2%; } }
     .beef-thumbnail .info-overlay .footer-panel {
       position: absolute;
       bottom: 0;
@@ -5131,7 +5134,7 @@ section {
           font-size: 12px; }
 
 .swiper-container {
-  height: 250px; }
+  height: 290px; }
   @media (max-width: 575.98px) {
     .swiper-container {
       margin-left: -13%;
@@ -5221,60 +5224,62 @@ section {
     position: absolute;
     right: 30%; }
 
-@media (min-width: 992px) {
-  .mini-vertical-list .hidden_on_lg {
-    display: none; } }
-
-.mini-vertical-list .vertical-list-item {
-  padding-bottom: 50px; }
-  .mini-vertical-list .vertical-list-item ul.beef-info {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    padding-bottom: 10px; }
-    .mini-vertical-list .vertical-list-item ul.beef-info li {
-      display: inline-block;
-      padding-right: 10px;
-      margin-right: 10px; }
-      .mini-vertical-list .vertical-list-item ul.beef-info li .fas {
-        color: #DF3E3E; }
-      .mini-vertical-list .vertical-list-item ul.beef-info li:last-child {
-        border-right: 0; }
-  .mini-vertical-list .vertical-list-item .vertical-list-item-thumbnail .header-panel {
-    position: relative; }
-    .mini-vertical-list .vertical-list-item .vertical-list-item-thumbnail .header-panel .category-name {
+.mini-vertical-list {
+  /*.hidden_on_lg{                
+        @include media-breakpoint-up(lg) {
+            display: none;
+        }
+    }*/ }
+  .mini-vertical-list .vertical-list-item {
+    height: 110px; }
+    .mini-vertical-list .vertical-list-item ul.beef-info {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      padding-bottom: 10px; }
+      .mini-vertical-list .vertical-list-item ul.beef-info li {
+        display: inline-block;
+        padding-right: 10px;
+        margin-right: 10px; }
+        .mini-vertical-list .vertical-list-item ul.beef-info li .fas {
+          color: #DF3E3E; }
+        .mini-vertical-list .vertical-list-item ul.beef-info li:last-child {
+          border-right: 0; }
+    .mini-vertical-list .vertical-list-item .vertical-list-item-thumbnail .header-panel {
+      position: relative; }
+      .mini-vertical-list .vertical-list-item .vertical-list-item-thumbnail .header-panel .category-name {
+        position: absolute;
+        margin-top: 10px;
+        border-radius: 4px;
+        padding: 2px 10px;
+        top: 0;
+        right: 3%; }
+    .mini-vertical-list .vertical-list-item .vertical-list-item-thumbnail img {
+      width: 100%;
+      max-height: 100%; }
+    .mini-vertical-list .vertical-list-item .vertical-list-item-details a {
+      color: #000; }
+      .mini-vertical-list .vertical-list-item .vertical-list-item-details a:hover {
+        text-decoration: none; }
+    .mini-vertical-list .vertical-list-item .vertical-list-item-details h3 {
+      color: #000;
+      margin: 0;
+      padding: 0;
+      padding-bottom: 5px; }
+    @media (min-width: 768px) and (max-width: 991.98px) {
+      .mini-vertical-list .vertical-list-item .vertical-list-item-details ul {
+        display: none; } }
+    @media (min-width: 768px) and (max-width: 991.98px) {
+      .mini-vertical-list .vertical-list-item .vertical-list-item-details p {
+        display: none; } }
+    @media (min-width: 992px) and (max-width: 1199.98px) {
+      .mini-vertical-list .vertical-list-item .vertical-list-item-details p {
+        display: none; } }
+    .mini-vertical-list .vertical-list-item .vertical-list-item-view-btn .btn {
+      bottom: 0;
+      margin-bottom: 30%;
       position: absolute;
-      margin-top: 10px;
-      border-radius: 4px;
-      padding: 2px 10px;
-      top: 0;
-      right: 3%; }
-  .mini-vertical-list .vertical-list-item .vertical-list-item-thumbnail img {
-    width: 100%;
-    max-height: 100%; }
-  .mini-vertical-list .vertical-list-item .vertical-list-item-details a {
-    color: #000; }
-    .mini-vertical-list .vertical-list-item .vertical-list-item-details a:hover {
-      text-decoration: none; }
-  .mini-vertical-list .vertical-list-item .vertical-list-item-details h3 {
-    color: #000;
-    margin: 0;
-    padding: 0;
-    padding-bottom: 5px; }
-  @media (min-width: 768px) and (max-width: 991.98px) {
-    .mini-vertical-list .vertical-list-item .vertical-list-item-details ul {
-      display: none; } }
-  @media (min-width: 768px) and (max-width: 991.98px) {
-    .mini-vertical-list .vertical-list-item .vertical-list-item-details p {
-      display: none; } }
-  @media (min-width: 992px) and (max-width: 1199.98px) {
-    .mini-vertical-list .vertical-list-item .vertical-list-item-details p {
-      display: none; } }
-  .mini-vertical-list .vertical-list-item .vertical-list-item-view-btn .btn {
-    bottom: 0;
-    margin-bottom: 30%;
-    position: absolute;
-    right: 30%; }
+      right: 30%; }
 
 /*
 $categories: (
@@ -5384,6 +5389,24 @@ $categories: (
   border-bottom: 4px solid #000; }
 
 .beef-category-pop .category-name {
+  background-color: #000;
+  color: #fff; }
+
+.beef-category-default .category-header-title {
+  color: #000;
+  border-bottom: 2px solid #000; }
+
+.beef-category-default .beef-thumbnail img, .beef-category-default .vertical-list-item-thumbnail img {
+  border-bottom: 4px solid #000; }
+
+.beef-category-other .category-header-title {
+  color: #000;
+  border-bottom: 2px solid #000; }
+
+.beef-category-other .beef-thumbnail img, .beef-category-other .vertical-list-item-thumbnail img {
+  border-bottom: 4px solid #000; }
+
+.beef-category-other .category-name {
   background-color: #000;
   color: #fff; }
 
@@ -5685,6 +5708,10 @@ div#smartwizard:before {
       .category-browser-section .category-browser-header .header-menu ul li.category-pop {
         background-color: #000; }
         .category-browser-section .category-browser-header .header-menu ul li.category-pop:hover {
+          background-color: black; }
+      .category-browser-section .category-browser-header .header-menu ul li.category-other {
+        background-color: #000; }
+        .category-browser-section .category-browser-header .header-menu ul li.category-other:hover {
           background-color: black; }
 
 .inline-beef-search-form .form-text.trending a {

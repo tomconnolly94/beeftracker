@@ -24,18 +24,3 @@ mixin medium-beef-thumbnail(data, data_type, image_resize_params)
                     div.beefometer-container
                         div.beefometer.small.four-beefs
             img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + data.img_title_fullsize)
-
-
-mixin medium-actor-thumbnail(name, image, cat_name, actor_id, d_o_b)
-    a.beef-thumbnail(href="/actor/#{actor_id}", class!=attributes.class)
-            div.info-overlay
-                div.header-panel
-                    span.category-name= cat_name
-                div.footer-panel
-                    //- div.footer-panel-bg &nbsp;
-                    div.beef-details
-                        h4= name
-                        span.date= d_o_b
-                    div.beefometer-container
-                        div.beefometer.small.four-beefs
-            img(src=image)

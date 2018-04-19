@@ -8,7 +8,7 @@ var EventCategory = require("../schemas/event_category_schema");
 
 module.exports = {
     
-    getEventCategories: function(request, response, callback){
+    getEventCategories: function(callback){
         
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
