@@ -15,7 +15,7 @@ var build_template_function = function(request, response){
     //strip request.url to find the component name and its path
     var component_name = request.url.split("/")[1].split("?")[0];
     var template_path = template_dir + component_name + "/" + component_name + ".jade";
-    var function_name = component_name + "_tmpl_func";
+    var function_name = component_name + "_tmpl_render_func";
     
     // Compile the template to a function string
     var template_compilation_function = jade.compileFileClient(template_path, { exportMixins: true, name: function_name });

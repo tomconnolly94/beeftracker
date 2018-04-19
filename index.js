@@ -71,10 +71,10 @@ app.use('/modules', express.static(__dirname + '/node_modules/')); //route to re
 app.use('/bower_components', express.static(__dirname + '/bower_components/')); //route to reference bower library files
 app.use('/component_controllers', express.static(__dirname + '/views/templates/components/')); //route to reference client side controller scripts
 
-
+//route for service worker script must be here to allow it to cache files globally across the site
 app.get("/service_worker", function(request, response){
-    response.sendFile(__dirname + "/public/javascript/service_worker.js")
-})
+    response.sendFile(__dirname + "/public/javascript/service_worker/service_worker.js")
+});
 
 // ### Page routes configuration file ###
 app.use('/', require('./server_files/routing/page_routing'));
