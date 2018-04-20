@@ -7,11 +7,14 @@ mixin category-browser-section()
             div.header-menu
                 ul
                     each category in categories
+                        - var initial_style = category == categories[0] ? "color:#DF3E3E;" : ""
                         li(class="category-#{category.name.toLowerCase()}")
-                            a(href="#", class="category_button", id="#{category.cat_id}") #{category.name}
+                            a(href="#", class="category_button", id="#{category.cat_id}", style=initial_style) #{category.name}
             div.header-title
-                h2.category-header-title RAP.
-        +category-browser-display()
+                h2.category-header-title#category_header_title GRIME.
+                
+        div.row.beef-category-browser#beef_category_browser_display
+            +category-browser-display()
     
     append scripts
         script(src="/component_controllers/category_browser/category_browser_controller.js")

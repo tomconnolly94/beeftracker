@@ -134,7 +134,7 @@ router.get("/beef", function(request, response) {
     });
     
     var category_event_data_promise = new Promise(function(resolve, reject){
-       event_controller.findEvents({ match_category: 1, limit: 6 }, function(data){
+       event_controller.findEvents({ match_category: "0", limit: 6 }, function(data){
            resolve(data);
         });
     });

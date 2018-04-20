@@ -5098,6 +5098,9 @@ section {
         @media (min-width: 576px) and (max-width: 767.98px) {
           .beef-thumbnail .info-overlay .header-panel .category-name {
             margin: 2%; } }
+        @media (max-width: 575.98px) {
+          .beef-thumbnail .info-overlay .header-panel .category-name {
+            margin: 2%; } }
     .beef-thumbnail .info-overlay .footer-panel {
       position: absolute;
       bottom: 0;
