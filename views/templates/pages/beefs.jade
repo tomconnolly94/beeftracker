@@ -2,35 +2,32 @@ extends ../layouts/layout.jade
 include ../components/trending_beef/trending_beef.jade
 include ../components/category_browser/category_browser.jade
 include ../components/pagination/pagination.jade
+include ../components/section_control_toolbar/section_control_toolbar.jade
 
 append body
     div.bt-content
-        +section('ALL', 'BEEFS', 'fa-tv')
-            div.section-toolbar
-                div.section-toolbar-menu
-                    ul.list-sections
-                        li.active
-                            a(href="#") All
-                        li
-                            a(href="#") New
-                        li
-                            a(href="#") Trending
-                        li
-                            a(href="#") Hot
-                    ul.list-type
-                        li.active
-                            a(href="#")
-                                span.fas.fa-list
-                        li
-                            a(href="#")
-                                span.fas.fa-th
+        +category-browser-section(grid_data)
+        
+append body
+    div.bt-content-full-width.dark
+      div.container
+          +section('HOT', 'BEEF')
+               +horizontal-slider('featured_beefs_slider_full', slider_data, "events", "c_fill,g_face,h_219,w_340")
+
+append body
+    div.bt-content
+        +section('ALL', 'BEEF', 'fa-tv')
+            +section-control-toolbar(["All", "New", "Trending", "Hot"])
             div.row
                 each thumbnail_data in grid_data
                     div.col-lg-4.col-md-6.col-xs-4
                         +medium-beef-thumbnail(thumbnail_data, "events", "c_fill,g_face,h_215,w_350")(class="beef-category-#{thumbnail_data.categories[0].name.toLowerCase()}")
-            div.row
+            //div.row
                 div.col-md-12
                     +pagination()
         
-        +category-browser-section(grid_data)
-
+append scripts
+    +horizontal-slider-js('featured_beefs_slider')
+    +horizontal-slider-js('featured_beefs_slider_full')
+    +horizontal-slider-js('featured_beefs_slider_dark')
+    script(src="/bower_components/swiper/dist/js/swiper.js")

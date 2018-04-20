@@ -79,19 +79,33 @@ router.get("/", function(request, response){
             resolve(data);
         });
     });
+    
     var grid_data_promise = new Promise(function(resolve, reject){
        event_controller.findEvents({ limit: 6, featured: false }, function(data){
            resolve(data);
         });
     });
+    
     var slider_data_promise = new Promise(function(resolve, reject){
          event_controller.findEvents({ limit: 12, featured: false, increasing_order: "date_added" }, function(data){
             resolve(data);
         });
     });
+    
+    var category_event_data_promise = new Promise(function(resolve, reject){
+       event_controller.findEvents({ match_category: "0", limit: 6 }, function(data){
+           resolve(data);
+        });
+    });
+    
+    var categories_promise = new Promise(function(resolve, reject){
+       category_controller.getEventCategories(function(data){
+           resolve(data);
+        });
+    });
 
-    Promise.all([ featured_data_promise, grid_data_promise, slider_data_promise ]).then(function(values) {
-        response.render("pages/home.jade", { file_server_url_prefix: globals.file_server_url_prefix, featured_data: values[0], grid_data: values[1], slider_data: values[2] });
+    Promise.all([ featured_data_promise, grid_data_promise,/* slider_data_promise,*/ category_event_data_promise, categories_promise ]).then(function(values) {
+        response.render("pages/home.jade", { file_server_url_prefix: globals.file_server_url_prefix, featured_data: values[0], grid_data: values[1], /*slider_data: values[2] */ category_event_data: values[2], categories: values[3] });
     }).catch(function(error){
         console.log(error);
     });
@@ -128,7 +142,7 @@ router.get("/add-beef", function(request, response) {
 router.get("/beef", function(request, response) { 
     
     var events_data_promise = new Promise(function(resolve, reject){
-       event_controller.findEvents({ decreasing_order: "date_added" }, function(data){
+       event_controller.findEvents({ decreasing_order: "date_added", limit: 12 }, function(data){
             resolve(data);
         });
     });
@@ -145,9 +159,15 @@ router.get("/beef", function(request, response) {
         });
     });
     
-    Promise.all([ events_data_promise, category_event_data_promise, categories_promise ]).then(function(data){
-        response.render("pages/beefs.jade", { file_server_url_prefix: globals.file_server_url_prefix, grid_data: data[0], category_event_data: data[1], categories: data[2] }); 
-    });    
+    var slider_data_promise = new Promise(function(resolve, reject){
+         event_controller.findEvents({ limit: 12, featured: false, increasing_order: "date_added" }, function(data){
+            resolve(data);
+        });
+    });
+    
+    Promise.all([ events_data_promise, category_event_data_promise, categories_promise, slider_data_promise ]).then(function(data){
+        response.render("pages/beefs.jade", { file_server_url_prefix: globals.file_server_url_prefix, grid_data: data[0], category_event_data: data[1], categories: data[2], slider_data: data[3] }); 
+    });
 }); //beef page
 router.get("/beef/:beef_chain_id/:event_id", function(request, response) { 
 

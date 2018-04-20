@@ -2,6 +2,7 @@ extends ../layouts/layout.jade
 include ../components/trending_beef/trending_beef.jade
 include ../components/add_beef_call_to_action/add_beef_call_to_action.jade
 include ../components/featured_beef/featured_beef.jade
+include ../components/category_browser/category_browser.jade
 include ../layouts/horizontal_slider.jade
 
 append scripts
@@ -22,9 +23,13 @@ append body
             //+horizontal-slider('featured_beefs_slider', grid_data, "events")
 append body
     div.bt-content
-        +add-beef-cta()
+        +category-browser-section(grid_data)
 
 append body
+    div.bt-content
+        +add-beef-cta()
+
+//append body
     div.bt-content-full-width.dark
       div.container
           +section('HOT', 'BEEF')
@@ -32,7 +37,7 @@ append body
 
 append body
     div.bt-content
-        +section('JOIN', 'US')
+        +section('JOINTHE', 'COMMUNITY')
             div.row
                 div.col-sm-6
                     p

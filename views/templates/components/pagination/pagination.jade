@@ -4,16 +4,16 @@ mixin pagination()
             li.prev
                 a(href="#")
                     i.fas.fa-chevron-left
-                li.num
-                    a(href="#") 1
-                li.num.active
-                    a(href="#") 2
-                li.num
-                    a(href="#") 3
-                li.num
-                    a(href="#") 4
+            li.num
+                a.pagination_number_button(href="#", id=1) 1
+            li.num.active
+                a.pagination_number_button(href="#", id=2) 2
+            li.num
+                a.pagination_number_button(href="#", id=3) 3
+            li.num
+                a.pagination_number_button(href="#", id=4) 4
             li.next
                 a(href="#")
                     i.fas.fa-chevron-right
-
-
+    append scripts
+        script(src="/component_controllers/pagination/pagination_controller.js")
