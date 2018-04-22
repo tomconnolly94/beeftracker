@@ -8,4 +8,8 @@ mixin thumbnail-grid(grid_thumbnail_data)
                 +medium-beef-thumbnail(thumbnail_data, "events", "c_fill,g_face,h_215,w_350")(class=category_class)
     - }
 
-+thumbnail-grid("none")
+- if(!grid_thumbnail_data){
+-     grid_thumbnail_data = "none";
+- } 
+
++thumbnail-grid(grid_thumbnail_data)

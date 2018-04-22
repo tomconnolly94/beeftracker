@@ -125,7 +125,7 @@ router.get("/actor/:tagId", function(request, response) {
 
     //access data from db
     
-    response.render("pages/dynamic_pages/actor.ejs"); 
+    response.render("pages/actor.jade"); 
 }); //actor page
 router.get("/add-beef", function(request, response) {
 
@@ -209,7 +209,6 @@ router.get("/contact", function(request, response) {
         response.render("pages/contact.jade", { file_server_url_prefix: globals.file_server_url_prefix, trending_data: data }); 
     });
 }); // contact us page
-
 
 /*
 router.get("/subscribe/", function(request, response) { response.render("pages/form_pages/subscribe_to_news.ejs"); }); // submit actordata page

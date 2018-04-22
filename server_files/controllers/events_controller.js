@@ -231,15 +231,16 @@ module.exports = {
                 aggregate_array.splice(1, 0, { $limit: limit_query_content });
                 
                 if(Object.keys(sort_query_content).length > 0){
-                    aggregate_array.splice(1, 0, { $sort: sort_query_content });
+                    aggregate_array.push({ $sort: sort_query_content });
                 }
                 
                 console.log(aggregate_array);
                 db.collection(db_ref.get_current_event_table()).aggregate(aggregate_array).toArray(function(err, docs) {
                     if(err){ console.log(err); }
                     else{
-                        console.log(docs[0]);
                         if(docs && docs.length > 0){
+                        console.log(docs[0]);
+                        console.log(docs[1]);
                             callback( docs );
                         }
                         else{
