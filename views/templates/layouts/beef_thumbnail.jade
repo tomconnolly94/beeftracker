@@ -1,8 +1,6 @@
 mixin medium-beef-thumbnail(data, data_type, image_resize_params)
     - if(data != "none"){
-        - if(data.event_date instanceof Date){
-        
-        - }
+        - if(data.event_date instanceof Date){}
         - else{
         -   data.event_date = new Date(data.event_date);
         - }

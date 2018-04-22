@@ -1,18 +1,19 @@
+include ../../layouts/beef_thumbnail.jade
+
 mixin section-control-toolbar(toolbar_buttons)
-    div.section-toolbar
-        div.section-toolbar-menu
-            ul.list-sections
-                each toolbar_button in toolbar_buttons
-                    - var active_class = toolbar_button == toolbar_buttons[0] ? "active" : "";
-                    li(class=active_class)
-                        a.toolbar_button(href="#", id=toolbar_button.toLowerCase()) #{toolbar_button}
-            ul.list-type
-                //li
-                    a(href="#")
-                        span.fas.fa-list
-                li.active
-                    a(href="#")
-                        span.fas.fa-th
+    div.section-toolbar-menu
+        ul.list-sections(x-selected-option=toolbar_buttons[0])
+            each toolbar_button in toolbar_buttons
+                - var active_class = toolbar_button == toolbar_buttons[0] ? "active" : "";
+                li(class=active_class)
+                    a.toolbar_button(href="#", id=toolbar_button.toLowerCase()) #{toolbar_button}
+        ul.list-type
+            //li
+                a(href="#")
+                    span.fas.fa-list
+            li.active
+                a(href="#")
+                    span.fas.fa-th
                         
     append scripts
         script(src="/component_controllers/section_control_toolbar/section_control_toolbar_controller.js")

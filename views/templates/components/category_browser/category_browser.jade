@@ -1,5 +1,5 @@
 include ../../layouts/mini_vertical_beef_list.jade
-include ./category_browser_display.jade
+include ../thumbnail_grid/thumbnail_grid.jade
 
 mixin category-browser-section()
     +section('BROWSE', 'CATEGORIES', 'fa-clock')(class="category-browser-section beef-category-music", id="category_browser_section")
@@ -14,7 +14,7 @@ mixin category-browser-section()
                 h2.category-header-title#category_header_title GRIME.
                 
         div.row.beef-category-browser#beef_category_browser_display
-            +category-browser-display()
+            +thumbnail-grid(category_event_data)
     
     append scripts
         script(src="/component_controllers/category_browser/category_browser_controller.js")

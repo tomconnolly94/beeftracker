@@ -35,7 +35,7 @@ var build_template_function = function(request, response){
 //Activity logs endpoints
 router.route('/carousel').get(build_template_function);//built, written, tested
 router.route('/gallery_manager/gallery_manager').get(build_template_function);//built, written, tested
-router.route('/category_browser/category_browser_display').get(build_template_function);//built, written, tested
+router.route('/thumbnail_grid/thumbnail_grid').get(build_template_function);//built, written, tested
 
 //handle errors
 router.route('/*').get(function(request, response) {response.status(404).send({ success: false, message: "Template not found." }); });

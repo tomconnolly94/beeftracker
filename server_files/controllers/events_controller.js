@@ -46,6 +46,20 @@ var check_end_or_next = function(event, item, next){
     }
 }
 
+var increment_hit_counts = function(event_id){
+    
+    db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
+        if(err){ console.log(err); }
+        else{
+            //var event_id_object = BSON.ObjectID.createFromHexString(event_id);
+
+            db.collection(db_ref.get_current_event_table()).update({ _id: event_id }, { $inc: { "hit_counts.total": 1, "hit_counts.today": 1, "hit_counts.this_month": 1 } }, function(err, result){
+                //callback();
+            })
+        }
+    });
+}
+
 module.exports = {
     
     format_event_data: function(submission_data){
@@ -122,8 +136,8 @@ module.exports = {
             
             if(query_parameters.increasing_order == "name"){ sort_field_name = "name"; }
             else if(query_parameters.increasing_order == "rating" || query_parameters.decreasing_order == "rating"){ sort_field_name = "rating"; }
-            else if(query_parameters.increasing_order == "popularity" || query_parameters.decreasing_order == "popularity"){ sort_field_name = "hit_count"; }
-            else if(query_parameters.increasing_order == "currently_trending" || query_parameters.decreasing_order == "currently_trending"){ sort_field_name = "hit_counts.last_two_days"; }
+            else if(query_parameters.increasing_order == "popularity" || query_parameters.decreasing_order == "popularity"){ sort_field_name = "hit_count.total"; }
+            else if(query_parameters.increasing_order == "currently_trending" || query_parameters.decreasing_order == "currently_trending"){ sort_field_name = "hit_counts.today"; }
             else if(query_parameters.increasing_order == "date_added" || query_parameters.decreasing_order == "date_added"){ sort_field_name = "date_added"; }
             else{ query_present = false; }// if no valid queries provided, disallow a sort query
 
@@ -214,16 +228,17 @@ module.exports = {
                     { $project: event_projection }
                 ];
                 
+                aggregate_array.splice(1, 0, { $limit: limit_query_content });
+                
                 if(Object.keys(sort_query_content).length > 0){
-                    aggregate_array.push({ $sort: sort_query_content });
+                    aggregate_array.splice(1, 0, { $sort: sort_query_content });
                 }
-                aggregate_array.push({ $limit: limit_query_content });
                 
-                //console.log(aggregate_array);
-                
-                db.collection(db_ref.get_current_event_table()).aggregate(aggregate_array).toArray(function(queryErr, docs) {
-                    if(queryErr){ console.log(queryErr); }
+                console.log(aggregate_array);
+                db.collection(db_ref.get_current_event_table()).aggregate(aggregate_array).toArray(function(err, docs) {
+                    if(err){ console.log(err); }
                     else{
+                        console.log(docs[0]);
                         if(docs && docs.length > 0){
                             callback( docs );
                         }
@@ -240,9 +255,7 @@ module.exports = {
 
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
-            else{
-                console.log(event_id)
-                
+            else{                
                 var event_id_object = BSON.ObjectID.createFromHexString(event_id);
                 
                 db.collection(db_ref.get_current_event_table()).aggregate([
@@ -312,6 +325,9 @@ module.exports = {
                     else{
                         if(docs && docs.length > 0){
                             callback( docs[0] );
+                            if(process.env.NODE_ENV == "heroku_production"){//only increment hit counts if codebase is in production
+                                increment_hit_counts(docs[0]._id);
+                            }
                         }
                         else{
                             callback({ failed: true, message: "Event not found."});
@@ -504,5 +520,6 @@ module.exports = {
                 });
             }
         });
-    }
+    },
+    
 }

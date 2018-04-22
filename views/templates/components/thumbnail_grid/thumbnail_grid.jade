@@ -1,0 +1,11 @@
+include ../../layouts/beef_thumbnail.jade
+
+mixin thumbnail-grid(grid_thumbnail_data)
+    - if(grid_thumbnail_data != "none"){
+        each thumbnail_data in grid_thumbnail_data
+            div.col-lg-4.col-md-6.col-xs-4
+                - var category_class = "beef-category-" + thumbnail_data.categories[0].name.toLowerCase()
+                +medium-beef-thumbnail(thumbnail_data, "events", "c_fill,g_face,h_215,w_350")(class=category_class)
+    - }
+
++thumbnail-grid("none")
