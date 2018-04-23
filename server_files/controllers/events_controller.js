@@ -203,7 +203,7 @@ module.exports = {
                         foreignField: "_id", 
                         as: "beef_chain_ids.events"
                     }},*/
-                    { $unwind: "$beef_chain_ids"}, 
+                    { $unwind: "$beef_chain_ids"},
                     { $group: {
                         _id: "$_id", 
                         title: { $first: "$title"},
@@ -239,8 +239,6 @@ module.exports = {
                     if(err){ console.log(err); }
                     else{
                         if(docs && docs.length > 0){
-                        console.log(docs[0]);
-                        console.log(docs[1]);
                             callback( docs );
                         }
                         else{

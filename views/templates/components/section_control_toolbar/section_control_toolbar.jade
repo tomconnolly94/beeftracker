@@ -1,8 +1,8 @@
 include ../../layouts/beef_thumbnail.jade
 
-mixin section-control-toolbar(toolbar_buttons)
+mixin section-control-toolbar(toolbar_buttons, data_type)
     div.section-toolbar-menu
-        ul.list-sections(x-selected-option=toolbar_buttons[0].toLowerCase())
+        ul.list-sections(x-selected-option=toolbar_buttons[0].toLowerCase(), x-data-type=data_type)
             each toolbar_button in toolbar_buttons
                 - var active_class = toolbar_button == toolbar_buttons[0] ? "active" : "";
                 li(class=active_class)

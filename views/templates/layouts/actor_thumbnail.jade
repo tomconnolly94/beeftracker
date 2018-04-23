@@ -1,13 +1,34 @@
-mixin medium-actor-thumbnail(name, image, cat_name, actor_id, d_o_b)
-    a.beef-thumbnail(href="/actor/#{actor_id}", class!=attributes.class)
-            div.info-overlay
-                div.header-panel
-                    span.category-name= cat_name
-                div.footer-panel
-                    //- div.footer-panel-bg &nbsp;
-                    div.beef-details
-                        h4= name
-                        span.date= d_o_b
-                    div.beefometer-container
-                        div.beefometer.small.four-beefs
-            img(src=image)
+mixin medium-actor-thumbnail(data, data_type, image_resize_params)
+    - if(data != "none"){
+        - if(data.date_of_origin instanceof Date){}
+        - else{
+        -   data.date_of_origin = new Date(data.date_of_origin);
+        - }
+        
+        - var day = data.date_of_origin.getDate();
+        - var monthIndex = data.date_of_origin.getMonth();
+        - var year = data.date_of_origin.getFullYear();
+        - var formatted_date =  day + '/' + monthIndex + '/' + year;
+            
+        - if(image_resize_params){
+        -   var split_server_url_prefix = file_server_url_prefix.split("/");
+        -   split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, image_resize_params);
+        -   var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
+        - }
+
+        a.beef-category-default(href="/actor/#{data._id}", class!=attributes.class, class!=attributes.beef_thumbnail_class)
+            div.beef-thumbnail(class!=attributes.beef_thumbnail_class)
+                div.info-overlay
+                    div.header-panel
+                        //- if(data.categories[0].name)
+                            span.category-name= data.categories[0].name
+                    div.footer-panel
+                        //- div.footer-panel-bg &nbsp;
+                        div.beef-details
+                            h4 #{data.name.length > 45 ? data.name.slice(0,45)+ "..." : data.name}
+                            span.date #{formatted_date}
+                        div.beefometer-container
+                            div.beefometer.small.four-beefs
+                img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + data.img_title_fullsize)
+    - }
++medium-actor-thumbnail("none", "none", "none")

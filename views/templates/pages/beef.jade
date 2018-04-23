@@ -10,7 +10,6 @@ append scripts
     script(src="/bower_components/shufflejs/dist/shuffle.js")
     script(src="/bower_components/fancybox/dist/jquery.fancybox.js")
     script(src="/bower_components/select2/dist/js/select2.full.js")
-    script(src="/bower_components/hammerjs/hammer.js")
 
 append body_scripts
     +masonry-gallery-script()
@@ -18,29 +17,29 @@ append body_scripts
     script.
         //Associated Actors
         function formatState (state) {
-              if (!state.id || state.element.getAttribute('disabled')) {
+            if (!state.id || state.element.getAttribute('disabled')) {
                 return state.text;
-              }
-              var $state = $(
+            }
+            var $state = $(
                 '<span><img style="width: 48px;" src="'+state.element.getAttribute('image_src') + '" class="img-flag" /> ' + state.text + '</span>'
-              );
-              return $state;
-            };
+            );
+            return $state;
+        };
 
 
-            //Also appears in selector
-            var aaisEl = $(".also-appears-in-select");
-            aaisEl.select2({
-              templateResult: formatState,
-              theme: 'classic',
-                width: "100%",
-                minimumResultsForSearch: -1 //Disable search
-            });
+        //Also appears in selector
+        var aaisEl = $(".also-appears-in-select");
+        aaisEl.select2({
+            templateResult: formatState,
+            theme: 'classic',
+            width: "100%",
+            minimumResultsForSearch: -1 //Disable search
+        });
 
-            aaisEl.on('select2:select', function (e) {
-              var actor_id = e.params.data.id;
-              alert("Selected "+actor_id);
-            });
+        aaisEl.on('select2:select', function (e) {
+            var actor_id = e.params.data.id;
+            alert("Selected "+actor_id);
+        });
 
 append body
 
@@ -56,6 +55,8 @@ append body
             - main_graphic = event_data.gallery_items[i];
         - }
     - }
+    
+    - var letter_mapping = ["one", "two", "three", "four", "five" ]
     
     div.bt-content
         div.row.versus-panel
@@ -86,7 +87,7 @@ append body
                 div.beef-title
                     h2
                         | #{event_data.title}
-                        span.beefometer.medium.four-beefs
+                        span.beefometer.medium(class=letter_mapping[event_data.rating - 1] + "-beefs")
                 div.beef-content-category
                     span.category-name #{event_data.categories[0].name}
                 div.beef-content-contribute

@@ -22,6 +22,7 @@
     padding-bottom: 20px;
     .actor-attribute {
         padding-bottom: 10px;
+        padding-top: 10px;
         border-bottom: 1px solid #f1f1f1;
     }
 
@@ -151,6 +152,12 @@
             }
         }
     }
+}
 
+li.actor-attribute span.list:after {
+    content: ", "
+}
 
+li.actor-attribute span.list :last-child:after{
+    content: ""
 }

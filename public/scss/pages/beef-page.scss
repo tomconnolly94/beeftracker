@@ -51,7 +51,7 @@
 
 .beef-content-container {
     @extend .row;
-    padding-top: 50px;
+    padding-top: 20px;
 
     @include media-breakpoint-only(xs) {
         padding-top: 10px;

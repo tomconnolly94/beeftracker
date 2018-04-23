@@ -1,16 +1,20 @@
-mixin related-actors()
+mixin related-actors(actors, image_resize_params, current_actor_id)
+
+    - if(image_resize_params){
+    -   var split_server_url_prefix = file_server_url_prefix.split("/");
+    -   split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, image_resize_params);
+    -   var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
+    - }
+
     div.rounded-mini-thumbs.related-beefs
         h4 Related Actors
         ul
-            li
-                a(href="#")
-                    img(src="https://peopledotcom.files.wordpress.com/2017/10/michelle-obama-d1.jpg")
-            li
-                a(href="#")
-                    img(src="https://peopledotcom.files.wordpress.com/2017/10/michelle-obama-d1.jpg")
-            li
-                a(href="#")
-                    img(src="https://peopledotcom.files.wordpress.com/2017/10/michelle-obama-d1.jpg")
-            li
-                a(href="#")
-                    img(src="https://peopledotcom.files.wordpress.com/2017/10/michelle-obama-d1.jpg")
+            each actor in actors
+                - if(String(actor._id) != String(current_actor_id)){
+                    li
+                        a(href="/actor/#{actor._id}")
+                            img(src=server_url_prefix_with_image_formatting + "/actors/" + actor.img_title_fullsize)
+                            div    
+                                p #{actor.name.slice(0,20)}
+                - }
+                            

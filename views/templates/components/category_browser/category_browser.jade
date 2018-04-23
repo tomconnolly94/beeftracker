@@ -14,7 +14,7 @@ mixin category-browser-section()
                 h2.category-header-title#category_header_title GRIME.
                 
         div.row.beef-category-browser#beef_category_browser_display
-            +thumbnail-grid(category_event_data)
+            +thumbnail-grid(category_event_data, "events")
     
     append scripts
         script(src="/component_controllers/category_browser/category_browser_controller.js")

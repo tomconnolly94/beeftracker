@@ -118,14 +118,37 @@ router.get("/about", function(request, response) {
 router.get("/actors", function(request, response) { 
     
     //access data from db
-    
-    response.render("pages/actors.jade", template_data_actors); 
-}); // about_us page
-router.get("/actor/:tagId", function(request, response) { 
+    var actors_promise = new Promise(function(resolve, reject){
+       actor_controller.findActors({ limit: 12 }, function(data){
+           resolve(data);
+        });
+    });
 
-    //access data from db
+    Promise.all([ actors_promise ]).then(function(values) {
+        response.render("pages/actors.jade", { file_server_url_prefix: globals.file_server_url_prefix, actor_data: values[0] });
+    }).catch(function(error){
+        console.log(error);
+    });
+}); // about_us page
+router.get("/actor/:actor_id", function(request, response) { 
+
+    //extract data
+    var actor_id = request.params.actor_id;
     
-    response.render("pages/actor.jade"); 
+    //access data from db
+    var actor_data_promise = new Promise(function(resolve, reject){
+       actor_controller.findActor(actor_id, function(data){
+           console.log(data);
+           console.log(data.related_actors);
+           resolve(data);
+        });
+    });
+
+    Promise.all([ actor_data_promise ]).then(function(values) {
+        response.render("pages/actor.jade", { file_server_url_prefix: globals.file_server_url_prefix, actor_data: values[0] });
+    }).catch(function(error){
+        console.log(error);
+    });
 }); //actor page
 router.get("/add-beef", function(request, response) {
 
@@ -185,6 +208,7 @@ router.get("/beef/:beef_chain_id/:event_id", function(request, response) {
             });
         });
     });
+    
     var comment_data_promise = new Promise(function(resolve, reject){
        comment_controller.findCommentsFromBeefChain(beef_chain_id, function(data){
             resolve(data);

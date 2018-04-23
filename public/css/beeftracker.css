@@ -5479,6 +5479,7 @@ $categories: (
   padding-bottom: 20px; }
   .actor-attributes .actor-attribute {
     padding-bottom: 10px;
+    padding-top: 10px;
     border-bottom: 1px solid #f1f1f1; }
   .actor-attributes .attribute-name {
     color: #DF3E3E; }
@@ -5564,6 +5565,12 @@ $categories: (
         .versus-panel .versus h4 {
           font-size: 1.2em;
           padding-top: 100%; } }
+
+li.actor-attribute span.list:after {
+  content: ", "; }
+
+li.actor-attribute span.list :last-child:after {
+  content: ""; }
 
 form label {
   color: #000;
@@ -6175,7 +6182,7 @@ figure.masonry-item.soundcloud-item .play-button {
   font-size: 0.8rem; }
 
 .beef-content-container {
-  padding-top: 50px; }
+  padding-top: 20px; }
   @media (max-width: 575.98px) {
     .beef-content-container {
       padding-top: 10px; } }

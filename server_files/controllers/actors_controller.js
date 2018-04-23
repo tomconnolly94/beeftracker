@@ -13,6 +13,28 @@ var format_embeddable_items = require('../tools/formatting.js').format_embeddabl
 var Actor = require('../schemas/actor_schema');
 
 var test_mode = false;
+var actor_intermediate_projection = {
+    $project: {
+        _id: 1, 
+        name: 1,
+        date_of_origin: 1,
+        place_of_origin: 1,
+        description: 1,
+        data_sources: 1,
+        also_known_as: 1,
+        classification: 1,
+        variable_field_values: 1,
+        links: 1,
+        gallery_items: 1,
+        img_title_thumbnail: 1,
+        img_title_fullsize: 1,
+        rating: 1,
+        date_added: 1,
+        name_lower: 1,
+        also_known_as_lower: 1,
+        related_actors: { $setUnion: [ "$related_actors_aggressors", "$related_actors_targets" ] }
+    }
+}
 var actor_projection = {
     $project: {
         _id: 1, 
@@ -20,19 +42,19 @@ var actor_projection = {
         date_of_origin: 1,
         place_of_origin: 1,
         description: 1,
-        associated_actors: 1,
         data_sources: 1,
         also_known_as: 1,
-        img_title: 1,
         classification: 1,
         variable_field_values: 1,
         links: 1,
         gallery_items: 1,
         img_title_thumbnail: 1,
         img_title_fullsize: 1,
+        rating: 1,
         date_added: 1,
         name_lower: 1,
-        also_known_as_lower: 1
+        also_known_as_lower: 1,
+        related_actors: 1
     }
 }
 
@@ -79,7 +101,7 @@ module.exports = {
         var match_query = {};
         var sort_query_content = {};
         var query_present = Object.keys(query_parameters).length === 0 && query_parameters.constructor === Object ? false : true; //check if request comes with query
-        var limit_query_content = null;//30; //max amount of records to return
+        var limit_query_content = 30;//30; //max amount of records to return
                 
         if(query_present){
             
@@ -105,8 +127,7 @@ module.exports = {
             if(query_parameters.match_name){ match_query = { name: { $regex : query_parameters.match_name, $options: "i" } } }
             
             //deal with $limit query
-            if(query_parameters.limit){ limit_query_content = query_parameters.limit }
-            
+            if(query_parameters.limit){ limit_query_content = typeof query_parameters.limit == "string" ? parseInt(query_parameters.limit) : query_parameters.limit }
         }
 
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
@@ -115,12 +136,11 @@ module.exports = {
 
                 var aggregate_array = [
                     { $match: match_query },
-                    { $unwind :  { "path" : "$associated_actors", "preserveNullAndEmptyArrays": true  }},
                     { $lookup : { 
-                        from: db_ref.get_current_actor_table(),
-                        localField: "associated_actors",
-                        foreignField: "_id",
-                        as: "associated_actors" }}, 
+                        from: db_ref.get_current_event_table(),
+                        localField: "_id",
+                        foreignField: "aggressors",
+                        as: "related_events" }}, 
                     { $group : { 
                         _id: "$_id", 
                         name: { "$max": "$name" },
@@ -140,14 +160,11 @@ module.exports = {
                     }}
                 ];
 
+                aggregate_array.splice(1, 0, { $limit: limit_query_content });
+                
                 if(Object.keys(sort_query_content).length > 0){
-                    aggregate_array.$sort = sort_query_content;
+                    aggregate_array.push({ $sort: sort_query_content });
                 }
-
-                if(limit_query_content && Object.keys(limit_query_content).length > 0){
-                    aggregate_array.$limit = limit_query_content;
-                }
-
                 db.collection(db_ref.get_current_actor_table()).aggregate(aggregate_array).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
                     else{
@@ -158,11 +175,8 @@ module.exports = {
         });
     },
     
-    findActor: function(request, response, callback){
+    findActor: function(actor_id, callback){
         
-        //extract data
-        var actor_id = request.params.actor_id;
-
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
             else{
@@ -171,13 +185,42 @@ module.exports = {
                 
                 db.collection(db_ref.get_current_actor_table()).aggregate([
                     { $match: { _id: actor_id_object } },
-                    { $unwind :  { "path" : "$associated_actors", "preserveNullAndEmptyArrays": true  }},
                     { $lookup : { 
+                        from: db_ref.get_current_event_table(),
+                        localField: "_id",
+                        foreignField: "aggressors",
+                        as: "related_events" }},
+                    { $unwind: "$related_events" },
+                    { $unwind: "$related_events.aggressors" },
+                    { $unwind: "$related_events.targets" },
+                    { $group: {
+                        _id: "$_id", 
+                        name: { $first: "$name"},
+                        date_of_origin: { $addToSet: "$date_of_origin" },
+                        place_of_origin: { $addToSet: "$place_of_origin"},
+                        description: { $first: "$description"},
+                        data_sources: { $first: "$data_sources"},
+                        also_known_as: { $first: "$also_known_as"},
+                        classification: { $first: "$classification"},
+                        variable_field_values: { $first: "$variable_field_values"},
+                        links: { $first: "$links"},
+                        gallery_items: { $first: "$gallery_items"},
+                        img_title_thumbnail: { $first: "$img_title_thumbnail"},
+                        img_title_fullsize: { $first: "$img_title_fullsize"},
+                        rating: { $first: "$rating"},
+                        date_added: { $addToSet: "$date_added"},
+                        name_lower: { $first: "$name_lower"},
+                        also_known_as_lower: { $first: "$also_known_as_lower"},
+                        related_actors_aggressors: { $addToSet: "$related_events.aggressors" },
+                        related_actors_targets: { $addToSet: "$related_events.targets" }
+                    }},
+                    actor_intermediate_projection,
+                    { $lookup: {
                         from: db_ref.get_current_actor_table(),
-                        localField: "associated_actors",
+                        localField: "related_actors",
                         foreignField: "_id",
-                        as: "associated_actors" 
-                    }}, 
+                        as: "related_actors"
+                    }},
                     actor_projection
                 ]).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
@@ -397,6 +440,6 @@ module.exports = {
                 }
             }
         });
-    }
+    },
     
 }

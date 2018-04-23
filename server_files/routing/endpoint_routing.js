@@ -91,7 +91,10 @@ router.route('/activity-logs/actors/:actor_id').get(function(){
 
 //Actors endpoints
 router.route('/actors').get(function(request, response){
-    actor_controller.findActors(request, response, function(actors){
+    
+    var query = request.query;
+    
+    actor_controller.findActors(query, function(actors){
         if(actors.length > 0){
             send_successful_response(response, 200, actors);
         }
@@ -289,7 +292,6 @@ router.route('/event-categories').post(event_categories_data_validator.validate,
 router.route('/events').get(function(request, response){
     
     var query = request.query;
-    console.log(query);
     
     event_controller.findEvents(query, function(data){
         if(data.failed){

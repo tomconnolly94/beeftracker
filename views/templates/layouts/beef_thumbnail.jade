@@ -15,20 +15,22 @@ mixin medium-beef-thumbnail(data, data_type, image_resize_params)
         -   split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, image_resize_params);
         -   var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
         - }
+        
+        - var letter_mapping = ["one", "two", "three", "four", "five" ]
 
         a(href="/beef/#{data.beef_chain_ids[0]._id}/#{data._id}", class!=attributes.class, class!=attributes.beef_thumbnail_class)
             div.beef-thumbnail(class!=attributes.beef_thumbnail_class)
                 div.info-overlay
                     div.header-panel
                         - if(data.categories[0].name)
-                            span.category-name= data.categories[0].name
+                            span.category-name= data.categories[0].name                            
                     div.footer-panel
                         //- div.footer-panel-bg &nbsp;
                         div.beef-details
                             h4 #{data.title.length > 45 ? data.title.slice(0,45)+ "..." : data.title}
                             span.date #{formatted_date}
                         div.beefometer-container
-                            div.beefometer.small.four-beefs
+                            div.beefometer.small(class=letter_mapping[data.rating - 1] + "-beefs")
                 img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + data.img_title_fullsize)
     - }
 +medium-beef-thumbnail("none", "none", "none")

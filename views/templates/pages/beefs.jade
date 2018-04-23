@@ -19,9 +19,9 @@ append body
     div.bt-content
         +section('ALL', 'BEEF', 'fa-tv')
             div.section-toolbar#section_toolbar_control_1
-                +section-control-toolbar(["All", "New", "Trending", "Hot", "Old"])
+                +section-control-toolbar(["All", "New", "Trending", "Hot", "Old"], "events")
             div.row#section_toolbar_display_1
-                +thumbnail-grid(grid_data)
+                +thumbnail-grid(grid_data, "events")
             //div.row
                 div.col-md-12
                     +pagination()

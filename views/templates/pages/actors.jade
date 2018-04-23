@@ -2,12 +2,21 @@ extends ../layouts/layout.jade
 include ../components/trending_beef/trending_beef.jade
 include ../components/category_browser/category_browser.jade
 include ../components/pagination/pagination.jade
-include ../layouts/actor_thumbnail.jade
+include ../components/section_control_toolbar/section_control_toolbar.jade
+include ../components/thumbnail_grid/thumbnail_grid.jade
 
 append body
     div.bt-content
         +section('ALL', 'ACTORS', 'fa-tv')
-            div.section-toolbar
+            div.section-toolbar#section_toolbar_control_actor_grid
+                +section-control-toolbar(["All", "New"], "actors")
+            div.row#section_toolbar_display_actor_grid
+                +thumbnail-grid(actor_data, "actors")
+            //div.row
+                div.col-md-12
+                    +pagination()
+                    
+            //div.section-toolbar
                 div.section-toolbar-menu
                     ul.list-sections
                         li.active
@@ -15,19 +24,11 @@ append body
                         li
                             a(href="#") New
                     ul.list-type
-                        li.active
+                        //li
                             a(href="#")
                                 span.fas.fa-list
-                        li
+                        li.active
                             a(href="#")
                                 span.fas.fa-th
-            div.row
-                each thumbnail_data in grid_data
-                    div.col-lg-4.col-md-6.col-xs-4.beef-category-tech
-                        +medium-actor-thumbnail(thumbnail_data.name, thumbnail_data.image_url, thumbnail_data.category, thumbnail_data._id, thumbnail_data.d_o_b)(class="beef-category-#{thumbnail_data.category.toLowerCase()}")
-            div.row
-                div.col-md-12
-                    +pagination()
 
         +add-beef-cta()
-
