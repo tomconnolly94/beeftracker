@@ -41,9 +41,6 @@ mixin select-actor-modal()
                             option(value="default", selected="true", disabled="disabled") Select Actor 
                             each actor in actor_data
                                 option(value=actor._id, x-actor-image-link=server_url_prefix_with_image_formatting + "/actors/" + actor.img_title_fullsize, x-actor-name=actor.name, x-actor-id=actor._id) #{actor.name}
-                            //option(value="donald_trump") Donald Trump
-                            //option(value="eminem") Eminem
-                            //option(value="obama") Obama
                 div.form-row
                     div.col-md-12
                         a#add_new_actor(href="#") Add New Actor

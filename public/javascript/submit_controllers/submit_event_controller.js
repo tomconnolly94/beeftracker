@@ -12,8 +12,14 @@ $(function(){
         var target = $("#beefee_name").attr("x-actor-id");
         var category = $("#beef_category").select2().find(":selected").val();
         var tags = $("#beef_tags").select2().val();
-        var summernote_content = $("#beef_content_summernote").val();
+        var description = $("#beef_content_summernote").val();
         
-        console.log(summernote_content);
+        console.log(title);
+        console.log(date);
+        console.log(aggressor);
+        console.log(target);
+        console.log(category);
+        console.log(tags);
+        console.log(description);
     }); 
 });

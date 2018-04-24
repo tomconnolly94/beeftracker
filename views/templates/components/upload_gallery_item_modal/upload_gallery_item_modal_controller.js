@@ -5,16 +5,19 @@ $(function(){
     
     //clear all data from modal and reset it to its original state
     function reset_modal(){
-        $('#media_preview').attr('src', "");
+        $('#media_preview').attr('src', ""); //reset media preview element
         
-        $("#photo_input_div").css("display", "none");
+        //hide all input divs in modal
+        $("#photo_input_div").css("display", "none"); 
         $("#soundcloud_input_div").css("display", "none");
         $("#youtube_input_div").css("display", "none");
         
-        //$('#upload_type').select2("val", "Select Type");
-        $('#upload_type').select2().val(null);
-        //$('#upload_type').select2('data', null)
-        $("#upload_gallery_item_modal").modal("hide");
+        var file_input_tag = $('#photo_link');
+        file_input_tag.wrap('<form>').closest('form').get(0).reset();
+        file_input_tag.unwrap();
+        
+        $('#upload_type').val("default").trigger("change"); //reset media type input select box
+        $("#upload_gallery_item_modal").modal("hide"); //hide modal
     }
     
     //onchange event for when a media type is selected
@@ -25,13 +28,11 @@ $(function(){
         $("#soundcloud_input_div").css("display", "none");
         $("#youtube_input_div").css("display", "none");
         
-        let media_type = $("#upload_type").select2().find(":selected").val();
+        let media_type = $("#upload_type").val();
         
-        $("#" + media_type + "_input_div").css("display", "block");
-        $("#set_as_cover").css("display", "block");
-        $("#media_submit_button").removeAttr("disabled");
-        
-        //$('#upload_type').val(null).trigger('change');
+        $("#" + media_type + "_input_div").css("display", "block"); //show text input tag
+        $("#set_as_cover").css("display", "block"); //show set as cover checkbox input
+        $("#media_submit_button").removeAttr("disabled"); //enable the "add" button
     });
     
     //function to handle a photo being added to the file input tag
