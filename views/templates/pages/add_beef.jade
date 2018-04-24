@@ -42,7 +42,7 @@ append scripts
     script(src="/bower_components/select2/dist/js/select2.full.js")
     script(src="/modules/summernote/dist/summernote-lite.js")
     script(src="/bower_components/smartwizard/dist/js/jquery.smartWizard.js")
-
+    script(src="/js/submit_controllers/submit_event_controller.js")
 
 append body
     div.bt-content
@@ -57,12 +57,12 @@ append body
                         | Beef
                 span.col-2.icon.fas-plus
             div(style="padding-top: 20px;")
-                form
+                form(action="/api/actors", method="POST")
                     div.row
                         div.col-12
                             div.button-group.float-right
                                 a(href="#").btn.btn-secondary Cancel
-                                button(type="submit").btn.btn-primary Submit
+                                button(type="submit").btn.btn-primary#submit_new_event_button Submit
                     div.row.versus-panel
                         div.col-5.beefer
                             div
@@ -96,7 +96,9 @@ append body
                                 div.form-group.col-md-6
                                     label(for="beef_category") Category
                                     select#beef_category.form-control(name="beef_category")
-                                        option Cat one
+                                        option(selected="selected", disabled="disabled") Select Category
+                                        each category in categories
+                                            option(value=category.cat_id) #{category.name}
                                 div.form-group.col-md-6
                                     label(for="beef_tags") Tags
                                     select#beef_tags.form-control(name="beef_tags", multiple="multiple")

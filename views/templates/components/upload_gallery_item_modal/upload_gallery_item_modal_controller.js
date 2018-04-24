@@ -63,7 +63,7 @@ $(function(){
         
         gallery_items.push({ url: $("#media_preview").attr("src") });
         
-        load_template_render_function("gallery_manager", function(status){
+        load_template_render_function("gallery_manager/gallery_manager", function(status){
             $("#gallery_manager").html(window["gallery_manager_tmpl_render_func"]({ gallery_items: gallery_items }));
 
             //clear and close modal

@@ -29,6 +29,9 @@ mixin medium-actor-thumbnail(data, data_type, image_resize_params)
                             span.date #{formatted_date}
                         div.beefometer-container
                             div.beefometer.small.four-beefs
-                img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + data.img_title_fullsize)
+                - if(server_rendered)
+                    img(class="lazy" data-src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + data.img_title_fullsize)
+                - else
+                    img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + data.img_title_fullsize)
     - }
 +medium-actor-thumbnail("none", "none", "none")

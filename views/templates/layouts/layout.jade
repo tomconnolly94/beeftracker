@@ -22,12 +22,19 @@ html(lang="en")
             link(href='/stylesheets/beeftracker.vendors.css', rel='stylesheet')
         link(href='/logo/beeftracker_new_logo_cropped_small.ico', rel='icon', sizes="16x16")
         //script tags
-        script(src="/modules/jquery/dist/jquery.min.js")
-        script(src="/bower_components/bootstrap/dist/js/bootstrap.bundle.js", async)
-        script(src="/bower_components/hammerjs/hammer.js", async)
-        script(src="/js/service_worker/service_worker_init.js", async)
-        script(src="/js/globals.js", async)
+        script(type="text/javascript", src="/modules/jquery/dist/jquery.min.js")
+        script(type="text/javascript", src="/modules/jquery-lazy/jquery.lazy.min.js")
+        script(type="text/javascript", src="/bower_components/bootstrap/dist/js/bootstrap.bundle.js", async)
+        script(type="text/javascript", src="/bower_components/hammerjs/hammer.js", async)
+        script(type="text/javascript", src="/js/service_worker/service_worker_init.js", async)
+        script(type="text/javascript", src="/js/globals.js", async)
         //script(src="/js/vendor.min.js")
+        
+        script.
+            $(function() {
+                $('.lazy').Lazy();
+            });
+        
         block scripts
     body
         header.container.d-none.d-md-block

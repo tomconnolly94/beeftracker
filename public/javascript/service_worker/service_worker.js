@@ -42,8 +42,27 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
+    
+    var request = event.request;
+    
     event.respondWith(
-        caches.match(event.request).then(function(response) {
+        fetch(request)
+            .then(function(response) {
+                var copy = response.clone();
+                caches.open(CACHE_NAME)
+                    .then(function(cache) {
+                        cache.put(request, copy);
+                    });
+                return response;
+            })
+            .catch(function() {
+                return caches.match(request)
+                    .then(function(response) {
+                        return response || caches.match("/offline/");
+                    });
+            })
+
+        /*caches.match(event.request).then(function(response) {
             // Cache hit - return response
             if (response) {
                 return response;
@@ -51,7 +70,7 @@ self.addEventListener('fetch', function(event) {
             
             return fetch(event.request);
         }).catch(function(response){
-            console.log("match faield, catch");
+            console.log("match field, catch");
             
             var url_split = event.request.url.split("/");
 
@@ -61,6 +80,7 @@ self.addEventListener('fetch', function(event) {
                     return cache.add("/" + url_split[3] + "/" + url_split[3]);
                 })
             }
-        })
+        })*/
     )
+    return;
 });

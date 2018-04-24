@@ -105,7 +105,7 @@ router.get("/", function(request, response){
     });
 
     Promise.all([ featured_data_promise, grid_data_promise,/* slider_data_promise,*/ category_event_data_promise, categories_promise ]).then(function(values) {
-        response.render("pages/home.jade", { file_server_url_prefix: globals.file_server_url_prefix, featured_data: values[0], grid_data: values[1], /*slider_data: values[2] */ category_event_data: values[2], categories: values[3] });
+        response.render("pages/home.jade", { file_server_url_prefix: globals.file_server_url_prefix, server_rendered: true, featured_data: values[0], grid_data: values[1], /*slider_data: values[2] */ category_event_data: values[2], categories: values[3] });
     }).catch(function(error){
         console.log(error);
     });
@@ -125,7 +125,7 @@ router.get("/actors", function(request, response) {
     });
 
     Promise.all([ actors_promise ]).then(function(values) {
-        response.render("pages/actors.jade", { file_server_url_prefix: globals.file_server_url_prefix, actor_data: values[0] });
+        response.render("pages/actors.jade", { file_server_url_prefix: globals.file_server_url_prefix, server_rendered: true, actor_data: values[0] });
     }).catch(function(error){
         console.log(error);
     });
@@ -145,7 +145,7 @@ router.get("/actor/:actor_id", function(request, response) {
     });
 
     Promise.all([ actor_data_promise ]).then(function(values) {
-        response.render("pages/actor.jade", { file_server_url_prefix: globals.file_server_url_prefix, actor_data: values[0] });
+        response.render("pages/actor.jade", { file_server_url_prefix: globals.file_server_url_prefix, server_rendered: true, actor_data: values[0] });
     }).catch(function(error){
         console.log(error);
     });
@@ -158,8 +158,14 @@ router.get("/add-beef", function(request, response) {
         });
     });
     
-    actor_data_promise.then(function(data){
-        response.render("pages/add_beef.jade", { file_server_url_prefix: globals.file_server_url_prefix, actor_data: data, gallery_items: [] }); 
+    var categories_promise = new Promise(function(resolve, reject){
+       category_controller.getEventCategories(function(data){
+           resolve(data);
+        });
+    });
+    
+    Promise.all([ actor_data_promise, categories_promise ]).then(function(data){
+        response.render("pages/add_beef.jade", { file_server_url_prefix: globals.file_server_url_prefix, server_rendered: true, actor_data: data[0], gallery_items: [], categories: data[1] }); 
     });
 }); // submit beefdata page page
 router.get("/beef", function(request, response) { 
@@ -189,7 +195,7 @@ router.get("/beef", function(request, response) {
     });
     
     Promise.all([ events_data_promise, category_event_data_promise, categories_promise, slider_data_promise ]).then(function(data){
-        response.render("pages/beefs.jade", { file_server_url_prefix: globals.file_server_url_prefix, grid_data: data[0], category_event_data: data[1], categories: data[2], slider_data: data[3] }); 
+        response.render("pages/beefs.jade", { file_server_url_prefix: globals.file_server_url_prefix, server_rendered: true, grid_data: data[0], category_event_data: data[1], categories: data[2], slider_data: data[3] }); 
     });
 }); //beef page
 router.get("/beef/:beef_chain_id/:event_id", function(request, response) { 
@@ -216,7 +222,7 @@ router.get("/beef/:beef_chain_id/:event_id", function(request, response) {
     });
 
     Promise.all([ main_event_data_promise, comment_data_promise ]).then(function(values) {
-        response.render("pages/beef.jade", { file_server_url_prefix: globals.file_server_url_prefix, event_data: values[0].event_data, comment_data: values[1], related_events: values[0].related_events });
+        response.render("pages/beef.jade", { file_server_url_prefix: globals.file_server_url_prefix, server_rendered: true, event_data: values[0].event_data, comment_data: values[1], related_events: values[0].related_events });
     }).catch(function(error){
         console.log(error);
     });
@@ -230,7 +236,7 @@ router.get("/contact", function(request, response) {
     });
     
     trending_data_promise.then(function(data){
-        response.render("pages/contact.jade", { file_server_url_prefix: globals.file_server_url_prefix, trending_data: data }); 
+        response.render("pages/contact.jade", { file_server_url_prefix: globals.file_server_url_prefix, server_rendered: true, trending_data: data }); 
     });
 }); // contact us page
 
