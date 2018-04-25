@@ -1,0 +1,21 @@
+include ./add_data_sources_display.jade
+
+mixin add-data-sources(data_sources, display_id)
+    
+    append scripts
+        script(src="/component_controllers/add_data_sources/add_data_sources_controller.js")
+        //script(src="/component_controllers/add_actor_modal/add_actor_modal.js")
+
+    div.row
+        div.col-md-12
+            label(for="beef_date") Data sources/Links
+            .input-group.mb-3
+                input.form-control(id="data_source_input_" + display_id, type='text', placeholder='', aria-label='', aria-describedby='basic-addon1')
+                .input-group-append
+                    button.btn.btn-primary.add_data_source_button(type='button', x-display-id=display_id) Add
+        div.col-md-12
+            ul.data_sources_list(id=display_id)
+                +add-data-sources-display(data_sources)
+                
+
+//split component into display and controls to allow re-rendering of display only

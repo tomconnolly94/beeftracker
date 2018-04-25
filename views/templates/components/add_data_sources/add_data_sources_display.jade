@@ -1,0 +1,18 @@
+mixin add-data-sources-display(data_sources)
+    each data_source in data_sources
+        li.list-group-item
+            | #{data_source}
+            span.action
+                a.remove-data-source(href="#")
+                    i.fas.fa-trash
+        //li.list-group-item
+            | http//www.facebook.com
+            span.action
+                a(href="#")
+                    i.fas.fa-trash
+                            
+- if(!data_sources){
+-     data_sources = [];
+- }
+                            
++add-data-sources-display(data_sources)
