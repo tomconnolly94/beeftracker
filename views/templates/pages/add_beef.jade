@@ -4,6 +4,7 @@ include ../components/upload_gallery_item_modal/upload_gallery_item_modal.jade
 include ../components/select_actor_modal/select_actor_modal.jade
 include ../components/add_actor_modal/add_actor_modal.jade
 include ../components/gallery_manager/gallery_manager.jade
+include ../components/add_data_sources/add_data_sources.jade
 
 append scripts
     script.
@@ -107,7 +108,8 @@ append body
                                 div.form-group.col-md-12
                                     label(for="beef_content_summernote") What happened?
                                     textarea.form-control#beef_content_summernote
-                                    
+                            +add-data-sources([], "add_beef_event_data_sources")
+                            
                             div.form-row
                                 div.form-group.col-md-12
                                     h2 Gallery

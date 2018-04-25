@@ -2,10 +2,11 @@
 //- Bootstrap Modal mixin for adding an actor. Also uses SmartWizard for a step-by-step data entry.
 
 include ../../layouts/modal.jade
+//include ../add_data_sources/add_data_sources.jade
 
 
 mixin add-actor-modal-js()
-    script(src="component_controllers/add_actor_modal/add_actor_modal.js")
+    script(src="/component_controllers/add_actor_modal/add_actor_modal.js")
 
 mixin add-actor-modal()
     +modal('Add Actor', '#', false)(id="add_actor_modal", large_modal=true, class="add-actor-modal")
@@ -88,25 +89,7 @@ mixin add-actor-modal()
                             div.col-md-12
                                 div.row
                                     div.form-group.col-md-6
-                                        div.row
-                                            div.col-md-12
-                                                label(for="beef_date") Data sources/Links
-                                                .input-group.mb-3
-                                                  input.form-control(type='text', placeholder='', aria-label='', aria-describedby='basic-addon1')
-                                                  .input-group-append
-                                                    button.btn.btn-primary(type='button') Add
-                                            div.col-md-12
-                                                ul.data_sources_list
-                                                    li.list-group-item
-                                                        | http//www.wikipedia.com
-                                                        span.action
-                                                            a(href="#")
-                                                                i.fas.fa-trash
-                                                    li.list-group-item
-                                                        | http//www.facebook.com
-                                                        span.action
-                                                            a(href="#")
-                                                                i.fas.fa-trash
+                                        +add-data-sources([], "add_actor_modal_data_sources")
 
                                     div.form-group.col-md-6
                                         div.row

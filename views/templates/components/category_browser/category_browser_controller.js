@@ -1,12 +1,13 @@
 $(function(){
     $(".category_button").click(function(event){
         event.preventDefault();
+        
         var clicked_button = this;
         var template_dir = "thumbnail_grid";
         var template_name = "thumbnail_grid";
         
         $(".category_button").parent().find('.category_button').css('color', '#fff');
-        $(clicked_button).css("color", "#DF3E3E")
+        $(clicked_button).css("color", "#DF3E3E");
         
         $.get("/api/events", { match_category: this.id, limit: 6 }, function(data){                
             load_template_render_function(template_dir + "/" + template_name, function(status){
