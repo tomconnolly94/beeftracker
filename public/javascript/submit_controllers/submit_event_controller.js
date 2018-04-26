@@ -7,6 +7,30 @@ $(function(){
         );
     }
     
+    function b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        var blob = new Blob(byteArrays, {type: contentType});
+        return blob;
+    }
+    
     $("#submit_new_event_button").click(function(event){
         event.preventDefault();
         console.log(this);
@@ -45,6 +69,7 @@ $(function(){
             var item = li_items_gallery_manager[i];
             
             var gallery_item_formatted = {
+                file: item.children[1].currentSrc,
                 media_type: item.children[1].attributes[1].value,
                 link: "",
                 main_graphic: false
@@ -52,38 +77,39 @@ $(function(){
 
             gallery_items.push(gallery_item_formatted);
 
-            var event_submission = {
-                title: title,
-                aggressors: [ aggressor ],
-                targets: [ target ],
-                date: date,
-                description: description,
-                categories: [ category ],
-                tags: tags,
-                data_sources: data_sources,
-                gallery_items: gallery_items
-            }
-
-            var form_data = new FormData();
-
-            form_data.append("data", JSON.stringify(event_submission));
-            form_data.append("file1", item.children[1].currentSrc);
-
-            /*$.post("/api/events", { data: event_submission }, function(data) {
-                console.log(data);
-            });*/
-
-            $.ajax({
-                url: "/api/events",
-                data: form_data,
-                processData: false,
-                contentType: false,
-                type: 'POST',
-                success: function(data){
-                    alert(data);
-                }
-            });
         }
+        
+        var event_submission = {
+            title: title,
+            aggressors: [ aggressor ],
+            targets: [ target ],
+            date: date,
+            description: description,
+            categories: [ category ],
+            tags: tags,
+            data_sources: data_sources,
+            gallery_items: gallery_items
+        }
+
+        var form_data = new FormData();
+
+        form_data.append("data", JSON.stringify(event_submission));
+        form_data.append("file1", b64toBlob(item.children[1].currentSrc));
+
+        /*$.post("/api/events", { data: event_submission }, function(data) {
+            console.log(data);
+        });*/
+
+        $.ajax({
+            url: "/api/events",
+            data: form_data,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function(data){
+                alert(data);
+            }
+        });
         
     }); 
 });
