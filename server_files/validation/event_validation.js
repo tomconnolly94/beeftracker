@@ -11,11 +11,14 @@ module.exports = {
     },
     
     validate: function(request, response, next){
-        
+                
         //access form data and reassign it to the request body
         if (typeof request.body.data === 'string' || request.body.data instanceof String){
             request.body = JSON.parse(request.body.data); //get form data
         }
+        
+        console.log(request.body);
+        console.log(request.files);        
         
         //validate title
         request.checkBody("title", "Field is empty").notEmpty();

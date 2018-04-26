@@ -5576,6 +5576,9 @@ form label {
   color: #000;
   text-transform: uppercase; }
 
+.form-row {
+  margin-top: 20px; }
+
 .rounded-mini-thumbs h4 {
   padding: 0;
   margin: 0;

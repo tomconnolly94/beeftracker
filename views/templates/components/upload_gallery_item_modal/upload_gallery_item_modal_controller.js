@@ -6,6 +6,7 @@ $(function(){
     //clear all data from modal and reset it to its original state
     function reset_modal(){
         $('#media_preview').attr('src', ""); //reset media preview element
+        $('#set_as_cover').prop("checked", 0); //reset set as cover input checkbox
         
         //hide all input divs in modal
         $("#photo_input_div").css("display", "none"); 
@@ -47,6 +48,11 @@ $(function(){
             }
             reader.readAsDataURL(input.files[0]);
         }
+        
+        $('#media_preview').attr('x-media-type', "image");
+        var file_name = $(this).val().split("\\").pop();
+        $('#media_preview').attr('x-file-name', file_name);
+        
     });
     
     //function to handle a youtube link being added to the file input tag
@@ -62,7 +68,7 @@ $(function(){
     $("#media_submit_button").click(function(event){
         event.preventDefault();
         
-        gallery_items.push({ url: $("#media_preview").attr("src") });
+        gallery_items.push({ url: $("#media_preview").attr("src"), media_type: $("#media_preview").attr("x-media-type"), file_name: $("#media_preview").attr("x-file-name") });
         
         load_template_render_function("gallery_manager/gallery_manager", function(status){
             $("#gallery_manager").html(window["gallery_manager_tmpl_render_func"]({ gallery_items: gallery_items }));
