@@ -38,7 +38,7 @@ $(function(){
         
         //get form contents
         var title = $("#beef_title").val();
-        var date = $("#beef_date").val();
+        var date = $("#beef_date").val().split("-");
         var aggressor = $("#beefer_name").attr("x-actor-id");
         var target = $("#beefee_name").attr("x-actor-id");
         var category = $("#beef_category").select2().find(":selected").val();
@@ -51,8 +51,8 @@ $(function(){
         console.log(target);
         console.log(category);
         console.log(tags);
-        console.log(description);*/
-        
+        console.log(description);
+        */
         var li_items_data_sources = $("#add_beef_event_data_sources").find("li");
         var data_sources = [];
         
@@ -62,20 +62,22 @@ $(function(){
         }
         
         var li_items_gallery_manager = $("#gallery_manager").find(".gallery-manager-item");
-        var gallery_items = [];
+        var gallery_items = [];        
+        var form_data = new FormData();
         
         //extract gallery items
         for(var i = 0; i < li_items_gallery_manager.length; i++){
             var item = li_items_gallery_manager[i];
             
             var gallery_item_formatted = {
-                file: item.children[1].currentSrc,
+                file: b64toBlob(item.children[1].currentSrc.split("base64,")[1]),
                 media_type: item.children[1].attributes[1].value,
                 link: "",
                 main_graphic: false
             }
 
             gallery_items.push(gallery_item_formatted);
+            form_data.append("file-" + i, gallery_item_formatted.file);
 
         }
         
@@ -83,7 +85,7 @@ $(function(){
             title: title,
             aggressors: [ aggressor ],
             targets: [ target ],
-            date: date,
+            date: date[2] + "/" + date[1] + "/" + date[0],
             description: description,
             categories: [ category ],
             tags: tags,
@@ -91,15 +93,8 @@ $(function(){
             gallery_items: gallery_items
         }
 
-        var form_data = new FormData();
-
         form_data.append("data", JSON.stringify(event_submission));
-        form_data.append("file1", b64toBlob(item.children[1].currentSrc));
-
-        /*$.post("/api/events", { data: event_submission }, function(data) {
-            console.log(data);
-        });*/
-
+        
         $.ajax({
             url: "/api/events",
             data: form_data,

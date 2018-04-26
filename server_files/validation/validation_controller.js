@@ -21,7 +21,7 @@ var master_functions_object = {
             var checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
             var invalid_value_found = false;
 
-            if(input.match(checkForHexRegExp)){
+            if(input && input.match(checkForHexRegExp)){
                 continue;
             }
             else{
@@ -115,17 +115,22 @@ var master_functions_object = {
     },
     test_array_of_links: function(links) {
 
-        for(var i = 0; i < links.length; i++){
-            var url = links[i].url;
+        if(links){    
+            for(var i = 0; i < links.length; i++){
+                var url = links[i].url;
 
-            if (valid_url.isUri(url)){
-                continue;
-            } 
-            else {
-                return false;
+                if (valid_url.isUri(url)){
+                    continue;
+                } 
+                else {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
+        else{
+            return false;
+        }
     },
     test_int: function(number) {
 
@@ -243,28 +248,33 @@ var master_functions_object = {
     },
     detect_xss_in_array_of_objects_keys_and_fields: function(objects){
         
-        for(var j = 0; j < objects.length; j++){
-            
-            var object = objects[j];
-            
-            var keys = Object.keys(objects);
+        if(objects){
+            for(var j = 0; j < objects.length; j++){
 
-            for(var i = 0; i < keys.length; i++){
+                var object = objects[j];
 
-                var key = keys[i];
-                var field = object[key];
+                var keys = Object.keys(objects);
 
-                var sanitised_key = sanitizer.escape(key);
-                var sanitised_field = sanitizer.escape(field);
+                for(var i = 0; i < keys.length; i++){
 
-                if(key === sanitised_key && field === sanitised_field){
-                    continue;
+                    var key = keys[i];
+                    var field = object[key];
+
+                    var sanitised_key = sanitizer.escape(key);
+                    var sanitised_field = sanitizer.escape(field);
+
+                    if(key === sanitised_key && field === sanitised_field){
+                        continue;
+                    }
+                    else{
+                        return false;
+                    }
                 }
-                else{
-                    return false;
-                }
+                return true;
             }
-            return true;
+        }
+        else{
+            return false;
         }
     },
     is_bool: function(input){

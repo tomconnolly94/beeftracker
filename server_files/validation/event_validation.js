@@ -44,13 +44,13 @@ module.exports = {
         request.checkBody("description", "Field is empty").notEmpty();
         request.checkBody("description", "Field is null.").not_null();
         request.checkBody("description", "Potential HTML code found, please remove this.").detect_xss();
-        
+        /*
         //validate data_soruces
         request.checkBody("links", "Field is empty").notEmpty();
         request.checkBody("links", "Field is null.").not_null();
         request.checkBody("links", "Potential HTML code found, please remove this.").detect_xss_in_array_of_objects_keys_and_fields();
         request.checkBody("links", "Not an array of links.").test_array_of_links();
-        
+        */
         //validate gallery_items
         request.checkBody("gallery_items", "Field is empty").notEmpty();
         request.checkBody("gallery_items", "Field is null.").not_null();
