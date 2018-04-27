@@ -26,19 +26,24 @@ append body_scripts
             return $state;
         };
 
+        function handle_also_appears_in_select(element){
+            window.location = element.value + window.location.pathname.split("/").pop();
+        }
 
         //Also appears in selector
         var aaisEl = $(".also-appears-in-select");
         aaisEl.select2({
+            placeholder: "Event also appears in...",
             templateResult: formatState,
             theme: 'classic',
             width: "100%",
             minimumResultsForSearch: -1 //Disable search
         });
-
+        
         aaisEl.on('select2:select', function (e) {
-            var actor_id = e.params.data.id;
-            alert("Selected "+actor_id);
+            var new_url_path = e.params.data.id + window.location.pathname.split("/").pop();
+            //alert("new_url_path " + new_url_path);
+            window.location = new_url_path;
         });
 
 append body
@@ -57,6 +62,16 @@ append body
     - }
     
     - var letter_mapping = ["one", "two", "three", "four", "five" ]
+    
+    - var aggressor_index;
+    - var target_index;
+
+    //- find the beef_chain index using the beef chain accessed from the db and the current_beef_chain_id accessed via the path of the page request
+    - beef_chain_index = event_data.beef_chain_ids.map(function(e){ return String(e._id) } ).indexOf(String(current_beef_chain_id));
+    
+    - aggressor_index = event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) != -1 ? event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) : event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[1]))
+
+    - target_index = event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) != -1 ? event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) : event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[1]))
     
     div.bt-content
         
@@ -92,26 +107,37 @@ append body
         div.row.versus-panel
             div.col-5.beefer
                 div
-                    h4 #{event_data.aggressors[0].name}
-                    a(href="/actor/#event_data.aggressors[0]._id")
-                        img(src=server_url_prefix_with_image_formatting + "/actors/" + event_data.aggressors[0].img_title_fullsize).actor-avatar
+                    h4 #{event_data.aggressors[aggressor_index].name}
+                    a(href="/actor/#event_data.aggressors[aggressor_index]._id")
+                        img(src=server_url_prefix_with_image_formatting + "/actors/" + event_data.aggressors[aggressor_index].img_title_fullsize).actor-avatar
 
             div.col-2.versus
                 h4 VS.
             div.col-5.beefee
                 div
-                    h4 #{event_data.targets[0].name}
-                    a(href="/actor/#event_data.targets[0]._id")
-                        img(src=server_url_prefix_with_image_formatting + "/actors/" + event_data.targets[0].img_title_fullsize).actor-avatar
+                    h4 #{event_data.targets[target_index].name}
+                    a(href="/actor/#event_data.targets[target_index]._id")
+                        img(src=server_url_prefix_with_image_formatting + "/actors/" + event_data.targets[target_index].img_title_fullsize).actor-avatar
         div.row(style="text-align:center")
             div.col-md-4.offset-md-4
                 select.form-control.also-appears-in-select
-                    option(selected="selected", disabled="disabled") Also Appears In
+                    option
                     each aggressor in event_data.aggressors
-                        each target in event_data.targets
-                            //if aggressor != event_data.aggressors[0] && target != event_data.targets[0]
-                            option(image_src=server_url_prefix + "/actors/" + event_data.img_title_fullsize, value="obama_vs_trump") #{aggressor.name} v. #{target.name}
-
+                        each target in event_data.targets                        
+                            - if(!(String(aggressor._id) == String(event_data.aggressors[aggressor_index]._id) && String(target._id) == String(event_data.targets[target_index]._id))){
+                                
+                                - var beef_chain_id;
+                                - for(var i = 0; i < event_data.beef_chain_ids.length; i++){
+                                                                
+                                    - if(event_data.beef_chain_ids[i].actors.map(function(e){ return String(e) }).indexOf(String(aggressor._id)) != -1 && event_data.beef_chain_ids[i].actors.map(function(e){ return String(e) }).indexOf(String(target._id)) != -1){
+                                        - beef_chain_id = event_data.beef_chain_ids[i]._id;
+                                        - console.log(beef_chain_id)
+                                        - break;
+                                    - }
+                                - }
+                                
+                                option(image_src=file_server_url_prefix + "/events/" + event_data.img_title_fullsize, value="/beef/" + beef_chain_id + "/") #{aggressor.name} v. #{target.name}
+                            - }
                         
         div.row
             +timeline-section(event_data)

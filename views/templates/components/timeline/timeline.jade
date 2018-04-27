@@ -17,15 +17,9 @@ mixin timeline-section(data, aggressor)
                 each thumbnail_data in data.beef_chain_ids[0].events
                     - thumbnail_data.beef_chain_ids[0] = data.beef_chain_ids[0]
                 
-                    //p #{previous_aggressor_id}
-                    //p #{thumbnail_data.aggressors[0]}
-                
                     - if(String(previous_aggressor_id) == String(thumbnail_data.aggressors[0])){
                         li.empty
-                            &nbsp;
-                    - }
-                    - else {
-                        //p hello
+                            | &nbsp;
                     - }
                     
                     - if(thumbnail_data.title == data.title){
@@ -40,8 +34,8 @@ mixin timeline-section(data, aggressor)
                     - previous_aggressor_id = thumbnail_data.aggressors[0]
 
                 li.empty
-                    &nbsp;
+                    | &nbsp;
                 li.empty
-                    &nbsp;
+                    | &nbsp;
                 li.empty
-                    &nbsp;
+                    | &nbsp;

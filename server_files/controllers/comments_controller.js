@@ -28,7 +28,6 @@ module.exports = {
                     //handle error
                     if(err) { console.log(err);}
                     else{
-                        console.log(docs)
                         callback({ id: docs.ops[0]._id });
                     }
                 });
@@ -175,7 +174,6 @@ module.exports = {
                     //handle error
                     if(err) { console.log(err);}
                     else{
-                        console.log(docs)
                         callback(docs);
                     }
                 });

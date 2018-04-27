@@ -223,7 +223,7 @@ router.get("/beef/:beef_chain_id/:event_id", function(request, response) {
     });
 
     Promise.all([ main_event_data_promise, comment_data_promise ]).then(function(values) {
-        response.render("pages/beef.jade", { file_server_url_prefix: globals.file_server_url_prefix, server_rendered: true, event_data: values[0].event_data, comment_data: values[1], related_events: values[0].related_events });
+        response.render("pages/beef.jade", { file_server_url_prefix: globals.file_server_url_prefix, current_beef_chain_id: beef_chain_id, server_rendered: true, event_data: values[0].event_data, comment_data: values[1], related_events: values[0].related_events });
     }).catch(function(error){
         console.log(error);
     });

@@ -233,8 +233,7 @@ module.exports = {
                 if(Object.keys(sort_query_content).length > 0){
                     aggregate_array.push({ $sort: sort_query_content });
                 }
-                
-                console.log(aggregate_array);
+
                 db.collection(db_ref.get_current_event_table()).aggregate(aggregate_array).toArray(function(err, docs) {
                     if(err){ console.log(err); }
                     else{
