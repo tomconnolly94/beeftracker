@@ -11,13 +11,12 @@ var random_id = require("random-id");
         
 module.exports = {
     
-    getUser: function(request, response, callback){
+    findUser: function(user_id, is_admin, callback){
         
-        var user_id = request.params.user_id;
         var user_id_object = BSON.ObjectID.createFromHexString(user_id);
         var user_projection;
                 
-        if(request.user_is_admin){ //return more data about a user if the request is coming from an admin
+        if(is_admin){ //return more data about a user if the request is coming from an admin
             user_projection = { //admin user projection
                 $project: {
                     "_id": 1,

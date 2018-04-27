@@ -12,6 +12,7 @@ var actor_controller = require("../controllers/actors_controller.js");
 var event_controller = require("../controllers/events_controller.js");
 var comment_controller = require("../controllers/comments_controller.js");
 var category_controller = require("../controllers/event_categories_controller.js");
+var user_controller = require("../controllers/users_controller.js");
 
 if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if deployed on a heroku server
     /* Detect any http requests, if found, redirect to https, otherwise continue to other routes */
@@ -239,7 +240,25 @@ router.get("/contact", function(request, response) {
         response.render("pages/contact.jade", { file_server_url_prefix: globals.file_server_url_prefix, server_rendered: true, trending_data: data }); 
     });
 }); // contact us page
+router.get("/user/:user_id", function(request, response) { 
 
+    //extract data
+    var user_id = request.params.user_id;
+    
+    //access data from db
+    var user_data_promise = new Promise(function(resolve, reject){
+       user_controller.findUser(user_id, false, function(data){
+           console.log(data);
+           resolve(data);
+        });
+    });
+
+    Promise.all([ user_data_promise ]).then(function(values) {
+        response.render("pages/user_profile.jade", { file_server_url_prefix: globals.file_server_url_prefix, server_rendered: true, user_data: values[0] });
+    }).catch(function(error){
+        console.log(error);
+    });
+}); //actor page
 /*
 router.get("/subscribe/", function(request, response) { response.render("pages/form_pages/subscribe_to_news.ejs"); }); // submit actordata page
 router.get("/submission_confirmation/", function(request, response) { response.render("pages/static_pages/submit_conf.ejs"); }); // about_us page

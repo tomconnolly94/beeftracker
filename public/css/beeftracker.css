@@ -5928,8 +5928,16 @@ figure.masonry-item.soundcloud-item .play-button {
 .timeline ol li:last-child {
   width: 280px; }
 
-.timeline ol li:not(:first-child) {
-  margin-left: 14px; }
+/*.timeline ol li:not(:first-child) {
+  margin-left: 14px;
+}*/
+.timeline ol li.empty {
+  top: -3px;
+  margin-left: 0; }
+
+.timeline ol li.empty:not(:last-child)::after {
+  width: 0;
+  height: 0; }
 
 .timeline ol li::after {
   content: '';

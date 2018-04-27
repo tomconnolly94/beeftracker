@@ -296,7 +296,7 @@ module.exports = {
                         foreignField: "_id", 
                         as: "beef_chain_ids.events"
                     }},
-                    { $unwind: "$beef_chain_ids"}, 
+                    { $unwind: "$beef_chain_ids" },
                     { $group: {
                         _id: "$_id", 
                         title: { $first: "$title"},
@@ -323,6 +323,12 @@ module.exports = {
                     if(queryErr){ console.log(queryErr); }
                     else{
                         if(docs && docs.length > 0){
+                            
+                            function compare_event_dates(a, b) {
+                                return a.event_date.valueOf() - b.event_date.valueOf();
+                            }
+                            docs[0].beef_chain_ids[0].events.sort(compare_event_dates); //sort beef chain events using event dates using above compare function
+                            
                             callback( docs[0] );
                             if(process.env.NODE_ENV == "heroku_production"){//only increment hit counts if codebase is in production
                                 increment_hit_counts(docs[0]._id);
@@ -385,7 +391,7 @@ module.exports = {
     
     updateEvent: function(event_data, event_files, existing_object_id, callback){
         
-        var files = event_files;
+            var files = event_files;
         
         //extract data for use later
         var existing_event_id_object = BSON.ObjectID.createFromHexString(existing_object_id);

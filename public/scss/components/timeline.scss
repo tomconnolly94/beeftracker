@@ -73,8 +73,16 @@
   width: 280px;
 }
 
-.timeline ol li:not(:first-child) {
+/*.timeline ol li:not(:first-child) {
   margin-left: 14px;
+}*/
+.timeline ol li.empty {
+    top: -3px;
+    margin-left: 0;
+}
+.timeline ol li.empty:not(:last-child)::after {
+    width:0;
+    height:0;
 }
 
 .timeline ol li/*:not(:last-child)*/::after {
