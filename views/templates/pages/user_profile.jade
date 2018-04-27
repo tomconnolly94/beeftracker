@@ -1,0 +1,45 @@
+extends ../layouts/layout.jade
+include ../components/trending_beef/trending_beef.jade
+include ../components/timeline/timeline.jade
+include ../components/related_actors/related_actors.jade
+include ../layouts/masonry_gallery.jade
+
+append body_scripts
+    script(src="/bower_components/shufflejs/dist/shuffle.js")
+    script(src="/bower_components/fancybox/dist/jquery.fancybox.js")
+    +masonry-gallery-script()
+    //+timeline-section-js()
+
+append body
+
+    - var letter_mapping = ["one", "two", "three", "four", "five" ]
+
+    div.bt-content
+        div.beef-content.beef-category-music
+            div.beef-content-header
+                div.beef-title
+                    h2
+                        | #{user_data.name}
+                        //span.beefometer.medium(class=letter_mapping[user_data.rating - 1] + "-beefs")
+                div.beef-content-category
+                    //span.category-name #{user_data.classification}
+                div.beef-content-contribute
+                    a.btn.btn-primary(href="/add-beef") Contribute
+            div.beef-content-container
+                    div.col-md-12.beef-summary
+                        div.beef-thumb
+                            img(src=file_server_url_prefix + "/user_profiles/" + user_data.img_title, alt=user_data.img_title_fullsize).float-left
+                            //div.beef-content-thumb-border
+                        //ul.actor-attributes
+                            li.actor-attribute
+                                strong.attribute-name Also Known As
+                                each also_known_as in user_data.also_known_as
+                                    span.list #{also_known_as}
+                        //p.
+                            #{user_data.description}
+
+                        //+related-actors(user_data.related_actors.slice(0, 6), "c_fill,g_face,h_120,w_120", user_data._id)
+        //div.row
+            //+timeline-section()
+        //+section('EXPLORE', 'GALLERY', '')
+            +masonry-gallery-section(user_data.gallery_items, "actors")
