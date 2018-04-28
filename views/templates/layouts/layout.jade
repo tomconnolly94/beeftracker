@@ -5,6 +5,7 @@ include ../components/add_beef_call_to_action/add_beef_call_to_action.jade
 include ../components/login_modal/login_modal.jade
 include ../components/register_modal/register_modal.jade
 include ../components/inline_beef_search/inline_beef_search.jade
+include ../components/search_results/search_results.jade
 
 doctype html
 html(lang="en")
@@ -31,7 +32,7 @@ html(lang="en")
         //script(src="/js/vendor.min.js")
         
         script.
-            $(function() {
+            $(function() { //code to exexcute lazy loading of images
                 $('.lazy').Lazy();
             });
         
@@ -42,7 +43,7 @@ html(lang="en")
                 div.col-md-6.offset-md-3
                     a(href="/")
                         img(src='/logo/logo@256.png', alt='Beeftracker')
-                div.col-md-3
+                //div.col-md-3 //-removed for version 2.0.0
                     a.btn.btn-primary.btn-lg.float-right(href="/add-beef")
                         span.fas.fa-star
                         | Add Beef
@@ -72,7 +73,7 @@ html(lang="en")
                         li.nav-item.d-block.d-md-none#add-beef
                             a.nav-link(href="/add-beef") Add Beef
                     ul.navbar-nav.social-navbar-nav.d-sm-non
-                        li.nav-item.login
+                        //li.nav-item.login  //removed for version 2.0.0
                             a.nav-link(href="#", data-toggle="modal", data-target="#login_modal")
                                 span.fas.fa-user
                                 span.text &nbsp; Login
@@ -84,6 +85,8 @@ html(lang="en")
             div.row#beef-search-container(hidden)
                 div.col-md-6.offset-md-3
                     +inline-beef-search
+                div#search_results.col-md-10.offset-md-1.row
+                
         block body
         footer
             div.footer-logo

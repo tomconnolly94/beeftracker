@@ -1,15 +1,13 @@
-include ../../layouts/mini_vertical_beef_list.jade
-
 mixin inline-beef-search()
-    form.inline-beef-search-form
+    form.inline-beef-search-form#search_box_form
         div.row
             div.col-md-9.col-8
-                input(type="text", placeholder="Search for keyword").form-control
+                input(type="text", placeholder="Search for keyword").form-control#search_box_input
             div.col-md-3.col-4
                 button(type="submit").btn.btn-primary Search
         small.form-text.trending.mb-2
             | Trending Searches &nbsp;
             a(href="#") Donald Trump
 
-
-
+    append scripts
+        script(src="/component_controllers/inline_beef_search/inline_beef_search_controller.js")

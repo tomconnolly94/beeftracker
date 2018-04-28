@@ -1,0 +1,45 @@
+mixin vertical-list-actor-item(item, image_resize_params)
+
+    - if(image_resize_params){
+    -   var split_server_url_prefix = file_server_url_prefix.split("/");
+    -   split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, image_resize_params);
+    -   var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
+    - }
+
+    - if(item.date_of_origin instanceof Date){}
+    - else{
+    -   item.date_of_origin = new Date(item.date_of_origin);
+    - }
+
+    - var day = item.date_of_origin.getDate();
+    - var monthIndex = item.date_of_origin.getMonth();
+    - var year = item.date_of_origin.getFullYear();
+    - var formatted_date =  day + '/' + monthIndex + '/' + year;
+
+    //div.vertical-list-item.beef-category-music(class=item == data[2] ? "hidden_on_lg" : "")
+    div.vertical-list-item.beef-category-music
+        div.vertical-list-item-thumbnail
+            a(href="/actor/#{data._id}") 
+                img(src=server_url_prefix_with_image_formatting + "/actors/" + item.img_title_fullsize)
+        div.vertical-list-item-details
+            h5
+                a(href="/actor/#{data._id}") #{item.name.length > 40 ? item.name.slice(0,40)+ "..." : item.name}
+            ul.beef-info
+                    li #{formatted_date}
+                    li
+                        span.fas.fa-comments &nbsp;&nbsp;
+                        //| #{item.comments.length}
+                    li
+                        span.beefometer.small.two-beefs
+            //p.
+                #{item.description.slice(0, 90).trim()}...
+                
+- if(!item){
+-     item = "none";
+- }
+
+- if(!image_resize_params){
+-     image_resize_params = "none";
+- }
+
++vertical-list-beef-item(item, image_resize_params)

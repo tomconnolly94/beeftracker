@@ -1,32 +1,32 @@
+include ./vertical_list_beef_item.jade
+include ./vertical_list_actor_item.jade
+
 mixin mini-vertical-beef(data, data_type, image_resize_params)
-    - if(image_resize_params){
-    -   var split_server_url_prefix = file_server_url_prefix.split("/");
-    -   split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, image_resize_params);
-    -   var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
-    - }
 
     div.mini-vertical-list(class!=attributes.class)
         div.col-md-12
-            each item in data
-                - var day = item.event_date.getDate();
-                - var monthIndex = item.event_date.getMonth();
-                - var year = item.event_date.getFullYear();
-                - var formatted_date =  day + '/' + monthIndex + '/' + year;
+            - console.log(data_type)
+            - console.log(data)
+            - if(data != "none"){
+                each item in data
+                    - if(data_type == "events"){
+                        +vertical-list-beef-item(item, image_resize_params)
+                    - }
+                    - else if(data_type == "actors"){
+                        +vertical-list-actor-item(item, image_resize_params)
+                    - }
+            - }
 
-                //div.vertical-list-item.beef-category-music(class=item == data[2] ? "hidden_on_lg" : "")
-                div.vertical-list-item.beef-category-music
-                    div.vertical-list-item-thumbnail
-                        a(href="/beef/#{item.beef_chain_ids[0]._id}/#{data._id}") 
-                            img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + item.img_title_fullsize)
-                    div.vertical-list-item-details
-                        h3
-                            a(href="/#{item.type}/#{item._id}") #{item.title.length > 40 ? item.title.slice(0,40)+ "..." : item.title}
-                        ul.beef-info
-                                li #{formatted_date}
-                                li
-                                    span.fas.fa-comments &nbsp;&nbsp;
-                                    //| #{item.comments.length}
-                                li
-                                    span.beefometer.small.two-beefs
-                        //p.
-                            #{item.description.slice(0, 90).trim()}...
+- if(!data){
+-     data = "none";
+- }
+
+- if(!data_type){
+-     data_type = "none";
+- }
+
+- if(!image_resize_params){
+-     image_resize_params = null;
+- }
+
++mini-vertical-beef(data, data_type, image_resize_params)

@@ -1,0 +1,17 @@
+include ../../layouts/mini_vertical_beef_list.jade
+
+mixin search-results(search_result_event_data, search_result_actor_data)
+    div.col-md-6
+        +mini-vertical-beef(search_result_event_data, "events", "c_fill,g_face,h_215,w_350")
+    div.col-md-6
+        +mini-vertical-beef(search_result_actor_data, "actors", "c_fill,g_face,h_215,w_350")
+        
+- if(!search_result_event_data){
+-     search_result_event_data = "none";
+- }
+
+- if(!search_result_actor_data){
+-     search_result_actor_data = "none";
+- }
+
++search-results(search_result_event_data, search_result_actor_data)

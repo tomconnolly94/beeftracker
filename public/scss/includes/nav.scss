@@ -10,13 +10,11 @@ nav {
     .nav-item:not(:last-child) .nav-link {
         border-right: 1px solid white;
     }
-
-
-
+    
     .navbar-toggler-icon {
         font-size:20px !important;
     }
-
+    
     background-color: #000000;
 
     @include media-breakpoint-down(sm) {
@@ -28,12 +26,12 @@ nav {
     .nav-item {
         padding: 0;
         .nav-link {
-            padding: 0.8rem 1.2rem !important;
+            padding: 0.4rem 1.2rem !important;
             display:block;
             color: #ffffff;
             text-transform:uppercase;
             /*font-weight:300;*/
-            font-size:14px !important;
+            font-size:12px !important;
             @include media-breakpoint-only(sm) {
                 padding: 1.5rem 1.5rem !important;
             }
@@ -111,7 +109,7 @@ nav {
              }
              &.search {
                 background-color: $brand-primary;
-
+                border: solid $brand-primary;
             }
 
             &.login {
