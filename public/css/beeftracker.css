@@ -4958,7 +4958,7 @@ footer {
         padding-right: 20px; }
         footer .footer-nav ul li a {
           color: #fff;
-          font-size: 18px;
+          font-size: 14px;
           font-weight: 300; }
     footer .footer-nav .footer-nav-items {
       display: inline-block;
@@ -5212,8 +5212,7 @@ section {
       top: 0;
       right: 3%; }
   .vertical-list .vertical-list-item .vertical-list-item-thumbnail img {
-    width: 100%;
-    height: 100%; }
+    width: 100%; }
   .vertical-list .vertical-list-item .vertical-list-item-details a {
     color: #000; }
     .vertical-list .vertical-list-item .vertical-list-item-details a:hover {
@@ -6027,16 +6026,14 @@ figure.masonry-item.soundcloud-item .play-button {
 .hiw-container .hiw-title {
   text-align: center; }
   .hiw-container .hiw-title img {
-    width: 100%;
-    height: 100%; }
+    width: 100%; }
 
 .hiw-container .hiw-list {
   padding-top: 30px; }
   .hiw-container .hiw-list .hiw-list-item {
     margin-bottom: 15px; }
   .hiw-container .hiw-list img {
-    width: 100%;
-    height: 100%; }
+    width: 100%; }
 
 .pagination {
   text-align: center;

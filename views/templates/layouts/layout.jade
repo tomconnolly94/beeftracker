@@ -16,11 +16,14 @@ html(lang="en")
         meta(name="apple-mobile-web-app-capable" content="yes")
         meta(name="mobile-web-app-capable" content="yes")
         //link tags
-        link(href='/stylesheets/beeftracker.vendors.css', rel="preload", as="style", onload="this.rel='stylesheet'")
-        link(href='/stylesheets/beeftracker.css', rel="preload", as="style", onload="this.rel='stylesheet'")
-        noscript
+        //-link(href='/stylesheets/beeftracker.vendors.css', rel="preload", as="style", onload="this.rel='stylesheet'")
+        //-link(href='/stylesheets/beeftracker.css', rel="preload", as="style", onload="this.rel='stylesheet'")
+        //-noscript
             link(href='/stylesheets/beeftracker.css', rel='stylesheet')
             link(href='/stylesheets/beeftracker.vendors.css', rel='stylesheet')
+            
+        link(href='/stylesheets/beeftracker.css', rel='stylesheet')
+        link(href='/stylesheets/beeftracker.vendors.css', rel='stylesheet')
         link(href='/logo/beeftracker_new_logo_cropped_small.ico', rel='icon', sizes="16x16")
         //script tags
         script(type="text/javascript", src="/modules/jquery/dist/jquery.min.js")
@@ -94,11 +97,11 @@ html(lang="en")
             div.footer-nav
                 ul.footer-nav-items
                     li
-                        a(href="#") Terms &amp; Conditions
+                        a(href="/terms-and-conditions") Terms &amp; Conditions
                     li
-                        a(href="#") Privacy Policy
+                        a(href="/privacy-policy") Privacy Policy
                     li
-                        a(href="#") Disclaimer
+                        a(href="/disclaimer") Disclaimer
                 ul.footer-nav-social
                     li
                         a(href="https://www.facebook.com/beeftracker/", target="_blank")

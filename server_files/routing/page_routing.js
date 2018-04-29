@@ -26,53 +26,6 @@ if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if 
     });
 }
 
-let template_data_actors = {
-    grid_data: [
-        {
-            name: "Trump",
-            image_url: "https://cdn.cnn.com/cnnnext/dam/assets/180217093516-03-donald-trump-0216-exlarge-169.jpg",
-            category: "Politics",
-            _id: "5a3eac03a9106c0004935803",
-            d_o_b: "20/20/20"
-        },
-        {
-            name: "Obama",
-            image_url: "http://ksassets.timeincuk.net/wp/uploads/sites/54/2014/12/iphone-7-vs-galaxy-s8-1.jpg",
-            category: "Tech",
-            _id: "5a3eac03a9106c0004935803",
-            d_o_b: "20/20/20"
-        },
-        {
-            name: "Wiley",
-            image_url: "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg",
-            category: "Music",
-            _id: "5a3eac03a9106c0004935803",
-            d_o_b: "20/20/20"
-        },
-        {
-            name: "Eminem",
-            image_url: "https://assets.capitalxtra.com/2017/24/wiley-and-dizzee-rascal-1497355087-list-handheld-0.jpg",
-            category: "Music",
-            _id: "5a3eac03a9106c0004935803",
-            d_o_b: "20/20/20"
-        },
-        {
-            name: "Dizzee",
-            image_url: "https://i0.wp.com/www.mac-history.net/wp-content/uploads/2011/01/microsoft-vs-apple.jpg?fit=599%2C311",
-            category: "Tech",
-            _id: "5a3eac03a9106c0004935803",
-            d_o_b: "20/20/20"
-        },
-        {
-            name: "Man U",
-            image_url: "https://metrouk2.files.wordpress.com/2016/09/ac_manuntdvsstoke_comp.jpg?w=748&h=427&crop=1",
-            category: "Sports",
-            _id: "5a3eac03a9106c0004935803",
-            d_o_b: "20/20/20"
-        },
-    ]
-};
-
 router.get("/", function(request, response){
     
     var featured_data_promise = new Promise(function(resolve, reject){
@@ -259,6 +212,10 @@ router.get("/user/:user_id", function(request, response) {
         console.log(error);
     });
 }); //actor page
+router.get("/privacy-policy", function(request, response){ response.render("pages/peripheral_pages/privacy_policy.jade"); });
+router.get("/terms-and-conditions", function(request, response){ response.render("pages/peripheral_pages/terms_and_conditions.jade"); });
+router.get("/disclaimer", function(request, response){ response.render("pages/peripheral_pages/disclaimer.jade"); });
+
 /*
 router.get("/subscribe/", function(request, response) { response.render("pages/form_pages/subscribe_to_news.ejs"); }); // submit actordata page
 router.get("/submission_confirmation/", function(request, response) { response.render("pages/static_pages/submit_conf.ejs"); }); // about_us page
