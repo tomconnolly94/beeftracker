@@ -23,6 +23,7 @@ var jade = require('pug');
 var compression = require('compression');
 var validation_controller = require("./server_files/validation/validation_controller");
 var validator = require('express-validator');
+var fs = require('fs');
 
 //configure validator
 app.use(validator({
@@ -63,6 +64,11 @@ app.use(function(req, res, next) {
 app.use(compression());
 
 app.use('/logo', express.static(__dirname + '/public/assets/images/logo/v3')); //route to reference logo images
+app.use('/favicon.ico', function(request, response){
+    var img = fs.readFileSync('public/assets/images/logo/v3/beeftracker_new_logo_cropped_small.ico');
+    response.writeHead(200, {'Content-Type': 'image/ico' });
+    response.end(img, 'binary');
+}); //route to reference logo favicon
 app.use('/images', express.static(__dirname + '/public/assets/images/other_graphics')); //route to reference logo images
 app.use('/stylesheets', express.static(__dirname + '/public/css/')); //route to reference css scripts
 app.use('/webfonts', express.static(__dirname + '/public/fonts/')); //route to reference css scripts

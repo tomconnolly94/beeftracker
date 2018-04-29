@@ -4974,6 +4974,8 @@ footer {
     padding-top: 10px;
     text-align: center;
     color: #999999; }
+    footer .footer-copyright p {
+      font-size: 10px; }
 
 section {
   padding-top: 30px; }
