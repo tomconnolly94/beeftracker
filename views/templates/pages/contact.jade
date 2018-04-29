@@ -4,7 +4,7 @@ include ../components/add_beef_call_to_action/add_beef_call_to_action.jade
 
 append body
     div.bt-content
-        +section('CONTACT', 'US', '')
+        +section('CONTACT', 'US', 'fa fa-envelope')
             form
                 div.form-row
                     div.form-group.col-md-6
@@ -22,7 +22,7 @@ append body
                         label(for="message") Message
                         textarea.form-control#message
                 button(type="submit").btn.btn-primary.float-right Send
-        +section('STAY IN', 'TOUCH', '')(class="social-media-section")
+        +section('STAYIN', 'TOUCH', 'fa fa-thumbs-up')(class="social-media-section")
             div.row
                 div.col-md-4
                    a.social-media-item.facebook(href="https://www.facebook.com/beeftracker/", target="_blank")
