@@ -62,7 +62,7 @@ $(function(){
         }
         
         var li_items_gallery_manager = $("#gallery_manager").find(".gallery-manager-item");
-        var gallery_items = [];        
+        var gallery_items = [];
         var form_data = new FormData();
         
         //extract gallery items
@@ -100,10 +100,7 @@ $(function(){
             data: form_data,
             processData: false,
             contentType: false,
-            type: 'POST',
-            success: function(data){
-                alert(data);
-            }
+            type: 'POST'
         });
         
     }); 

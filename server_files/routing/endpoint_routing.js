@@ -10,9 +10,9 @@ var token_authentication = require("../tools/token_authentication.js"); //get to
 //endpoint controllers
 var activity_logs_controller = require('../controllers/activity_logs_controller');
 var actor_controller = require('../controllers/actors_controller');
-var administration_data_controller = require('../controllers/administration_data_controller');
 var authentication_controller = require('../controllers/authentication_controller');
 var comments_controller = require('../controllers/comments_controller');
+var contact_request_controller = require('../controllers/contact_requests_controller');
 var event_categories_controller = require('../controllers/event_categories_controller');
 var event_controller = require('../controllers/events_controller');
 var event_peripherals_controller = require('../controllers/events_peripherals_controller');
@@ -23,6 +23,7 @@ var users_controller = require('../controllers/users_controller');
 var actor_data_validator = require("../validation/actor_validation");
 var authentication_request_validator = require("../validation/authentication_request_validation");
 var comment_data_validator = require("../validation/comment_validation");
+var contact_request_validator = require("../validation/contact_request_validation");
 var email_data_validator = require("../validation/email_validation");
 var event_categories_data_validator = require("../validation/event_categories_validation");
 var event_data_validator = require("../validation/event_validation");
@@ -57,11 +58,9 @@ var send_unsuccessful_response = function(response, code, error_message){
 }
 
 /*
-
     Connection of server routes to controllers - middleware ordering = auth function (optional) -> multer file formatting function (optional) -> data validation function (optional) -> endpoint handler function
 
     Endpoint handler functions are designed to handle the HTTP request and response, they use controllers to access the data they require
-
 */
 
 //Activity logs endpoints
@@ -166,58 +165,6 @@ router.route('/actor-variable-fields-config').get(function(request, response){
     });
 });//built, written, tested
 
-//Administration data endpoints
-router.route('/contact-us-data').get(function(request, response){
-    administration_data_controller.getContactUsData(request, response, function(data){
-        if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
-        }
-        else{
-            send_successful_response(response, 200);
-        }
-    });
-});//built, not written, not tested
-router.route('/about-us-data').get(function(request, response){
-    administration_data_controller.getAboutUsData(request, response, function(data){
-        if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
-        }
-        else{
-            send_successful_response(response, 200);
-        }
-    });
-});//built, not written, not tested
-router.route('/privacy-policy-data').get(function(request, response){
-    administration_data_controller.getPrivacyPolicyData(request, response, function(data){
-        if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
-        }
-        else{
-            send_successful_response(response, 200);
-        }
-    });
-});//built, not written, not tested
-router.route('/terms-and-conditions-data').get(function(request, response){
-    administration_data_controller.getTermsAndConditionsData(request, response, function(data){
-        if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
-        }
-        else{
-            send_successful_response(response, 200);
-        }
-    });
-});//built, not written, not tested
-router.route('/disclaimer-data').get(function(request, response){
-    administration_data_controller.getDisclaimerData(request, response, function(data){
-        if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
-        }
-        else{
-            send_successful_response(response, 200);
-        }
-    });
-});//built, not written
-
 //Comments endpoints
 router.route('/comments').post(comment_data_validator.validate, function(request, response){
     
@@ -262,6 +209,31 @@ router.route('/comments/:comment_id').delete(token_authentication.authenticate_a
         }
     });
 });//built, written, tested, needs specific user or admin auth
+
+//Contact reqest endpoints
+router.route('/contact-requests').get(function(request, response){
+    contact_request_controller.findContactRequests(function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 200, data);
+        }
+    });
+});//built, written, tested
+router.route('/contact-requests').post(contact_request_validator.validate, function(request, response){
+    
+    var contact_request_data = request.locals.validated_data;    
+    
+    contact_request_controller.createContactRequest(contact_request_data, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 201, data);
+        }
+    });
+});//built, written, tested, needs specific user auth
 
 // Event categories endpoints
 router.route('/event-categories').get(function(request, response){

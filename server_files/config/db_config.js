@@ -80,5 +80,9 @@ module.exports = {
     
     get_password_reset_request_table: function(){
         return "user_password_reset_requests";
+    },
+    
+    get_contact_requests_table: function(){
+        return "contact_requests";
     }
 }

@@ -5,7 +5,7 @@ include ../components/add_beef_call_to_action/add_beef_call_to_action.jade
 append body
     div.bt-content
         +section('CONTACT', 'US', 'fa fa-envelope')
-            form
+            form#contact_request_form
                 div.form-row
                     div.form-group.col-md-6
                         label(for="fullname") Name
@@ -39,4 +39,5 @@ append body
         +trending-beefs-section(trending_data)
         +add-beef-cta()
 
-
+    append scripts
+        script(src="/js/submit_controllers/submit_contact_request.js")
