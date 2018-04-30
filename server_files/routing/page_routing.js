@@ -26,6 +26,11 @@ if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if 
     });
 }
 
+var view_parameters = { 
+    file_server_url_prefix: globals.file_server_url_prefix,
+    server_rendered: true
+}
+
 router.get("/", function(request, response){
     
     var featured_data_promise = new Promise(function(resolve, reject){
@@ -59,15 +64,19 @@ router.get("/", function(request, response){
     });
 
     Promise.all([ featured_data_promise, grid_data_promise,/* slider_data_promise,*/ category_event_data_promise, categories_promise ]).then(function(values) {
-        response.render("pages/home.jade", { file_server_url_prefix: globals.file_server_url_prefix, server_rendered: true, featured_data: values[0], grid_data: values[1], /*slider_data: values[2] */ category_event_data: values[2], categories: values[3] });
+        
+        view_parameters.featured_data = values[0];
+        view_parameters.grid_data = values[1];
+        view_parameters.category_event_data = values[2];
+        view_parameters.categories = values[3];
+        
+        response.render("pages/home.jade", view_parameters);
     }).catch(function(error){
         console.log(error);
     });
-    
-    
 }); //home page
 router.get("/about", function(request, response) {
-    response.render("pages/about.jade");
+    response.render("pages/about.jade", view_parameters);
 }); // about_us page
 router.get("/actors", function(request, response) { 
     
@@ -79,7 +88,10 @@ router.get("/actors", function(request, response) {
     });
 
     Promise.all([ actors_promise ]).then(function(values) {
-        response.render("pages/actors.jade", { file_server_url_prefix: globals.file_server_url_prefix, server_rendered: true, actor_data: values[0] });
+        
+        view_parameters.actor_data = values[0];
+        
+        response.render("pages/actors.jade", view_parameters);
     }).catch(function(error){
         console.log(error);
     });
@@ -99,7 +111,10 @@ router.get("/actor/:actor_id", function(request, response) {
     });
 
     Promise.all([ actor_data_promise ]).then(function(values) {
-        response.render("pages/actor.jade", { file_server_url_prefix: globals.file_server_url_prefix, server_rendered: true, actor_data: values[0] });
+        
+        view_parameters.actor_data = values[0];
+        
+        response.render("pages/actor.jade", view_parameters);
     }).catch(function(error){
         console.log(error);
     });
@@ -118,8 +133,13 @@ router.get("/add-beef", function(request, response) {
         });
     });
     
-    Promise.all([ actor_data_promise, categories_promise ]).then(function(data){
-        response.render("pages/add_beef.jade", { file_server_url_prefix: globals.file_server_url_prefix, server_rendered: true, actor_data: data[0], gallery_items: [], categories: data[1] }); 
+    Promise.all([ actor_data_promise, categories_promise ]).then(function(values){
+        
+        view_parameters.actor_data = values[0];
+        view_parameters.gallery_items = [];
+        view_parameters.categories = values[1];
+        
+        response.render("pages/add_beef.jade", view_parameters); 
     });
 }); // submit beefdata page page
 router.get("/beef", function(request, response) { 
@@ -148,8 +168,14 @@ router.get("/beef", function(request, response) {
         });
     });
     
-    Promise.all([ events_data_promise, category_event_data_promise, categories_promise, slider_data_promise ]).then(function(data){
-        response.render("pages/beefs.jade", { file_server_url_prefix: globals.file_server_url_prefix, server_rendered: true, grid_data: data[0], category_event_data: data[1], categories: data[2], slider_data: data[3] }); 
+    Promise.all([ events_data_promise, category_event_data_promise, categories_promise, slider_data_promise ]).then(function(values){
+        
+        view_parameters.grid_data = values[0];
+        view_parameters.category_event_data = values[1];
+        view_parameters.categories = values[2];
+        view_parameters.slider_data = values[3];
+        
+        response.render("pages/beefs.jade", view_parameters); 
     });
 }); //beef page
 router.get("/beef/:beef_chain_id/:event_id", function(request, response) { 
@@ -176,6 +202,12 @@ router.get("/beef/:beef_chain_id/:event_id", function(request, response) {
     });
 
     Promise.all([ main_event_data_promise, comment_data_promise ]).then(function(values) {
+        
+        view_parameters.current_beef_chain_id = beef_chain_id;
+        view_parameters.event_data = values[0].event_data;
+        view_parameters.comment_data = values[1];
+        view_parameters.related_events = values[0].related_events;
+        
         response.render("pages/beef.jade", { file_server_url_prefix: globals.file_server_url_prefix, current_beef_chain_id: beef_chain_id, server_rendered: true, event_data: values[0].event_data, comment_data: values[1], related_events: values[0].related_events });
     }).catch(function(error){
         console.log(error);
@@ -189,11 +221,14 @@ router.get("/contact", function(request, response) {
         });
     });
     
-    trending_data_promise.then(function(data){
-        response.render("pages/contact.jade", { file_server_url_prefix: globals.file_server_url_prefix, server_rendered: true, trending_data: data }); 
+    trending_data_promise.then(function(value){
+        
+        view_parameters.trending_data = value;
+        
+        response.render("pages/contact.jade", view_parameters); 
     });
 }); // contact us page
-router.get("/user/:user_id", function(request, response) { 
+/*router.get("/user/:user_id", function(request, response) { 
 
     //extract data
     var user_id = request.params.user_id;
@@ -207,14 +242,17 @@ router.get("/user/:user_id", function(request, response) {
     });
 
     Promise.all([ user_data_promise ]).then(function(values) {
-        response.render("pages/user_profile.jade", { file_server_url_prefix: globals.file_server_url_prefix, server_rendered: true, user_data: values[0] });
+        
+        view_parameters.user_data = values[0];
+        
+        response.render("pages/user_profile.jade", view_parameters);
     }).catch(function(error){
         console.log(error);
     });
-}); //actor page
-router.get("/privacy-policy", function(request, response){ response.render("pages/peripheral_pages/privacy_policy.jade"); });
-router.get("/terms-and-conditions", function(request, response){ response.render("pages/peripheral_pages/terms_and_conditions.jade"); });
-router.get("/disclaimer", function(request, response){ response.render("pages/peripheral_pages/disclaimer.jade"); });
+}); //actor page*/
+router.get("/privacy-policy", function(request, response){ response.render("pages/peripheral_pages/privacy_policy.jade", view_parameters); });
+router.get("/terms-and-conditions", function(request, response){ response.render("pages/peripheral_pages/terms_and_conditions.jade", view_parameters); });
+router.get("/disclaimer", function(request, response){ response.render("pages/peripheral_pages/disclaimer.jade", view_parameters); });
 
 /*
 router.get("/subscribe/", function(request, response) { response.render("pages/form_pages/subscribe_to_news.ejs"); }); // submit actordata page

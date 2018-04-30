@@ -10,12 +10,13 @@ $(function(){
         var template_name = "add_data_sources_display";
         var display_id = $(this).attr("x-display-id"); //get the id if the display of this componenet, needed in case componenet is used twice on the same page
         var new_data_source = $("#data_source_input_" + display_id).val(); //get data source from text input
+        var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
         
         if(new_data_source && new_data_source.length > 0){
             data_sources.push(new_data_source); //add new source to global array
 
             load_template_render_function(template_dir + "/" + template_name, function(status){
-                fade_new_content_to_div("#" + display_id, window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: "http://res.cloudinary.com/hghz4zts3/image/upload/v1514066941", data_sources: data_sources, display_id: display_id }))
+                fade_new_content_to_div("#" + display_id, window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, data_sources: data_sources, display_id: display_id }))
 
                 $("#data_source_input_" + display_id).val(""); //clear text input box
             });

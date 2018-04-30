@@ -18,10 +18,10 @@ mixin vertical-list-actor-item(item, image_resize_params)
 
     //div.vertical-list-item.beef-category-music(class=item == data[2] ? "hidden_on_lg" : "")
     div.vertical-list-item.beef-category-default
-        div.vertical-list-item-thumbnail
+        div.col-6.vertical-list-item-thumbnail
             a(href="/actor/#{data._id}") 
                 img(src=server_url_prefix_with_image_formatting + "/actors/" + item.img_title_fullsize)
-        div.vertical-list-item-details
+        div.col-6.vertical-list-item-details
             h5
                 a(href="/actor/#{data._id}") #{item.name.length > 40 ? item.name.slice(0,40)+ "..." : item.name}
             ul.beef-info

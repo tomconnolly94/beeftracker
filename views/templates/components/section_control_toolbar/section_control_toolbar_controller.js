@@ -12,6 +12,7 @@ $(function(){
         var section_control_div_id = $(this).parent().parent().parent().parent()[0].id;
         var section_display_div_id = section_control_div_id.replace("control", "display");
         var data_type = $(this).parent().parent().attr("x-data-type");
+        var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
         
         //set new active button
         $(clicked_button).parent().parent().find('li').removeClass("active");
@@ -41,7 +42,7 @@ $(function(){
             
             $.get("/api/" + data_type, events_query, function(data){
                 load_template_render_function(template_dir + "/" + template_name, function(status){
-                    fade_new_content_to_div("#" + section_display_div_id, window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: "http://res.cloudinary.com/hghz4zts3/image/upload/v1514066941", grid_thumbnail_data: data, data_type: data_type }))
+                    fade_new_content_to_div("#" + section_display_div_id, window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, grid_thumbnail_data: data, data_type: data_type }))
                 });
             });
             $(this).parent().parent().attr("x-selected-option", this.id);
