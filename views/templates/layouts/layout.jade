@@ -35,6 +35,13 @@ html(lang="en")
         script(type="text/javascript", src="/js/globals.js", async)
         //script(src="/js/vendor.min.js")
         
+        script(async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js")
+        script.
+            (adsbygoogle = window.adsbygoogle || []).push({
+                google_ad_client: "ca-pub-2566324736007588",
+                enable_page_level_ads: true
+            });
+        
         script.
             $(function() { //code to exexcute lazy loading of images
                 $('.lazy').Lazy();
@@ -42,6 +49,7 @@ html(lang="en")
         
         block scripts
     body
+        div#file_server_url_prefix_store(value=file_server_url_prefix)
         header.container.d-none.d-md-block
             div.row
                 div.col-md-6.offset-md-3
@@ -74,7 +82,7 @@ html(lang="en")
                             a.nav-link(href="/actors") Actors
                         li.nav-item#contact
                             a.nav-link(href="/contact") Contact Us
-                        li.nav-item.d-block.d-md-none#add-beef
+                        li.nav-item.d-block.d-md-none#add-beef(style="display:none;") //hidden for version 2.0.0
                             a.nav-link(href="/add-beef") Add Beef
                     ul.navbar-nav.social-navbar-nav.d-sm-non
                         //li.nav-item.login  //removed for version 2.0.0

@@ -18,11 +18,11 @@ mixin vertical-list-beef-item(item, image_resize_params)
         - var formatted_date =  day + '/' + monthIndex + '/' + year;
 
         //div.vertical-list-item.beef-category-music(class=item == data[2] ? "hidden_on_lg" : "")
-        div.vertical-list-item.beef-category-music
-            div.vertical-list-item-thumbnail
+        div.vertical-list-item.beef-category-music.row
+            div.col-6.vertical-list-item-thumbnail
                 a(href="/beef/#{item.beef_chain_ids[0]._id}/#{data._id}") 
                     img(src=server_url_prefix_with_image_formatting + "/events/" + item.img_title_fullsize)
-            div.vertical-list-item-details
+            div.col-6.vertical-list-item-details
                 h5
                     a(href="/#{item.type}/#{item._id}") #{item.title.length > 40 ? item.title.slice(0,40)+ "..." : item.title}
                 ul.beef-info
