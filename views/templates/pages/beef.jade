@@ -83,7 +83,7 @@ append body
                         span.beefometer.medium(class=letter_mapping[event_data.rating - 1] + "-beefs")
                 div.beef-content-category
                     span.category-name #{event_data.categories[0].name}
-                div.beef-content-contribute
+                //-div.beef-content-contribute
                     a.btn.btn-primary(href="#") Contribute
             div.beef-content-container
                     div.col-md-12.beef-summary
@@ -144,6 +144,6 @@ append body
                         
             +section('G', 'ALLERY', '')
                 +masonry-gallery-section(event_data.gallery_items, "events")
-            +comment-box-section(comment_data)
+            //+comment-box-section(comment_data)
 
 

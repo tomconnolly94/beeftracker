@@ -119,7 +119,7 @@ router.get("/actor/:actor_id", function(request, response) {
         console.log(error);
     });
 }); //actor page
-router.get("/add-beef", function(request, response) {
+/*router.get("/add-beef", function(request, response) {
 
     var actor_data_promise = new Promise(function(resolve, reject){
         actor_controller.findActors({ increasing_order: "name" }, function(data){
@@ -141,7 +141,7 @@ router.get("/add-beef", function(request, response) {
         
         response.render("pages/add_beef.jade", view_parameters); 
     });
-}); // submit beefdata page page
+}); // submit beefdata page page*/
 router.get("/beef", function(request, response) { 
     
     var events_data_promise = new Promise(function(resolve, reject){
