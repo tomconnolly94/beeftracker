@@ -19,7 +19,20 @@ append body
                 +thumbnail-grid(grid_data, "events")
         //+section('HOT', 'BEEFS')
             //+horizontal-slider('featured_beefs_slider', grid_data, "events")
-            
+append body
+    div.bt-content
+        +section('JOINTHE', 'COMMUNITY', 'fa fa-comments')
+            div.row
+                div.col-sm-8
+                    h4
+                        | Beeftracker is creating a community of Beef lovers to share and discuss every beef out there. If you have information that we don't have yet, create an account and join our contributors in our information sharing goals.
+                    p
+                        | Beef can be found everywhere and anywhere. We follow Beef in Music, Politics, Sport and even Silicon Valley to ensure any argument you're interested in is covered in our quickly expanding database.
+                div.col-sm-4
+                    a.btn.btn-lg.btn-primary.btn-float(href="add-beef") Add Beef
+                    a.btn.btn-lg.btn-primary.btn-float(href="#", data-toggle="modal", data-target="#register_modal") Create an Account
+
+
 append body
     div.bt-content
         +category-browser-section(grid_data)
@@ -34,14 +47,3 @@ append body
           +section('HOT', 'BEEF')
                +horizontal-slider('featured_beefs_slider_full', slider_data, "events", "c_fill,g_face,h_219,w_340")
 
-append body
-    div.bt-content
-        +section('JOINTHE', 'COMMUNITY', 'fa fa-comments')
-            div.row
-                div.col-sm-6
-                    p
-                        | Beeftracker is creating a community of Beef lovers to share and discuss every beef out there. If you have information that we don't have yet, create an account and join our contributors in our information sharing goals.
-                div.col-sm-6
-                    a.btn.btn-lg.btn-primary(href="add-beef") Add Beef
-                    hr
-                    a.btn.btn-lg.btn-primary(href="#", data-toggle="modal", data-target="#register_modal") Sign up

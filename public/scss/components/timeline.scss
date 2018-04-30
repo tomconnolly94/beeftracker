@@ -1,19 +1,20 @@
 .timeline-container {
-  padding-top: 0;
+    padding-top: 0;
 }
 
 .timeline {
-  white-space: nowrap;
-  overflow-x: hidden;
-  padding-top: 0;
-  cursor:move;
+    white-space: nowrap;
+    overflow-x: hidden;
+    padding-top: 0;
+    cursor:move;
 }
 
 .timeline ol {
-  font-size: 0;
-  width: 100vw;
-  padding: 250px 0;
-  transition: all 1s;
+    font-size: 0;
+    width: 100vw;
+    padding: 250px 0;
+    transition: all 1s;
+    min-height: 550px
 }
 
 .timeline ol li {
@@ -25,13 +26,14 @@
     background: $brand-primary;
 
     &.active {
-        a {
+        /*a {
             width: 280px;
             left: calc(15% + 7px);
-        }
+        }*/
 
         .beef-thumbnail {
-            height: 265px !important;
+            //height: 265px !important;
+            border: solid $brand-primary 4px;;
         }
     }
 
@@ -70,7 +72,7 @@
 }
 
 .timeline ol li:last-child {
-  width: 280px;
+    width: 280px;
 }
 
 /*.timeline ol li:not(:first-child) {

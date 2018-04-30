@@ -5894,7 +5894,8 @@ figure.masonry-item.soundcloud-item .play-button {
   font-size: 0;
   width: 100vw;
   padding: 250px 0;
-  transition: all 1s; }
+  transition: all 1s;
+  min-height: 550px; }
 
 .timeline ol li {
   position: relative;
@@ -5903,11 +5904,13 @@ figure.masonry-item.soundcloud-item .play-button {
   width: 160px;
   height: 3px;
   background: #DF3E3E; }
-  .timeline ol li.active a {
-    width: 280px;
-    left: calc(15% + 7px); }
-  .timeline ol li.active .beef-thumbnail {
-    height: 265px !important; }
+  .timeline ol li.active {
+    /*a {
+            width: 280px;
+            left: calc(15% + 7px);
+        }*/ }
+    .timeline ol li.active .beef-thumbnail {
+      border: solid #DF3E3E 4px; }
   .timeline ol li .beef-thumbnail {
     height: 185px !important; }
   .timeline ol li a {
@@ -6178,7 +6181,7 @@ figure.masonry-item.soundcloud-item .play-button {
   padding-top: 30px; }
   @media (max-width: 575.98px) {
     .beef-content {
-      padding-top: 0; } }
+      padding-top: 15px; } }
 
 .beef-content-header .beef-title h2 {
   color: #000; }
@@ -6363,6 +6366,8 @@ a.btn {
   .btn.btn-lg {
     font-size: 16px;
     padding: 0.6rem 1rem; }
+  .btn.btn-float {
+    float: right; }
   .btn.btn-sm, .btn.btn-md {
     font-size: 14px;
     padding: 0.6rem 1rem; }

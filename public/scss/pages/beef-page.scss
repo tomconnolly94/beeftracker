@@ -2,7 +2,7 @@
     padding-top: 30px;
 
     @include media-breakpoint-only(xs) {
-        padding-top: 0;
+        padding-top: 15px;
     }
 }
 
@@ -21,7 +21,7 @@
             margin-left:10px;
 
             @include media-breakpoint-only(xs) {
-            margin-left:0;
+                margin-left:0;
             }
         }
     }

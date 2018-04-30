@@ -26,12 +26,12 @@ mixin vertical-list-beef-item(item, image_resize_params)
                 h5
                     a(href="/#{item.type}/#{item._id}") #{item.title.length > 40 ? item.title.slice(0,40)+ "..." : item.title}
                 ul.beef-info
-                        li #{formatted_date}
-                        li
-                            span.fas.fa-comments &nbsp;&nbsp;
-                            //| #{item.comments.length}
-                        li
-                            span.beefometer.small.two-beefs
+                    li #{formatted_date}
+                    li
+                        span.fas.fa-comments &nbsp;&nbsp;
+                        //| #{item.comments.length}
+                    li
+                        span.beefometer.small.two-beefs
                 //p.
                     #{item.description.slice(0, 90).trim()}...
     - }
