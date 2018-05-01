@@ -33,7 +33,8 @@ var event_projection = {
     "beef_chain_ids": 1,
     "contributions": 1,
     "tags": 1,
-    "featured": 1
+    "featured": 1,
+    "votes": 1
 };
 
 var check_end_or_next = function(event, item, next){
@@ -224,6 +225,7 @@ module.exports = {
                         contributions: { $first: "$contributions"},
                         tags: { $first: "$tags"},
                         featured: { $first: "$featured"},
+                        votes: { $first: "$votes"},
                     }},
                     { $project: event_projection }
                 ];
@@ -316,6 +318,7 @@ module.exports = {
                         contributions: { $first: "$contributions"},
                         tags: { $first: "$tags"},
                         featured: { $first: "$featured"},
+                        votes: { $first: "$votes"},
                     }},
                     { $project: event_projection }
                 ]).toArray(function(queryErr, docs) {

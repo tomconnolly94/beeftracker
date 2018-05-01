@@ -18,6 +18,7 @@ var event_controller = require('../controllers/events_controller');
 var event_peripherals_controller = require('../controllers/events_peripherals_controller');
 var update_request_controller = require('../controllers/update_request_controller');
 var users_controller = require('../controllers/users_controller');
+var votes_controller = require('../controllers/votes_controller');
 
 //input validation functions
 var actor_data_validator = require("../validation/actor_validation");
@@ -30,6 +31,7 @@ var event_data_validator = require("../validation/event_validation");
 var password_reset_data_validator = require("../validation/password_reset_validation");
 var update_request_validator = require("../validation/update_request_validation");
 var user_data_validator = require("../validation/user_validation");
+var vote_data_validator = require("../validation/vote_data_validation");
 
 var memoryStorage = multer.memoryStorage();
 var memoryUpload = multer({
@@ -451,6 +453,24 @@ router.route('/users/execute-password-reset').post(password_reset_data_validator
         }
     });
 });//built, not written, not tested
+
+router.route('/votes/events').put(vote_data_validator.validate, function(request, response){
+    
+    var event_id = request.locals.validated_data.event_id; //get form data
+    var vote_direction = request.locals.validated_data.vote_direction; //get form data
+    
+    console.log(event_id);
+    console.log(vote_direction);
+        
+    votes_controller.addVoteToEvent(event_id, vote_direction, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 200, data);
+        }
+    });
+});//built, written, tested
 
 //Authentication endpoints
 router.route('/authenticate').post(authentication_request_validator.validate, function(request, response){

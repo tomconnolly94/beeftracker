@@ -27,7 +27,7 @@ mixin medium-actor-thumbnail(data, data_type, image_resize_params)
                         div.beef-details
                             h4 #{data.name.length > 45 ? data.name.slice(0,45)+ "..." : data.name}
                             span.date #{formatted_date}
-                        div.beefometer-container
+                        //-div.beefometer-container
                             div.beefometer.small.four-beefs
                 - if(server_rendered)
                     img(class="lazy" data-src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + data.img_title_fullsize)

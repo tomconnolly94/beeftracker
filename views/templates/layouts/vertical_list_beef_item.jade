@@ -20,7 +20,7 @@ mixin vertical-list-beef-item(item, image_resize_params)
         //div.vertical-list-item.beef-category-music(class=item == data[2] ? "hidden_on_lg" : "")
         div.vertical-list-item.beef-category-music.row
             div.col-6.vertical-list-item-thumbnail
-                a(href="/beef/#{item.beef_chain_ids[0]._id}/#{data._id}") 
+                a(href="/beef/" + item.beef_chain_ids[0]._id + "/" + item._id) 
                     img(src=server_url_prefix_with_image_formatting + "/events/" + item.img_title_fullsize)
             div.col-6.vertical-list-item-details
                 h5

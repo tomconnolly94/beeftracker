@@ -4,6 +4,33 @@
     @include media-breakpoint-only(xs) {
         padding-top: 15px;
     }
+    
+    .voting-panel{
+        padding-bottom: 30px;
+        
+        span{
+            font-size: 70px;
+        }
+        
+        div{
+            text-align: center;
+        }
+        
+        h3{
+            margin: 10px auto;
+        }
+        
+        p{
+            margin: 0 auto;
+        }
+    }
+}
+
+.icon-flipped {
+    transform: scaleX(-1);
+    -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    -ms-transform: scaleX(-1);
 }
 
 .beef-content-header {
@@ -182,7 +209,7 @@
     } 
     .beef-body-content-image img{
         margin: 0 auto;
-        padding-bottom: 60px;
+        padding-bottom: 30px;
     }
 
     .beef-body {

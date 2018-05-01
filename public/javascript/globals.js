@@ -31,3 +31,35 @@ function fade_new_content_to_div(tag_selector, content_rendering_function){
         $(tag_selector).fadeIn(fade_speed);
     });
 }
+
+function append_or_create_cookie(cookie_name, value){
+    
+    var all_cookies = document.cookie.split(';');
+    var cookie_found = false;
+    //set expiration date
+    var d = new Date();
+    var exdays = 90;
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires="+d.toUTCString();
+
+    
+    for(var i = 0; i < all_cookies.length; i++) {
+        var cookie = all_cookies[i];
+        var cookie_split = cookie.split("=");
+        
+        if(cookie_name == cookie_split[0]){
+            cookie_found = true;
+            cookie_split.push(value);
+            cookie_split.splice(0, 1);
+            var new_cookie_value = cookie_split.join(",");
+            
+            document.cookie = cookie_name + "=" + new_cookie_value + ";" + expires + ";path=/";
+        }
+        
+    }
+    
+    if(!cookie_found){
+        //if cookie not found
+        document.cookie = cookie_name + "=" + value + ";" + expires + ";path=/";
+    }
+}

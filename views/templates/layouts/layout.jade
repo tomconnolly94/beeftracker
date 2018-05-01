@@ -55,7 +55,7 @@ html(lang="en")
                 div.col-md-6.offset-md-3
                     a(href="/")
                         img(src='/logo/logo@256.png', alt='Beeftracker')
-                //div.col-md-3 //-removed for version 2.0.0
+                div.col-md-3
                     a.btn.btn-primary.btn-lg.float-right(href="/add-beef")
                         span.fas.fa-star
                         | Add Beef
@@ -82,12 +82,11 @@ html(lang="en")
                             a.nav-link(href="/actors") Actors
                         li.nav-item#contact
                             a.nav-link(href="/contact") Contact Us
-                        //hidden for version 2.0.0
-                        li.nav-item.d-block.d-md-none#add-beef(style="display:none;") 
+                        li.nav-item.d-block.d-md-none#add-beef 
                             a.nav-link(href="/add-beef") Add Beef
                     ul.navbar-nav.social-navbar-nav.d-sm-non
-                        //li.nav-item.login  //removed for version 2.0.0
-                            a.nav-link(href="#", data-toggle="modal", data-target="#login_modal")
+                        li.nav-item.login
+                            a.nav-link(href="#", data-toggle="modal", data-target="#login_modal", style="min-height:30px;padding-top: 9px !important;")
                                 span.fas.fa-user
                                 span.text &nbsp; Login
                         li.nav-item.search

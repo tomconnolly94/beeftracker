@@ -6182,6 +6182,22 @@ figure.masonry-item.soundcloud-item .play-button {
   @media (max-width: 575.98px) {
     .beef-content {
       padding-top: 15px; } }
+  .beef-content .voting-panel {
+    padding-bottom: 30px; }
+    .beef-content .voting-panel span {
+      font-size: 70px; }
+    .beef-content .voting-panel div {
+      text-align: center; }
+    .beef-content .voting-panel h3 {
+      margin: 10px auto; }
+    .beef-content .voting-panel p {
+      margin: 0 auto; }
+
+.icon-flipped {
+  transform: scaleX(-1);
+  -moz-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  -ms-transform: scaleX(-1); }
 
 .beef-content-header .beef-title h2 {
   color: #000; }
@@ -6279,7 +6295,7 @@ figure.masonry-item.soundcloud-item .play-button {
       width: 100%; }
   .beef-content-container .beef-body-content-image img {
     margin: 0 auto;
-    padding-bottom: 60px; }
+    padding-bottom: 30px; }
   .beef-content-container .beef-body {
     padding-top: 20px;
     padding-bottom: 20px; }
@@ -6364,7 +6380,7 @@ a.btn {
   .btn span.fas:first-child {
     padding-right: 5px; }
   .btn.btn-lg {
-    font-size: 16px;
+    font-size: 14px;
     padding: 0.6rem 1rem; }
   .btn.btn-float {
     float: right; }

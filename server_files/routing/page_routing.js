@@ -6,6 +6,7 @@ var async = require("async");
 var db_ref = require("../config/db_config.js"); //get database reference object
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
 var globals = require("../config/globals.js")
+var cookie_parser = require("../tools/cookie_parsing.js");
 
 //endpoint controllers
 var actor_controller = require("../controllers/actors_controller.js");
@@ -29,6 +30,11 @@ if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if 
 var view_parameters = { 
     file_server_url_prefix: globals.file_server_url_prefix,
     server_rendered: true
+}
+
+function calculate_rating(votes){
+    var rating = Math.round( (votes.upvotes / ( votes.upvotes + votes.downvotes ) ) * 5 )
+    return rating;
 }
 
 router.get("/", function(request, response){
@@ -69,6 +75,19 @@ router.get("/", function(request, response){
         view_parameters.grid_data = values[1];
         view_parameters.category_event_data = values[2];
         view_parameters.categories = values[3];
+        
+        //calculate grid_data events ratings
+        for(var i = 0; i < view_parameters.featured_data.length; i++){
+            view_parameters.featured_data[i].rating = calculate_rating(view_parameters.featured_data[i].votes);
+        }
+        //calculate grid_data events ratings
+        for(var i = 0; i < view_parameters.grid_data.length; i++){
+            view_parameters.grid_data[i].rating = calculate_rating(view_parameters.grid_data[i].votes);
+        }
+        //calculate slider_data events ratings
+        for(var i = 0; i < view_parameters.category_event_data.length; i++){
+            view_parameters.category_event_data[i].rating = calculate_rating(view_parameters.category_event_data[i].votes);
+        }
         
         response.render("pages/home.jade", view_parameters);
     }).catch(function(error){
@@ -119,7 +138,7 @@ router.get("/actor/:actor_id", function(request, response) {
         console.log(error);
     });
 }); //actor page
-/*router.get("/add-beef", function(request, response) {
+router.get("/add-beef", function(request, response) {
 
     var actor_data_promise = new Promise(function(resolve, reject){
         actor_controller.findActors({ increasing_order: "name" }, function(data){
@@ -141,7 +160,7 @@ router.get("/actor/:actor_id", function(request, response) {
         
         response.render("pages/add_beef.jade", view_parameters); 
     });
-}); // submit beefdata page page*/
+}); // submit beefdata page page
 router.get("/beef", function(request, response) { 
     
     var events_data_promise = new Promise(function(resolve, reject){
@@ -175,15 +194,37 @@ router.get("/beef", function(request, response) {
         view_parameters.categories = values[2];
         view_parameters.slider_data = values[3];
         
+        //calculate grid_data events ratings
+        for(var i = 0; i < view_parameters.grid_data.length; i++){
+            view_parameters.grid_data[i].rating = calculate_rating(view_parameters.grid_data[i].votes);
+        }
+        //calculate grid_data events ratings
+        for(var i = 0; i < view_parameters.category_event_data.length; i++){
+            view_parameters.category_event_data[i].rating = calculate_rating(view_parameters.category_event_data[i].votes);
+        }
+        //calculate slider_data events ratings
+        for(var i = 0; i < view_parameters.slider_data.length; i++){
+            view_parameters.slider_data[i].rating = calculate_rating(view_parameters.slider_data[i].votes);
+        }
+        
         response.render("pages/beefs.jade", view_parameters); 
     });
 }); //beef page
 router.get("/beef/:beef_chain_id/:event_id", function(request, response) { 
 
+    
+    var cookies = cookie_parser.parse_cookies(request);
+    
+    
     //extract data
     var event_id = request.params.event_id;    
     var beef_chain_id = request.params.beef_chain_id;
+    var disable_voting = false;
         
+    if(cookies.beef_ids_voted_on.split(",").indexOf(event_id) != -1){
+        disable_voting = true;
+    }
+    
     var main_event_data_promise = new Promise(function(resolve, reject){
         event_controller.findEvent(event_id, function(data){
             let data_object = { event_data: data };
@@ -205,10 +246,12 @@ router.get("/beef/:beef_chain_id/:event_id", function(request, response) {
         
         view_parameters.current_beef_chain_id = beef_chain_id;
         view_parameters.event_data = values[0].event_data;
+        view_parameters.event_data.rating = calculate_rating(view_parameters.event_data.votes);
         view_parameters.comment_data = values[1];
         view_parameters.related_events = values[0].related_events;
+        view_parameters.disable_voting = disable_voting;
         
-        response.render("pages/beef.jade", { file_server_url_prefix: globals.file_server_url_prefix, current_beef_chain_id: beef_chain_id, server_rendered: true, event_data: values[0].event_data, comment_data: values[1], related_events: values[0].related_events });
+        response.render("pages/beef.jade", view_parameters);
     }).catch(function(error){
         console.log(error);
     });
@@ -228,7 +271,7 @@ router.get("/contact", function(request, response) {
         response.render("pages/contact.jade", view_parameters); 
     });
 }); // contact us page
-/*router.get("/user/:user_id", function(request, response) { 
+router.get("/user/:user_id", function(request, response) { 
 
     //extract data
     var user_id = request.params.user_id;
@@ -249,7 +292,7 @@ router.get("/contact", function(request, response) {
     }).catch(function(error){
         console.log(error);
     });
-}); //actor page*/
+}); //actor page
 router.get("/privacy-policy", function(request, response){ response.render("pages/peripheral_pages/privacy_policy.jade", view_parameters); });
 router.get("/terms-and-conditions", function(request, response){ response.render("pages/peripheral_pages/terms_and_conditions.jade", view_parameters); });
 router.get("/disclaimer", function(request, response){ response.render("pages/peripheral_pages/disclaimer.jade", view_parameters); });

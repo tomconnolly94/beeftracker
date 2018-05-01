@@ -134,7 +134,7 @@ var master_functions_object = {
     },
     test_int: function(number) {
 
-        if (isNaN(number) || number !== parseInt(number, 10)){
+        if (isNaN(number) /*|| number !== parseInt(number, 10)*/){
             return false;
         } 
         else {
