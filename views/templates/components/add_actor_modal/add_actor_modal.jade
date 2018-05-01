@@ -6,7 +6,7 @@ include ../../layouts/modal.jade
 
 
 mixin add-actor-modal-js()
-    script(src="/component_controllers/add_actor_modal/add_actor_modal.js")
+    script(src="/component_controllers/add_actor_modal/add_actor_modal.js" async)
 
 mixin add-actor-modal()
     +modal('Add Actor', '#', false)(id="add_actor_modal", large_modal=true, class="add-actor-modal")

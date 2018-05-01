@@ -3,7 +3,7 @@ include ./add_data_sources_display.jade
 mixin add-data-sources(data_sources, display_id)
     
     append scripts
-        script(src="/component_controllers/add_data_sources/add_data_sources_controller.js")
+        script(src="/component_controllers/add_data_sources/add_data_sources_controller.js" async)
         //script(src="/component_controllers/add_actor_modal/add_actor_modal.js")
 
     div.row

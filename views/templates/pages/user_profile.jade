@@ -5,8 +5,8 @@ include ../components/related_actors/related_actors.jade
 include ../layouts/masonry_gallery.jade
 
 append body_scripts
-    script(src="/bower_components/shufflejs/dist/shuffle.js")
-    script(src="/bower_components/fancybox/dist/jquery.fancybox.js")
+    script(src="/bower_components/shufflejs/dist/shuffle.js" async)
+    script(src="/bower_components/fancybox/dist/jquery.fancybox.js" async)
     +masonry-gallery-script()
     //+timeline-section-js()
 
