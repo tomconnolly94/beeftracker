@@ -279,7 +279,7 @@ var master_functions_object = {
     },
     is_bool: function(input){
         
-        if(typeof input === "boolean"){
+        if(typeof input === "boolean" || input == "true" || input == "false"){
             return true;
         }
         else{

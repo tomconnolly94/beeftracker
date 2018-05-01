@@ -130,7 +130,7 @@ router.route('/actors').post(memoryUpload, actor_data_validator.validate, functi
     });
     
 });//built, written, tested
-router.route('/actors/:actor_id').put(token_authentication.authenticate_admin_user_token, memoryUpload, actor_data_validator.validate, function(request, response){
+router.route('/actors/:actor_id').put(token_authentication.authenticate_endpoint_with_admin_user_token, memoryUpload, actor_data_validator.validate, function(request, response){
     
     var data = request.locals.validated_data;
     var files = request.files;
@@ -144,7 +144,7 @@ router.route('/actors/:actor_id').put(token_authentication.authenticate_admin_us
         }
     });
 });//built, written, tested, needs admin auth
-router.route('/actors/:actor_id').delete(token_authentication.authenticate_admin_user_token, function(request, response){
+router.route('/actors/:actor_id').delete(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     actor_controller.deleteActor(request, response, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
@@ -201,7 +201,7 @@ router.route('/comments/actors/:actor_id').get(function(request, response){
         }
     });
 });//built, written, tested
-router.route('/comments/:comment_id').delete(token_authentication.authenticate_admin_user_token, function(request, response){
+router.route('/comments/:comment_id').delete(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     comments_controller.deleteComment(request, response, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
@@ -286,7 +286,7 @@ router.route('/events/:event_id').get(function(request, response){
         }
     });
 });//built, written, tested
-router.route('/events').post(token_authentication.authenticate_admin_user_token, memoryUpload, event_data_validator.validate, function(request, response){
+router.route('/events').post(token_authentication.authenticate_endpoint_with_admin_user_token, memoryUpload, event_data_validator.validate, function(request, response){
     
     var data = request.locals.validated_data;
     var files = request.files;
@@ -300,7 +300,7 @@ router.route('/events').post(token_authentication.authenticate_admin_user_token,
         }
     });
 });//built, written, tested, needs specific user auth
-router.route('/events/:event_id').put(token_authentication.authenticate_admin_user_token, memoryUpload, event_data_validator.validate, function(request, response){
+router.route('/events/:event_id').put(token_authentication.authenticate_endpoint_with_admin_user_token, memoryUpload, event_data_validator.validate, function(request, response){
     
     var data = request.locals.validated_data;
     var files = request.files;
@@ -315,7 +315,7 @@ router.route('/events/:event_id').put(token_authentication.authenticate_admin_us
         }
     });
 });//built, written, tested, needs admin auth
-router.route('/events/:event_id').delete(token_authentication.authenticate_admin_user_token, function(request, response){
+router.route('/events/:event_id').delete(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     event_controller.deleteEvent(request, response, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
@@ -375,7 +375,7 @@ router.route('/update-requests').post(memoryUpload, update_request_validator.val
 });//built, not written, not tested
 
 //Users endpoints
-router.route('/users/:user_id').get(token_authentication.authenticate_user_token, function(request, response){
+router.route('/users/:user_id').get(token_authentication.authenticate_endpoint_with_user_token, function(request, response){
     users_controller.getUser(request, response, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
@@ -400,7 +400,7 @@ router.route('/users').post(memoryUpload, user_data_validator.validate, function
         }
     });
 });//built, written, manually tested
-router.route('/users/:user_id').put(memoryUpload, token_authentication.authenticate_admin_user_token, user_data_validator.validate, function(request, response){
+router.route('/users/:user_id').put(memoryUpload, token_authentication.authenticate_endpoint_with_admin_user_token, user_data_validator.validate, function(request, response){
     
     var user_details = request.locals.validated_data;
     var user_id = request.params.user_id;
@@ -416,7 +416,7 @@ router.route('/users/:user_id').put(memoryUpload, token_authentication.authentic
         }
     });
 });//built, not written, not tested, needs specific user or admin auth
-router.route('/users/:user_id').delete(token_authentication.authenticate_admin_user_token, function(request, response){
+router.route('/users/:user_id').delete(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     users_controller.deleteUser(request, response, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
@@ -478,15 +478,14 @@ router.route('/authenticate').post(authentication_request_validator.validate, fu
     var auth_details = request.locals.validated_data;
     var headers = request.headers;
     
-    authentication_controller.authenticateUser(auth_details, headers, function(data, cookie_details){
+    authentication_controller.authenticateUser(auth_details, headers, response, function(data, cookie_details){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
             //set auth token for verification and logged_in token so client javascript knows how to behave
-            response.cookie("auth", cookie_details.auth_token, { expires: new Date(cookie_details.expiry_timestamp), httpOnly: cookie_details.cookies_http_only, secure: cookie_details.cookies_secure });
-            response.cookie("logged_in", "true", { expires: new Date(cookie_details.expiry_timestamp), httpOnly: false });
-
+            /*response.cookie("auth", cookie_details.auth_token, { expires: new Date(cookie_details.expiry_timestamp), httpOnly: cookie_details.cookies_http_only, secure: cookie_details.cookies_secure });
+            response.cookie("logged_in", "true", { expires: new Date(cookie_details.expiry_timestamp), httpOnly: false });*/
             send_successful_response(response, 200, data);
         }
     });

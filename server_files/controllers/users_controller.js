@@ -67,7 +67,6 @@ module.exports = {
                     
                     if(err){ console.log(err);}
                     else{
-                        console.log(users);
                         if(users.length < 1){
                             callback({ failed: true, message: "Could not find user." });
                         }

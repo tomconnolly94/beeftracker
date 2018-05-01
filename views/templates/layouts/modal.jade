@@ -1,4 +1,4 @@
-mixin modal(title, url, show_footer, submit_button_label)
+mixin modal(title, show_footer, submit_button_label)
     div.modal(role="dialog", id!=attributes.id, class!=attributes.class)
         div.modal-dialog(role="document", class=attributes.large_modal ? 'modal-lg' : '')
             div.modal-content

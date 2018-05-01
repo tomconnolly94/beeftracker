@@ -1,7 +1,7 @@
 include ../../layouts/modal.jade
 
 mixin login-modal()
-    +modal('Login', 'login.php', false)(id="login_modal", large_modal=true)
+    +modal('Login', false)(id="login_modal", large_modal=true)
         div.row
             div.col-md-12.text-right
                 p
@@ -16,15 +16,15 @@ mixin login-modal()
                 form#login_form
                     div.form-row
                         div.form-group.col-md-12
-                            label(for="login_email") Email
-                            input(type="email").form-control#login_email
+                            label(for="login_username") Email
+                            input(type="text").form-control#login_username
                     div.form-row
                         div.form-group.col-md-12
                             label(for="login_password") Password
                             input(type="password").form-control#login_password
                     div.form-row
                         div.form-group.col-md-12
-                            button(type="submit").btn.btn-primary.float-right Login
+                            button#login_button.btn.btn-primary.float-right Login
                     div.form-row
                         div.form-group.col-md-12
                             p

@@ -81,5 +81,4 @@ module.exports = {
         response.cookie( "bftkr_logged_in", "false", { expires: new Date(0), httpOnly: false });
         callback({});
     }
-    
 }

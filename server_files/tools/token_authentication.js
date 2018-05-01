@@ -6,15 +6,21 @@ var jwt = require("jsonwebtoken");
 var os = require("os");
 var cookie_parser = require('../tools/cookie_parsing.js');
 
-var auth_disabled = true;
+var auth_disabled = false;
 var auto_refresh_auth_token = false;
 
 //delete all auth cookies and redirect to login page
-var reset_auth = function(response){
+var reset_auth = function(response, deny_access_on_fail, next){
     response.cookie("auth", "0", { expires: new Date(0), httpOnly: true });
     response.cookie("logged_in", "false", { expires: new Date(0) });
     //response.render('pages/authentication/admin_login.ejs');
-    response.status(401).send({message: "Authentication failed."});
+    
+    if(deny_access_on_fail){
+        response.status(401).send({message: "Authentication failed."});
+    }
+    else{
+        next();
+    }
 }
 
 //confirm authentication, refresh cookie, and let page route continue executing
@@ -36,33 +42,31 @@ var confirm_auth = function(request, response, token, next){
     response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
     response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
 
-    request.authenticated_user_id = token._id;
-
+    
+    if(!request.locals){ request.locals = {}; }
+    request.locals.authenticated_user = {
+        id: token._id,
+        is_admin: token.admin
+    }
     next();
 }
 
-var authentication_procedure = function(request, response, next){
+var authentication_procedure = function(request, response, deny_access_on_fail, next){
     
     //extract data for use later
     var db_url = process.env.MONGODB_URI; //get db uri
-    var session_details = request.body; //get form data
     var auto_refresh_auth_token = false;
-    
-    //get request user_id
-    var params_user_id = request.params.user_id;
-    var body_user_id = request.body.user_id;
-
     var cookies = cookie_parser.parse_cookies(request);
-    
-    if(cookies.auth){
+        
+    if(cookies.bftkr_auth){
         //verify token to ensure its still valid
-        jwt.verify(cookies.auth, process.env.JWT_SECRET, function(error, auth_token){
+        jwt.verify(cookies.bftkr_auth, process.env.JWT_SECRET, function(error, auth_token){
             if(error){ 
                 console.log(error);
-                reset_auth(response);
+                reset_auth(response, deny_access_on_fail, next);
             }
             else{                
-                if((!request.route_requires_admin && ( params_user_id == auth_token._id || body_user_id == auth_token._id ) ) || //route is not admin, ensure provided user_id matches the _id in the auth token
+                if((!request.route_requires_admin && auth_token.admin == false) || //route is not admin, ensure provided user_id matches the _id in the auth token
                     auth_token.admin){ //auth_token is admin, allow
                     
                     request.user_is_admin = auth_token.admin;
@@ -73,7 +77,7 @@ var authentication_procedure = function(request, response, next){
                             confirm_auth(request, response, auth_token, next);
                         }
                         else{
-                            reset_auth(response);
+                            reset_auth(response, deny_access_on_fail, next);
                         }
                     }
                     else{
@@ -82,34 +86,52 @@ var authentication_procedure = function(request, response, next){
                 }
                 else{
                     console.log("Token does not have correct authorisation");
-                    reset_auth(response);
+                    reset_auth(response, deny_access_on_fail, next);
                 }
             }
         });
     }
     else{
         console.log("No cookie provided.")
-        reset_auth(response);
+        reset_auth(response, deny_access_on_fail, next);
     }
 }
 
 module.exports = {
     
-    authenticate_user_token : function(request, response, next) {
+    authenticate_endpoint_with_user_token : function(request, response, next) {
         if(auth_disabled){
             next();
         }
         else{
-            authentication_procedure(request, response, next);
+            authentication_procedure(request, response, true, next);
         }
     },
-    authenticate_admin_user_token : function(request, response, next) {
+    authenticate_endpoint_with_admin_user_token : function(request, response, next) {
         if(auth_disabled){
             next();
         }
         else{
             request.route_requires_admin = true; //set field requiring the token has auth field set to true
-            authentication_procedure(request, response, next);
+            authentication_procedure(request, response, true, next);
+        }
+    },
+    
+    authenticate_page_route_with_user_token : function(request, response, next) {
+        if(auth_disabled){
+            next();
+        }
+        else{
+            authentication_procedure(request, response, false, next);
+        }
+    },
+    authenticate_page_route_with_admin_user_token : function(request, response, next) {
+        if(auth_disabled){
+            next();
+        }
+        else{
+            request.route_requires_admin = true; //set field requiring the token has auth field set to true
+            authentication_procedure(request, response, false, next);
         }
     }
 }
