@@ -459,9 +459,6 @@ router.route('/votes/events').put(vote_data_validator.validate, function(request
     var event_id = request.locals.validated_data.event_id; //get form data
     var vote_direction = request.locals.validated_data.vote_direction; //get form data
     
-    console.log(event_id);
-    console.log(vote_direction);
-        
     votes_controller.addVoteToEvent(event_id, vote_direction, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);

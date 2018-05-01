@@ -89,8 +89,6 @@ router.get("/", token_authentication.authenticate_page_route_with_user_token, fu
         view_parameters.categories = values[3];
         view_parameters.user_data = values[4];
         
-        console.log(view_parameters.user_data);
-        
         //calculate grid_data events ratings
         for(var i = 0; i < view_parameters.featured_data.length; i++){
             view_parameters.featured_data[i].rating = calculate_event_rating(view_parameters.featured_data[i].votes);
@@ -138,8 +136,6 @@ router.get("/actor/:actor_id", function(request, response) {
     //access data from db
     var actor_data_promise = new Promise(function(resolve, reject){
        actor_controller.findActor(actor_id, function(data){
-           console.log(data);
-           console.log(data.related_actors);
            resolve(data);
         });
     });
@@ -292,7 +288,6 @@ router.get("/user/:user_id", token_authentication.authenticate_page_route_with_u
     //access data from db
     var user_data_promise = new Promise(function(resolve, reject){
        user_controller.findUser(user_id, false, function(data){
-           console.log(data);
            resolve(data);
         });
     });
