@@ -4928,7 +4928,9 @@ nav {
     nav .social-navbar-nav {
       position: absolute;
       margin: 0;
-      right: 0; } }
+      right: 0;
+      top: 0.2px;
+      height: 31px; } }
   @media (min-width: 576px) {
     nav .social-navbar-nav .nav-item span.text {
       display: none; } }
@@ -6183,7 +6185,8 @@ figure.masonry-item.soundcloud-item .play-button {
     .beef-content {
       padding-top: 15px; } }
   .beef-content .voting-panel {
-    padding-bottom: 30px; }
+    padding-bottom: 30px;
+    margin: 0 auto; }
     .beef-content .voting-panel span {
       font-size: 70px; }
     .beef-content .voting-panel div {
@@ -6400,3 +6403,6 @@ a.btn {
 
 #beef-search-container {
   padding: 50px 0; }
+
+#login_modal_warning_message {
+  color: #DF3E3E; }

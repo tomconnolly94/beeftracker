@@ -63,3 +63,25 @@ function append_or_create_cookie(cookie_name, value){
         document.cookie = cookie_name + "=" + value + ";" + expires + ";path=/";
     }
 }
+
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+$(function(){
+    $(".add-beef-button").unbind().click(function(event){
+        event.preventDefault();
+        
+        $("#login_modal_warning_message").text("Please create an Account before you submit your BEEF.");
+        
+        console.log(getCookie("bftkr_logged_in"))
+        if(!getCookie("bftkr_logged_in")){        
+            $("#login_modal").modal("show");
+        }
+        else{
+            window.location.href = "/add-beef"
+        }
+    });
+})

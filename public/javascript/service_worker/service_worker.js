@@ -45,42 +45,24 @@ self.addEventListener('fetch', function(event) {
     
     var request = event.request;
     
-    event.respondWith(
-        fetch(request)
-            .then(function(response) {
-                var copy = response.clone();
-                caches.open(CACHE_NAME)
-                    .then(function(cache) {
-                        cache.put(request, copy);
-                    });
-                return response;
-            })
-            .catch(function() {
-                return caches.match(request)
-                    .then(function(response) {
-                        return response || caches.match("/offline/");
-                    });
-            })
-
-        /*caches.match(event.request).then(function(response) {
-            // Cache hit - return response
-            if (response) {
-                return response;
-            }
-            
-            return fetch(event.request);
-        }).catch(function(response){
-            console.log("match field, catch");
-            
-            var url_split = event.request.url.split("/");
-
-            if(url_split[3] == "beef"){
-                caches.open(CACHE_NAME).then(function(cache) {
-                    
-                    return cache.add("/" + url_split[3] + "/" + url_split[3]);
+    if(request.method == "GET"){ //only allow service worker to intercept request if it is a GET request
+        event.respondWith(
+            fetch(request) //attempt to fetch the resource
+                .then(function(response) { //run if fetch is successful
+                    var copy = response.clone();
+                    caches.open(CACHE_NAME) //open cache and dynamically add page that has just been fetched to cache
+                        .then(function(cache) {
+                            cache.put(request, copy);
+                        });
+                    return response;
                 })
-            }
-        })*/
-    )
+                .catch(function() { //run if fetch is unsuccessful, client is offline
+                    return caches.match(request)
+                        .then(function(response) {
+                            return response;// || caches.match("/offline/");
+                        });
+                })
+        )
+    }
     return;
 });

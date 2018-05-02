@@ -65,7 +65,11 @@ var authentication_procedure = function(request, response, deny_access_on_fail, 
                 console.log(error);
                 reset_auth(response, deny_access_on_fail, next);
             }
-            else{                
+            else{
+                
+                console.log(auth_token);
+                console.log(request.route_requires_admin);
+                
                 if((!request.route_requires_admin && auth_token.admin == false) || //route is not admin, ensure provided user_id matches the _id in the auth token
                     auth_token.admin){ //auth_token is admin, allow
                     
@@ -116,8 +120,7 @@ module.exports = {
             authentication_procedure(request, response, true, next);
         }
     },
-    
-    authenticate_page_route_with_user_token : function(request, response, next) {
+    recognise_user_token : function(request, response, next) {
         if(auth_disabled){
             next();
         }
@@ -125,7 +128,7 @@ module.exports = {
             authentication_procedure(request, response, false, next);
         }
     },
-    authenticate_page_route_with_admin_user_token : function(request, response, next) {
+    recognise_admin_token : function(request, response, next) {
         if(auth_disabled){
             next();
         }

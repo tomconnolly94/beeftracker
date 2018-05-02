@@ -38,7 +38,9 @@ function calculate_event_rating(votes){
     return rating;
 }
 
-router.get("/", token_authentication.authenticate_page_route_with_user_token, function(request, response){
+router.get("/", token_authentication.recognise_user_token, function(request, response){
+    
+    console.log(request.locals)
     
     var featured_data_promise = new Promise(function(resolve, reject){
         event_controller.findEvents({ limit: 3, featured: true, decreasing_order: "date_added" }, function(data){
@@ -81,13 +83,14 @@ router.get("/", token_authentication.authenticate_page_route_with_user_token, fu
         }
     });
 
-    Promise.all([ featured_data_promise, grid_data_promise,/* slider_data_promise,*/ category_event_data_promise, categories_promise, user_promise ]).then(function(values) {
+    Promise.all([ featured_data_promise, grid_data_promise, slider_data_promise, category_event_data_promise, categories_promise, user_promise ]).then(function(values) {
         
         view_parameters.featured_data = values[0];
         view_parameters.grid_data = values[1];
-        view_parameters.category_event_data = values[2];
-        view_parameters.categories = values[3];
-        view_parameters.user_data = values[4];
+        view_parameters.slider_data = values[2];
+        view_parameters.category_event_data = values[3];
+        view_parameters.categories = values[4];
+        view_parameters.user_data = values[5];
         
         //calculate grid_data events ratings
         for(var i = 0; i < view_parameters.featured_data.length; i++){
@@ -280,7 +283,7 @@ router.get("/contact", function(request, response) {
         response.render("pages/contact.jade", view_parameters); 
     });
 }); // contact us page
-router.get("/user/:user_id", token_authentication.authenticate_page_route_with_user_token, function(request, response) { 
+router.get("/user/:user_id", token_authentication.recognise_user_token, function(request, response) { 
 
     //extract data
     var user_id = request.params.user_id;
@@ -306,6 +309,8 @@ router.get("/user/:user_id", token_authentication.authenticate_page_route_with_u
         response.redirect("/");
     }
 }); //actor page
+router.get("/register", token_authentication.recognise_user_token, function(request, response) { response.render("pages/register.jade") }); //actor page
+
 router.get("/privacy-policy", function(request, response){ response.render("pages/peripheral_pages/privacy_policy.jade", view_parameters); });
 router.get("/terms-and-conditions", function(request, response){ response.render("pages/peripheral_pages/terms_and_conditions.jade", view_parameters); });
 router.get("/disclaimer", function(request, response){ response.render("pages/peripheral_pages/disclaimer.jade", view_parameters); });

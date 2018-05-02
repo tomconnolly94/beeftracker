@@ -3,7 +3,6 @@ include ./horizontal_slider.jade
 include ./beef_thumbnail.jade
 include ../components/add_beef_call_to_action/add_beef_call_to_action.jade
 include ../components/login_modal/login_modal.jade
-include ../components/register_modal/register_modal.jade
 include ../components/inline_beef_search/inline_beef_search.jade
 include ../components/search_results/search_results.jade
 
@@ -56,7 +55,7 @@ html(lang="en")
                     a(href="/")
                         img(src='/logo/logo@256.png', alt='Beeftracker')
                 div.col-md-3
-                    a.btn.btn-primary.btn-lg.float-right(href="/add-beef")
+                    a.btn.btn-primary.btn-lg.float-right.add-beef-button(href="/add-beef")
                         span.fas.fa-star
                         | Add Beef
         header.container.d-block.d-md-none
@@ -83,7 +82,7 @@ html(lang="en")
                         li.nav-item#contact
                             a.nav-link(href="/contact") Contact Us
                         li.nav-item.d-block.d-md-none#add-beef 
-                            a.nav-link(href="/add-beef") Add Beef
+                            a.nav-link.add-beef-button(href="/add-beef") Add Beef
                     ul.navbar-nav.social-navbar-nav.d-sm-non
                         - if(user_data == null){ //-if user is logged in, display header button, if not, display login button
                             li.nav-item.login
@@ -137,7 +136,7 @@ html(lang="en")
             div.footer-copyright
                 p BeefTracker &copy; Copyright 2018. All Rights Reserved.
         +login-modal()
-        +register-modal()
+        //+register-modal()
         block body_scripts
         div#fb-root
         script.
@@ -145,7 +144,7 @@ html(lang="en")
                 var js, fjs = d.getElementsByTagName(s)[0];
                 if (d.getElementById(id)) return;
                 js = d.createElement(s); js.id = id;
-                js.src = 'https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.12&appId=344505175667327&autoLogAppEvents=1';
+                js.src = 'https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.0&appId=224319738124629&autoLogAppEvents=1';
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
         script.

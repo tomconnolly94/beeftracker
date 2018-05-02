@@ -14,9 +14,11 @@ module.exports = {
     validate: function(request, response, next){
         console.log("validator started.");
         console.log(request.body);
-        
+                
         //access form data and reassign it to the request body
-        request.body = JSON.parse(request.body.data); //get form data
+        if (typeof request.body.data === 'string' || request.body.data instanceof String){
+            request.body = JSON.parse(request.body.data); //get form data
+        }
         
         //validate username
         request.checkBody("username", "Field is empty").notEmpty();
@@ -59,15 +61,17 @@ module.exports = {
         request.checkBody("gallery_items", "Field is null.").not_null();
         request.checkBody("gallery_items", "Gallery items are not formatted correctly.").test_gallery_items_structure(request.files);
         */
+        /*
         request.checkBody("img_title", "Field is empty").notEmpty();
         request.checkBody("img_title", "Field is null.").not_null();
-        
+        */
+        /*
         //validate event date
         request.checkBody("country", "Field is empty").notEmpty();
         request.checkBody("country", "Field is null.").not_null();
         request.checkBody("country", "Field is not a string.").is_string();
         request.checkBody("country", "Potential HTML code found, please remove this.").detect_xss();
-        
+        */
         if(request.files){
             //validate image files
             for(var i = 0; i < request.files.length; i++){
@@ -90,6 +94,7 @@ module.exports = {
                     username: request.body.username,
                     first_name: request.body.first_name,
                     last_name: request.body.last_name,
+                    password: request.body.password,
                     email_address: request.body.email_address,
                     d_o_b: request.body.d_o_b,
                     img_title: request.body.img_title,

@@ -9,7 +9,7 @@ append scripts
     +horizontal-slider-js('featured_beefs_slider')
     +horizontal-slider-js('featured_beefs_slider_full')
     +horizontal-slider-js('featured_beefs_slider_dark')
-    script(src="/bower_components/swiper/dist/js/swiper.js" async)
+    script(src="/bower_components/swiper/dist/js/swiper.js")
 
 append body        
     div.bt-content
@@ -19,7 +19,7 @@ append body
                 +thumbnail-grid(grid_data, "events")
         //+section('HOT', 'BEEFS')
             //+horizontal-slider('featured_beefs_slider', grid_data, "events")
-//append body
+append body
     div.bt-content
         +section('JOINTHE', 'COMMUNITY', 'fa fa-comments')
             div.row
@@ -41,7 +41,7 @@ append body
     div.bt-content
         +add-beef-cta()
 
-//append body
+append body
     div.bt-content-full-width.dark
       div.container
           +section('HOT', 'BEEF')

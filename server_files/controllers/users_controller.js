@@ -140,12 +140,12 @@ module.exports = {
                     hashed_password: password_data.hashed_password, 
                     salt: password_data.salt,
                     d_o_b: birth_date,
-                    img_title: user_details.img_title,
+                    img_title: user_details.img_title ? user_details.img_title : "default",
                     ip_addresses: ip_address ? [ ip_address ] : [ ],
                     date_created: new Date(),
                     last_seen: new Date(),
-                    admin: user_details.admin,
-                    registration_method: user_details.registration_method
+                    admin: user_details.admin ? user_details.admin : false,
+                    registration_method: user_details.registration_method ? user_details.registration_method : "beeftracker"
                 };
                 
                 var image_requires_download = true;
@@ -154,6 +154,21 @@ module.exports = {
                 if(files && files[0]){
                     image_requires_download = false;
                     file_buffer = files[0];
+                }
+                
+                var create_user = function(insert_object, table, img_title, additional_message){
+                    
+                    insert_object.img_title_fullsize = img_title ? img_title : "default_user_img";
+                    var success_message = "Registration complete." + additional_message ? additional_message : "";
+
+                    //insert new user record
+                    db.collection(table).insert(insert_object, function(err, document){
+                        if(err){ console.log(err); }
+                        else{
+                            console.log(document);
+                            callback({ user_id: document.ops[0]._id, message: success_message});
+                        }
+                    });
                 }
                 
                 //make sure username and email are both not taken
@@ -174,52 +189,29 @@ module.exports = {
                                 }
                                 else{
                                     storage_interface.upload_image(image_requires_download, storage_ref.get_user_images_folder(), insert_object.img_title, files[0], false, function(img_title){
-
-                                        insert_object.img_title_fullsize = img_title;
-
-                                        storage_interface.upload_image(image_requires_download, storage_ref.get_user_images_folder(), insert_object.img_title, files[0], true, function(thumbnail_img_title){
-
-                                            insert_object.img_title_thumbnail = thumbnail_img_title;
-                                            //insert new user record
-                                            db.collection(db_ref.get_pending_registered_admin_users_table()).insert(insert_object, function(err, document){
-                                                if(err){ console.log(err); }
-                                                else{
-                                                    callback({ user_id: document.ops[0]._id, message: "Registration complete, requires approval from an existing admin." });
-                                                }
-                                            });
-                                        });
+                                        create_user(insert_object, db_ref.get_pending_registered_admin_users_table(), img_title, "Requires approval from an existing admin.");
                                     });
                                 }
                             }
                         });
                     }
                     else{
-                                
-                        storage_interface.upload_image(image_requires_download, storage_ref.get_user_images_folder(), insert_object.img_title, file_buffer, false, function(img_title){
-                            
-                            insert_object.img_title_fullsize = img_title;
-                            
-                            storage_interface.upload_image(image_requires_download, storage_ref.get_user_images_folder(), insert_object.img_title, file_buffer, true, function(thumbnail_img_title){
-                                
-                                insert_object.img_title_thumbnail = thumbnail_img_title;
-
-                                //add extra fields if not an admin user
-                                insert_object.viewed_beef_ids = [];
-                                insert_object.submitted_beef_ids = [];
-                                insert_object.submitted_actor_ids = [];
-                                insert_object.country = user_details.country;
-                                insert_object.contribution_score = 0;
-
-                                //insert new user record
-                                db.collection(db_ref.get_user_details_table()).insert(insert_object, function(err, document){
-                                    if(err){ console.log(err); }
-                                    else{
-                                        console.log(document);
-                                        callback({ user_id: document.ops[0]._id, message: "Registration complete."});
-                                    }
-                                });
+                                                
+                        //add extra fields if not an admin user
+                        insert_object.viewed_beef_ids = [];
+                        insert_object.submitted_beef_ids = [];
+                        insert_object.submitted_actor_ids = [];
+                        insert_object.country = user_details.country;
+                        insert_object.contribution_score = 0;
+                        
+                        if(insert_object.img_title != "default"){
+                            storage_interface.upload_image(image_requires_download, storage_ref.get_user_images_folder(), insert_object.img_title, file_buffer, false, function(img_title){
+                                create_user(insert_object, db_ref.get_user_details_table(), img_title);
                             });
-                        });
+                        }
+                        else{
+                            create_user(insert_object, db_ref.get_user_details_table());
+                        }
                     }
                 });
             }
