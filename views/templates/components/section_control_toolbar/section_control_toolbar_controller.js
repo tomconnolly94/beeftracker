@@ -30,7 +30,7 @@ $(function(){
                     events_query = { limit: 12, decreasing_order: "currently_trending" };
                     break;
                 case "hot":
-                    events_query = { limit: 12, decreasing_order: "popularity" };
+                    events_query = { limit: 12, decreasing_order: "rating" };
                     break;
                 case "old":
                     events_query = { limit: 12, increasing_order: "date_added" };

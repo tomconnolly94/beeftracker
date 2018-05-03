@@ -91,7 +91,7 @@ router.get("/", token_authentication.recognise_user_token, resolve_user_from_loc
         view_parameters.category_event_data = values[3];
         view_parameters.categories = values[4];
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
-        
+        /*
         //calculate grid_data events ratings
         for(var i = 0; i < view_parameters.featured_data.length; i++){
             view_parameters.featured_data[i].rating = calculate_event_rating(view_parameters.featured_data[i].votes);
@@ -104,7 +104,7 @@ router.get("/", token_authentication.recognise_user_token, resolve_user_from_loc
         for(var i = 0; i < view_parameters.category_event_data.length; i++){
             view_parameters.category_event_data[i].rating = calculate_event_rating(view_parameters.category_event_data[i].votes);
         }
-        
+        */
         response.render("pages/home.jade", view_parameters);
     }).catch(function(error){
         console.log(error);
@@ -176,6 +176,7 @@ router.get("/add-beef", token_authentication.recognise_user_token, resolve_user_
     
     Promise.all([ actor_data_promise, categories_promise ]).then(function(values){
         
+        var view_parameters = Object.assign({}, view_parameters_global);
         view_parameters.actor_data = values[0];
         view_parameters.gallery_items = [];
         view_parameters.categories = values[1];
@@ -212,12 +213,13 @@ router.get("/beef", token_authentication.recognise_user_token, resolve_user_from
     
     Promise.all([ events_data_promise, category_event_data_promise, categories_promise, slider_data_promise ]).then(function(values){
         
+        var view_parameters = Object.assign({}, view_parameters_global);
         view_parameters.grid_data = values[0];
         view_parameters.category_event_data = values[1];
         view_parameters.categories = values[2];
         view_parameters.slider_data = values[3];
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
-        
+        /*
         //calculate grid_data events ratings
         for(var i = 0; i < view_parameters.grid_data.length; i++){
             view_parameters.grid_data[i].rating = calculate_event_rating(view_parameters.grid_data[i].votes);
@@ -230,7 +232,7 @@ router.get("/beef", token_authentication.recognise_user_token, resolve_user_from
         for(var i = 0; i < view_parameters.slider_data.length; i++){
             view_parameters.slider_data[i].rating = calculate_event_rating(view_parameters.slider_data[i].votes);
         }
-        
+        */
         response.render("pages/beefs.jade", view_parameters); 
     });
 }); //beef page
@@ -266,9 +268,10 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
 
     Promise.all([ main_event_data_promise, comment_data_promise ]).then(function(values) {
         
+        var view_parameters = Object.assign({}, view_parameters_global);
         view_parameters.current_beef_chain_id = beef_chain_id;
         view_parameters.event_data = values[0].event_data;
-        view_parameters.event_data.rating = calculate_event_rating(view_parameters.event_data.votes);
+        //view_parameters.event_data.rating = calculate_event_rating(view_parameters.event_data.votes);
         view_parameters.comment_data = values[1];
         view_parameters.related_events = values[0].related_events;
         view_parameters.disable_voting = disable_voting;

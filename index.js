@@ -62,6 +62,7 @@ app.use(function(req, res, next) {
     next();
 });
 app.use(compression());
+app.disable('etag');
 
 app.use('/logo', express.static(__dirname + '/public/assets/images/logo/v3')); //route to reference logo images
 app.use('/favicon.ico', function(request, response){

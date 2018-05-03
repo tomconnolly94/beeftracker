@@ -28,13 +28,13 @@ var event_projection = {
     "gallery_items": 1,
     "img_title_thumbnail": 1,
     "img_title_fullsize": 1,
-    "rating": 1,
     "data_sources": 1,
     "beef_chain_ids": 1,
     "contributions": 1,
     "tags": 1,
     "featured": 1,
-    "votes": 1
+    "votes": 1,
+    "rating": { $ceil: { $multiply: [ 5, { $divide: [ "$votes.upvotes", { $add : [ "$votes.upvotes", "$votes.downvotes"] }] }] }}
 };
 
 var check_end_or_next = function(event, item, next){
@@ -230,11 +230,16 @@ module.exports = {
                     { $project: event_projection }
                 ];
                 
-                aggregate_array.splice(1, 0, { $limit: limit_query_content });
+                //aggregate_array.splice(1, 0, { $limit: limit_query_content });
                 
                 if(Object.keys(sort_query_content).length > 0){
                     aggregate_array.push({ $sort: sort_query_content });
                 }
+                
+                aggregate_array.push({ $limit: limit_query_content });
+                
+                console.log(aggregate_array);
+                console.log(event_projection);
 
                 db.collection(db_ref.get_current_event_table()).aggregate(aggregate_array).toArray(function(err, docs) {
                     if(err){ console.log(err); }
