@@ -5,9 +5,11 @@ mixin horizontal-slider-js(slider_id)
                 slidesPerView: 3,
                 spaceBetween: 30,
                 slidesPerGroup: 3,
+                mode: 'horizontal',
                 pagination: {
                     el: '.swiper-pagination',
-                    clickable: true,
+                    type: 'bullets',
+                    clickable: true
                 },
                 navigation: {
                     nextEl: '.swiper-button-next',
@@ -34,8 +36,9 @@ mixin horizontal-slider(id, data, data_type, image_resize_params)
             each thumbnail_data in data
                 div.swiper-slide
                     +medium-beef-thumbnail(thumbnail_data, data_type, image_resize_params)(class="beef-category-#{thumbnail_data.categories[0].name.toLowerCase()}")
-        div.swiper-pagination
+
         div.swiper-button-prev
             span.fas.fa-chevron-left
         div.swiper-button-next
             span.fas.fa-chevron-right
+        div.swiper-pagination

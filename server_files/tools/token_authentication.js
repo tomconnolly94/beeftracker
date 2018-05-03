@@ -66,10 +66,6 @@ var authentication_procedure = function(request, response, deny_access_on_fail, 
                 reset_auth(response, deny_access_on_fail, next);
             }
             else{
-                
-                console.log(auth_token);
-                console.log(request.route_requires_admin);
-                
                 if((!request.route_requires_admin && auth_token.admin == false) || //route is not admin, ensure provided user_id matches the _id in the auth token
                     auth_token.admin){ //auth_token is admin, allow
                     

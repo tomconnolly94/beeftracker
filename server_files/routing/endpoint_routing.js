@@ -95,23 +95,26 @@ router.route('/actors').get(function(request, response){
     
     var query = request.query;
     
-    actor_controller.findActors(query, function(actors){
-        if(actors.length > 0){
-            send_successful_response(response, 200, actors);
+    actor_controller.findActors(query, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, "No actors found.");
         }
         else{
-            send_unsuccessful_response(response, 400, "No actors found.");
+            send_successful_response(response, 200, data);
         }
     });
     
 });//built, written, tested, needs query handling
 router.route('/actors/:actor_id').get(function(request, response){
-    actor_controller.findActor(request, response, function(actor){
-        if(actor){
-            send_successful_response(response, 200, actor);
+    
+    var actor_id = request.params.actor_id;
+    
+    actor_controller.findActor(actor_id, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, "Actor not found.");
         }
         else{
-            send_unsuccessful_response(response, 400, "Actor not found.");
+            send_successful_response(response, 200, data);
         }
     });
 });//built, written, tested
@@ -454,7 +457,7 @@ router.route('/users/execute-password-reset').post(password_reset_data_validator
     });
 });//built, not written, not tested
 
-router.route('/votes/events').put(vote_data_validator.validate, function(request, response){
+router.route('/votes/events').put( token_authentication.recognise_user_token, vote_data_validator.validate, function(request, response){
     
     var event_id = request.locals.validated_data.event_id; //get form data
     var vote_direction = request.locals.validated_data.vote_direction; //get form data

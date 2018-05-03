@@ -28,7 +28,7 @@ if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if 
     });
 }
 
-var view_parameters = { 
+var view_parameters_global = { 
     file_server_url_prefix: globals.file_server_url_prefix,
     server_rendered: true
 }
@@ -38,9 +38,19 @@ function calculate_event_rating(votes){
     return rating;
 }
 
-router.get("/", token_authentication.recognise_user_token, function(request, response){
-    
-    console.log(request.locals)
+function resolve_user_from_locals_token(request, response, next){
+    if(request.locals && request.locals.authenticated_user){
+        user_controller.findUser(request.locals.authenticated_user.id, request.locals.authenticated_user.is_admin, function(data){
+            request.locals.authenticated_user = data;
+            next();
+        });
+    }
+    else{
+        next();
+    }
+}
+
+router.get("/", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response){
     
     var featured_data_promise = new Promise(function(resolve, reject){
         event_controller.findEvents({ limit: 3, featured: true, decreasing_order: "date_added" }, function(data){
@@ -72,25 +82,15 @@ router.get("/", token_authentication.recognise_user_token, function(request, res
         });
     });
     
-    var user_promise = new Promise(function(resolve, reject){
-        if(request.locals && request.locals.authenticated_user){
-            user_controller.findUser(request.locals.authenticated_user.id, request.locals.authenticated_user.is_admin, function(data){
-               resolve(data);
-            });
-        }
-        else{
-            resolve(null);
-        }
-    });
-
-    Promise.all([ featured_data_promise, grid_data_promise, slider_data_promise, category_event_data_promise, categories_promise, user_promise ]).then(function(values) {
+    Promise.all([ featured_data_promise, grid_data_promise, slider_data_promise, category_event_data_promise, categories_promise ]).then(function(values) {
         
+        var view_parameters = Object.assign({}, view_parameters_global);
         view_parameters.featured_data = values[0];
         view_parameters.grid_data = values[1];
         view_parameters.slider_data = values[2];
         view_parameters.category_event_data = values[3];
         view_parameters.categories = values[4];
-        view_parameters.user_data = values[5];
+        view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
         
         //calculate grid_data events ratings
         for(var i = 0; i < view_parameters.featured_data.length; i++){
@@ -110,10 +110,14 @@ router.get("/", token_authentication.recognise_user_token, function(request, res
         console.log(error);
     });
 }); //home page
-router.get("/about", function(request, response) {
+router.get("/about", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
+    
+    var view_parameters = Object.assign({}, view_parameters_global);
+    view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
+    
     response.render("pages/about.jade", view_parameters);
 }); // about_us page
-router.get("/actors", function(request, response) { 
+router.get("/actors", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
     
     //access data from db
     var actors_promise = new Promise(function(resolve, reject){
@@ -124,14 +128,16 @@ router.get("/actors", function(request, response) {
 
     Promise.all([ actors_promise ]).then(function(values) {
         
+        var view_parameters = Object.assign({}, view_parameters_global);
         view_parameters.actor_data = values[0];
+        view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
         
         response.render("pages/actors.jade", view_parameters);
     }).catch(function(error){
         console.log(error);
     });
 }); // about_us page
-router.get("/actor/:actor_id", function(request, response) { 
+router.get("/actor/:actor_id", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
 
     //extract data
     var actor_id = request.params.actor_id;
@@ -145,14 +151,16 @@ router.get("/actor/:actor_id", function(request, response) {
 
     Promise.all([ actor_data_promise ]).then(function(values) {
         
+        var view_parameters = Object.assign({}, view_parameters_global);
         view_parameters.actor_data = values[0];
+        view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
         
         response.render("pages/actor.jade", view_parameters);
     }).catch(function(error){
         console.log(error);
     });
 }); //actor page
-router.get("/add-beef", function(request, response) {
+router.get("/add-beef", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
 
     var actor_data_promise = new Promise(function(resolve, reject){
         actor_controller.findActors({ increasing_order: "name" }, function(data){
@@ -171,11 +179,12 @@ router.get("/add-beef", function(request, response) {
         view_parameters.actor_data = values[0];
         view_parameters.gallery_items = [];
         view_parameters.categories = values[1];
+        view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
         
         response.render("pages/add_beef.jade", view_parameters); 
     });
 }); // submit beefdata page page
-router.get("/beef", function(request, response) { 
+router.get("/beef", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
     
     var events_data_promise = new Promise(function(resolve, reject){
        event_controller.findEvents({ decreasing_order: "date_added", limit: 12 }, function(data){
@@ -207,6 +216,7 @@ router.get("/beef", function(request, response) {
         view_parameters.category_event_data = values[1];
         view_parameters.categories = values[2];
         view_parameters.slider_data = values[3];
+        view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
         
         //calculate grid_data events ratings
         for(var i = 0; i < view_parameters.grid_data.length; i++){
@@ -224,7 +234,7 @@ router.get("/beef", function(request, response) {
         response.render("pages/beefs.jade", view_parameters); 
     });
 }); //beef page
-router.get("/beef/:beef_chain_id/:event_id", function(request, response) { 
+router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
 
     var cookies = cookie_parser.parse_cookies(request);
 
@@ -262,13 +272,14 @@ router.get("/beef/:beef_chain_id/:event_id", function(request, response) {
         view_parameters.comment_data = values[1];
         view_parameters.related_events = values[0].related_events;
         view_parameters.disable_voting = disable_voting;
+        view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
         
         response.render("pages/beef.jade", view_parameters);
     }).catch(function(error){
         console.log(error);
     });
 }); //beef page
-router.get("/contact", function(request, response) { 
+router.get("/contact", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
     
     var trending_data_promise = new Promise(function(resolve, reject){
         event_controller.findEvents({ limit: 3, featured: true }, function(data){
@@ -279,41 +290,56 @@ router.get("/contact", function(request, response) {
     trending_data_promise.then(function(value){
         
         view_parameters.trending_data = value;
+        view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
         
         response.render("pages/contact.jade", view_parameters); 
     });
 }); // contact us page
-router.get("/user/:user_id", token_authentication.recognise_user_token, function(request, response) { 
+router.get("/profile", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
 
-    //extract data
-    var user_id = request.params.user_id;
-    
-    //access data from db
-    var user_data_promise = new Promise(function(resolve, reject){
-       user_controller.findUser(user_id, false, function(data){
-           resolve(data);
-        });
-    });
-    
     if(request.locals && request.locals.authenticated_user){
-        Promise.all([ user_data_promise ]).then(function(values) {
 
-            view_parameters.user_data = values[0];
+        var view_parameters = Object.assign({}, view_parameters_global);
+        view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
 
-            response.render("pages/user_profile.jade", view_parameters);
-        }).catch(function(error){
-            console.log(error);
-        });
+        response.render("pages/user_profile.jade", view_parameters);
     }
     else{
         response.redirect("/");
     }
 }); //actor page
-router.get("/register", token_authentication.recognise_user_token, function(request, response) { response.render("pages/register.jade") }); //actor page
+router.get("/register", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
+    
+    if(request.locals && request.locals.authenticated_user){ //is user token found, then do not allow them to access the register page
+        response.redirect("/");
+    }
+    else{
+        response.render("pages/register.jade") 
+    }
+}); //actor page
 
-router.get("/privacy-policy", function(request, response){ response.render("pages/peripheral_pages/privacy_policy.jade", view_parameters); });
-router.get("/terms-and-conditions", function(request, response){ response.render("pages/peripheral_pages/terms_and_conditions.jade", view_parameters); });
-router.get("/disclaimer", function(request, response){ response.render("pages/peripheral_pages/disclaimer.jade", view_parameters); });
+//peripheral page routes
+router.get("/privacy-policy", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response){ 
+    
+    var view_parameters = Object.assign({}, view_parameters_global);
+    view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
+    
+    response.render("pages/peripheral_pages/privacy_policy.jade", view_parameters); 
+});
+router.get("/terms-and-conditions", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response){
+    
+    var view_parameters = Object.assign({}, view_parameters_global);
+    view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
+    
+    response.render("pages/peripheral_pages/terms_and_conditions.jade", view_parameters); 
+});
+router.get("/disclaimer", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response){
+    
+    var view_parameters = Object.assign({}, view_parameters_global);
+    view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
+    
+    response.render("pages/peripheral_pages/disclaimer.jade", view_parameters); 
+});
 
 /*
 router.get("/subscribe/", function(request, response) { response.render("pages/form_pages/subscribe_to_news.ejs"); }); // submit actordata page

@@ -5067,9 +5067,14 @@ section {
     height: 450px; }
   .beef-thumbnail.hide-category .category-name {
     display: none; }
-  .beef-thumbnail:hover {
+  .beef-thumbnail:hover:before {
     color: #fff;
-    transform: scale(1.007); }
+    background: -owg-linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0, #111 100%);
+    background: -webkit-linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0, #111 100%);
+    background: -moz-linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0, #111 100%);
+    background: -o-linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0, #111 100%);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0, #111 100%);
+    border: solid #000 0.5px; }
   .beef-thumbnail img {
     width: 100%;
     height: 100%;

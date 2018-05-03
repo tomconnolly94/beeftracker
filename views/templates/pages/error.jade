@@ -1,0 +1,14 @@
+extends ../layouts/layout.jade
+
+append body
+    div.bt-content
+        +section('E', 'RROR', 'fa fa-minus-circle')
+            div.text-center
+                h2 Page not found, 404 error
+                h3 It looks like you have stumbled off the farm! Click below to return to the stables
+                
+                a(href="/")
+                    //img(src="/logo/beeftracker_new_logo_cropped_small.ico")
+                    img(src="/images/sad_cow.png" width="300px")
+                    h4 Go 
+                        a(href="/") home

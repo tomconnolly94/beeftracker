@@ -121,7 +121,7 @@ app.get('/manifest.webmanifest', function(request, response) {
 }); //web app manifest
 
 // ### Serve an error page on unrecognised uri###
-//app.get('/*', function(req, res, next) { res.render("pages/static_pages/error.ejs"); });
+app.get('/*', function(req, res, next) { res.render("pages/error.jade"); });
 
 // ### Launch application ####
 app.listen(app.get('port'), function(){ console.log('Node app is running on port', app.get('port'), 'in', process.env.NODE_ENV, 'mode'); });

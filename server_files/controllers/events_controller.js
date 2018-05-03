@@ -239,7 +239,7 @@ module.exports = {
                 db.collection(db_ref.get_current_event_table()).aggregate(aggregate_array).toArray(function(err, docs) {
                     if(err){ console.log(err); }
                     else{
-                        if(docs && docs.length > 0){
+                        if(docs){
                             callback( docs );
                         }
                         else{

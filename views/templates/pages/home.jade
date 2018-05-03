@@ -3,13 +3,7 @@ include ../components/trending_beef/trending_beef.jade
 include ../components/add_beef_call_to_action/add_beef_call_to_action.jade
 include ../components/featured_beef/featured_beef.jade
 include ../components/category_browser/category_browser.jade
-include ../layouts/horizontal_slider.jade
-
-append scripts
-    +horizontal-slider-js('featured_beefs_slider')
-    +horizontal-slider-js('featured_beefs_slider_full')
-    +horizontal-slider-js('featured_beefs_slider_dark')
-    script(src="/bower_components/swiper/dist/js/swiper.js")
+//include ../layouts/horizontal_slider.jade
 
 append body        
     div.bt-content
@@ -29,8 +23,8 @@ append body
                     p
                         | Beef can be found everywhere and anywhere. We follow Beef in Music, Politics, Sport and even Silicon Valley to ensure any argument you're interested in is covered in our quickly expanding database.
                 div.col-sm-4
-                    a.btn.btn-lg.btn-primary.btn-float(href="add-beef") Add Beef
-                    a.btn.btn-lg.btn-primary.btn-float(href="#", data-toggle="modal", data-target="#register_modal") Create an Account
+                    a.btn.btn-lg.btn-primary.btn-float.add-beef-button(href="/add-beef") Add Beef
+                    a.btn.btn-lg.btn-primary.btn-float(href="/register") Create an Account
 
 
 append body
@@ -47,3 +41,9 @@ append body
           +section('HOT', 'BEEF')
                +horizontal-slider('featured_beefs_slider_full', slider_data, "events", "c_fill,g_face,h_219,w_340")
 
+
+append scripts
+    //-+horizontal-slider-js('featured_beefs_slider')
+    //-+horizontal-slider-js('featured_beefs_slider_full')
+    +horizontal-slider-js('featured_beefs_slider_full')
+    script(src="/bower_components/swiper/dist/js/swiper.js")

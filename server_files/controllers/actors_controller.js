@@ -168,7 +168,12 @@ module.exports = {
                 db.collection(db_ref.get_current_actor_table()).aggregate(aggregate_array).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
                     else{
-                        callback(docs);
+                        if(docs){
+                            callback( docs );
+                        }
+                        else{
+                            callback({ failed: true, message: "Actors not found." });
+                        }
                     }
                 });            
             }
@@ -225,7 +230,12 @@ module.exports = {
                 ]).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
                     else{
-                        callback(docs[0]);
+                        if(docs[0]){
+                            callback( docs[0] );
+                        }
+                        else{
+                            callback({ failed: true, message: "Actor not found." });
+                        }
                     }
                 });            
             }

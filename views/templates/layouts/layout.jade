@@ -21,8 +21,8 @@ html(lang="en")
             link(href='/stylesheets/beeftracker.css', rel='stylesheet')
             link(href='/stylesheets/beeftracker.vendors.css', rel='stylesheet')
             
-        link(href='/stylesheets/beeftracker.css', rel='stylesheet')
         link(href='/stylesheets/beeftracker.vendors.css', rel='stylesheet')
+        link(href='/stylesheets/beeftracker.css', rel='stylesheet')
         head(profile="http://www.w3.org/2005/10/profile")
         link(href='/favicon.ico', rel='shortcut icon', type="image/x-icon")
         //script tags
@@ -92,7 +92,7 @@ html(lang="en")
                         - }
                         - else{
                             li.nav-item.login
-                                a.nav-link(href="/user/#{user_data._id}", style="min-height:30px;padding-top: 9px !important;")
+                                a.nav-link(href="/profile", style="min-height:30px;padding-top: 6px !important;")
                                     span #{user_data.first_name} 
                         - }
                         li.nav-item.search
