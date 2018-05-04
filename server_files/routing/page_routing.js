@@ -174,16 +174,23 @@ router.get("/add-beef", token_authentication.recognise_user_token, resolve_user_
         });
     });
     
-    Promise.all([ actor_data_promise, categories_promise ]).then(function(values){
+    if(request.locals && request.locals.authenticated_user){ //is user token found, then do not allow them to access the register page
         
-        var view_parameters = Object.assign({}, view_parameters_global);
-        view_parameters.actor_data = values[0];
-        view_parameters.gallery_items = [];
-        view_parameters.categories = values[1];
-        view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
-        
-        response.render("pages/add_beef.jade", view_parameters); 
-    });
+        Promise.all([ actor_data_promise, categories_promise ]).then(function(values){
+
+            var view_parameters = Object.assign({}, view_parameters_global);
+            view_parameters.actor_data = values[0];
+            view_parameters.gallery_items = [];
+            view_parameters.categories = values[1];
+            view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
+
+            response.render("pages/add_beef.jade", view_parameters); 
+        });
+    }
+    else{
+        response.redirect("/login?redirected_from=/add-beef") 
+    }
+    
 }); // submit beefdata page page
 router.get("/beef", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
     
@@ -244,9 +251,17 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
     var event_id = request.params.event_id;    
     var beef_chain_id = request.params.beef_chain_id;
     var disable_voting = false;
+    
+    if(request.locals && request.locals.authenticated_user){ //if user is logged on, decide whether to disable voting panel based on user record voted_on_beef_ids field
         
-    if(cookies.beef_ids_voted_on && cookies.beef_ids_voted_on.split(",").indexOf(event_id) != -1){
-        disable_voting = true;
+        if(request.locals.authenticated_user.voted_on_beef_ids.split(",").indexOf(event_id) != -1){
+            disable_voting = true;
+        }
+    }
+    else{ //if user is not logged in, use the browser cookies to decide whether to hide voting panel
+        if(cookies.voted_on_beef_ids && cookies.voted_on_beef_ids.split(",").indexOf(event_id) != -1){
+            disable_voting = true;
+        }
     }
     
     var main_event_data_promise = new Promise(function(resolve, reject){
@@ -308,7 +323,7 @@ router.get("/profile", token_authentication.recognise_user_token, resolve_user_f
         response.render("pages/user_profile.jade", view_parameters);
     }
     else{
-        response.redirect("/");
+        response.redirect("/login?redirected_from=/profile");
     }
 }); //actor page
 router.get("/register", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
@@ -318,6 +333,19 @@ router.get("/register", token_authentication.recognise_user_token, resolve_user_
     }
     else{
         response.render("pages/register.jade") 
+    }
+}); //actor page
+router.get("/login", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
+    
+    var redirected_from = request.query && request.query.redirected_from ? request.query.redirected_from : null; //if user has been denied entry to a page and then redirected to login, access the page they were attempting to access
+    var view_parameters = Object.assign({}, view_parameters_global);
+    
+    if(request.locals && request.locals.authenticated_user){ //is user token found, then do not allow them to access the register page
+        response.redirect("/profile", view_parameters);
+    }
+    else{
+        view_parameters.redirected_from = redirected_from;
+        response.render("pages/login.jade", view_parameters) 
     }
 }); //actor page
 

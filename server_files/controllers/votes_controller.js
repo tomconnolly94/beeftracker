@@ -4,10 +4,24 @@ var BSON = require('bson');
 //internal dependencies
 var db_ref = require("../config/db_config.js");
 
+function add_vote_to_user_record(db, event_id, user_id){
+    
+    var user_id_object = BSON.ObjectID.createFromHexString(user_id);
+                                                        
+    //standard query to match an event and resolve aggressor and targets references
+    db.collection(db_ref.get_user_details_table()).update({ _id: user_id_object }, { $push: { voted_on_beef_ids : event_id }}, function(err, docs) {
+        //handle error
+        if(err) { console.log(err);}
+        else{
+            console.log(docs);
+        }
+    });
+}
+
 //objects
 module.exports = {
     
-    addVoteToEvent: function(event_id, vote_direction, callback){
+    addVoteToEvent: function(event_id, vote_direction, user_id, callback){
         
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
@@ -40,6 +54,9 @@ module.exports = {
                     if(err) { console.log(err);}
                     else{
                         callback(docs);
+                        if(user_id){
+                            add_vote_to_user_record(db, event_id, user_id);
+                        }
                     }
                 });
             }

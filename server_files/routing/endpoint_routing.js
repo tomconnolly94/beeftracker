@@ -293,6 +293,7 @@ router.route('/events').post(token_authentication.authenticate_endpoint_with_adm
     
     var data = request.locals.validated_data;
     var files = request.files;
+    data.user_id = request.locals.authenticated_user.id;
     
     event_controller.createEvent(data, files, function(data){
         if(data.failed){
@@ -461,8 +462,9 @@ router.route('/votes/events').put( token_authentication.recognise_user_token, vo
     
     var event_id = request.locals.validated_data.event_id; //get form data
     var vote_direction = request.locals.validated_data.vote_direction; //get form data
+    var user_id = request.locals.authenticated_user && request.locals.authenticated_user.id ? request.locals.authenticated_user.id : null;
     
-    votes_controller.addVoteToEvent(event_id, vote_direction, function(data){
+    votes_controller.addVoteToEvent(event_id, vote_direction, user_id, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }

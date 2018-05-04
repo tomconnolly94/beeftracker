@@ -19,7 +19,7 @@ mixin medium-beef-thumbnail(data, data_type, image_resize_params)
         
         - var letter_mapping = ["one", "two", "three", "four", "five" ]
 
-        a(href="/beef/#{data.beef_chain_ids[0]._id}/#{data._id}", class!=attributes.class, class!=attributes.beef_thumbnail_class)
+        a(href="/beef/" + data.beef_chain_ids[0]._id + "/" + data._id, class!=attributes.class, class!=attributes.beef_thumbnail_class)
             div.beef-thumbnail(class!=attributes.beef_thumbnail_class)
                 div.info-overlay
                     div.header-panel

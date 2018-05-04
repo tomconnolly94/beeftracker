@@ -8,9 +8,9 @@ include ../layouts/section.jade
 include ../layouts/masonry_gallery.jade
 
 append scripts
-    script(src="/bower_components/shufflejs/dist/shuffle.js" async)
+    script(src="/bower_components/shufflejs/dist/shuffle.js")
     script(src="/bower_components/fancybox/dist/jquery.fancybox.js" async)
-    script(src="/bower_components/select2/dist/js/select2.full.js" async)
+    script(src="/bower_components/select2/dist/js/select2.full.js")
 
 append body_scripts
     +masonry-gallery-script()
@@ -113,7 +113,7 @@ append body
             div.col-5.beefer
                 div
                     h4 #{event_data.aggressors[aggressor_index].name}
-                    a(href="/actor/#event_data.aggressors[aggressor_index]._id")
+                    a(href="/actor/" + event_data.aggressors[aggressor_index]._id)
                         img(src=server_url_prefix_with_image_formatting + "/actors/" + event_data.aggressors[aggressor_index].img_title_fullsize).actor-avatar
 
             div.col-2.versus
@@ -121,7 +121,7 @@ append body
             div.col-5.beefee
                 div
                     h4 #{event_data.targets[target_index].name}
-                    a(href="/actor/#event_data.targets[target_index]._id")
+                    a(href="/actor/" + event_data.targets[target_index]._id)
                         img(src=server_url_prefix_with_image_formatting + "/actors/" + event_data.targets[target_index].img_title_fullsize).actor-avatar
         div.row(style="text-align:center")
             div.col-md-4.offset-md-4

@@ -94,7 +94,7 @@ module.exports = {
             }
             else{
                 console.log("validation succeeded.");
-                request.locals = {};
+                if(!request.locals){ request.locals = {}; }
                 request.locals.validated_data = {
                     name: request.body.name,
                     date_of_origin: request.body.date_of_origin,

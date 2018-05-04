@@ -31,7 +31,7 @@ module.exports = {
             }
             else{
                 console.log("validation succeeded.");
-                request.locals = {};
+                if(!request.locals){ request.locals = {}; }
                 request.locals.validated_data = {
                     email_address: request.body.email_address
                 };

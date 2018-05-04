@@ -2,7 +2,7 @@ include ./section.jade
 include ./horizontal_slider.jade
 include ./beef_thumbnail.jade
 include ../components/add_beef_call_to_action/add_beef_call_to_action.jade
-include ../components/login_modal/login_modal.jade
+include ../components/login/login_modal.jade
 include ../components/inline_beef_search/inline_beef_search.jade
 include ../components/search_results/search_results.jade
 
@@ -43,7 +43,11 @@ html(lang="en")
         
         script.
             $(function() { //code to exexcute lazy loading of images
-                $('.lazy').Lazy();
+                $('.lazy').Lazy({
+                    effect: "fadeIn",
+                    effectTime: 200,
+                    bind: "event"
+                });
             });
         
         block scripts

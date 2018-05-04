@@ -89,7 +89,7 @@ module.exports = {
             }
             else{
                 console.log("validation succeeded.");
-                request.locals = {};
+                if(!request.locals){ request.locals = {}; }
                 request.locals.validated_data = {
                     username: request.body.username,
                     first_name: request.body.first_name,

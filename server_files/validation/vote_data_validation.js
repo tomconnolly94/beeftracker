@@ -31,7 +31,7 @@ module.exports = {
             }
             else{
                 console.log("validation succeeded.");
-                request.locals = {};
+                if(!request.locals){ request.locals = {}; }
                 request.locals.validated_data = {
                     event_id: request.body.event_id,
                     vote_direction: request.body.vote_direction

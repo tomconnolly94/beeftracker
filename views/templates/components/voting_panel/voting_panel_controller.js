@@ -12,7 +12,7 @@ $(function(){
             success: function(result) {
                 console.log("upvote complete");
                 fade_new_content_to_div("#voting_panel", success_html);
-                append_or_create_cookie("beef_ids_voted_on", event_id);
+                append_or_create_cookie("voted_on_beef_ids", event_id);
             }
         });
     }

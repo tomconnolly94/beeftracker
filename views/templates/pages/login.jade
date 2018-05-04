@@ -1,0 +1,17 @@
+extends ../layouts/layout.jade
+include ../components/login/login_form.jade
+
+append scripts
+
+append body
+
+    div.row(style="margin:20px;")
+    div.bt-content
+        - if(redirected_from == "/add-beef"){
+            div.row
+                div.col-md-12.text-center
+                    h3#login_modal_warning_message Please log-in to submit BEEF.
+        - }
+
+    div.bt-content
+        +login-form("page")

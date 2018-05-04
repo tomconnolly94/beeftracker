@@ -70,7 +70,7 @@ function getCookie(name) {
   if (parts.length == 2) return parts.pop().split(";").shift();
 }
 
-$(function(){
+/*$(function(){
     $(".add-beef-button").unbind().click(function(event){
         event.preventDefault();
         
@@ -84,4 +84,4 @@ $(function(){
             window.location.href = "/add-beef"
         }
     });
-})
+})*/

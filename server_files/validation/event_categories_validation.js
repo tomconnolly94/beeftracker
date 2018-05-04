@@ -35,7 +35,7 @@ module.exports = {
             }
             else{
                 console.log("validation succeeded.");
-                request.locals = {};
+                if(!request.locals){ request.locals = {}; }
                 request.validated_data = {
                     cat_id: request.body.cat_id,
                     name: request.body.name

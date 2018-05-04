@@ -34,7 +34,8 @@ module.exports = {
                     "submitted_beef_ids": 1,
                     "submitted_actor_ids": 1,
                     "country": 1,
-                    "contribution_score": 1
+                    "contribution_score": 1,
+                    "voted_on_beef_ids": 1
                 }
             }
         }
@@ -52,7 +53,8 @@ module.exports = {
                     "img_title": 1,
                     "admin": 1,
                     "country": 1,
-                    "contribution_score": 1
+                    "contribution_score": 1,
+                    "voted_on_beef_ids": 1
                 }
             }            
         }
