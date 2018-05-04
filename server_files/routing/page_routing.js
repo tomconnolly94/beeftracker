@@ -41,8 +41,13 @@ function calculate_event_rating(votes){
 function resolve_user_from_locals_token(request, response, next){
     if(request.locals && request.locals.authenticated_user){
         user_controller.findUser(request.locals.authenticated_user.id, request.locals.authenticated_user.is_admin, function(data){
-            request.locals.authenticated_user = data;
-            next();
+            if(data.failed){
+                response.render("pages/error.jade");
+            }
+            else{
+                request.locals.authenticated_user = data;
+                next();
+            }
         });
     }
     else{
@@ -145,7 +150,12 @@ router.get("/actor/:actor_id", token_authentication.recognise_user_token, resolv
     //access data from db
     var actor_data_promise = new Promise(function(resolve, reject){
        actor_controller.findActor(actor_id, function(data){
-           resolve(data);
+           if(data.failed){
+                response.render("pages/error.jade");
+            }
+            else{
+                resolve(data);
+            }
         });
     });
 
@@ -245,16 +255,15 @@ router.get("/beef", token_authentication.recognise_user_token, resolve_user_from
 }); //beef page
 router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
 
-    var cookies = cookie_parser.parse_cookies(request);
-
     //extract data
     var event_id = request.params.event_id;    
     var beef_chain_id = request.params.beef_chain_id;
     var disable_voting = false;
+    var cookies = cookie_parser.parse_cookies(request);
     
     if(request.locals && request.locals.authenticated_user){ //if user is logged on, decide whether to disable voting panel based on user record voted_on_beef_ids field
         
-        if(request.locals.authenticated_user.voted_on_beef_ids.split(",").indexOf(event_id) != -1){
+        if(request.locals.authenticated_user.voted_on_beef_ids.indexOf(event_id) != -1){
             disable_voting = true;
         }
     }
@@ -266,18 +275,28 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
     
     var main_event_data_promise = new Promise(function(resolve, reject){
         event_controller.findEvent(event_id, function(data){
-            let data_object = { event_data: data };
-            
-            event_controller.findEvents({ match_actor: data_object.event_data.aggressors[0]._id, limit: 5, decreasing_order: "date_added" }, function(data){
-                data_object.related_events = data;
-                resolve(data_object);
-            });
+            if(data.failed){
+                response.render("pages/error.jade");
+            }
+            else{
+                let data_object = { event_data: data };
+
+                event_controller.findEvents({ match_actor: data_object.event_data.aggressors[0]._id, limit: 5, decreasing_order: "date_added" }, function(data){
+                    data_object.related_events = data;
+                    resolve(data_object);
+                });
+            }
         });
     });
     
     var comment_data_promise = new Promise(function(resolve, reject){
        comment_controller.findCommentsFromBeefChain(beef_chain_id, function(data){
-            resolve(data);
+            if(data.failed){
+                response.render("pages/error.jade");
+            }
+            else{
+                resolve(data);
+            }
         });
     });
 
@@ -295,6 +314,7 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
         response.render("pages/beef.jade", view_parameters);
     }).catch(function(error){
         console.log(error);
+        response.render("pages/error.jade");
     });
 }); //beef page
 router.get("/contact", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 

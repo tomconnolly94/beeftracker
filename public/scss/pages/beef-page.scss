@@ -38,6 +38,7 @@
 
     @extend .row;
     .beef-title {
+        //background-color: rgba(255, 255, 255, 0.6);
         @extend .col-md-12;
         @extend .col-sm-12;
         h2 {
@@ -218,4 +219,17 @@
         padding-top: 20px;
         padding-bottom: 20px;
     }
+}
+
+$banner-height: 250px;
+
+.beef-background-banner{
+    opacity: 0.2;
+    height: $banner-height;
+    background-repeat: repeat-x;
+}
+
+.bt-content-shift-up{
+    position: relative;
+    top: -$banner-height;
 }

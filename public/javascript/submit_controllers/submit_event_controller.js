@@ -31,10 +31,8 @@ $(function(){
         return blob;
     }
     
-    $("#submit_new_event_button").click(function(event){
+    $("#submit_new_event_button").unbind().click(function(event){
         event.preventDefault();
-        console.log(this);
-        
         
         //get form contents
         var title = $("#beef_title").val();
@@ -44,6 +42,7 @@ $(function(){
         var category = $("#beef_category").select2().find(":selected").val();
         var tags = $("#beef_tags").select2().val();
         var description = $("#beef_content_summernote").val();
+        var description = $("#beef_description").val();
         /*
         console.log(title);
         console.log(date);
@@ -69,15 +68,33 @@ $(function(){
         for(var i = 0; i < li_items_gallery_manager.length; i++){
             var item = li_items_gallery_manager[i];
             
+            var media_type = item.children[1].attributes[1].value;
+            var media_name = item.children[1].attributes[2].value;
+            var media_link = item.children[1].attributes[3].value;
+            var main_graphic = item.children[1].attributes[4] ? true : false;
+            
+            var file;
+            var link;
+            
+            if(media_type == "image"){
+                file = b64toBlob(item.children[1].currentSrc.split("base64,")[1]);
+                link = "img" + i;
+            }
+            else if(media_type == "youtube_embed"){
+                link = media_link;
+            }
+            
             var gallery_item_formatted = {
-                file: b64toBlob(item.children[1].currentSrc.split("base64,")[1]),
-                media_type: item.children[1].attributes[1].value,
-                link: "",
-                main_graphic: false
+                file: file,
+                media_type: media_type,
+                link: link,
+                main_graphic: main_graphic
             }
 
             gallery_items.push(gallery_item_formatted);
-            form_data.append("file-" + i, gallery_item_formatted.file);
+            
+            //gallery_item_formatted.file.originalname = gallery_item_formatted.link;
+            form_data.append("file-" + i, gallery_item_formatted.file, gallery_item_formatted.link);
 
         }
         
@@ -90,7 +107,8 @@ $(function(){
             categories: [ category ],
             tags: tags,
             data_sources: data_sources,
-            gallery_items: gallery_items
+            gallery_items: gallery_items,
+            record_origin: "submitted"
         }
 
         form_data.append("data", JSON.stringify(event_submission));

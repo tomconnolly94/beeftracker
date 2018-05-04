@@ -238,9 +238,6 @@ module.exports = {
                 
                 aggregate_array.push({ $limit: limit_query_content });
                 
-                console.log(aggregate_array);
-                console.log(event_projection);
-
                 db.collection(db_ref.get_current_event_table()).aggregate(aggregate_array).toArray(function(err, docs) {
                     if(err){ console.log(err); }
                     else{
@@ -332,7 +329,7 @@ module.exports = {
                         if(docs && docs.length > 0){
                             
                             function compare_event_dates(a, b) {
-                                return a.event_date.valueOf() - b.event_date.valueOf();
+                                return b.event_date.valueOf() - a.event_date.valueOf();
                             }
                             docs[0].beef_chain_ids[0].events.sort(compare_event_dates); //sort beef chain events using event dates using above compare function
                             

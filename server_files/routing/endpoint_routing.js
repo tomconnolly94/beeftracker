@@ -289,10 +289,11 @@ router.route('/events/:event_id').get(function(request, response){
         }
     });
 });//built, written, tested
-router.route('/events').post(token_authentication.authenticate_endpoint_with_admin_user_token, memoryUpload, event_data_validator.validate, function(request, response){
+router.route('/events').post(token_authentication.authenticate_endpoint_with_user_token, memoryUpload, event_data_validator.validate, function(request, response){
     
     var data = request.locals.validated_data;
     var files = request.files;
+    console.log(request.locals.authenticated_user);
     data.user_id = request.locals.authenticated_user.id;
     
     event_controller.createEvent(data, files, function(data){

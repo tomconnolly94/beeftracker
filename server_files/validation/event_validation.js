@@ -17,9 +17,6 @@ module.exports = {
             request.body = JSON.parse(request.body.data); //get form data
         }
         
-        console.log(request.body);
-        console.log(request.files);        
-        
         //validate title
         request.checkBody("title", "Field is empty").notEmpty();
         request.checkBody("title", "Field is null.").not_null();
@@ -66,12 +63,12 @@ module.exports = {
         request.checkBody("data_sources", "Field is null.").not_null();
         request.checkBody("data_sources", "Potential HTML code found, please remove this.").detect_xss_in_string_array();
         request.checkBody("data_sources", "Data sources are improperly formatted.").test_array_of_urls();
-        
+        /*
         //validate user id
         request.checkBody("user_id", "Field is empty").notEmpty();
         request.checkBody("user_id", "Field is null.").not_null();
         request.checkBody("user_id", "Field is not mongodb id.").test_mongodb_object_id();
-        
+        */
         //validate record_origin
         request.checkBody("record_origin", "Field is empty").notEmpty();
         request.checkBody("record_origin", "Field is null.").not_null();
@@ -86,8 +83,8 @@ module.exports = {
         
         //validate image files
         for(var i = 0; i < request.files.length; i++){
-            var filename = typeof request.files[i] !== "undefined" ? request.files[i].originalname : '';
-            request.checkBody('file', 'Please upload an image Jpeg, Png or Gif').test_image(filename);
+            //var filename = typeof request.files[i] !== "undefined" ? request.files[i].originalname : '';
+            request.checkBody('file', 'Please upload an image Jpeg, Png, blob or Gif').test_image(request.files[i].mimetype);
         }
         
         request.getValidationResult().then(function(validationResult){
@@ -99,7 +96,7 @@ module.exports = {
             }
             else{
                 console.log("validation succeeded.");
-                request.locals = {};
+                if(!request.locals){ request.locals = {}; }
                 request.locals.validated_data = {
                     title: request.body.title,
                     aggressors: request.body.aggressors,

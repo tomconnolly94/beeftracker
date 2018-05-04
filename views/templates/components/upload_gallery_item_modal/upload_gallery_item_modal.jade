@@ -48,9 +48,9 @@ mixin upload-gallery-item-modal()
                         div.form-group.col-md-12#photo_input_div(style="display:none;")
                             label(for="photo_link") Browse and Select photo
                             input.form-control#photo_link(type="file", name="gallery-upload-file")
-                    div.form-check#set_as_cover(style="display:none;")
-                            input.form-check-input(type="checkbox", value="")#set_as_cover
-                            label.form-check-label(for="set_as_cover") Set as cover
+                    div.form-check#set_as_main_graphic(style="display:none;")
+                            input.form-check-input(type="checkbox", value="")#set_as_main_graphic_checkbox
+                            label.form-check-label(for="set_as_main_graphic_checkbox") Set as Main Graphic
                     div.form-row
                         div.form-group.col-md-12
                             button(disabled).btn.btn-primary.float-right#media_submit_button Add

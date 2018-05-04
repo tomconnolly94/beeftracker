@@ -51,7 +51,7 @@ append body
     - //insert image resizing into the image URL
     - var split_server_url_prefix = file_server_url_prefix.split("/");
     - split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, "c_fill,g_face,h_150,w_150");
-    - var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
+    - var versus_panel_server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
     
     - var main_graphic = {};
     
@@ -73,7 +73,9 @@ append body
 
     - target_index = event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) != -1 ? event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) : event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[1]))
     
-    div.bt-content
+    div.bt-content-full-width.beef-background-banner(style="background-image: url('" + file_server_url_prefix + "/events/" + event_data.img_title_fullsize + "')")
+    
+    div.bt-content.bt-content-shift-up
         
         div.beef-content(class="beef-category-#{event_data.categories[0].name.toLowerCase()}")
             div.beef-content-header
@@ -95,8 +97,9 @@ append body
                         div.beef-body-content-youtube-video
                             iframe(height="315", scrolling="no", frameborder="no", src=main_graphic.link, allow="autoplay; encrypted-media")
                     - else if(main_graphic.media_type == "image")
-                        div.beef-body-content-image
-                            img(src=file_server_url_prefix + "/events/" + event_data.img_title_fullsize).float-left.col-sm-12
+                        div.row.col-md-6(style="margin: 0 auto;")
+                            div.beef-body-content-image.col-md-12
+                                img(src=file_server_url_prefix + "/events/" + event_data.img_title_fullsize).float-left.col-sm-12
 
                     //div.beef-thumb
                         img(src=server_url_prefix_with_image_formatting + "/events/" + event_data.img_title_fullsize).float-left
@@ -114,7 +117,7 @@ append body
                 div
                     h4 #{event_data.aggressors[aggressor_index].name}
                     a(href="/actor/" + event_data.aggressors[aggressor_index]._id)
-                        img(src=server_url_prefix_with_image_formatting + "/actors/" + event_data.aggressors[aggressor_index].img_title_fullsize).actor-avatar
+                        img(src=versus_panel_server_url_prefix_with_image_formatting + "/actors/" + event_data.aggressors[aggressor_index].img_title_fullsize).actor-avatar
 
             div.col-2.versus
                 h4 VS.
@@ -122,7 +125,7 @@ append body
                 div
                     h4 #{event_data.targets[target_index].name}
                     a(href="/actor/" + event_data.targets[target_index]._id)
-                        img(src=server_url_prefix_with_image_formatting + "/actors/" + event_data.targets[target_index].img_title_fullsize).actor-avatar
+                        img(src=versus_panel_server_url_prefix_with_image_formatting + "/actors/" + event_data.targets[target_index].img_title_fullsize).actor-avatar
         div.row(style="text-align:center")
             div.col-md-4.offset-md-4
                 select.form-control.also-appears-in-select

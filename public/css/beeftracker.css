@@ -5865,7 +5865,7 @@ figure.masonry-item.soundcloud-item .play-button {
   .gallery-manager .gallery-manager-add-item a {
     border: 5px solid #DF3E3E;
     display: block;
-    height: 100%;
+    height: 240px;
     background-color: #f1f1f1;
     text-align: center;
     font-size: 40px; }
@@ -6307,6 +6307,15 @@ figure.masonry-item.soundcloud-item .play-button {
   .beef-content-container .beef-body {
     padding-top: 20px;
     padding-bottom: 20px; }
+
+.beef-background-banner {
+  opacity: 0.2;
+  height: 250px;
+  background-repeat: repeat-x; }
+
+.bt-content-shift-up {
+  position: relative;
+  top: -250px; }
 
 .social-media-section a.social-media-item {
   border-radius: 5px;

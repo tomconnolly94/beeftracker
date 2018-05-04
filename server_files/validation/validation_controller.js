@@ -85,19 +85,27 @@ var master_functions_object = {
         }
         return true
     },
-    test_image: function(value, filename) {
+    test_image: function(file, mimetype) {
 
-        var extension = (path.extname(filename)).toLowerCase();
-        switch (extension) {
+        if(mimetype == "application/octet-stream"){
+            return true;
+        }
+        else{
+            return false;
+        }
+        
+        /*switch (mimetype) {
             case '.jpg':
                 return '.jpg';
             case '.jpeg':
                 return '.jpeg';
             case  '.png':
                 return '.png';
+            case  'blob':
+                return 'blob';
             default:
                 return false;
-        }
+        }*/
     },
     test_array_of_urls: function(urls) {
 
