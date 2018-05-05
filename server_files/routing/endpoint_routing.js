@@ -293,7 +293,6 @@ router.route('/events').post(token_authentication.authenticate_endpoint_with_use
     
     var data = request.locals.validated_data;
     var files = request.files;
-    console.log(request.locals.authenticated_user);
     data.user_id = request.locals.authenticated_user.id;
     
     event_controller.createEvent(data, files, function(data){

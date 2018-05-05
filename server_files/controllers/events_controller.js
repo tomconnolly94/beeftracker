@@ -27,7 +27,7 @@ var event_projection = {
     "hit_counts": 1,
     "gallery_items": 1,
     "img_title_thumbnail": 1,
-    "img_title_fullsize": 1,
+    "cover_image": 1,
     "data_sources": 1,
     "beef_chain_ids": 1,
     "contributions": 1,
@@ -69,8 +69,6 @@ module.exports = {
         var aggressor_ids = []; //create array to store target_ids
         var target_ids = []; //create array to store target_ids
         var gallery_items_formatted = [];
-
-        console.log(submission_data);
         
         //format target_ids array
         for(var i = 0; i < submission_data.aggressors.length; i++){
@@ -106,8 +104,8 @@ module.exports = {
             },
             gallery_items: submission_data.gallery_items,
             categories: submission_data.categories,
-            img_title_thumbnail: "",
-            img_title_fullsize: "",
+            //img_title_thumbnail: "",
+            cover_image: "",
             rating: 0,
             data_sources: submission_data.data_sources,
             contributions: [ initial_event_contribution ],
@@ -218,7 +216,7 @@ module.exports = {
                         hit_counts: { $first: "$hit_counts"},
                         gallery_items: { $first: "$gallery_items"},
                         img_title_thumbnail: { $first: "$img_title_thumbnail"},
-                        img_title_fullsize: { $first: "$img_title_fullsize"},
+                        cover_image: { $first: "$cover_image"},
                         rating: { $first: "$rating"},
                         data_sources: { $first: "$data_sources"},
                         beef_chain_ids: { $addToSet: "$beef_chain_ids"},
@@ -313,7 +311,7 @@ module.exports = {
                         hit_counts: { $first: "$hit_counts"},
                         gallery_items: { $first: "$gallery_items"},
                         img_title_thumbnail: { $first: "$img_title_thumbnail"},
-                        img_title_fullsize: { $first: "$img_title_fullsize"},
+                        cover_image: { $first: "$cover_image"},
                         rating: { $first: "$rating"},
                         data_sources: { $first: "$data_sources"},
                         beef_chain_ids: { $addToSet: "$beef_chain_ids"},
@@ -354,7 +352,7 @@ module.exports = {
         
         //format event record for insertion
         var event_insert = module.exports.format_event_data(event_data);
-                
+                        
         if(test_mode){
             console.log("test mode is on.");
                         
@@ -365,18 +363,15 @@ module.exports = {
             event_insert.gallery_items = format_embeddable_items(event_insert.gallery_items, files);
             
             storage_interface.async_loop_upload_items(event_insert.gallery_items, "events", files, function(items){
-                
-                event_insert.gallery_items = items;
-                
+                                
                 //remove file objects to avoid adding file buffer to the db
                 for(var i = 0; i < event_insert.gallery_items.length; i++){
-                    if(event_insert.gallery_items[i].file){
+                    if(event_insert.gallery_items[i].file){ //set file to null to avoid storing file buffer in db
                         event_insert.gallery_items[i].file = null;
                     }
                     
-                    if(event_insert.gallery_items[i].main_graphic){
-                        event_insert.img_title_fullsize = event_insert.gallery_items[i].link; //save fullsize main graphic ref
-                        event_insert.img_title_thumbnail = event_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
+                    if(event_insert.gallery_items[i].cover_image){
+                        event_insert.cover_image = event_insert.gallery_items[i].link; //save thumbnail main graphic ref
                     }
                 }
                 
@@ -446,9 +441,8 @@ module.exports = {
                                         event_insert.gallery_items[i].file = null;
                                     }
 
-                                    if(event_insert.gallery_items[i].main_graphic){
-                                        event_insert.img_title_fullsize = event_insert.gallery_items[i].link; //save fullsize main graphic ref
-                                        event_insert.img_title_thumbnail = event_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
+                                    if(event_insert.gallery_items[i].cover_image){
+                                        event_insert.cover_image = event_insert.gallery_items[i].link; //save fullsize main graphic ref
                                     }
                                 }
 

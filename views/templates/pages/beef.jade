@@ -73,7 +73,7 @@ append body
 
     - target_index = event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) != -1 ? event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) : event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[1]))
     
-    div.bt-content-full-width.beef-background-banner(style="background-image: url('" + file_server_url_prefix + "/events/" + event_data.img_title_fullsize + "')")
+    div.bt-content-full-width.beef-background-banner(style="background-image: url('" + file_server_url_prefix + "/events/" + event_data.cover_image + "')")
     
     div.bt-content.bt-content-shift-up
         
@@ -99,7 +99,7 @@ append body
                     - else if(main_graphic.media_type == "image")
                         div.row.col-md-6(style="margin: 0 auto;")
                             div.beef-body-content-image.col-md-12
-                                img(src=file_server_url_prefix + "/events/" + event_data.img_title_fullsize).float-left.col-sm-12
+                                img(src=file_server_url_prefix + "/events/" + main_graphic.link).float-left.col-sm-12
 
                     //div.beef-thumb
                         img(src=server_url_prefix_with_image_formatting + "/events/" + event_data.img_title_fullsize).float-left
@@ -111,7 +111,7 @@ append body
                     p.
                         #{event_data.description}
 
-                    +related-beefs(related_events, "events", "c_fill,g_face,h_120,w_120")
+                    +related-beefs(related_events, "events", "c_fill,g_face,h_120,w_120", event_data._id)
         div.row.versus-panel
             div.col-5.beefer
                 div

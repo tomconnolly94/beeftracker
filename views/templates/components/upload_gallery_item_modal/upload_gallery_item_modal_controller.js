@@ -3,13 +3,18 @@ $(function(){
     //array to hold all current gallery items, purely to keep a state outside of the media submit button handler
     let gallery_items = [];
     let set_as_main_graphic_used = false;
+    let set_as_cover_image_used = false;
     
     //clear all data from modal and reset it to its original state
     function reset_modal(){
         $('#media_preview').attr('src', ""); //reset media preview element        
         $('#media_preview').attr('x-media-type', "");
         $('#media_preview').attr('x-file-name', "");
-        $('#set_as_main_graphic_checkbox').prop("checked", false); //reset set as cover input checkbox
+        $('#set_as_main_graphic_checkbox').prop("checked", false); //reset set as main graphic input checkbox
+        $('#set_as_cover_image_checkbox').prop("checked", false); //reset set as cover input checkbox
+        
+        $('#set_as_main_graphic').css("display", "none"); //hide set as main graphic input div
+        $('#set_as_cover_image').css("display", "none"); //hide set as cover input div
         
         //hide all input divs in modal
         $("#photo_input_div").css("display", "none"); 
@@ -40,6 +45,9 @@ $(function(){
         $("#" + media_type + "_input_div").css("display", "block"); //show text input tag
         if(!set_as_main_graphic_used){
             $("#set_as_main_graphic").css("display", "block"); //show set as cover checkbox input
+        }
+        if(!set_as_cover_image_used){
+            $("#set_as_cover_image").css("display", "block"); //show set as cover checkbox input
         }
         $("#media_submit_button").removeAttr("disabled"); //enable the "add" button
     });
@@ -82,11 +90,16 @@ $(function(){
     $("#media_submit_button").click(function(event){
         event.preventDefault();
         
-        gallery_items.push({ src: $("#media_preview").attr("src"), media_type: $("#media_preview").attr("x-media-type"), file_name: $("#media_preview").attr("x-file-name"), link: $("#media_preview").attr("x-media-link") , main_graphic: $("#set_as_main_graphic_checkbox").prop("checked") });
+        gallery_items.push({ src: $("#media_preview").attr("src"), media_type: $("#media_preview").attr("x-media-type"), file_name: $("#media_preview").attr("x-file-name"), link: $("#media_preview").attr("x-media-link") , main_graphic: $("#set_as_main_graphic_checkbox").prop("checked"), cover_image:  $("#set_as_cover_image_checkbox").prop("checked") });
         
         if($("#set_as_main_graphic_checkbox").prop("checked")){
             set_as_main_graphic_used = true;
             $("#set_as_main_graphic").css("display", "none"); //hide set as cover checkbox input
+        }
+        
+        if($("#set_as_cover_image_checkbox").prop("checked")){
+            set_as_cover_image_used = true;
+            $("#set_as_cover_image").css("display", "none"); //hide set as cover checkbox input
         }
         
         load_template_render_function("gallery_manager/gallery_manager", function(status){
@@ -104,6 +117,9 @@ $(function(){
         for(var i = 0; i < gallery_items.length; i++){
             if(this.parentElement.children[1].attributes[0].value == gallery_items[i].src){
                 if(gallery_items[i].main_graphic){
+                    set_as_main_graphic_used = false;
+                }
+                if(gallery_items[i].cover_image){
                     set_as_main_graphic_used = false;
                 }
                 gallery_items.splice(i, 1);

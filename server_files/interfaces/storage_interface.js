@@ -143,7 +143,7 @@ module.exports = {
 
                         item.link = img_dl_title;
 
-                        if(item.main_graphic){
+                        /*if(item.main_graphic){
                             module.exports.upload_image(requires_download, file_server_folder, file_name, file_buffer, true, function(img_dl_title){
                                 item.thumbnail_img_title = img_dl_title;
 
@@ -156,14 +156,14 @@ module.exports = {
 
                             });
                         }
-                        else{
+                        else{*/
                             if(loop_count == items.length){
                                 next(null, loop.END_LOOP);
                             }
                             else{
                                 next();
                             }
-                        }
+                        //}
                     });
                 }
                 else{

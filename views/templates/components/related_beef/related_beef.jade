@@ -1,4 +1,4 @@
-mixin related-beefs(related_events, data_type, image_resize_params)
+mixin related-beefs(related_events, data_type, image_resize_params, main_event_id)
 
     - if(image_resize_params){
     -   var split_server_url_prefix = file_server_url_prefix.split("/");
@@ -10,9 +10,15 @@ mixin related-beefs(related_events, data_type, image_resize_params)
         h4 Related Beef
         ul
             each related_event in related_events
-                li
-                    a(href="/beef/#{related_event.beef_chain_ids[0]._id}/#{related_event._id}")
-                        img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + related_event.img_title_fullsize)
-                        div    
-                            p #{related_event.title.slice(0,20)}
-                            p #{related_event.aggressors[0].name.split(" ")[related_event.aggressors[0].name.split(" ").length-1]} v. #{related_event.targets[0].name.split(" ")[related_event.targets[0].name.split(" ").length-1]}
+                -console.log(related_event._id);
+                -console.log(main_event_id);
+            
+                - if(String(related_event._id) != String(main_event_id)){
+                    li
+                        a(href="/beef/#{related_event.beef_chain_ids[0]._id}/#{related_event._id}")
+                            img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + related_event.cover_image)
+                            div    
+                                p #{related_event.title.slice(0,20)}
+                                p #{related_event.aggressors[0].name.split(" ")[related_event.aggressors[0].name.split(" ").length-1]} v. #{related_event.targets[0].name.split(" ")[related_event.targets[0].name.split(" ").length-1]}
+                                
+                - }

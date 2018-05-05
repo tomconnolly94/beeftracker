@@ -281,7 +281,7 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
             else{
                 let data_object = { event_data: data };
 
-                event_controller.findEvents({ match_actor: data_object.event_data.aggressors[0]._id, limit: 5, decreasing_order: "date_added" }, function(data){
+                event_controller.findEvents({ match_actor: data_object.event_data.aggressors[0]._id, limit: 6, decreasing_order: "date_added" }, function(data){
                     data_object.related_events = data;
                     resolve(data_object);
                 });
@@ -390,6 +390,13 @@ router.get("/disclaimer", token_authentication.recognise_user_token, resolve_use
     view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
     
     response.render("pages/peripheral_pages/disclaimer.jade", view_parameters); 
+});
+router.get("/submission-success", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response){
+    
+    var view_parameters = Object.assign({}, view_parameters_global);
+    view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
+    
+    response.render("pages/successful_submission.jade", view_parameters); 
 });
 
 /*

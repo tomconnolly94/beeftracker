@@ -71,13 +71,13 @@ module.exports = {
                 else{
                     console.log("Validation failed. Both actor_id and event_id were valid.");
                     console.log(errors);
-                    response.status(400).send({ failed: true, message: "Validation faled, please format input data properly."});
+                    response.status(400).send({ failed: true, stage: "validation", message: "Validation faled, please format input data properly."});
                 }
             }
             else{
                 console.log("Validation failed. Both actor_id and event_id were valid.");
                 console.log(errors);
-                response.status(400).send({ failed: true, message: "Validation faled, please format input data properly."});
+                response.status(400).send({ failed: true, stage: "validation", message: "Validation faled, please format input data properly."});
             }
         })
     }

@@ -28,10 +28,9 @@ var event_schema = new Schema({
         link: String,
         main_graphic: Boolean,
         file: {},
-        file_name: String
+        cover_image: Boolean
     }],
-    img_title_thumbnail: String,
-    img_title_fullsize: String,
+    cover_image: String,
     rating: Number,
     beef_chain_ids: [ Schema.ObjectId ],
     data_sources: [ String ],

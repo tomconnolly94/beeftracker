@@ -68,10 +68,11 @@ $(function(){
         for(var i = 0; i < li_items_gallery_manager.length; i++){
             var item = li_items_gallery_manager[i];
             
-            var media_type = item.children[1].attributes[1].value;
-            var media_name = item.children[1].attributes[2].value;
-            var media_link = item.children[1].attributes[3].value;
-            var main_graphic = item.children[1].attributes[4] ? true : false;
+            var media_type = $(item).children("img").attr("x-media-type");
+            var media_name = $(item).children("img").attr("x-file-name");
+            var media_link = $(item).children("img").attr("x-media-link");
+            var main_graphic = $(item).children("img").attr("x-main-graphic") ? true : false;
+            var cover_image = $(item).children("img").attr("x-cover-image") ? true : false;
             
             var file = null;
             var link = null;
@@ -88,7 +89,8 @@ $(function(){
                 file: file,
                 media_type: media_type,
                 link: link,
-                main_graphic: main_graphic
+                main_graphic: main_graphic,
+                cover_image: cover_image
             }
 
             gallery_items.push(gallery_item_formatted);
@@ -118,7 +120,15 @@ $(function(){
             data: form_data,
             processData: false,
             contentType: false,
-            type: 'POST'
+            type: 'POST',
+            success: function(data){
+                window.location.href = "/submission-success";
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                if(XMLHttpRequest.responseJSON.stage == "validation"){
+                    //notify user that server validation failed.
+                }
+            }   
         });
         
     }); 

@@ -16,7 +16,6 @@ module.exports = {
         if (typeof request.body.data === 'string' || request.body.data instanceof String){
             request.body = JSON.parse(request.body.data); //get form data
         }
-        
         //validate title
         request.checkBody("title", "Field is empty").notEmpty();
         request.checkBody("title", "Field is null.").not_null();
@@ -92,7 +91,7 @@ module.exports = {
             if(validationResult.array().length > 0 ){
                 console.log("validation failed.");
                 console.log(validationResult.array());
-                response.status(400).send({ failed: true, message: "Validation faled, please format input data properly."});
+                response.status(400).send({ failed: true, stage: "validation", message: "Validation faled, please format input data properly."});
             }
             else{
                 console.log("validation succeeded.");

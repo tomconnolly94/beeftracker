@@ -51,6 +51,9 @@ mixin upload-gallery-item-modal()
                     div.form-check#set_as_main_graphic(style="display:none;")
                             input.form-check-input(type="checkbox", value="")#set_as_main_graphic_checkbox
                             label.form-check-label(for="set_as_main_graphic_checkbox") Set as Main Graphic
+                    div.form-check#set_as_cover_image(style="display:none;")
+                            input.form-check-input(type="checkbox", value="")#set_as_cover_image_checkbox
+                            label.form-check-label(for="set_as_cover_image_checkbox") Set as Cover Image
                     div.form-row
                         div.form-group.col-md-12
                             button(disabled).btn.btn-primary.float-right#media_submit_button Add

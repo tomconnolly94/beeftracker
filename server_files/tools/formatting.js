@@ -2,11 +2,12 @@
 module.exports = {
  
     format_embeddable_items: function(items, files){
+        
         //loop through gallery items and format them for storage
         for(var i = 0; i < items.length; i++){
 
             var gallery_item = items[i];
-
+            
             /* 
             gallery_item.media_type == "video_embed" || 
             gallery_item.media_type == "wikipedia_link" || 

@@ -33,9 +33,9 @@ mixin medium-beef-thumbnail(data, data_type, image_resize_params)
                         div.beefometer-container
                             div.beefometer.small(class=letter_mapping[data.rating - 1] + "-beefs")
                 - if(server_rendered)
-                    img(class="lazy" data-src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + data.img_title_fullsize)
+                    img(class="lazy" data-src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + data.cover_image)
                 - else
-                    img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + data.img_title_fullsize)
+                    img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + data.cover_image)
     - }
     
 +medium-beef-thumbnail("none", "none", "none")
