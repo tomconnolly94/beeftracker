@@ -1,0 +1,17 @@
+extends ../layouts/layout.jade
+
+append body
+    div.bt-content
+        +section('THANK', 'YOU', 'fa fa-check')
+            div.text-center
+                h2 Submission Successful!
+                h3 Thanks for submitting more beef to our database, it has been posted to the site and will be reviewed by one of our beef experts in the next few days.
+                
+                //a(href="/")
+                    //-img(src="/logo/beeftracker_new_logo_cropped_small.ico")
+                    //-img(src="/images/sad_cow.png" width="300px")
+                h4 Go 
+                    a(href="/") home
+                h3 OR
+                h4 
+                    a(href="/add-beef") Add more Beef!

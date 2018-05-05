@@ -1,0 +1,20 @@
+mixin error-panel(errors)
+    - if(errors != "none"){
+        - if(errors.length > 0){
+            div.col-md-12
+                h4 Errors:
+            each error in errors
+                - var error_loc = error.location.replace("_", " ").charAt(0).toUpperCase() + error.location.slice(1);
+                div.col-md-4
+                    h5 #{error_loc}
+                    h5 #{error.problem}
+                    hr
+        - }
+    - }
+        
+
+- if(!errors){
+-     errors = "none";
+- }
+
++error-panel(errors)

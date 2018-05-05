@@ -73,7 +73,6 @@ $(function(){
             var media_link = $(item).children("img").attr("x-media-link");
             var main_graphic = $(item).children("img").attr("x-main-graphic") ? true : false;
             var cover_image = $(item).children("img").attr("x-cover-image") ? true : false;
-            
             var file = null;
             var link = null;
             
@@ -94,8 +93,6 @@ $(function(){
             }
 
             gallery_items.push(gallery_item_formatted);
-            
-            //gallery_item_formatted.file.originalname = gallery_item_formatted.link;
             form_data.append("file-" + i, gallery_item_formatted.file, gallery_item_formatted.link);
 
         }
@@ -126,7 +123,23 @@ $(function(){
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) { 
                 if(XMLHttpRequest.responseJSON.stage == "validation"){
-                    //notify user that server validation failed.
+                    
+                    var template_dir = "error_panel";
+                    var template_name = "error_panel";
+                    var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
+                    
+                    load_template_render_function(template_dir + "/" + template_name, function(status){
+                        
+                        var errors = XMLHttpRequest.responseJSON.details.map(function(item){
+                            return {
+                                location: item.param,
+                                problem: item.msg
+                            }
+                        });
+                        
+                        fade_new_content_to_div("#error_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, errors: errors }))
+
+                    });
                 }
             }   
         });
