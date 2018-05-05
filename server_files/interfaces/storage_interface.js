@@ -175,6 +175,9 @@ module.exports = {
                     }
                 }
             }
+            else{
+                next();
+            }
         }, function(){
             callback(items);
         });

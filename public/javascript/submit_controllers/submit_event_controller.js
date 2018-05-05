@@ -73,8 +73,8 @@ $(function(){
             var media_link = item.children[1].attributes[3].value;
             var main_graphic = item.children[1].attributes[4] ? true : false;
             
-            var file;
-            var link;
+            var file = null;
+            var link = null;
             
             if(media_type == "image"){
                 file = b64toBlob(item.children[1].currentSrc.split("base64,")[1]);

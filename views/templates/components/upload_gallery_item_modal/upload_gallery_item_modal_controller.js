@@ -57,6 +57,8 @@ $(function(){
             reader.readAsDataURL(input.files[0]);
         }
         
+        var file_name = input.files[0].name;
+        
         $('#media_preview').attr('x-media-type', "image");
         $('#media_preview').attr('x-media-link', file_name);
         $('#media_preview').attr('x-file-name', file_name);
@@ -69,7 +71,7 @@ $(function(){
         
         let youtube_id = this.value.split("watch?v=")[1];
         let youtube_src = "https://img.youtube.com/vi/" + youtube_id + "/0.jpg";
-                
+        
         $('#media_preview').attr('x-media-type', "youtube_embed");
         $('#media_preview').attr('x-media-link', this.value);
         $('#media_preview').attr('x-file-name', youtube_src);

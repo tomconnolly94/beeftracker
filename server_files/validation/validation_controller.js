@@ -51,27 +51,28 @@ var master_functions_object = {
         }
     },
     test_gallery_items_structure: function(gallery_items, files){
-        
-        if(gallery_items.length != files.length){
-            return false;
-        }
-        
+                
         for(var i = 0; i < gallery_items.length; i++){
             
             var gallery_item = gallery_items[i];
             var gallery_item_found_in_files = false;
             
-            //loop through files to make sure the gallery item link is included
-            for(var j = 0; j < files.length; j++){
-                if(gallery_item.link == files[j].originalname){
-                    gallery_item_found_in_files = true;
-                    break;
+            console.log(gallery_item);
+            
+            if(gallery_item.media_type == "image"){
+                //loop through files to make sure the gallery item link is included
+                for(var j = 0; j < files.length; j++){
+                    if(gallery_item.link == files[j].originalname){
+                        gallery_item_found_in_files = true;
+                        break;
+                    }
+                }
+                
+                if(!gallery_item_found_in_files){
+                    return false;
                 }
             }
             
-            if(!gallery_item_found_in_files){
-                return false;
-            }
 
             if(gallery_item["media_type"] == 'undefined' || gallery_item["media_type"].length < 1){
                 return false;
