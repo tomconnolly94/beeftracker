@@ -187,10 +187,12 @@ module.exports = {
             else{
                 
                 var actor_id_object = BSON.ObjectID.createFromHexString(actor_id);
+                console.log(actor_id);
+                console.log(actor_id_object);
                 
                 db.collection(db_ref.get_current_actor_table()).aggregate([
                     { $match: { _id: actor_id_object } },
-                    { $lookup : { 
+                    /*{ $lookup : { 
                         from: db_ref.get_current_event_table(),
                         localField: "_id",
                         foreignField: "aggressors",
@@ -225,11 +227,13 @@ module.exports = {
                         localField: "related_actors",
                         foreignField: "_id",
                         as: "related_actors"
-                    }},
+                    }},*/
                     actor_projection
                 ]).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
                     else{
+                        
+                        console.log(docs);
                         if(docs[0]){
                             callback( docs[0] );
                         }

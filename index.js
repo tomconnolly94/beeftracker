@@ -89,9 +89,6 @@ app.use('/', require('./server_files/routing/page_routing'));
 // ### Endpoint routes configuration ###
 app.use('/api', require('./server_files/routing/endpoint_routing'));
 
-// ### Rendered component routes configuration ###
-app.use('/templates', require('./server_files/routing/template_routing')); //routes send rendered HTML
-
 // ### Component rendering function routes configuration ###
 app.use('/template_functions', require('./server_files/routing/template_function_routing')); //routes send javascript functions which render HTML on the client side
 
@@ -122,7 +119,7 @@ app.get('/manifest.webmanifest', function(request, response) {
 }); //web app manifest
 
 // ### Serve an error page on unrecognised uri###
-app.get('/*', function(req, res, next) { res.render("pages/error.jade"); });
+app.get('/*', function(req, res, next) { res.render("pages/static/error.jade"); });
 
 // ### Launch application ####
 app.listen(app.get('port'), function(){ console.log('Node app is running on port', app.get('port'), 'in', process.env.NODE_ENV, 'mode'); });

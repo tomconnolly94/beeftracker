@@ -17,7 +17,8 @@ $(function(){
             success: function(result) {
                 
                 //check for a redirect path
-                var query_params = original_url.split("?")[1].length > 0 ? original_url.split("?")[1] : null;
+                var query_params = original_url.split("?")[1] && original_url.split("?")[1].length > 0 ? original_url.split("?")[1] : null;
+                var first_path_stage = window.location.pathname.split("/")[0] && original_url.split("/")[0].length > 0 ? original_url.split("/")[0] : null;
                     
                 if(query_params){
                     var query_split = query_params.split("=");
@@ -27,6 +28,9 @@ $(function(){
                     else{
                         window.location.href = "/profile";
                     }
+                }
+                else if(first_path_stage != "login"){
+                    window.location.href = window.location.pathname;
                 }
                 else{
                     window.location.href = "/profile";

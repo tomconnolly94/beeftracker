@@ -22,13 +22,14 @@ function load_template_render_function(template_name, success_callback){
     }
 }
 
-function fade_new_content_to_div(tag_selector, content_rendering_function){
+function fade_new_content_to_div(tag_selector, content_rendering_function, callback){
     
     var fade_speed = 100;
     
     $(tag_selector).fadeOut(fade_speed, function(){
         $(tag_selector).html(content_rendering_function);
         $(tag_selector).fadeIn(fade_speed);
+        if(callback){ callback(); }
     });
 }
 

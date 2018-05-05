@@ -27,18 +27,25 @@ mixin comment-box(comments)
         div.col-md-12
             div.row
                 div.col-md-12
-                    p
-                        | You must be logged in to comment.&nbsp;
-                        a(href="#", data-toggle="modal", data-target="#login_modal") Login
+                    - if(!user_data)    
+                        p
+                            | You must be logged in to comment.&nbsp;
+                            a(href="#", data-toggle="modal", data-target="#login_modal") Login
             div.row.new-comment
                 div.col-md-1.d-none.d-md-block.d-lg-block.d-xl-block
-                    img(src="http://www.girardatlarge.com/wp-content/uploads/2013/05/gravatar-60-grey.jpg").img-fluid
+                    - if(user_data)
+                        img(src=file_server_url_prefix + "/user_profiles/" + user_data.img_title).img-fluid
+                    - else
+                        img(src=file_server_url_prefix + "/user_profiles/default").img-fluid
                 div.col-md-11
                     div.row
                         div.col-md-12
                             form
                                 div.col-md-12
-                                    textarea.form-control
+                                    - if(user_data)
+                                        textarea.form-control
+                                    - else
+                                        textarea.form-control(disabled)
                                 div.col-md-12
                                     button.btn.btn-primary.float-right(type="submit") Submit
             each comment in comments

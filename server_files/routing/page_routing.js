@@ -42,7 +42,7 @@ function resolve_user_from_locals_token(request, response, next){
     if(request.locals && request.locals.authenticated_user){
         user_controller.findUser(request.locals.authenticated_user.id, request.locals.authenticated_user.is_admin, function(data){
             if(data.failed){
-                response.render("pages/error.jade");
+                response.render("pages/static/error.jade");
             }
             else{
                 request.locals.authenticated_user = data;
@@ -120,7 +120,7 @@ router.get("/about", token_authentication.recognise_user_token, resolve_user_fro
     var view_parameters = Object.assign({}, view_parameters_global);
     view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
     
-    response.render("pages/about.jade", view_parameters);
+    response.render("pages/static/about.jade", view_parameters);
 }); // about_us page
 router.get("/actors", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
     
@@ -151,7 +151,7 @@ router.get("/actor/:actor_id", token_authentication.recognise_user_token, resolv
     var actor_data_promise = new Promise(function(resolve, reject){
        actor_controller.findActor(actor_id, function(data){
            if(data.failed){
-                response.render("pages/error.jade");
+                response.render("pages/static/error.jade");
             }
             else{
                 resolve(data);
@@ -276,7 +276,7 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
     var main_event_data_promise = new Promise(function(resolve, reject){
         event_controller.findEvent(event_id, function(data){
             if(data.failed){
-                response.render("pages/error.jade");
+                response.render("pages/static/error.jade");
             }
             else{
                 let data_object = { event_data: data };
@@ -292,7 +292,7 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
     var comment_data_promise = new Promise(function(resolve, reject){
        comment_controller.findCommentsFromBeefChain(beef_chain_id, function(data){
             if(data.failed){
-                response.render("pages/error.jade");
+                response.render("pages/static/error.jade");
             }
             else{
                 resolve(data);
@@ -314,7 +314,7 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
         response.render("pages/beef.jade", view_parameters);
     }).catch(function(error){
         console.log(error);
-        response.render("pages/error.jade");
+        response.render("pages/static/error.jade");
     });
 }); //beef page
 router.get("/contact", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
@@ -330,7 +330,7 @@ router.get("/contact", token_authentication.recognise_user_token, resolve_user_f
         view_parameters.trending_data = value;
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
         
-        response.render("pages/contact.jade", view_parameters); 
+        response.render("pages/static/contact.jade", view_parameters); 
     });
 }); // contact us page
 router.get("/profile", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
@@ -375,28 +375,28 @@ router.get("/privacy-policy", token_authentication.recognise_user_token, resolve
     var view_parameters = Object.assign({}, view_parameters_global);
     view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
     
-    response.render("pages/peripheral_pages/privacy_policy.jade", view_parameters); 
+    response.render("pages/static/peripheral_pages/privacy_policy.jade", view_parameters); 
 });
 router.get("/terms-and-conditions", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response){
     
     var view_parameters = Object.assign({}, view_parameters_global);
     view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
     
-    response.render("pages/peripheral_pages/terms_and_conditions.jade", view_parameters); 
+    response.render("pages/static/peripheral_pages/terms_and_conditions.jade", view_parameters); 
 });
 router.get("/disclaimer", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response){
     
     var view_parameters = Object.assign({}, view_parameters_global);
     view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
     
-    response.render("pages/peripheral_pages/disclaimer.jade", view_parameters); 
+    response.render("pages/static/peripheral_pages/disclaimer.jade", view_parameters); 
 });
 router.get("/submission-success", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response){
     
     var view_parameters = Object.assign({}, view_parameters_global);
     view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
     
-    response.render("pages/successful_submission.jade", view_parameters); 
+    response.render("pages/static/successful_submission.jade", view_parameters); 
 });
 
 /*

@@ -86,7 +86,7 @@ append body
                 div.beef-content-category
                     span.category-name #{event_data.categories[0].name}
                 div.beef-content-contribute
-                    a.btn.btn-primary.add-beef-button(href="#") Contribute
+                    a.btn.btn-primary.add-beef-button(href="/add-beef") Contribute
             
             div.beef-content-container
                 div.col-md-12.beef-summary
@@ -144,13 +144,21 @@ append body
                                     - }
                                 - }
                                 
-                                option(image_src=file_server_url_prefix + "/events/" + event_data.img_title_fullsize, value="/beef/" + beef_chain_id + "/") #{aggressor.name} v. #{target.name}
+                                option(image_src=file_server_url_prefix + "/events/" + event_data.cover_image, value="/beef/" + beef_chain_id + "/") #{aggressor.name} v. #{target.name}
                             - }
                         
         div.row
             +timeline-section(event_data)
-                        
-            +section('G', 'ALLERY', '')
+               
+        div.row
+        
+            +section('DATA', 'SOURCES', 'fa fa-book')
+        
+                each data_source in event_data.data_sources
+                    a(href=data_source) #{data_source}
+               
+        div.row
+            +section('G', 'ALLERY', 'fa fa-file-image')
                 +masonry-gallery-section(event_data.gallery_items, "events")
             +comment-box-section(comment_data)
 

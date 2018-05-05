@@ -6,6 +6,7 @@ include ../components/add_actor_modal/add_actor_modal.jade
 include ../components/gallery_manager/gallery_manager.jade
 include ../components/add_data_sources/add_data_sources.jade
 include ../components/error_panel/error_panel.jade
+include ../components/versus_panel/versus_panel.jade
 
 append scripts
     script.
@@ -69,16 +70,18 @@ append body
                             div.button-group.float-right
                                 a(href="#").btn.btn-secondary Cancel
                                 button(type="submit").btn.btn-primary#submit_new_event_button Submit
-                    div.row.versus-panel
-                        div.col-5.beefer
+                    div.row.versus-panel#versus_panel
+                        +versus-panel([], [])
+                    
+                        //-div.col-5.beefer
                             div
                                 h4#beefer_name &nbsp;
                                 a(href="#", data-toggle="modal", data-target="#selector_actor_modal", id="select_actor_beefer").selector
                                     img(src="", style="display:none;").actor-avatar
                                     i.fas.fa-plus
-                        div.col-2.versus
+                        //-div.col-2.versus
                             h4 VS.
-                        div.col-5.beefee
+                        //-div.col-5.beefee
                             div
                                 h4#beefee_name &nbsp;
                                 a(href="#", data-toggle="modal", data-target="#selector_actor_modal", id="select_actor_beefee").selector

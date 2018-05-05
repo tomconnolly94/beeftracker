@@ -5534,7 +5534,7 @@ $categories: (
       left: -3px; }
   .versus-panel .beefer {
     text-align: right;
-    height: 180px; }
+    height: 240px; }
     @media (max-width: 575.98px) {
       .versus-panel .beefer {
         height: 100px; } }
@@ -6183,6 +6183,9 @@ figure.masonry-item.soundcloud-item .play-button {
   .comment-box .comment-box-item .date {
     padding-left: 10px;
     color: #e1e1e1; }
+
+#error_panel h5 {
+  margin-left: 20px; }
 
 .beef-content {
   padding-top: 30px; }

@@ -28,13 +28,14 @@ var build_template_function = function(request, response){
     }
 }
 
-//Activity logs endpoints
-router.route('/carousel').get(build_template_function);//built, written, tested
+//Template function endpoints
+//router.route('/carousel').get(build_template_function);//built, written, tested
 router.route('/gallery_manager/gallery_manager').get(build_template_function);//built, written, tested
 router.route('/thumbnail_grid/thumbnail_grid').get(build_template_function);//built, written, tested
 router.route('/add_data_sources/add_data_sources_display').get(build_template_function);//built, written, tested
 router.route('/search_results/search_results').get(build_template_function);//built, written, tested
 router.route('/error_panel/error_panel').get(build_template_function);//built, written, tested
+router.route('/versus_panel/versus_panel').get(build_template_function);//built, written, tested
 
 //handle errors
 router.route('/*').get(function(request, response) {response.status(404).send({ success: false, message: "Template not found." }); });
