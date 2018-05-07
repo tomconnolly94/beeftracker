@@ -5643,9 +5643,13 @@ div#smartwizard > ul {
     div#smartwizard > ul {
       padding-left: 0; } }
 
-@media (max-width: 767.98px) {
+@media (min-width: 576px) and (max-width: 767.98px) {
   .sw-theme-circles > ul.step-anchor > li {
-    margin-left: 32px; } }
+    margin-left: 12%; } }
+
+@media (max-width: 575.98px) {
+  .sw-theme-circles > ul.step-anchor > li {
+    margin-left: 15%; } }
 
 div#smartwizard:before {
   content: " ";
@@ -5663,8 +5667,14 @@ div#smartwizard:before {
   border-color: #DF3E3E;
   background: #DF3E3E;
   color: #fff; }
-  .sw-theme-circles > ul.step-anchor > li > a small {
-    font-size: 12px !important; }
+  @media (max-width: 575.98px) {
+    .sw-theme-circles > ul.step-anchor > li > a {
+      font-size: 12px !important;
+      padding: 10px 0px;
+      position: relative;
+      top: 18px;
+      height: 40px;
+      width: 40px; } }
 
 .sw-theme-circles > ul.step-anchor > li.done > a > small {
   color: #717171 !important; }
@@ -6158,7 +6168,7 @@ figure.masonry-item.soundcloud-item .play-button {
   position: relative;
   margin: 20px 0; }
   .add-actor-modal .actor-type-selector .actor-type-row .actor-type-item div.title {
-    transform: translateY(50%); }
+    transform: translateY(35%); }
     .add-actor-modal .actor-type-selector .actor-type-row .actor-type-item div.title h3 {
       color: #fff !important;
       z-index: 100; }
@@ -6356,6 +6366,10 @@ a {
 
 h1, h2, h3, h4, h5 {
   color: #000; }
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  h3 {
+    font-size: 13px; } }
 
 p {
   color: #717171;

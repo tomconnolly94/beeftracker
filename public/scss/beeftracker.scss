@@ -92,6 +92,12 @@ h1, h2, h3, h4, h5 {
     color: #000;
 }
 
+h3{
+    @include media-breakpoint-only(md) {
+        font-size:13px;
+    }
+}
+
 p {
 	color: $text-color;
 	font-size: 14px;

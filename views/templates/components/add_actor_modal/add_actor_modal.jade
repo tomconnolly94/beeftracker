@@ -7,6 +7,7 @@ include ../../layouts/modal.jade
 
 mixin add-actor-modal-js()
     script(src="/component_controllers/add_actor_modal/add_actor_modal.js" async)
+    script(src="/component_controllers/add_actor_modal/add_actor_modal_controller.js" async)
 
 mixin add-actor-modal(actor_variable_fields)
     +modal('Add Actor', '#', false)(id="add_actor_modal", large_modal=true, class="add-actor-modal")
@@ -31,32 +32,29 @@ mixin add-actor-modal(actor_variable_fields)
               div
                 #step-1.actor-type-selector
                         h4 Select Actor Type
-                            
-                            - var class_icons = ["fa fa-institution", "fas fa-graduation-cap" ,"glyphicon glyphicon-globe"];
-                            
-                            - for(var i = 0; i < actor_variable_fields.length; i += 2){
-                                                        
+                        
+                            - for(var i = 0; i < actor_variable_fields.length; i += 2){  
                                 - if(actor_variable_fields[i+1]){
                                     div.actor-type-row
-                                        a.actor-type-item(href="#")
+                                        a.actor-type-item(href="#", id=actor_variable_fields[i].actor_classification)
                                             div.title
-                                                i(class=class_icons[i])
+                                                i(class=actor_variable_fields[i].icon)
                                                 h3 #{actor_variable_fields[i].actor_classification}
-                                        a.actor-type-item(href="#")
+                                        a.actor-type-item(href="#", id=actor_variable_fields[i+1].actor_classification)
                                             div.title
-                                                i(class=class_icons[i+1])
+                                                i(class=actor_variable_fields[i+1].icon)
                                                 h3 #{actor_variable_fields[i+1].actor_classification}
                                 - }
                                 - else{
                                     div.actor-type-row
-                                        a.actor-type-item(href="#").selected
+                                        a.actor-type-item(href="#", id=actor_variable_fields[i].actor_classification)
                                             div.title
-                                                i.fas.fa-user
+                                                i.fas.fa-user(class=actor_variable_fields[i].icon)
                                                 h3 #{actor_variable_fields[i].actor_classification}
                                 - }
                             - }
                                 //a.actor-type-item(href="#")
-                                    div.title
+                                    div.titlefa fa-soccer-ball
                                         i.fas.fa-music
                                         h3 Artist
                             //div.actor-type-row
@@ -68,10 +66,10 @@ mixin add-actor-modal(actor_variable_fields)
                                     div.title
                                         i.fas.fa-briefcase
                                         h3 Business
-                #step-2
+                #step-2.disable
                   div.row
                     div.col-md-4.photo_box
-                        img(src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1621707c924%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1621707c924%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E").img-thumbnail
+                        img(src="/images/no_preview_available.jpg").img-thumbnail#actor_photo_preview
                         input(type="file", name="actor_photo")#actor_photo
                         label(for="actor_photo").btn.btn-primary Upload Photo
                     div.col-md-8
@@ -82,16 +80,11 @@ mixin add-actor-modal(actor_variable_fields)
                                         label(for="actor_name") Name
                                         input(type="text").form-control#actor_name
                                     div.form-group.col-md-6
-                                        label(for="beef_date") Gender
-                                        select.form-control
-                                            option Male
-                                            option Female
-                                            option Other
-                            div.col-md-12
-                                div.row
-                                    div.form-group.col-md-6
                                         label(for="actor_name") Date of Birth
                                         input(type="date").form-control#actor_dob
+                            div.col-md-12
+                                div.row
+                                    each 
                                     div.form-group.col-md-6
                                         label(for="beef_date") Gender
                                         select.form-control
@@ -103,7 +96,7 @@ mixin add-actor-modal(actor_variable_fields)
                                     div.form-group.col-md-12
                                         label(for="actor_bio") Bio
                                         textarea.form-control#actor_bio
-                #step-3
+                #step-3.disable
                     div.row
                             div.col-md-12
                                 div.row

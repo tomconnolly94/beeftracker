@@ -21,8 +21,14 @@ div#smartwizard > ul {
 
 .sw-theme-circles > ul.step-anchor > li {
 
-    @include media-breakpoint-down(sm) {
-         margin-left:32px;
+    @include media-breakpoint-only(sm) {
+        //margin-left:32px;
+        margin-left:8%;
+    }
+    
+    @include media-breakpoint-only(xs) {
+        //margin-left:32px;
+        margin-left:12%;
     }
 
 }
@@ -45,8 +51,13 @@ div#smartwizard:before {
     background: $brand-primary;
     color: #fff;
 
-    small {
+    @include media-breakpoint-down(xs) {
         font-size: 12px !important;
+        padding: 12px 0px;
+        position: relative;
+        top: 18px;
+        height: 40px;
+        width: 40px;
     }
 }
 

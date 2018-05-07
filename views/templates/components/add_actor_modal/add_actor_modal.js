@@ -7,7 +7,7 @@ $(function() {
             showPreviousButton: false,
         },
         anchorSettings: {
-            anchorClickable: true,
+            //-anchorClickable: true,
             enableAllAnchors: true
         }
     });
