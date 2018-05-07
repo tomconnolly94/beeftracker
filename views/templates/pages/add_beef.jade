@@ -49,7 +49,7 @@ append scripts
 
 append body
     div.bt-content
-        +add-actor-modal()
+        +add-actor-modal(actor_variable_fields)
         +upload-gallery-item-modal()
         +select-actor-modal()
         section
@@ -68,30 +68,10 @@ append body
                     div.row
                         div.col-12
                             div.button-group.float-right
-                                a(href="#").btn.btn-secondary Cancel
-                                button(type="submit").btn.btn-primary#submit_new_event_button Submit
+                                //-a(href="#").btn.btn-secondary Cancel
+                                button(type="submit").btn.btn-primary.submit_new_event_button Submit
                     div.row.versus-panel#versus_panel
                         +versus-panel([], [])
-                    
-                        //-div.col-5.beefer
-                            div
-                                h4#beefer_name &nbsp;
-                                a(href="#", data-toggle="modal", data-target="#selector_actor_modal", id="select_actor_beefer").selector
-                                    img(src="", style="display:none;").actor-avatar
-                                    i.fas.fa-plus
-                        //-div.col-2.versus
-                            h4 VS.
-                        //-div.col-5.beefee
-                            div
-                                h4#beefee_name &nbsp;
-                                a(href="#", data-toggle="modal", data-target="#selector_actor_modal", id="select_actor_beefee").selector
-                                    img(src="", style="display:none;").actor-avatar
-                                    i.fas.fa-plus
-                        //div.col-5.beefee
-                            div
-                                h4 Obama
-                                a(href="actor.html").selector
-                                    img(src="http://cdn.edgecast.steamstatic.com/steamcommunity/public/images/avatars/64/64e8917b85a0f5e20565651119c60f3d8d363898_full.jpg").actor-avatar
                     div.row
                         div.col-12
                             div.form-row
@@ -124,3 +104,9 @@ append body
                                     h2 Gallery
                             div.row.gallery-manager#gallery_manager
                                 +gallery-manager()
+                                
+                    div.row
+                        div.col-12
+                            div.button-group.float-right
+                                //-a(href="#").btn.btn-secondary Cancel
+                                button(type="submit").btn.btn-primary.submit_new_event_button Submit

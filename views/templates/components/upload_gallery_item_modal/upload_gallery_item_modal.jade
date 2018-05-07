@@ -34,24 +34,25 @@ mixin upload-gallery-item-modal()
                             label(for="upload_type") What are you adding?
                             select#upload_type.form-control(name="upload_type")
                                 option(value="default") Select Type
-                                option(value="photo") Photo
+                                option(value="image") Image
                                 option(value="youtube") YouTube Video
-                                option(value="soundcloud") SoundCloud Link
+                                option(value="spotify") Spotify Link
+                    div.form-row
+                        div.form-group.col-md-12#image_input_div(style="display:none;")
+                            label(for="image_link") Browse and Select image
+                            input.form-control#image_link(type="file", name="gallery-upload-file")
+                    dvi-form-row
                          div.form-group.col-md-12#youtube_input_div(style="display:none;")
                             label(for="youtube_video_link") YouTube Link
                             input(type="text").form-control#youtube_video_link
                     div.form-row
-                         div.form-group.col-md-12#soundcloud_input_div(style="display:none;")
-                            label(for="soundcloud_link") Soundcloud Link
-                            input(type="text").form-control#soundcloud_link
-                    div.form-row
-                        div.form-group.col-md-12#photo_input_div(style="display:none;")
-                            label(for="photo_link") Browse and Select photo
-                            input.form-control#photo_link(type="file", name="gallery-upload-file")
-                    div.form-check#set_as_main_graphic(style="display:none;")
+                         div.form-group.col-md-12#spotify_input_div(style="display:none;")
+                            label(for="spotify_link") Spotify Link
+                            input(type="text").form-control#spotify_link
+                    div.form-check#set_as_main_graphic(style="display:none;", title="Check this box to set this gallery item as the main graphic meaning it will be placed at the top of the beef page.")
                             input.form-check-input(type="checkbox", value="")#set_as_main_graphic_checkbox
                             label.form-check-label(for="set_as_main_graphic_checkbox") Set as Main Graphic
-                    div.form-check#set_as_cover_image(style="display:none;")
+                    div.form-check#set_as_cover_image(style="display:none;", title="Check this box to set this gallery item as the cover image meaning it will be used as the thumbnail for the event, and as the faded background on the beef page.")
                             input.form-check-input(type="checkbox", value="")#set_as_cover_image_checkbox
                             label.form-check-label(for="set_as_cover_image_checkbox") Set as Cover Image
                     div.form-row

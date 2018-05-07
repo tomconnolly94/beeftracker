@@ -184,14 +184,21 @@ router.get("/add-beef", token_authentication.recognise_user_token, resolve_user_
         });
     });
     
+    var actor_variable_fields_promise = new Promise(function(resolve, reject){
+       actor_controller.getVariableActorFieldsConfig(function(data){
+           resolve(data);
+        });
+    });
+    
     if(request.locals && request.locals.authenticated_user){ //is user token found, then do not allow them to access the register page
         
-        Promise.all([ actor_data_promise, categories_promise ]).then(function(values){
+        Promise.all([ actor_data_promise, categories_promise, actor_variable_fields_promise ]).then(function(values){
 
             var view_parameters = Object.assign({}, view_parameters_global);
             view_parameters.actor_data = values[0];
             view_parameters.gallery_items = [];
             view_parameters.categories = values[1];
+            view_parameters.actor_variable_fields = values[2];
             view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
 
             response.render("pages/add_beef.jade", view_parameters); 
@@ -327,6 +334,7 @@ router.get("/contact", token_authentication.recognise_user_token, resolve_user_f
     
     trending_data_promise.then(function(value){
         
+        var view_parameters = Object.assign({}, view_parameters_global);
         view_parameters.trending_data = value;
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
         
@@ -391,12 +399,21 @@ router.get("/disclaimer", token_authentication.recognise_user_token, resolve_use
     
     response.render("pages/static/peripheral_pages/disclaimer.jade", view_parameters); 
 });
+
+//landing page routes
 router.get("/submission-success", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response){
     
     var view_parameters = Object.assign({}, view_parameters_global);
     view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
     
     response.render("pages/static/successful_submission.jade", view_parameters); 
+});
+router.get("/offline", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response){
+    
+    var view_parameters = Object.assign({}, view_parameters_global);
+    view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
+    
+    response.render("pages/static/offline.jade", view_parameters); 
 });
 
 /*

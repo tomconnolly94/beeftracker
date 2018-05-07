@@ -153,9 +153,10 @@ append body
         div.row
         
             +section('DATA', 'SOURCES', 'fa fa-book')
-        
-                each data_source in event_data.data_sources
-                    a(href=data_source) #{data_source}
+                ul
+                    each data_source in event_data.data_sources
+                        li
+                            a(href=data_source, target="_blank") #{data_source}
                
         div.row
             +section('G', 'ALLERY', 'fa fa-file-image')

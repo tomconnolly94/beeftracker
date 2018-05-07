@@ -17,14 +17,14 @@ $(function(){
         $('#set_as_cover_image').css("display", "none"); //hide set as cover input div
         
         //hide all input divs in modal
-        $("#photo_input_div").css("display", "none"); 
-        $("#soundcloud_input_div").css("display", "none");
+        $("#image_input_div").css("display", "none"); 
+        $("#spotify_input_div").css("display", "none");
         $("#youtube_input_div").css("display", "none");
         
         //clear all input text boxes
         $("#youtube_video_link").val("");
         
-        var file_input_tag = $('#photo_link');
+        var file_input_tag = $('#image_link');
         file_input_tag.wrap('<form>').closest('form').get(0).reset();
         file_input_tag.unwrap();
         
@@ -36,24 +36,28 @@ $(function(){
     $("#upload_type").change(function(event){
         
         //hide all input mediums
-        $("#photo_input_div").css("display", "none");
-        $("#soundcloud_input_div").css("display", "none");
+        $("#image_input_div").css("display", "none");
         $("#youtube_input_div").css("display", "none");
+        $("#spotify_input_div").css("display", "none");
+        
+        $("#set_as_main_graphic").css("display", "none"); //hide set as cover checkbox input
+        $("#set_as_cover_image").css("display", "none"); //hide set as cover checkbox input
         
         let media_type = $("#upload_type").val();
         
         $("#" + media_type + "_input_div").css("display", "block"); //show text input tag
+        
         if(!set_as_main_graphic_used){
-            $("#set_as_main_graphic").css("display", "block"); //show set as cover checkbox input
+            $("#set_as_main_graphic").css("display", "block"); //show main graphic checkbox input
         }
-        if(!set_as_cover_image_used){
+        if(!set_as_cover_image_used && media_type == "image"){
             $("#set_as_cover_image").css("display", "block"); //show set as cover checkbox input
         }
         $("#media_submit_button").removeAttr("disabled"); //enable the "add" button
     });
     
-    //function to handle a photo being added to the file input tag
-    $("#photo_link").change(function() {
+    //function to handle a image being added to the file input tag
+    $("#image_link").change(function() {
         let input = this;
         
         if (input.files && input.files[0]) {
@@ -84,6 +88,28 @@ $(function(){
         $('#media_preview').attr('x-media-link', this.value);
         $('#media_preview').attr('x-file-name', youtube_src);
         $('#media_preview').attr('src', youtube_src);
+    });
+    
+    //function to handle a youtube link being added to the file input tag
+    $("#spotify_link").on('input', function(e) {
+        
+        var link;
+        
+        if(this.value.indexOf("spotify:track") > 0){
+            var video_id = this.value.split("track:")[1];
+            link = "https://embed.spotify.com/?uri=spotify%3Atrack%3A" + video_id;
+        }
+        else if(this.value.indexOf("embed") == -1){
+
+            var video_id = this.value.split('track/')[1];
+            link = "https://embed.spotify.com/?uri=spotify%3Atrack%3A" + video_id;
+        }
+        
+        
+        $('#media_preview').attr('x-media-type', "spotify_embed");
+        $('#media_preview').attr('x-media-link', link);
+        $('#media_preview').attr('x-file-name', link);
+        $('#media_preview').attr('src', "/images/no_preview_available.jpg");
     });
     
     //function to handle media being officially added to the gallery manager with the "add" button
@@ -127,4 +153,24 @@ $(function(){
             }
         }
     });
+    /*
+    //function to remove item from gallery manager
+    $("#gallery_manager").on("click", ".gallery-manager-item", function(event){
+        event.preventDefault();
+        
+        let media_type = $(this).children("img").attr("x-media-type");
+
+        //set modal fields
+        $("#media_preview").attr("src", $(this).children("img").attr("src"));
+        $("#media_preview").attr("x-media-type", media_type);
+        $("#media_preview").attr("x-file-name", $(this).children("img").attr("x-file-name"));
+        $("#media_preview").attr("x-media-link", $(this).children("img").attr("x-media-link"));
+        $("#set_as_main_graphic_checkbox").prop("checked", $(this).children("img").attr("x-cover-image") == "x-cover-image" ? true : false);
+        $("#set_as_mcover_image_checkbox").prop("checked", $(this).children("img").attr("x-cover-image") == "x-cover-image" ? true : false);
+        
+        //set upload type select2 val
+        $("#upload_type").val(media_type).trigger("change");
+        
+        $("#upload_gallery_item_modal").modal("show"); //show modal
+    });*/
 });

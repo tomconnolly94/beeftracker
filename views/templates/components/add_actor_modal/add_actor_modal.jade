@@ -8,7 +8,7 @@ include ../../layouts/modal.jade
 mixin add-actor-modal-js()
     script(src="/component_controllers/add_actor_modal/add_actor_modal.js" async)
 
-mixin add-actor-modal()
+mixin add-actor-modal(actor_variable_fields)
     +modal('Add Actor', '#', false)(id="add_actor_modal", large_modal=true, class="add-actor-modal")
         form
             #smartwizard
@@ -31,24 +31,43 @@ mixin add-actor-modal()
               div
                 #step-1.actor-type-selector
                         h4 Select Actor Type
-                        div.actor-type-row
-                            a.actor-type-item(href="#").selected
-                                div.title
-                                    i.fas.fa-user
-                                    h3 Person
-                            a.actor-type-item(href="#")
-                                div.title
-                                    i.fas.fa-music
-                                    h3 Artist
-                        div.actor-type-row
-                            a.actor-type-item(href="#")
-                                div.title
-                                    i.fas.fa-flag
-                                    h3 Country
-                            a.actor-type-item(href="#")
-                                div.title
-                                    i.fas.fa-briefcase
-                                    h3 Business
+                            
+                            - var class_icons = ["fa fa-institution", "fas fa-graduation-cap" ,"glyphicon glyphicon-globe"];
+                            
+                            - for(var i = 0; i < actor_variable_fields.length; i += 2){
+                                                        
+                                - if(actor_variable_fields[i+1]){
+                                    div.actor-type-row
+                                        a.actor-type-item(href="#")
+                                            div.title
+                                                i(class=class_icons[i])
+                                                h3 #{actor_variable_fields[i].actor_classification}
+                                        a.actor-type-item(href="#")
+                                            div.title
+                                                i(class=class_icons[i+1])
+                                                h3 #{actor_variable_fields[i+1].actor_classification}
+                                - }
+                                - else{
+                                    div.actor-type-row
+                                        a.actor-type-item(href="#").selected
+                                            div.title
+                                                i.fas.fa-user
+                                                h3 #{actor_variable_fields[i].actor_classification}
+                                - }
+                            - }
+                                //a.actor-type-item(href="#")
+                                    div.title
+                                        i.fas.fa-music
+                                        h3 Artist
+                            //div.actor-type-row
+                                a.actor-type-item(href="#")
+                                    div.title
+                                        i.fas.fa-flag
+                                        h3 Country
+                                a.actor-type-item(href="#")
+                                    div.title
+                                        i.fas.fa-briefcase
+                                        h3 Business
                 #step-2
                   div.row
                     div.col-md-4.photo_box

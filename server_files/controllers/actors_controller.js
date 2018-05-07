@@ -435,7 +435,7 @@ module.exports = {
         });
     },
     
-    getVariableActorFieldsConfig: function(request, response, callback){
+    getVariableActorFieldsConfig: function(callback){
 
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
@@ -445,6 +445,7 @@ module.exports = {
                     db.collection(db_ref.get_actor_variable_fields_config()).find({}).toArray(function(queryErr, docs) {
                         if(queryErr){ console.log(queryErr); }
                         else{
+                            console.log(docs);
                             callback(docs);
                         }
                     });

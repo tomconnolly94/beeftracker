@@ -1,6 +1,7 @@
 var CACHE_NAME = 'beeftracker_page_cache';
 var urls_to_cache = [
     "/",
+    "/offline",
     "/stylesheets/beeftracker.vendors.css",
     "/stylesheets/beeftracker.css",
     "/modules/jquery/dist/jquery.min.js",
@@ -18,8 +19,14 @@ var urls_to_cache = [
     "/webfonts/fa-solid-900.ttf",
     "/webfonts/fa-brands-400.ttf",
     "/images/got-beef.jpg",
-    "/images/beefometers@small.png"
+    "/images/beefometers@small.png",
+    "/images/sad_cow.png",
+    
 ];
+
+var urls_to_avoid_caching = [
+    "add-beef"
+]
 
 self.addEventListener('install', function(event) {
     event.waitUntil(
@@ -49,17 +56,19 @@ self.addEventListener('fetch', function(event) {
         event.respondWith(
             fetch(request) //attempt to fetch the resource
                 .then(function(response) { //run if fetch is successful
-                    var copy = response.clone();
-                    caches.open(CACHE_NAME) //open cache and dynamically add page that has just been fetched to cache
-                        .then(function(cache) {
-                            cache.put(request, copy);
-                        });
+                    if(urls_to_avoid_caching.indexOf(request.url.split("/").pop().split("?")[0]) == -1){ //do not cache the add beef page
+                        var copy = response.clone();
+                        caches.open(CACHE_NAME) //open cache and dynamically add page that has just been fetched to cache
+                            .then(function(cache) {
+                                cache.put(request, copy);
+                            });
+                    }
                     return response;
                 })
                 .catch(function() { //run if fetch is unsuccessful, client is offline
                     return caches.match(request)
                         .then(function(response) {
-                            return response;// || caches.match("/offline/");
+                            return response || caches.match("/offline");
                         });
                 })
         )

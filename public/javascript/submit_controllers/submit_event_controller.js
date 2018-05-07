@@ -108,7 +108,7 @@ $(function(){
         });
     }
     
-    $("#submit_new_event_button").unbind().click(function(event){
+    $(".submit_new_event_button").unbind().click(function(event){
         event.preventDefault();
         
         //get form contents
