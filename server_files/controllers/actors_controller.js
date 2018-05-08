@@ -445,7 +445,6 @@ module.exports = {
                     db.collection(db_ref.get_actor_variable_fields_config()).find({}).toArray(function(queryErr, docs) {
                         if(queryErr){ console.log(queryErr); }
                         else{
-                            console.log(docs);
                             callback(docs);
                         }
                     });

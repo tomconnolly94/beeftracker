@@ -4,7 +4,8 @@ include ../components/upload_gallery_item_modal/upload_gallery_item_modal.jade
 include ../components/select_actor_modal/select_actor_modal.jade
 include ../components/add_actor_modal/add_actor_modal.jade
 include ../components/gallery_manager/gallery_manager.jade
-include ../components/add_data_sources/add_data_sources.jade
+//include ../components/add_data_sources/add_data_sources.jade
+include ../components/add_list/add_list.jade
 include ../components/error_panel/error_panel.jade
 include ../components/versus_panel/versus_panel.jade
 
@@ -42,9 +43,9 @@ append scripts
     +select-actor-modal-js()
     +add-actor-modal-js()
 
-    script(src="/bower_components/select2/dist/js/select2.full.js" async)
-    script(src="/modules/summernote/dist/summernote-lite.js" async)
-    script(src="/bower_components/smartwizard/dist/js/jquery.smartWizard.js" async)
+    script(src="/bower_components/select2/dist/js/select2.full.js")
+    //-script(src="/modules/summernote/dist/summernote-lite.js" async)
+    script(src="/bower_components/smartwizard/dist/js/jquery.smartWizard.js")
     script(src="/js/submit_controllers/submit_event_controller.js" async)
 
 append body
@@ -97,7 +98,8 @@ append body
                                     label(for="beef_content_summernote") What happened?
                                     textarea.form-control#beef_description
                                     //-#beef_content_summernote
-                            +add-data-sources([], "add_beef_event_data_sources")
+                            
+                            +add-list([], "add_event_data_sources", "Data sources/links")
                             
                             div.form-row
                                 div.form-group.col-md-12

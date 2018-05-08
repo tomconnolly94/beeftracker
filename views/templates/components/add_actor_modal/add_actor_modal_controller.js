@@ -5,9 +5,24 @@ $(function(){
         var id = $(this).attr("id");
         $(this).parent().parent().parent().attr("x-selected-actor-type", id);
         
-        //$("#step_2_button").attr("href", "#step-2");
-        //$("#step_3_button").attr("href", "#step-2");
+        var div_list = $(this).parent().parent().children();
         
+        //remove active class from all divs
+        for(var i = 0; i < div_list.length; i++){
+            $(div_list[i]).children("a").removeClass("active");        
+        }
+        
+        $(this).addClass("active"); //add active class to seelcted option
+        
+        var template_dir = "add_actor_modal";
+        var template_name = "add_actor_variable_field_panel";
+        var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
+        
+        $.get("/api/actor-variable-fields-config", {}, function(data){
+            load_template_render_function(template_dir + "/" + template_name, function(status){
+                fade_new_content_to_div("#variable_fields_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, variable_fields: data, active_classification: id }))
+            });
+        });
     });
     
     //function to handle a image being added to the file input tag

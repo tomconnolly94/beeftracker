@@ -1,0 +1,18 @@
+include ./add_list_display.jade
+
+mixin add-list(list, display_id, component_title)
+    
+    append scripts
+        script(src="/component_controllers/add_list/add_list_controller.js" async)
+        //script(src="/component_controllers/add_actor_modal/add_actor_modal.js")
+
+    div.row
+        div.col-md-12
+            label(for="beef_date") #{component_title}
+            .input-group.mb-3
+                input.form-control(id="add_list_input_" + display_id, type='text', placeholder='', aria-label='', aria-describedby='basic-addon1')
+                .input-group-append
+                    button.btn.btn-primary.add_list_item_button(type='button', x-display-id=display_id) Add
+        div.col-md-12
+            ul.add_list(id=display_id)
+                +add-list-display(list, display_id)

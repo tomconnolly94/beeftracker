@@ -160,7 +160,7 @@ router.route('/actors/:actor_id').delete(token_authentication.authenticate_endpo
 
 //Actor fields config endpoints
 router.route('/actor-variable-fields-config').get(function(request, response){
-    actor_controller.getVariableActorFieldsConfig(request, response, function(data){
+    actor_controller.getVariableActorFieldsConfig(function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }

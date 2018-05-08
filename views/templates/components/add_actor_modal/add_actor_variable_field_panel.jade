@@ -1,0 +1,40 @@
+include ../add_list/add_list.jade
+
+mixin add_actor_variable_field_panel(variable_fields, active_classification)
+
+    each field in variable_fields
+    
+        - if(field.actor_classification == active_classification){
+
+            div.form-group.col-md-6
+                label(for="actor_name") #{field.place_of_origin_title}
+                input(type="text").form-control#actor_place_of_origin
+            div.form-group.col-md-6
+                label(for="actor_name") #{field.date_of_origin_title}
+                input(type="date").form-control#actor_date_of_origin
+        
+        
+            each variable_field_value in field.variable_field_titles
+            
+                - if(variable_field_value.charAt(variable_field_value.length - 1) == "s"){
+                    div.form-group.col-md-6
+                        +add-list([], variable_field_value, variable_field_value)
+                - }
+                - else{
+            
+                    div.form-group.col-md-6
+                        label(for="actor_name") #{variable_field_value}
+                        input(type="text", id=variable_field_value).form-control
+                - }
+        - }
+                    
+ 
+- if(!variable_fields){
+    - variable_fields = [];
+- }
+
+- if(!active_classification){
+    - active_classification = [];
+- }
+
++add_actor_variable_field_panel(variable_fields, active_classification)

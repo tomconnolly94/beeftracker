@@ -1,4 +1,7 @@
-.data_sources_list {
+.add_list:empty {
+    border: 0px solid $brand-primary;
+}
+.add_list {
     @extend .list-group;
     @extend .list-group-flush;
     padding:0;
@@ -8,6 +11,7 @@
     border-radius: 5px;
     .list-group-item {
         background-color: #fdfdfd;
+        overflow:hidden;
 
         &:first-child {
            border-top-right-radius: 5px;
@@ -64,9 +68,6 @@
 
             .actor-type-item {
 
-
-
-
                 @extend .col-md-3;
                 @extend .col-sm-12;
 
@@ -111,6 +112,10 @@
 
                 &.selected {
                     background-color: $brand-primary;
+                }
+                
+                &.active{
+                    background-color: #000
                 }
             }
         }

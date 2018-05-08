@@ -1,9 +1,9 @@
-mixin add-data-sources-display(data_sources)
-    each data_source in data_sources
+mixin add-list-display(list_items, display_id)
+    each list_item in list_items
         li.list-group-item
-            | #{data_source}
+            | #{list_item}
             span.action
-                a.remove-data-source(href="#")
+                a.remove-list-item(href="#")
                     i.fas.fa-trash
         //li.list-group-item
             | http//www.facebook.com
@@ -11,8 +11,8 @@ mixin add-data-sources-display(data_sources)
                 a(href="#")
                     i.fas.fa-trash
                             
-- if(!data_sources){
--     data_sources = [];
+- if(!list_items){
+-     list_items = [];
 - }
                             
-+add-data-sources-display(data_sources)
++add-list-display(list_items)

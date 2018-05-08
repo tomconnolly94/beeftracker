@@ -3,6 +3,7 @@
 
 include ../../layouts/modal.jade
 //include ../add_data_sources/add_data_sources.jade
+include ../add_actor_modal/add_actor_variable_field_panel.jade
 
 
 mixin add-actor-modal-js()
@@ -79,18 +80,12 @@ mixin add-actor-modal(actor_variable_fields)
                                     div.form-group.col-md-6
                                         label(for="actor_name") Name
                                         input(type="text").form-control#actor_name
-                                    div.form-group.col-md-6
+                                    //div.form-group.col-md-6
                                         label(for="actor_name") Date of Birth
                                         input(type="date").form-control#actor_dob
                             div.col-md-12
-                                div.row
-                                    each 
-                                    div.form-group.col-md-6
-                                        label(for="beef_date") Gender
-                                        select.form-control
-                                            option Male
-                                            option Female
-                                            option Other
+                                div.row#variable_fields_panel
+                                    +add_actor_variable_field_panel([])
                             div.col-md-12
                                 div.row
                                     div.form-group.col-md-12
@@ -101,10 +96,37 @@ mixin add-actor-modal(actor_variable_fields)
                             div.col-md-12
                                 div.row
                                     div.form-group.col-md-6
-                                        +add-data-sources([], "add_actor_modal_data_sources")
+                                        +add-list([], "add_actor_modal_data_sources", "Data Sources")
 
                                     div.form-group.col-md-6
                                         div.row
+                                            div-col-12
+                                                Links
+                                            div-col-12
+                                                h4 Enter all that apply:
+                                                div.row
+                                                    div.form-group.col-md-6
+                                                        label(for="add_actor_website_link") Website
+                                                        input(type="text").form-control#add_actor_website_link
+                                                    div.form-group.col-md-6
+                                                        label(for="add_actor_wikipedia_link") Wikipedia
+                                                        input(type="text").form-control#add_actor_wikipedia_link
+                                                    div.form-group.col-md-6
+                                                        label(for="add_actor_twitter_link") Twitter
+                                                        input(type="text").form-control#add_actor_twitter_link
+                                                    div.form-group.col-md-6
+                                                        label(for="add_actor_instagram_link") Instagram
+                                                        input(type="text").form-control#add_actor_instagram_link
+                                                    div.form-group.col-md-6
+                                                        label(for="add_actor_youtube_link") YouTube
+                                                        input(type="text").form-control#add_actor_youtube_link
+                                                    div.form-group.col-md-6
+                                                        label(for="add_actor_spotify_link") Spotify
+                                                        input(type="text").form-control#add_actor_spotify_link
+                                                
+                                            
+                                                //+add-list([], "add_actor_links", "Links")
+                                        //div.row
                                             div.col-md-12
                                                 label Associated Actors
                                             div.col-md-12
