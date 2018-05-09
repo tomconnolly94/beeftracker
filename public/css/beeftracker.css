@@ -6131,7 +6131,8 @@ figure.masonry-item.soundcloud-item .play-button {
   border: 1px solid #DF3E3E;
   border-radius: 5px; }
   .add_list .list-group-item {
-    background-color: #fdfdfd; }
+    background-color: #fdfdfd;
+    overflow: hidden; }
     .add_list .list-group-item:first-child {
       border-top-right-radius: 5px;
       border-top-left-radius: 5px; }
@@ -6142,14 +6143,15 @@ figure.masonry-item.soundcloud-item .play-button {
       color: red; }
 
 .add-actor-modal .photo_box {
-  text-align: center; }
-  .add-actor-modal .photo_box input[type="file"] {
-    width: 0.1px;
-    height: 0.1px;
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: -1; }
+  text-align: center;
+  /*input[type="file"]  {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }*/ }
   .add-actor-modal .photo_box input[type="file"] + label {
     display: inline-block;
     margin-top: 20px; }

@@ -71,18 +71,33 @@ function getCookie(name) {
   if (parts.length == 2) return parts.pop().split(";").shift();
 }
 
-/*$(function(){
-    $(".add-beef-button").unbind().click(function(event){
-        event.preventDefault();
-        
-        $("#login_modal_warning_message").text("Please create an Account before you submit your BEEF.");
-        
-        console.log(getCookie("bftkr_logged_in"))
-        if(!getCookie("bftkr_logged_in")){        
-            $("#login_modal").modal("show");
+function urltoFile(url, filename, mimeType){
+    return (fetch(url)
+        .then(function(res){return res.arrayBuffer();})
+        .then(function(buf){return new File([buf], filename, {type:mimeType});})
+    );
+}
+
+function b64toBlob(b64Data, contentType, sliceSize) {
+    contentType = contentType || '';
+    sliceSize = sliceSize || 512;
+
+    var byteCharacters = atob(b64Data);
+    var byteArrays = [];
+
+    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        var byteNumbers = new Array(slice.length);
+        for (var i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
         }
-        else{
-            window.location.href = "/add-beef"
-        }
-    });
-})*/
+
+        var byteArray = new Uint8Array(byteNumbers);
+
+        byteArrays.push(byteArray);
+    }
+
+    var blob = new Blob(byteArrays, {type: contentType});
+    return blob;
+}

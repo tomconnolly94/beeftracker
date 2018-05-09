@@ -15,15 +15,17 @@ mixin versus-panel(aggressors, targets)
         - if(aggressors[i] ){ //if user has added aggressors, paint them 
             div.col-5.beefer
                 div
-                    h4#beefer_name(x-actor-id=aggressors[i].id) #{aggressors[i].name}
-                    a.selector.select_actor_beefer(href="#", data-toggle="modal", data-target="#selector_actor_modal", id="select_actor_beefer_" + i)
+                    a.remove_actor(href="#")
+                        i.fas.fa-times(style="float: left;")
+                    a.selector.select_actor_beefer(id="select_actor_beefer_" + i)
                         img.actor-avatar(src=aggressors[i].src)
                         //-i.fas.fa-plus
+                    h4#beefer_name(x-actor-id=aggressors[i].id) #{aggressors[i].name}
         -}
         - else if(i == aggressors.length){ //make sure to paint an extra button to allow adding more actors
             div.col-5.beefer
                 div
-                    h4#beefer_name &nbsp;
+                    //-h4#beefer_name &nbsp;
                     a.selector.select_actor_beefer(href="#", data-toggle="modal", data-target="#selector_actor_modal", id="select_actor_beefer_" + i)
                         //-img(src="", style="display:none;").actor-avatar
                         i.fas.fa-plus
@@ -40,15 +42,17 @@ mixin versus-panel(aggressors, targets)
         - if(targets[i] ){ //if user has added aggressors, paint them 
             div.col-5.beefee
                 div
-                    h4#beefee_name(x-actor-id=targets[i].id) #{targets[i].name}
-                    a.selector.select_actor_beefee(href="#", data-toggle="modal", data-target="#selector_actor_modal", id="select_actor_beefer_" + i)
+                    a.remove_actor(href="#")
+                        i.fas.fa-times(style="float: left;")
+                    a.selector.select_actor_beefee(id="select_actor_beefer_" + i)
                         img.actor-avatar(src=targets[i].src)
                         //-i.fas.fa-plus
+                    h4#beefee_name(x-actor-id=targets[i].id) #{targets[i].name}
         -}
         - else if(i == targets.length){ //make sure to paint an extra button to allow adding more actors
             div.col-5.beefee
                 div
-                    h4#beefee_name &nbsp;
+                    //-h4#beefee_name &nbsp;
                     a.selector.select_actor_beefee(href="#", data-toggle="modal", data-target="#selector_actor_modal", id="select_actor_beefer_" + i)
                         //-img(src="", style="display:none;").actor-avatar
                         i.fas.fa-plus

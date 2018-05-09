@@ -40,8 +40,8 @@ $(function(){
         
         var file_name = input.files[0].name;
         
-        $('#media_preview').attr('x-media-link', file_name);
-        $('#media_preview').attr('x-file-name', file_name);
+        $('#actor_photo_preview').attr('x-media-link', file_name);
+        $('#actor_photo_preview').attr('x-file-name', file_name);
         
     });
     

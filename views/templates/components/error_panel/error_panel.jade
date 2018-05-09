@@ -1,7 +1,7 @@
-mixin error-panel(errors)
+mixin error-panel(errors, error_panel_id)
     - if(errors != "none"){
         - if(errors.length > 0){
-            div.col-md-12
+            div.col-md-12(id=error_panel_id)
                 h4 Errors:
             each error in errors
                 - var error_loc = error.location.replace("_", " ").charAt(0).toUpperCase() + error.location.slice(1);

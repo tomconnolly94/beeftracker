@@ -283,7 +283,8 @@ module.exports = {
 
                     try{
                         db_interface.insert_record_into_db(actor_insert, db_ref.get_current_actor_table(), db_options, function(id){
-                            callback(id);
+                            actor_insert._id = id;
+                            callback(actor_insert);
                         });
                     }
                     catch(err){

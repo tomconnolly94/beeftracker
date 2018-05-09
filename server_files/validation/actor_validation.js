@@ -15,8 +15,9 @@ module.exports = {
         console.log("validation started.")
         
         //access form data and reassign it to the request body
-        request.body = JSON.parse(request.body.data); //get form data
-        
+        if (typeof request.body.data === 'string' || request.body.data instanceof String){
+            request.body = JSON.parse(request.body.data); //get form data
+        }
         //validate title
         request.checkBody("name", "Field is empty").notEmpty();
         request.checkBody("name", "Field is null.").not_null();
@@ -81,8 +82,7 @@ module.exports = {
         
         //validate image files
         for(var i = 0; i < request.files.length; i++){
-            var filename = typeof request.files[i] !== "undefined" ? request.files[i].originalname : '';
-            request.checkBody('file', 'Please upload an image Jpeg, Png or Gif.').test_image(filename);
+            request.checkBody('file', 'Please upload an image Jpeg, Png, blob or Gif').test_image(request.files[i].mimetype);
         }
         
         request.getValidationResult().then(function(validationResult){
@@ -90,7 +90,7 @@ module.exports = {
             if(validationResult.array().length > 0 ){
                 console.log("validation failed.");
                 console.log(validationResult.array());
-                response.status(400).send({ failed: true, stage: "validation", message: "Validation faled, please format input data properly."});
+                response.status(400).send({ failed: true, stage: "server_validation", message: "Validation faled, please format input data properly.", details: validationResult.array()});
             }
             else{
                 console.log("validation succeeded.");

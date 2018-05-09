@@ -61,9 +61,9 @@ append body
                         | Beef
                 span.col-2.icon.fas-plus
             div(style="padding-top: 20px;")
-                div.row#error_panel
+                div.row(id="submit_event_error_panel")
                     - var errors = []
-                    +error-panel(errors)
+                    +error-panel(errors, "submit_event_error_panel")
                 
                 form(action="", method="POST")
                     div.row

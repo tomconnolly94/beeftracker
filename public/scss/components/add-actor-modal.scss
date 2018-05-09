@@ -35,14 +35,14 @@
 
     .photo_box {
         text-align: center;
-        input[type="file"]  {
+        /*input[type="file"]  {
             width: 0.1px;
             height: 0.1px;
             opacity: 0;
             overflow: hidden;
             position: absolute;
             z-index: -1;
-        }
+        }*/
 
         input[type="file"] + label {
             // font-size: 1.25em;
