@@ -3,9 +3,13 @@ include ../components/trending_beef/trending_beef.jade
 include ../components/timeline/timeline.jade
 include ../components/related_actors/related_actors.jade
 include ../layouts/masonry_gallery.jade
+include ../layouts/vertical_beef_list.jade
 
 append body_scripts
     //-+masonry-gallery-script()
+    
+append scripts
+    script(src="/js/submit_controllers/submit_user_data_controller.js")
 
 append body
 
@@ -20,7 +24,7 @@ append body
     - var formatted_date =  day + '/' + monthIndex + '/' + year;
             
     div.bt-content
-        div.beef-content.beef-category-music
+        div.beef-content.beef-category-default
             div.beef-content-header
                 div.beef-title
                     h2
@@ -32,11 +36,19 @@ append body
                 //div.beef-content-contribute
                     a.btn.btn-primary(href="/add-beef") Contribute
             div.beef-content-container
-                    div.col-md-12.beef-summary
-                        div.beef-thumb
-                            img(src=file_server_url_prefix + "/user_profiles/" + user_data.img_title, alt=user_data.img_title_fullsize).float-left
-                            //div.beef-content-thumb-border
+                div.col-md-12.beef-summary.row
+                    div.user-thumb.col-md-4
+                        img(src=file_server_url_prefix + "/user_profiles/" + user_data.img_title, alt=user_data.img_title).float-left
+                        //div.beef-content-thumb-border
+                        label.btn.btn-primary(style="float:left;")
+                            | Change picture...
+                            input#change_user_image(type="file", hidden)
+                        div
+                            a.btn.btn-primary(href="#")#logout_button Log out
+                    div.col-md-8
                         ul.actor-attributes
+                            li.actor-attribute(style="display:none;")
+                                span#user_id #{user_data._id}
                             li.actor-attribute
                                 span @#{user_data.username}
                             li.actor-attribute
@@ -44,17 +56,14 @@ append body
                             li.actor-attribute
                                 span #{formatted_date}
                             li.actor-attribute
-                                span #{user_data.country}
+                                span #{user_data.country.name}
                             li.actor-attribute
                                 span Beef score: #{user_data.contribution_score}
                                 
-                    div.beef-content-contribute
-                        a.btn.btn-primary(href="#")#logout_button Log out
-                        //p.
-                            #{user_data.description}
-
-                        //+related-actors(user_data.related_actors.slice(0, 6), "c_fill,g_face,h_120,w_120", user_data._id)
-        //div.row
-            //+timeline-section()
-        //+section('EXPLORE', 'GALLERY', '')
-            +masonry-gallery-section(user_data.gallery_items, "actors")
+                div.row(style="margin-top:50px;")
+                    div.col-md-6
+                        h2 Beef you have contributed to:
+                        +vertical-beefs(events_added_by_user, "events", "c_fill,g_face,h_120,w_116")
+                    div.col-md-6
+                        h2 Recently viewed:
+                        +vertical-beefs(recently_viewed_events, "events", "c_fill,g_face,h_120,w_116")

@@ -1,0 +1,45 @@
+
+.user-thumb {
+    width: 100%;
+    position: relative;
+    .beef-content-thumb-border {
+        @include media-breakpoint-down(sm) {
+            display: none;
+        }
+
+        @media (max-width: 1199px) {
+            height: 240px;
+            width: 88%;
+        }
+
+
+        @media (max-width: 991px) {
+            height:170px;
+            width: 83%;
+        }
+
+        @media (max-width: 667px) {
+           display: none;
+        }
+
+
+
+        position: absolute;
+        width: 90%;
+        height: 300px;
+        border: 5px solid #DF3E3E;
+        display: block;
+        top: -10px !important;
+        left: 20px;
+        z-index: -1;
+    }
+
+    img {
+        width: 100%;
+
+        padding-right: 30px;
+        @media (max-width: 667px) {
+           padding-right: 10px;
+        }
+    }
+}

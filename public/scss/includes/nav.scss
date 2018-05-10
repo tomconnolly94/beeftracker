@@ -3,6 +3,17 @@
 }
 
 nav {
+    
+    .dropdown-menu > li{
+        padding: 10px;
+    }
+    
+    #user_dropdown{
+        position: relative;
+        top: 3px;
+        padding: 15px;
+    }
+    
     &.navbar {
         padding: 0 0.3rem;
     }

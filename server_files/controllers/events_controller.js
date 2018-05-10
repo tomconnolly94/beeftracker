@@ -153,6 +153,8 @@ module.exports = {
             else if(query_parameters.match_actor){ match_query_content = { $or: [ { aggressors: query_parameters.match_actor }, { targets: query_parameters.match_actor }] } }
             else if(query_parameters.match_category){ match_query_content = { categories: typeof query_parameters.match_category == "string" ? parseInt(query_parameters.match_category) : query_parameters.match_category } }
             else if(query_parameters.match_beef_chain_id){ match_query_content = { beef_chain_ids: query_parameters.match_beef_chain_id} }
+            else if(query_parameters.match_user_id){ match_query_content = { contributions: { $elemMatch: { user: BSON.ObjectID.createFromHexString(query_parameters.match_user_id) }}} }
+            else if(query_parameters.match_event_ids){ match_query_content = { _id: { $in: query_parameters.match_event_ids } }}
             
             //deal with $limit query
             if(query_parameters.limit){ limit_query_content = typeof query_parameters.limit == "string" ? parseInt(query_parameters.limit) : query_parameters.limit }
@@ -228,8 +230,6 @@ module.exports = {
                     { $project: event_projection }
                 ];
                 
-                //aggregate_array.splice(1, 0, { $limit: limit_query_content });
-                
                 if(Object.keys(sort_query_content).length > 0){
                     aggregate_array.push({ $sort: sort_query_content });
                 }
@@ -240,6 +240,7 @@ module.exports = {
                     if(err){ console.log(err); }
                     else{
                         if(docs){
+                            //console.log(docs)
                             callback( docs );
                         }
                         else{
@@ -332,6 +333,7 @@ module.exports = {
                             docs[0].beef_chain_ids[0].events.sort(compare_event_dates); //sort beef chain events using event dates using above compare function
                             
                             callback( docs[0] );
+                            
                             if(process.env.NODE_ENV == "heroku_production"){//only increment hit counts if codebase is in production
                                 increment_hit_counts(docs[0]._id);
                             }

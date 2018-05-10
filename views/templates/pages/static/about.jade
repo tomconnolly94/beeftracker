@@ -24,5 +24,9 @@ append body
                             img(src="images/hiw-2.png")
                         div.hiw-list-item
                             img(src="images/hiw-3.png")
+                            
+        +section('SITE', 'DETAILS', 'fas fa-server')
+            p.
+                Beeftracker Version: #{server_version}
         //+trending-beefs-section(trending_data, comment_data)
         +add-beef-cta()

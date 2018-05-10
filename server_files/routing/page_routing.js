@@ -119,6 +119,7 @@ router.get("/about", token_authentication.recognise_user_token, resolve_user_fro
     
     var view_parameters = Object.assign({}, view_parameters_global);
     view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
+    view_parameters.server_version = process.env.BFTR_VERSION;
     
     response.render("pages/static/about.jade", view_parameters);
 }); // about_us page
@@ -319,6 +320,10 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
         
         response.render("pages/beef.jade", view_parameters);
+        
+        user_controller.addViewedBeefEventToUser(view_parameters.user_data._id.toHexString(), event_id, function(data){
+            
+        });
     }).catch(function(error){
         console.log(error);
         response.render("pages/static/error.jade");
@@ -347,8 +352,38 @@ router.get("/profile", token_authentication.recognise_user_token, resolve_user_f
 
         var view_parameters = Object.assign({}, view_parameters_global);
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
-
-        response.render("pages/user_profile.jade", view_parameters);
+        
+        var events_added_by_user_promise = new Promise(function(resolve, reject){
+            event_controller.findEvents({ match_user_id: view_parameters.user_data._id.toHexString(), limit: 3 }, function(data){
+                resolve(data);
+            });
+        });
+        
+        var recently_viewed_events_promise = new Promise(function(resolve, reject){
+            
+            //sort viewed_beef_ids
+            view_parameters.user_data.viewed_beef_ids.sort(function(a, b){ return new Date(b.date) - new Date(a.date); }); //sort the viewed_beef_ids by date
+            view_parameters.user_data.viewed_beef_ids = view_parameters.user_data.viewed_beef_ids.slice(0, 3); //retrieve only the most recent three events
+            
+            event_controller.findEvents({ match_event_ids: view_parameters.user_data.viewed_beef_ids.map(function(item, index){ return item.id})}, function(data){
+                var recently_viewed_events_ordered = [];
+                                
+                for(var i = 0; i < data.length; i++){
+                    
+                    var index = view_parameters.user_data.viewed_beef_ids.map(function(item, index){ return String(item.id); }).indexOf(String(data[i]._id));//find index of resolved event
+                    if(index != -1) recently_viewed_events_ordered[index] = data[i]; //if the index has been found, add it to the return array
+                    if(recently_viewed_events_ordered[0] && recently_viewed_events_ordered[1] && recently_viewed_events_ordered[2]) break; //break early if the first three slots in the array are filled
+                }
+                resolve(recently_viewed_events_ordered);
+            });
+        });
+        
+        Promise.all([ events_added_by_user_promise, recently_viewed_events_promise ]).then(function(values){
+            view_parameters.events_added_by_user = values[0];
+            view_parameters.recently_viewed_events = values[1];
+            
+            response.render("pages/user_profile.jade", view_parameters);
+        });
     }
     else{
         response.redirect("/login?redirected_from=/profile");

@@ -14,6 +14,7 @@ html(lang="en")
         meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
         meta(name="apple-mobile-web-app-capable" content="yes")
         meta(name="mobile-web-app-capable" content="yes")
+        link(href='/favicon.ico', rel='shortcut icon', type="image/x-icon")
         //link tags
         //-link(href='/stylesheets/beeftracker.vendors.css', rel="preload", as="style", onload="this.rel='stylesheet'")
         //-link(href='/stylesheets/beeftracker.css', rel="preload", as="style", onload="this.rel='stylesheet'")
@@ -24,16 +25,18 @@ html(lang="en")
         link(href='/stylesheets/beeftracker.vendors.css', rel='stylesheet')
         link(href='/stylesheets/beeftracker.css', rel='stylesheet')
         head(profile="http://www.w3.org/2005/10/profile")
-        link(href='/favicon.ico', rel='shortcut icon', type="image/x-icon")
+        link(href='/modules/toastr/build/toastr.css', rel='stylesheet')
         //script tags
         script(type="text/javascript", src="/modules/jquery/dist/jquery.min.js")
         script(type="text/javascript", src="/modules/jquery-lazy/jquery.lazy.min.js")
         script(type="text/javascript", src="/modules/toastr/build/toastr.min.js")
-        link(href='/modules/toastr/build/toastr.css', rel='stylesheet')
         script(type="text/javascript", src="/bower_components/bootstrap/dist/js/bootstrap.bundle.js", async)
         script(type="text/javascript", src="/bower_components/hammerjs/hammer.js", async)
         script(type="text/javascript", src="/js/service_worker/service_worker_init.js", async)
         script(type="text/javascript", src="/js/globals.js", async)
+        
+        //-script(type="text/javascript", src="/modules/bootstrap/js/dropdown.js", async)
+        //-link(href='/modules/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
         //script(src="/js/vendor.min.js")
         
         script(async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js")
@@ -76,12 +79,13 @@ html(lang="en")
                         toastr.clear(toastr, { force: true });
                     });
                     localStorage["bftr_cookie_notice_shown"] = true;
+                    
+                    $('.dropdown-toggle').dropdown();
                 }
             });
                 
         block scripts
     body
-        div(class="iziToast-wrapper iziToast-wrapper-bottomCenter")
         div#file_server_url_prefix_store(value=file_server_url_prefix)
         header.container.d-none.d-md-block
             div.row
@@ -125,9 +129,23 @@ html(lang="en")
                                     span.text &nbsp; Login
                         - }
                         - else{
-                            li.nav-item.login
+                            //-li.nav-item.login
                                 a.nav-link(href="/profile", style="min-height:30px;padding-top: 6px !important;")
                                     span #{user_data.first_name} 
+                            li.nav-item.login.dropdown
+                                a.dropdown-toggle#user_dropdown(data-toggle="dropdown", href="#")
+                                    | #{user_data.first_name}
+                                    span.caret
+                                ul.dropdown-menu
+                                    li
+                                        a(href="/profile")
+                                            | My Profile
+                                    //li
+                                        a(href="#")
+                                            |Page 1-2
+                                    li
+                                        a#logout_button(href="#")
+                                            | Logout
                         - }
                         li.nav-item.search
                             a.nav-link(href="#")#open_search

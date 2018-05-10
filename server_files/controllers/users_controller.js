@@ -52,6 +52,9 @@ module.exports = {
                     "date_created": 1,
                     "img_title": 1,
                     "admin": 1,
+                    "viewed_beef_ids": 1,
+                    "submitted_beef_ids": 1,
+                    "submitted_actor_ids": 1,
                     "country": 1,
                     "contribution_score": 1,
                     "voted_on_beef_ids": 1
@@ -459,5 +462,76 @@ module.exports = {
                 });
             }
         });
-    }
+    },
+    
+    addViewedBeefEventToUser(user_id, event_id, callback){
+        
+        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
+            if(err){ console.log(err); }
+            else{
+                
+                var user_id_object = BSON.ObjectID.createFromHexString(user_id);
+                var event_id_object = BSON.ObjectID.createFromHexString(event_id);
+                
+                db.collection(db_ref.get_user_details_table()).update({ _id: user_id_object }, { $push: { viewed_beef_ids: { id: event_id_object, date: new Date() }}}, function(err, document){
+                    if(err){ console.log(err);}
+                    else{
+                        callback(document);
+                    }
+                });
+            }
+        });
+    },
+        
+    updateUserImage: function(user_id, new_gallery_item, new_file, callback){
+
+        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
+            if(err){ console.log(err); }
+            else{
+                var user_id_object = BSON.ObjectID.createFromHexString(user_id);
+                
+                
+                console.log("#############");
+                console.log(new_gallery_item);
+                console.log(new_file);
+                
+                db.collection(db_ref.get_user_details_table()).find({ _id: user_id_object }).toArray(function(queryErr, docs) {
+                    if(queryErr){ console.log(queryErr); }
+                    else{
+                        
+                        console.log(docs);
+                        
+                        var existing_user = docs[0];
+                        var existing_user_img = docs[0].img_title;
+                        
+                        storage_interface.upload_image(false, storage_ref.get_user_images_folder(), new_gallery_item.link, new_file.buffer, false, function(img_title){
+                            db.collection(db_ref.get_user_details_table()).update({ _id: user_id_object }, { $set: { img_title: img_title } }, function(queryErr, docs) {
+                                if(queryErr){ console.log(queryErr); }
+                                else{
+
+                                    console.log(docs);
+                                    console.log("UPDATED");
+                                    callback({});
+                                }
+                            });
+                        });
+                        
+                        if(existing_user_img != "default"){
+                            //delete old image
+                            storage_interface.delete_image(storage_ref.get_user_images_folder(), existing_user_img, function(){
+                                console.log("old user image deleted");
+                            })
+                        }
+                        /*if(docs[0]){
+                            callback( docs[0] );
+                        }
+                        else{
+                            callback({ failed: true, message: "Actor not found." });
+                        }*/
+                    }
+                });            
+            }
+        });
+    },
+    
 }

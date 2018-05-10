@@ -420,6 +420,23 @@ router.route('/users/:user_id').put(memoryUpload, token_authentication.authentic
         }
     });
 });//built, not written, not tested, needs specific user or admin auth
+router.route('/users/:user_id/image').put(token_authentication.authenticate_endpoint_with_user_token, memoryUpload,/* actor_data_validator.validate,*/ function(request, response){
+    
+    console.log(request.locals)
+    console.log(request.params)
+    
+    var data = JSON.parse(request.body.data);//request.locals.validated_data;
+    var file = request.files[0];
+    
+    users_controller.updateUserImage(request.locals.authenticated_user.id, data, file, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 200, data);
+        }
+    });
+});//built, written, tested, needs admin auth
 router.route('/users/:user_id').delete(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     users_controller.deleteUser(request, response, function(data){
         if(data.failed){
