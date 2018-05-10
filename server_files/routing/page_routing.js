@@ -321,9 +321,9 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
         
         response.render("pages/beef.jade", view_parameters);
         
-        user_controller.addViewedBeefEventToUser(view_parameters.user_data._id.toHexString(), event_id, function(data){
-            
-        });
+        if(view_parameters.user_data){
+            user_controller.addViewedBeefEventToUser(view_parameters.user_data._id.toHexString(), event_id, function(data){});
+        }
     }).catch(function(error){
         console.log(error);
         response.render("pages/static/error.jade");
