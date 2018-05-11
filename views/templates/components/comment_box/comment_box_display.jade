@@ -1,0 +1,36 @@
+mixin comment-box-display(comments)
+
+    each comment in comments
+                
+        - //insert image resizing into the image URL
+        - var split_server_url_prefix = file_server_url_prefix.split("/");
+        - split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, "c_fill,g_face,h_65,w_65");
+        - var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
+        
+        - if(comment.date_added instanceof Date){}
+        - else{
+        -   comment.date_added = new Date(comment.date_added);
+        - }
+        
+        - var day = comment.date_added.getDate();
+        - var monthIndex = comment.date_added.getMonth();
+        - var year = comment.date_added.getFullYear();
+        - var formatted_date =  day + '/' + monthIndex + '/' + year;
+        
+         div.comment-box-item
+            div.col-md-1.d-none.d-md-block.d-lg-block.d-xl-block
+                //img(src="http://www.girardatlarge.com/wp-content/uploads/2013/05/gravatar-60-grey.jpg").img-fluid
+                img(src=server_url_prefix_with_image_formatting + "/user_profiles/" + comment.user.img_title).img-fluid
+            div.col-md-11
+                div.row
+                    div.col-md-12
+                        strong.author #{comment.user.first_name} #{comment.user.last_name}
+                        small.date #{formatted_date} #{formatted_time}
+                    div.col-md-12
+                        p #{comment.text}
+                            
+- if(!comments){
+-     comments = [];
+- }
+                            
++comment-box-display(comments)

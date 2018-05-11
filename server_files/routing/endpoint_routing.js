@@ -185,7 +185,10 @@ router.route('/comments').post(comment_data_validator.validate, function(request
     });
 });//built, written, tested, needs specific user auth
 router.route('/comments/events/:event_id').get(function(request, response){
-    comments_controller.findCommentsFromEvent(request, response, function(data){
+    
+    var event_id = request.params.event_id;
+    
+    comments_controller.findCommentsFromEvent(event_id, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
@@ -196,6 +199,19 @@ router.route('/comments/events/:event_id').get(function(request, response){
 });//built, written, tested
 router.route('/comments/actors/:actor_id').get(function(request, response){
     comments_controller.findCommentsFromActor(request, response, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 200, data);
+        }
+    });
+});//built, written, tested
+router.route('/comments/beef_chains/:beef_chain_id').get(function(request, response){
+    
+    var beef_chain_id = request.params.beef_chain_id;
+        
+    comments_controller.findCommentsFromBeefChain(beef_chain_id, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }

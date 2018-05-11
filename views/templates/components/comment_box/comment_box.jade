@@ -1,28 +1,14 @@
-mixin comment-box-item(data)
+include ./comment_box_display.jade
+
+mixin comment-box(comments, content_classification)
+
     - //insert image resizing into the image URL
     - var split_server_url_prefix = file_server_url_prefix.split("/");
-    - split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, "c_fill,g_face,h_150,w_150");
+    - split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, "c_fill,g_face,h_65,w_65");
     - var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
 
-    - var day = data.date_added.getDate();
-    - var monthIndex = data.date_added.getMonth();
-    - var year = data.date_added.getFullYear();
-    - var formatted_date =  day + '/' + monthIndex + '/' + year;
-    - var formatted_time = data.date_added.getHours() + " " + data.date_added.getMinutes()
+    - console.log(content_classification)
 
-     div.comment-box-item
-        div.col-md-1.d-none.d-md-block.d-lg-block.d-xl-block
-            //img(src="http://www.girardatlarge.com/wp-content/uploads/2013/05/gravatar-60-grey.jpg").img-fluid
-            img(src=server_url_prefix_with_image_formatting + "/user_profiles/" + data.user.img_title).img-fluid
-        div.col-md-11
-            div.row
-                div.col-md-12
-                    strong.author #{data.user.first_name} #{data.user.last_name}
-                    small.date #{formatted_date} #{formatted_time}
-                div.col-md-12
-                    p #{data.text}
-                      
-mixin comment-box(comments)
     div.row.comment-box
         div.col-md-12
             div.row
@@ -34,24 +20,30 @@ mixin comment-box(comments)
             div.row.new-comment
                 div.col-md-1.d-none.d-md-block.d-lg-block.d-xl-block
                     - if(user_data)
-                        img(src=file_server_url_prefix + "/user_profiles/" + user_data.img_title).img-fluid
+                        img#user_img(src=server_url_prefix_with_image_formatting + "/user_profiles/" + user_data.img_title, x-user-id=user_data._id, x-content-type=content_classification).img-fluid
                     - else
-                        img(src=file_server_url_prefix + "/user_profiles/default").img-fluid
+                        img(src=server_url_prefix_with_image_formatting + "/user_profiles/default").img-fluid
                 div.col-md-11
                     div.row
                         div.col-md-12
                             form
-                                div.col-md-12
-                                    - if(user_data)
-                                        textarea.form-control
-                                    - else
-                                        textarea.form-control(disabled)
-                                div.col-md-12
-                                    button.btn.btn-primary.float-right(type="submit") Submit
-            each comment in comments
-                +comment-box-item(comment)
+                                - if(user_data)
+                                    div.col-md-12
+                                        textarea.form-control#comment_text_area
+                                    div.col-md-12
+                                        button.btn.btn-primary.float-right#submit_comment(type="submit") Submit
+                                - else
+                                    div.col-md-12
+                                        textarea.form-control#comment_text_area(disabled)
+                                    div.col-md-12
+                                        button.btn.btn-primary.float-right#submit_comment(type="submit", disabled) Submit
+            div#comment_box_display
+                +comment-box-display(comments)
+                
+    append scripts
+        script(src="/component_controllers/comment_box/comment_box_controller.js")
 
-mixin comment-box-section(data)
+mixin comment-box-section(data, content_classification)
     //+section('BEEF', 'COMMENTS', 'fa-comments')
     +section('D', 'ISCUSSION', 'fa-comments')
-        +comment-box(data)
+        +comment-box(data, content_classification)

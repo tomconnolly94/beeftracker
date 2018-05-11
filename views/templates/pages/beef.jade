@@ -143,7 +143,6 @@ append body
                                                                 
                                     - if(event_data.beef_chain_ids[i].actors.map(function(e){ return String(e) }).indexOf(String(aggressor._id)) != -1 && event_data.beef_chain_ids[i].actors.map(function(e){ return String(e) }).indexOf(String(target._id)) != -1){
                                         - beef_chain_id = event_data.beef_chain_ids[i]._id;
-                                        - console.log(beef_chain_id)
                                         - break;
                                     - }
                                 - }
@@ -170,6 +169,6 @@ append body
             +section('G', 'ALLERY', 'fa fa-file-image')
                 +masonry-gallery-section(event_data.gallery_items, "events")
             +adsense-banner-ad()
-            +comment-box-section(comment_data)
+            +comment-box-section(comment_data, "event")
 
 

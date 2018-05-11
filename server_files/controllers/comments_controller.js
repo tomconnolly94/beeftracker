@@ -10,15 +10,19 @@ var Comment = require("../schemas/comment_schema");
 module.exports = {
     
     createComment: function(comment_data, callback){
-        
+
         var comment_record = new Comment({
             text: comment_data.text,
             user: BSON.ObjectID.createFromHexString(comment_data.user),
             event_id: comment_data.event_id ? BSON.ObjectID.createFromHexString(comment_data.event_id) : null,
             actor_id: comment_data.actor_id ? BSON.ObjectID.createFromHexString(comment_data.actor_id) : null,
+            beef_chain_id: comment_data.beef_chain_id ? BSON.ObjectID.createFromHexString(comment_data.beef_chain_id) : null,
             date_added: new Date(),
             likes: 0
         });
+        
+        console.log("New comment record");
+        console.log(comment_record);
         
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
@@ -120,7 +124,8 @@ module.exports = {
                                 }
                             }
                         }
-                    }}
+                    }},
+                    { $sort: { date_added: -1 } }
                 ]).toArray(function(err, docs) {
                     //handle error
                     if(err) { console.log(err);}

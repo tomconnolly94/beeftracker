@@ -47,9 +47,6 @@ var confirm_auth = function(request, response, token, next){
         id: token._id,
         is_admin: token.admin
     }
-    
-    console.log("token found");
-    console.log(request.locals);
     next();
 }
 
@@ -94,7 +91,7 @@ var authentication_procedure = function(request, response, deny_access_on_fail, 
         });
     }
     else{
-        console.log("No cookie provided.")
+        console.log("Token Authentication: No cookie provided")
         reset_auth(response, deny_access_on_fail, next);
     }
 }

@@ -18,11 +18,16 @@ module.exports = {
         request.checkBody("event_id", "Field is empty").notEmpty();
         request.checkBody("event_id", "Field is null.").not_null();
         request.checkBody("event_id", "No event_id provided.").test_mongodb_object_id();
-                
+
         //validate event date
         request.checkBody("actor_id", "Field is empty").notEmpty();
         request.checkBody("actor_id", "Field is null.").not_null();
         request.checkBody("actor_id", "actor_id is formatted incorrectly.").test_mongodb_object_id();
+
+        //validate event date
+        request.checkBody("beef_chain_id", "Field is empty").notEmpty();
+        request.checkBody("beef_chain_id", "Field is null.").not_null();
+        request.checkBody("beef_chain_id", "beef_chain_id is formatted incorrectly.").test_mongodb_object_id();
         
         //validate event date
         request.checkBody("text", "Field is empty").notEmpty();
@@ -63,6 +68,7 @@ module.exports = {
                     request.locals.validated_data = {
                         event_id: request.body.event_id,
                         actor_id: request.body.actor_id,
+                        beef_chain_id: request.body.beef_chain_id,
                         text: request.body.text,
                         user: request.body.user
                     };

@@ -38,6 +38,7 @@ router.route('/search_results/search_results').get(build_template_function);//bu
 router.route('/error_panel/error_panel').get(build_template_function);//built, written, tested
 router.route('/versus_panel/versus_panel').get(build_template_function);//built, written, tested
 router.route('/add_actor_modal/add_actor_variable_field_panel').get(build_template_function);//built, written, tested
+router.route('/comment_box/comment_box_display').get(build_template_function);//built, written, tested
 
 //handle errors
 router.route('/*').get(function(request, response) {response.status(404).send({ success: false, message: "Template not found." }); });
