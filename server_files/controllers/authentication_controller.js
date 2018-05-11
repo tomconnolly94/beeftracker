@@ -44,7 +44,7 @@ module.exports = {
                 db.collection(db_ref.get_user_details_table()).aggregate([{ $match: { username: auth_details.username } }]).toArray(function(err, auth_arr){
                     if(err){ console.log(err); }
                     else if(auth_arr.length < 1){                            
-                        callback({ failed: true, auth_failed: true, message: "User not found."});
+                        callback({ failed: true, stage: "authentication", message: "Validation faled, please format input data properly.", details: [{ location: "Your Username/Password", problem: "Please check your log in details, we don't seem to recognise them."}] });
                     }
                     else{
 
@@ -67,7 +67,7 @@ module.exports = {
                             }
                         }
                         if(!response_sent){ //if the password hash is not found send a failed auth response
-                            callback({ failed: true, auth_failed: true, message: "Incorrect Password."});
+                            callback({ failed: true, stage: "authentication", message: "Validation faled, please format input data properly.", details: [{ location: "Your Username/Password", problem: "Please check your log in details, we don't seem to recognise them."}] });
                         }
                     }
                 });

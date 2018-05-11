@@ -242,18 +242,27 @@ $(function(){
                     
                     $("#selector_actor_modal").modal("show"); //show select_actor_modal
                 },
-                error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
                     
-                    if(XMLHttpRequest.responseJSON.stage == "server_validation"){
-                        
-                        var errors = XMLHttpRequest.responseJSON.details.map(function(item){
-                            return {
-                                location: item.param,
-                                problem: item.msg
+                    if(XMLHttpRequest.status != 200){
+
+                        if(XMLHttpRequest && XMLHttpRequest.responseJSON){
+
+                            if(XMLHttpRequest.responseJSON.stage == "server_validation"){
+
+                                var errors = XMLHttpRequest.responseJSON.details.map(function(item){
+                                    return {
+                                        location: item.param,
+                                        problem: item.msg
+                                    }
+                                });
+
+                                render_actor_modal_error_messages(errors);
                             }
-                        });
-                        
-                        render_actor_modal_error_messages(errors);
+                        }
+                        else{
+                            console.log("URGENT SERVER ERROR.", XMLHttpRequest.statusText);
+                        }
                     }
                 }
             });

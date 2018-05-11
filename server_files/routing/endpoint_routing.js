@@ -47,16 +47,8 @@ var send_successful_response = function(response, code, data){
         response.status(code).send();
     }
 }
-var send_unsuccessful_response = function(response, code, error_message){
-    
-    var response_json = {
-        failed: true
-    }
-    
-    if(error_message){
-        response_json.message = error_message;
-    }
-    response.status(code).send(response_json);
+var send_unsuccessful_response = function(response, code, error){
+    response.status(code).send(error);
 }
 
 /*
@@ -515,7 +507,7 @@ router.route('/authenticate').post(authentication_request_validator.validate, fu
     
     authentication_controller.authenticateUser(auth_details, headers, response, function(data, cookie_details){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            send_unsuccessful_response(response, 400, data);
         }
         else{
             //set auth token for verification and logged_in token so client javascript knows how to behave

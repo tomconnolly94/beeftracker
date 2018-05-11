@@ -1,5 +1,18 @@
 $(function(){
     
+        
+    //take any validation error messgages and display them to the error panel
+    function render_login_modal_error_messages(error_messages){
+
+        var template_dir = "error_panel";
+        var template_name = "error_panel";
+        var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
+
+        load_template_render_function(template_dir + "/" + template_name, function(status){
+            fade_new_content_to_div("#login_error_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, errors: error_messages }));
+        });
+    }
+    
     //$("#login_form").unbind().submit(function(event){
     $(".login_button").unbind().click(function(event){
         event.preventDefault();
@@ -34,6 +47,32 @@ $(function(){
                 }
                 else{
                     window.location.href = "/profile";
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+                if(XMLHttpRequest.status != 200){
+                
+                    if(XMLHttpRequest && XMLHttpRequest.responseJSON){
+                    
+                        if(XMLHttpRequest.responseJSON.stage == "server_validation"){
+
+                            var errors = XMLHttpRequest.responseJSON.details.map(function(item){
+                                return {
+                                    location: item.param,
+                                    problem: item.msg
+                                }
+                            });
+
+                            render_login_modal_error_messages(errors);
+                        }
+                        else if(XMLHttpRequest.responseJSON.stage == "authentication"){
+                            render_login_modal_error_messages(XMLHttpRequest.responseJSON.details);
+                        }
+                    }
+                    else{
+                        console.log("URGENT SERVER ERROR.", XMLHttpRequest.statusText);
+                    }
                 }
             }
         });
