@@ -29,6 +29,16 @@ append body
 
 append body
     div.bt-content
+        script(async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js")
+        <!-- banner_ad -->
+        ins(class="adsbygoogle",
+             style="display:block",
+             data-ad-client="ca-pub-2566324736007588",
+             data-ad-slot="2354175800",
+             data-ad-format="auto")
+        script.
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        
         +category-browser-section(grid_data)
 
 append body
