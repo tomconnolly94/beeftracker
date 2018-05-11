@@ -148,28 +148,36 @@ router.get("/actor/:actor_id", token_authentication.recognise_user_token, resolv
     //extract data
     var actor_id = request.params.actor_id;
     
-    //access data from db
-    var actor_data_promise = new Promise(function(resolve, reject){
-       actor_controller.findActor(actor_id, function(data){
-           if(data.failed){
-                response.render("pages/static/error.jade");
-            }
-            else{
-                resolve(data);
-            }
-        });
-    });
+    var regex = /[0-9A-Fa-f]{6}/g;
 
-    Promise.all([ actor_data_promise ]).then(function(values) {
-        
-        var view_parameters = Object.assign({}, view_parameters_global);
-        view_parameters.actor_data = values[0];
-        view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
-        
-        response.render("pages/actor.jade", view_parameters);
-    }).catch(function(error){
-        console.log(error);
-    });
+    if(regex.test(event_id) && regex.test(beef_chain_id)) {//valida query params
+    
+        //access data from db
+        var actor_data_promise = new Promise(function(resolve, reject){
+           actor_controller.findActor(actor_id, function(data){
+               if(data.failed){
+                    response.render("pages/static/error.jade");
+                }
+                else{
+                    resolve(data);
+                }
+            });
+        });
+
+        Promise.all([ actor_data_promise ]).then(function(values) {
+
+            var view_parameters = Object.assign({}, view_parameters_global);
+            view_parameters.actor_data = values[0];
+            view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
+
+            response.render("pages/actor.jade", view_parameters);
+        }).catch(function(error){
+            console.log(error);
+        });
+    }
+    else {
+        response.render("pages/static/error.jade");
+    }
 }); //actor page
 router.get("/add-beef", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
 
@@ -266,68 +274,77 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
     //extract data
     var event_id = request.params.event_id;    
     var beef_chain_id = request.params.beef_chain_id;
-    var disable_voting = false;
-    var cookies = cookie_parser.parse_cookies(request);
     
-    if(request.locals && request.locals.authenticated_user){ //if user is logged on, decide whether to disable voting panel based on user record voted_on_beef_ids field
-        
-        if(request.locals.authenticated_user.voted_on_beef_ids.indexOf(event_id) != -1){
-            disable_voting = true;
-        }
-    }
-    else{ //if user is not logged in, use the browser cookies to decide whether to hide voting panel
-        if(cookies.voted_on_beef_ids && cookies.voted_on_beef_ids.split(",").indexOf(event_id) != -1){
-            disable_voting = true;
-        }
-    }
-    
-    var main_event_data_promise = new Promise(function(resolve, reject){
-        event_controller.findEvent(event_id, function(data){
-            if(data.failed){
-                response.render("pages/static/error.jade");
-            }
-            else{
-                let data_object = { event_data: data };
+    var regex = /[0-9A-Fa-f]{6}/g;
 
-                event_controller.findEvents({ match_actor: data_object.event_data.aggressors[0]._id, limit: 6, decreasing_order: "date_added" }, function(data){
-                    data_object.related_events = data;
-                    resolve(data_object);
-                });
-            }
-        });
-    });
+    if(regex.test(event_id) && regex.test(beef_chain_id)) {//valida query params
     
-    var comment_data_promise = new Promise(function(resolve, reject){
-       comment_controller.findCommentsFromBeefChain(beef_chain_id, function(data){
-            if(data.failed){
-                response.render("pages/static/error.jade");
-            }
-            else{
-                resolve(data);
-            }
-        });
-    });
+        var disable_voting = false;
+        var cookies = cookie_parser.parse_cookies(request);
 
-    Promise.all([ main_event_data_promise, comment_data_promise ]).then(function(values) {
-        
-        var view_parameters = Object.assign({}, view_parameters_global);
-        view_parameters.current_beef_chain_id = beef_chain_id;
-        view_parameters.event_data = values[0].event_data;
-        //view_parameters.event_data.rating = calculate_event_rating(view_parameters.event_data.votes);
-        view_parameters.comment_data = values[1];
-        view_parameters.related_events = values[0].related_events;
-        view_parameters.disable_voting = disable_voting;
-        view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
-        
-        response.render("pages/beef.jade", view_parameters);
-        
-        if(view_parameters.user_data){
-            user_controller.addViewedBeefEventToUser(view_parameters.user_data._id.toHexString(), event_id, function(data){});
+        if(request.locals && request.locals.authenticated_user){ //if user is logged on, decide whether to disable voting panel based on user record voted_on_beef_ids field
+
+            if(request.locals.authenticated_user.voted_on_beef_ids.indexOf(event_id) != -1){
+                disable_voting = true;
+            }
         }
-    }).catch(function(error){
-        console.log(error);
+        else{ //if user is not logged in, use the browser cookies to decide whether to hide voting panel
+            if(cookies.voted_on_beef_ids && cookies.voted_on_beef_ids.split(",").indexOf(event_id) != -1){
+                disable_voting = true;
+            }
+        }
+
+        var main_event_data_promise = new Promise(function(resolve, reject){
+            event_controller.findEvent(event_id, function(data){
+                if(data.failed){
+                    response.render("pages/static/error.jade");
+                }
+                else{
+                    let data_object = { event_data: data };
+
+                    event_controller.findEvents({ match_actor: data_object.event_data.aggressors[0]._id, limit: 6, decreasing_order: "date_added" }, function(data){
+                        data_object.related_events = data;
+                        resolve(data_object);
+                    });
+                }
+            });
+        });
+
+        var comment_data_promise = new Promise(function(resolve, reject){
+           comment_controller.findCommentsFromBeefChain(beef_chain_id, function(data){
+                if(data.failed){
+                    response.render("pages/static/error.jade");
+                }
+                else{
+                    resolve(data);
+                }
+            });
+        });
+
+        Promise.all([ main_event_data_promise, comment_data_promise ]).then(function(values) {
+
+            var view_parameters = Object.assign({}, view_parameters_global);
+            view_parameters.current_beef_chain_id = beef_chain_id;
+            view_parameters.event_data = values[0].event_data;
+            //view_parameters.event_data.rating = calculate_event_rating(view_parameters.event_data.votes);
+            view_parameters.comment_data = values[1];
+            view_parameters.related_events = values[0].related_events;
+            view_parameters.disable_voting = disable_voting;
+            view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
+
+            response.render("pages/beef.jade", view_parameters);
+
+            if(view_parameters.user_data){
+                user_controller.addViewedBeefEventToUser(view_parameters.user_data._id.toHexString(), event_id, function(data){});
+            }
+        }).catch(function(error){
+            console.log(error);
+            response.render("pages/static/error.jade");
+        });
+    }
+    else {
         response.render("pages/static/error.jade");
-    });
+    }
 }); //beef page
 router.get("/contact", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
     
