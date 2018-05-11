@@ -112,6 +112,9 @@ append body
                         #{event_data.description}
 
                     +related-beefs(related_events, "events", "c_fill,g_face,h_120,w_120", event_data._id)
+                    
+        +adsense-banner-ad()
+        
         div.row.versus-panel
             div.col-5.beefer
                 div
@@ -165,6 +168,7 @@ append body
         div.row
             +section('G', 'ALLERY', 'fa fa-file-image')
                 +masonry-gallery-section(event_data.gallery_items, "events")
+            +adsense-banner-ad()
             +comment-box-section(comment_data)
 
 

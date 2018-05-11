@@ -6562,6 +6562,9 @@ a {
   a:hover {
     text-decoration: none;
     color: #9B3131; }
+  a.disabled_anchor {
+    pointer-events: none;
+    cursor: default; }
 
 h1, h2, h3, h4, h5 {
   color: #000; }

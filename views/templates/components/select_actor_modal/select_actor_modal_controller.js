@@ -84,4 +84,14 @@ $(function(){
         $('#select_actor').val("default").trigger("change"); //reset actor input select box
         $("#selector_actor_modal").modal("hide"); //hide modal
     });
+    
+    $("#select_actor").unbind().change(function(){
+        console.log(this);
+        $("#select_actor_modal_submit").removeAttr("disabled")
+    });
+    
+    $("#select_actor_modal_cancel").unbind().click(function(){
+        $('#select_actor').val("default").trigger("change"); //reset actor input select box
+        $("#selector_actor_modal").modal("hide"); //hide modal
+    });
 });

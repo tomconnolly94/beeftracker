@@ -23,6 +23,11 @@ $(function(){
                 fade_new_content_to_div("#variable_fields_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, variable_fields: data, active_classification: id }))
             });
         });
+        
+        //un-disable step2 modal page
+        $("#step_2_anchor").removeClass("disabled_anchor");
+        $("#step_3_anchor").removeClass("disabled_anchor");
+        //window.location.hash = "step-2";
     });
     
     //function to handle a image being added to the file input tag
