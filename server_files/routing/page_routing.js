@@ -150,7 +150,7 @@ router.get("/actor/:actor_id", token_authentication.recognise_user_token, resolv
     
     var regex = /[0-9A-Fa-f]{6}/g;
 
-    if(regex.test(event_id) && regex.test(beef_chain_id)) {//valida query params
+    if(regex.test(actor_id)) {//valida query params
     
         //access data from db
         var actor_data_promise = new Promise(function(resolve, reject){

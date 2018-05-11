@@ -32,7 +32,8 @@ var actor_intermediate_projection = {
         date_added: 1,
         name_lower: 1,
         also_known_as_lower: 1,
-        related_actors: { $setUnion: [ "$related_actors_aggressors", "$related_actors_targets" ] }
+        related_actors: { $setUnion: [ "$related_actors_aggressors", "$related_actors_targets" ] },
+        related_events: 1
     }
 }
 var actor_projection = {
@@ -54,7 +55,8 @@ var actor_projection = {
         date_added: 1,
         name_lower: 1,
         also_known_as_lower: 1,
-        related_actors: 1
+        related_actors: 1,
+        related_events: 1
     }
 }
 
@@ -192,14 +194,23 @@ module.exports = {
                 
                 db.collection(db_ref.get_current_actor_table()).aggregate([
                     { $match: { _id: actor_id_object } },
-                    /*{ $lookup : { 
+                    { $lookup : { 
                         from: db_ref.get_current_event_table(),
                         localField: "_id",
                         foreignField: "aggressors",
                         as: "related_events" }},
-                    { $unwind: "$related_events" },
-                    { $unwind: "$related_events.aggressors" },
-                    { $unwind: "$related_events.targets" },
+                    { $unwind: {
+                        "path": "$related_events",
+                        "preserveNullAndEmptyArrays": true
+                    } },
+                    { $unwind: {
+                        "path": "$related_events.aggressors",
+                        "preserveNullAndEmptyArrays": true
+                    } },
+                    { $unwind: {
+                        "path": "$related_events.targets" ,
+                        "preserveNullAndEmptyArrays": true
+                    } },
                     { $group: {
                         _id: "$_id", 
                         name: { $first: "$name"},
@@ -219,7 +230,8 @@ module.exports = {
                         name_lower: { $first: "$name_lower"},
                         also_known_as_lower: { $first: "$also_known_as_lower"},
                         related_actors_aggressors: { $addToSet: "$related_events.aggressors" },
-                        related_actors_targets: { $addToSet: "$related_events.targets" }
+                        related_actors_targets: { $addToSet: "$related_events.targets" },
+                        related_events: { $first: "$img_title_thumbnail"}
                     }},
                     actor_intermediate_projection,
                     { $lookup: {
@@ -227,7 +239,7 @@ module.exports = {
                         localField: "related_actors",
                         foreignField: "_id",
                         as: "related_actors"
-                    }},*/
+                    }},
                     actor_projection
                 ]).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
