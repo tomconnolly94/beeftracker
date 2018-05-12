@@ -92,7 +92,7 @@ $(function(){
         var tags = $("#beef_tags").select2().val();
         //var description = $("#beef_content_summernote").val();
         var description = $("#beef_description").val();
-        var li_items_data_sources = $("#add_beef_event_data_sources").find("li");
+        var li_items_data_sources = $("#add_event_data_sources").find("li");
         var data_sources = [];
         var aggressors = [];
         var targets = [];
