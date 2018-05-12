@@ -85,7 +85,7 @@ module.exports = {
             if(validationResult.array().length > 0 ){
                 console.log("validation failed.");
                 console.log(validationResult.array());
-                response.status(400).send({ failed: true, stage: "validation", message: "Validation faled, please format input data properly."});
+                response.status(400).send({ failed: true, stage: "server_validation", message: "Validation failed, please format input data properly.", details: validationResult.array()});
             }
             else{
                 console.log("validation succeeded.");

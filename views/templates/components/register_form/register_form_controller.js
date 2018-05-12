@@ -48,6 +48,9 @@ $(function(event){
                     },
                     success: function(auth_result) {
                         window.location.href = "/user/" + register_result.user_id;
+                    },
+                    error: function(err){
+                        console.log("Authentication error, please try again.", err);
                     }
                 });
             },
@@ -57,7 +60,7 @@ $(function(event){
                 
                     if(XMLHttpRequest && XMLHttpRequest.responseJSON){
                     
-                        if(XMLHttpRequest.responseJSON.stage == "controller_function"){
+                        if(XMLHttpRequest.responseJSON.stage == "server_validation"){
 
                             var errors = XMLHttpRequest.responseJSON.details.map(function(item){
                                 return {
@@ -66,10 +69,10 @@ $(function(event){
                                 }
                             });
 
-                            render_login_modal_error_messages(errors);
+                            render_register_modal_error_messages(errors);
                         }
-                        else if(XMLHttpRequest.responseJSON.stage == "authentication"){
-                            render_login_modal_error_messages(XMLHttpRequest.responseJSON.details);
+                        else if(XMLHttpRequest.responseJSON.stage == "controller_function"){
+                            render_register_modal_error_messages(XMLHttpRequest.responseJSON.details);
                         }
                     }
                     else{
