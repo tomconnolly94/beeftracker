@@ -11,6 +11,13 @@ mixin versus-panel(aggressors, targets)
         - longest_actor_array = targets
     - }
 
+    div.col-5(style="text-align:right;")
+        h4 Aggressor/s
+    div.col-2
+    div.col-5(style="text-align:left;")
+        h4 Target/s
+
+
     - for(var i = 0; i < longest_actor_array.length+1; i++){
         - if(aggressors[i] ){ //if user has added aggressors, paint them 
             div.col-5.beefer
