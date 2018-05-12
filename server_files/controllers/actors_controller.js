@@ -103,7 +103,7 @@ module.exports = {
         var match_query = {};
         var sort_query_content = {};
         var query_present = Object.keys(query_parameters).length === 0 && query_parameters.constructor === Object ? false : true; //check if request comes with query
-        var limit_query_content = 30;//30; //max amount of records to return
+        var limit_query_content = 0; //max amount of records to return
                 
         if(query_present){
             
@@ -162,7 +162,9 @@ module.exports = {
                     }}
                 ];
 
-                aggregate_array.splice(1, 0, { $limit: limit_query_content });
+                if(limit_query_content != 0){
+                    aggregate_array.splice(1, 0, { $limit: limit_query_content });
+                }
                 
                 if(Object.keys(sort_query_content).length > 0){
                     aggregate_array.push({ $sort: sort_query_content });

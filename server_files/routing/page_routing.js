@@ -183,6 +183,8 @@ router.get("/add-beef", token_authentication.recognise_user_token, resolve_user_
 
     var actor_data_promise = new Promise(function(resolve, reject){
         actor_controller.findActors({ increasing_order: "name" }, function(data){
+            console.log(data);
+            console.log(data.length);
             resolve(data);
         });
     });
