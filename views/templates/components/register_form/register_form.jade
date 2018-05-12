@@ -1,5 +1,8 @@
 mixin register-form()
     div.bt-content(style="padding-top:30px;")
+        div.row(id="register_error_panel")
+            - var errors = []
+            +error-panel(errors, "register_error_panel")
         div.row
             div.col-md-12.text-right
                 p

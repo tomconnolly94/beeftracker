@@ -24,7 +24,7 @@ mixin vertical-list-beef-item(item, image_resize_params)
                     img(src=server_url_prefix_with_image_formatting + "/events/" + item.cover_image)
             div.col-6.vertical-list-item-details
                 h5
-                    a(href="/#{item.type}/#{item._id}") #{item.title.length > 40 ? item.title.slice(0,40)+ "..." : item.title}
+                    a(href="/" + item.type + "/" + item._id) #{item.title.length > 40 ? item.title.slice(0,40)+ "..." : item.title}
                 ul.beef-info
                     li #{formatted_date}
                     li

@@ -187,6 +187,7 @@ module.exports = {
                                 if(auth_arr.length > 0){
                                     if(auth_arr[0].username == user_details.username){
                                         callback({failed: true, message: "Username is taken. (admin)"});
+                                        //{ failed: true, stage: "controller_function", message: "Username is taken. (admin)", details: [{ location: "Username", problem: "This username is taken."}] }
                                     }
                                     else{
                                         callback({failed: true, message: "Email is taken. (admin)"});

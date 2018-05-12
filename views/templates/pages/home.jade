@@ -6,7 +6,17 @@ include ../components/category_browser/category_browser.jade
 include ../components/google_adsense/adsense_banner_ad.jade
 //include ../layouts/horizontal_slider.jade
 
-append body        
+append body
+    
+    div.bt-content
+        +section('WHATIS', 'THIS', 'fas fa-question')
+            div.row
+                div.col-sm-12
+                    h5
+                        | Home of beef! Explore our broad collection of conflict/beef/argument stories below! Get informed about who you agree with and 
+                        a(href="/register") join the community 
+                        | to start contributing today!
+                        
     div.bt-content
         +featured-beef-section(featured_data, "events", "c_fill,g_face,h_215,w_350")
         +adsense-banner-ad()
@@ -21,9 +31,9 @@ append body
             div.row
                 div.col-sm-8
                     h4
-                        | Beeftracker is creating a community of Beef lovers to share and discuss every beef out there. If you have information that we don't have yet, create an account and join our contributors in our information sharing goals.
+                        | Beeftracker is creating a community of Beef lovers to share and discuss every beef out there. If you have information that we don't have yet, create an account and join our contributors in building the biggest beef based database this world has ever seen...
                     p
-                        | Beef can be found everywhere and anywhere. We follow Beef in Music, Politics, Sport and even Silicon Valley to ensure any argument you're interested in is covered in our quickly expanding database.
+                        | Beef can be found everywhere and anywhere. We follow Beef in Music, Politics, Sport and even Silicon Valley to ensure any argument you're interested in will be covered, and if we havent got round to it yet, join, and help us out!
                 div.col-sm-4
                     a.btn.btn-lg.btn-primary.btn-float.add-beef-button(href="/add-beef") Add Beef
                     a.btn.btn-lg.btn-primary.btn-float(href="/register") Create an Account
