@@ -70,10 +70,7 @@ $(function(){
         var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
 
         load_template_render_function(template_dir + "/" + template_name, function(status){
-            
-            var html = window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, errors: error_messages });
-            
-            fade_new_content_to_div("#error_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, errors: error_messages }));
+            fade_new_content_to_div("#submit_event_error_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, errors: error_messages }));
         });
     }
     
