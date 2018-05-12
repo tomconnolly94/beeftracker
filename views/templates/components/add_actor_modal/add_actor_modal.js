@@ -2,6 +2,7 @@ $(function() {
     $('#smartwizard').smartWizard({
         theme: 'circles',
         cycleSteps: true,
+        keyNavigation: false,
         toolbarSettings: {
             showNextButton: false,
             showPreviousButton: false,

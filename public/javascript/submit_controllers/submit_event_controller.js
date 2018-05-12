@@ -149,8 +149,10 @@ $(function(){
             }
 
             gallery_items.push(gallery_item_formatted);
-            form_data.append("file-" + i, gallery_item_formatted.file, gallery_item_formatted.link);
-
+            
+            if(media_type == "image"){
+                form_data.append("file-" + i, gallery_item_formatted.file, gallery_item_formatted.link);
+            }
         }
         
         var event_submission = {
