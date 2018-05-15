@@ -146,7 +146,7 @@ $(function(){
                     set_as_main_graphic_used = false;
                 }
                 if(gallery_items[i].cover_image){
-                    set_as_main_graphic_used = false;
+                    set_as_cover_image_used = false;
                 }
                 gallery_items.splice(i, 1);
                 i--;
