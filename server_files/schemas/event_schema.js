@@ -36,7 +36,8 @@ var event_schema = new Schema({
     data_sources: [ String ],
     contributions: [ ContributionSchema ],
     featured: Boolean,
-    tags: [ String ]
+    tags: [ String ],
+    user: Schema.ObjectId
 });
 
 module.exports = mongoose.model('Event', event_schema);

@@ -56,8 +56,10 @@ append body
                                 span #{user_data.email_address}
                             li.actor-attribute
                                 span #{formatted_date}
-                            li.actor-attribute
-                                span #{user_data.country.name}
+                            - if(user_data.country){
+                                li.actor-attribute
+                                    span #{user_data.country.name}
+                            - }
                             li.actor-attribute
                                 span Beef score: #{user_data.contribution_score}
                                 

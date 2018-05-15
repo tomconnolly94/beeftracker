@@ -205,6 +205,7 @@ module.exports = {
                                                 
                         //add extra fields if not an admin user
                         insert_object.viewed_beef_ids = [];
+                        insert_object.voted_on_beef_ids = [];
                         insert_object.submitted_beef_ids = [];
                         insert_object.submitted_actor_ids = [];
                         insert_object.country = user_details.country;
