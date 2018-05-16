@@ -161,7 +161,6 @@ module.exports = {
                         
         }
         
-        //if(false){
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
             else{                

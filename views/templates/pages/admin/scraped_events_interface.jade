@@ -1,0 +1,22 @@
+extends ../../layouts/layout.jade
+
+append body
+    div.bt-content
+    
+        h2 Scraped Events:
+    
+        //- var scraped_records = [ { title: "title1", description: "description1" }, { title: "title2", description: "description2" } ]
+    
+        - for(var i = 0; i < scraped_records.length; i++){
+            div.panel-group#accordion
+                div.panel.panel-default
+                    div.classpanel-heading
+                    h4.panel-title
+                        a(data-toggle="collapse", data-parent="#accordion", href="#collapse_" + i) - #{scraped_records[i].title}
+                    div.panel-collapse.collapse.in(id="collapse_" + i)
+                        div.panel-body 
+                            
+                            
+                            
+                            #{scraped_records[i].description}
+        - }

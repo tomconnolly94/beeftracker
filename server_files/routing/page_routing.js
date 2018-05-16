@@ -14,6 +14,7 @@ var actor_controller = require("../controllers/actors_controller.js");
 var event_controller = require("../controllers/events_controller.js");
 var comment_controller = require("../controllers/comments_controller.js");
 var category_controller = require("../controllers/event_categories_controller.js");
+var scraped_data_controller = require("../controllers/scraped_data_controller.js");
 var user_controller = require("../controllers/users_controller.js");
 
 if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if deployed on a heroku server
@@ -470,15 +471,33 @@ router.get("/offline", token_authentication.recognise_user_token, resolve_user_f
     response.render("pages/static/offline.jade", view_parameters); 
 });
 
+router.get("/scraping_dump/", /*token_authentication.authenticate_admin_user_token, */function(request, response) {
+   
+    var scraped_event_data_promise = new Promise(function(resolve, reject){
+        scraped_data_controller.findScrapedEventData({ }, function(data){
+            resolve(data);
+        });
+    });
+    
+    Promise.all([ scraped_event_data_promise ]).then(function(values){
+        
+        var view_parameters = Object.assign({}, view_parameters_global);
+        view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
+        view_parameters.scraped_records = values[0];
+
+        response.render("pages/admin/scraped_events_interface.jade", view_parameters);
+    });
+}); // about_us page
+
 /*
 router.get("/subscribe/", function(request, response) { response.render("pages/form_pages/subscribe_to_news.ejs"); }); // submit actordata page
 router.get("/submission_confirmation/", function(request, response) { response.render("pages/static_pages/submit_conf.ejs"); }); // about_us page
 router.get("/terms_of_use/", function(request, response) { response.render("pages/static_pages/terms_of_use.ejs"); }); // about_us page
-router.get("/scraping_dump/", token_authentication.authenticate_admin_user_token, function(request, response) { response.render("pages/admin_pages/scraping_control/scraping_dump_viewer.ejs"); }); // about_us page
 router.get("/recently_added/", token_authentication.authenticate_admin_user_token, function(request, response) { response.render("pages/admin_pages/site_config/recently_confirmed.ejs"); }); // about_us page
 router.get("/raw_actor_scraping_html/", token_authentication.authenticate_admin_user_token, function(request, response) { response.render("partials/scraping_dump/raw_actor_scraping.ejs"); }); // raw actor scraping page route
 router.get("/broken_fields_stats/", token_authentication.authenticate_admin_user_token, function(request, response) { response.render("pages/admin_pages/scraping_control/broken_fields_stats.ejs"); }); // raw actor scraping page route
 router.get("/admin_login/", function(request, response) { response.render("pages/authentication/admin_login.ejs"); }); // raw actor scraping page route*/
+
 router.get("/reset-my-password/:id_token", function(request, response) { 
     
     var id_token = request.params.id_token;
