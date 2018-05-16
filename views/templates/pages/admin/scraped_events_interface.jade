@@ -3,24 +3,34 @@ extends ../../layouts/layout.jade
 append body
     div.bt-content
     
-        h2 Scraped Events:
+        h2#heading Scraped Events:
     
         //- var scraped_records = [ { title: "title1", description: "description1" }, { title: "title2", description: "description2" } ]
     
         div.panel-group#accordion
             - for(var i = 0; i < scraped_records.length; i++){
-                div.panel.panel-default
-                    div.panel-heading
-                        h4.panel-title
-                            a(data-toggle="collapse", data-parent="#accordion", href="#collapse_" + i) - #{scraped_records[i].title}
-                    div.panel-collapse.collapse.in(id="collapse_" + i)
-                        div.panel-body
+                div.panel.panel-default.row
+                    form.form-horizontal.col-md-12
+                        div.panel-heading.row                        
+                            div.col-md-1
+                                h4 #{i + 1}
+                            textarea.panel-title.col-md-8
+                                | #{scraped_records[i].title}
+                            div.col-md-2
+                                input.delete_button.form-control(type="button", value="Delete")
+                                input.classification_indicator(type="text", class="form-control")
                             
-                            div.row
-                                h5 Original Description
-                                div.col-md-6
-                                    textarea(style="width:100%;height:200px;resize:none;color:black;padding:5px;font-size:15px;") #{scraped_records[i].description}
-                                h5 Paraphrased Description
-                                div.col-md-6
-                                    textarea(style="width:100%;height:200px;resize:none;color:black;padding:5px;font-size:15px;") #{scraped_records[i].description}
+                            div.col-md-1.row(style="padding:0px;")
+                                input.col-md-6.multi_check_box(type="checkbox")
+                                a.col-sm-6#index_container(data-toggle="collapse", data-parent="#accordion", href="#collapse_"+i)
+                                    span.fa.fa-sort-down
+                        div.panel-collapse.collapse.in(id="collapse_" + i)
+                            div.panel-body
+                                div.row
+                                    div.col-md-6
+                                        h5 Original Description
+                                        textarea.text_box #{scraped_records[i].description}
+                                    div.col-md-6
+                                        h5 Paraphrased Description
+                                        textarea.text_box #{scraped_records[i].description}
             - }

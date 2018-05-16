@@ -6294,6 +6294,23 @@ figure.masonry-item.soundcloud-item .play-button {
 .panel-body {
   padding: 50px 20px; }
 
+.delete_button {
+  padding: 5px;
+  text-align: center;
+  font-size: 11px; }
+
+.classification_indicator {
+  margin: 3px 0px;
+  padding: 5px;
+  text-align: center;
+  font-size: 11px; }
+
+.multi_check_box {
+  padding: 8px 0px; }
+
+#heading {
+  margin: 40px; }
+
 @media (min-width: 576px) and (max-width: 767.98px) {
   .featured-beefs-section .primary-featured-beef .beef-thumbnail.x-large {
     height: 270px; } }
