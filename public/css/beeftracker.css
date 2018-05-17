@@ -6322,6 +6322,9 @@ figure.masonry-item.soundcloud-item .play-button {
 .actor-sub-row {
   height: 30px; }
 
+#scraping_dump_panel_body > .row, #scraping_dump_panel_body > .section-toolbar, #scraping_dump_panel_body > .vertical-list, .vertical-list #scraping_dump_panel_body > .vertical-list-item, #scraping_dump_panel_body > .mini-vertical-list, .mini-vertical-list #scraping_dump_panel_body > .vertical-list-item, .category-browser-section #scraping_dump_panel_body > .category-browser-header, .add-actor-modal .actor-type-selector #scraping_dump_panel_body > .actor-type-row, .comment-box #scraping_dump_panel_body > .comment-box-item, #scraping_dump_panel_body > .beef-content-header, #scraping_dump_panel_body > .beef-content-container {
+  margin: 20px 0px; }
+
 @media (min-width: 576px) and (max-width: 767.98px) {
   .featured-beefs-section .primary-featured-beef .beef-thumbnail.x-large {
     height: 270px; } }

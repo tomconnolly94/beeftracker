@@ -492,7 +492,7 @@ router.get("/scraping_dump/", /*token_authentication.authenticate_admin_user_tok
         view_parameters.scraped_records = values[0];
         view_parameters.categories = values[1];
         
-        console.log(view_parameters.categories)
+        console.log(view_parameters.scraped_records[0].highlights)
 
         response.render("pages/admin/scraped_events_interface/scraping_dump.jade", view_parameters);
     });
