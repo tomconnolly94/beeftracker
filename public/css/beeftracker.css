@@ -6319,6 +6319,9 @@ figure.masonry-item.soundcloud-item .play-button {
   padding: 5px;
   font-size: 15px; }
 
+.actor-sub-row {
+  height: 30px; }
+
 @media (min-width: 576px) and (max-width: 767.98px) {
   .featured-beefs-section .primary-featured-beef .beef-thumbnail.x-large {
     height: 270px; } }
