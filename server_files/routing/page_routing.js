@@ -486,8 +486,7 @@ router.get("/offline", token_authentication.recognise_user_token, resolve_user_f
 //admin only pages
 router.get("/scraping_dump", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
     
-    if(request.locals && request.locals.authenticated_user){
-        
+    if(request.locals && request.locals.authenticated_user){    
         
         var view_parameters = Object.assign({}, view_parameters_global);
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;

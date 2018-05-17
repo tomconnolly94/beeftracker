@@ -17,7 +17,6 @@ module.exports = {
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
             else{
-                
                 db.collection(db_ref.get_scraped_events_dump_table()).aggregate([
                     { $lookup: {
                         from: db_ref.get_event_classification_table(),
