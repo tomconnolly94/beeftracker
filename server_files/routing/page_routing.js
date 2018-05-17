@@ -490,7 +490,6 @@ router.get("/scraping_dump", token_authentication.recognise_user_token, resolve_
         
         var view_parameters = Object.assign({}, view_parameters_global);
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
-
         if(request.locals.authenticated_user.admin){
             
             var scraped_event_data_promise = new Promise(function(resolve, reject){
