@@ -30,5 +30,27 @@ module.exports = {
                 });   
             }
         });
+    },
+    
+    deleteScrapedEventData: function(id_array, callback){
+        
+        var id_object_array = [];
+        for(var i = 0; i < id_array.length; i++){
+            console.log(id_array[i]);
+            id_object_array.push(BSON.ObjectID.createFromHexString(id_array[i]))
+        }
+        
+        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
+            if(err){ console.log(err); }
+            else{
+                
+                db.collection(db_ref.get_scraped_events_dump_table()).remove({ _id: { $in: id_object_array }}, function(err, docs) {
+                    if(err){ console.log(err); }
+                    else{
+                        callback({});
+                    }
+                });   
+            }
+        });
     }
 }

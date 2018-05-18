@@ -153,8 +153,9 @@ $(function(){
             }
         }
     });
+    
     /*
-    //function to remove item from gallery manager
+    //function to re-open modal with data loaded if user clicks on a gallery item
     $("#gallery_manager").on("click", ".gallery-manager-item", function(event){
         event.preventDefault();
         
