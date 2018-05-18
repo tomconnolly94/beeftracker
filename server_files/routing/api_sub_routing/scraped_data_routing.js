@@ -23,7 +23,6 @@ router.route('/events').get(token_authentication.authenticate_endpoint_with_admi
         }
     });
 });//built, written, tested
-
 router.route('/events').delete(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     
     console.log(request.body);
@@ -37,7 +36,6 @@ router.route('/events').delete(token_authentication.authenticate_endpoint_with_a
         }
     });
 });//built, written, tested
-
 router.route('/actor/:name').get(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     
     var actor_name = request.params.name;
