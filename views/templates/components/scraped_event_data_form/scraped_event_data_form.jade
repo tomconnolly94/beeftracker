@@ -19,7 +19,6 @@ mixin scraped-data-event-form(scraped_record)
                     div.row(id=scraped_record._id + "_scraped_data_error_panel")
                         - var errors = []
                         +error-panel(errors, scraped_record._id + "_scraped_data_error_panel")
-                        
                     div.row
                         div.row.col-md-8
                             div.col-md-6
