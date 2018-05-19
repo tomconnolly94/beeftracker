@@ -1,5 +1,4 @@
 $(function(){
-      
     //brief basic validation to avoid using the server for trivial mistakes
     function validate_event_submission(event_submission){
         
@@ -141,7 +140,6 @@ $(function(){
             //contentType: "application/json",
             type: 'GET',
             success: function(data){
-                
                 if(data.length > 0 ){
                     //actor already in the database, execute post function
                     post_scrape_function(data[0]);
@@ -182,7 +180,6 @@ $(function(){
                 console.log(errorThrown);
             }
         });
-        
     });
     
     //confirm event and add it to event_data table
