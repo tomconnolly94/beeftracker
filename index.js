@@ -87,7 +87,7 @@ app.get("/service_worker", function(request, response){
 app.use('/', require('./server_files/routing/page_routing'));
  
 // ### Endpoint routes configuration ###
-app.use('/api', require('./server_files/routing/endpoint_routing'));
+app.use('/api', require('./server_files/routing/api_routing_index'));
 
 // ### Component rendering function routes configuration ###
 app.use('/template_functions', require('./server_files/routing/template_function_routing')); //routes send javascript functions which render HTML on the client side
