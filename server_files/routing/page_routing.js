@@ -485,16 +485,21 @@ router.get("/scraping_dump/", /*token_authentication.authenticate_admin_user_tok
         });
     });
     
-    Promise.all([ scraped_event_data_promise, categories_promise ]).then(function(values){
+    var actor_variable_fields_promise = new Promise(function(resolve, reject){
+       actor_controller.getVariableActorFieldsConfig(function(data){
+           resolve(data);
+        });
+    });
+    
+    Promise.all([ scraped_event_data_promise, categories_promise, actor_variable_fields_promise ]).then(function(values){
         
         var view_parameters = Object.assign({}, view_parameters_global);
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
         view_parameters.scraped_records = values[0];
         view_parameters.categories = values[1];
-        
-        console.log(view_parameters.scraped_records[0].highlights)
+        view_parameters.actor_variable_fields = values[2];
 
-        response.render("pages/admin/scraped_events_interface/scraping_dump.jade", view_parameters);
+        response.render("pages/admin/scraping_dump.jade", view_parameters);
     });
 }); // about_us page
 

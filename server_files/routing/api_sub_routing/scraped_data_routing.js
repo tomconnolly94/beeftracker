@@ -38,4 +38,18 @@ router.route('/events').delete(function(request, response){
     });
 });//built, written, tested
 
+router.route('/actor/:name').get(function(request, response){
+    
+    var actor_name = request.params.name;
+    
+    scraped_data_controller.scrapeActor(actor_name, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 200, data);
+        }
+    });
+});//built, written, tested
+
 module.exports = router;
