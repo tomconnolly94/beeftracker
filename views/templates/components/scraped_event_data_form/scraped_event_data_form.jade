@@ -1,0 +1,100 @@
+mixin scraped-data-event-form(scraped_record)
+    div.panel.panel-default.row
+        form.form-horizontal.col-md-12
+            div.panel-heading.row                        
+                div.col-md-1
+                    h4 #{i + 1}
+                textarea.panel-title.col-md-8
+                    | #{scraped_record.title}
+                div.col-md-2
+                    input.delete-button.form-control(type="button", value="Delete", x-event-id=scraped_record._id)
+                    input.classification_indicator(type="text", class="form-control")
+
+                div.col-md-1.row(style="padding:0px;")
+                    input.col-md-6.multi-check-box(type="checkbox", x-event-id=scraped_record._id)
+                    a.col-md-6#index_container(data-toggle="collapse", data-parent="#accordion", href="#collapse_"+i)
+                        span.fa.fa-sort-down
+            div.panel-collapse.collapse.in(id="collapse_" + i)
+                div.panel-body#scraping_dump_panel_body
+                    div.row
+                        div.row.col-md-8
+                            div.col-md-6
+
+                                h4 Aggressor
+
+                                - for(var aggressor_index = 0; aggressor_index < scraped_record.relevant_actors.length; aggressor_index++){
+                                    div.row.actor-sub-row
+                                        div.row.col-md-8
+                                            input.col-md-2(type="radio", value=scraped_record.relevant_actors[aggressor_index].db_id, name="aggressor_radio_" + i, disabled=scraped_record.relevant_actors[aggressor_index].db_id.length == 0)
+                                            input.col-md-8.aggressor-name(type="text", value=scraped_record.relevant_actors[aggressor_index].name)
+                                        div.col-md-4.text-center
+                                            i.fa.fa-check(style="display:none;")
+                                            input.scrape-actor-button(type="button", value="Scrape", style="padding:1px;width:100%;text-align:center;")
+                                            //-, ng-click="scrape_actor(actor.name, event._id)">
+                                - }
+
+                            div.col-md-6
+
+                                h4 Targets
+
+                                - for(var target_index = 0; target_index < scraped_record.relevant_actors.length; target_index++){
+                                    div.row.actor-sub-row
+                                        div.row.col-md-8
+                                            input.col-md-2(type="checkbox", value=scraped_record.relevant_actors[target_index].db_id, name="target_radio_" + i, disabled=scraped_record.relevant_actors[target_index].db_id.length == 0)
+                                            input.col-md-8.aggressor-name(type="text", value=scraped_record.relevant_actors[target_index].name) 
+                                        div.col-md-4.text-center
+                                            i.fa.fa-check(style="display:none;")
+                                            input.scrape-actor-button(type="button", value="Scrape", style="padding:1px;width:100%;text-align:center;")
+                                            //-, ng-click="scrape_actor(actor.name, event._id)">
+                                - }
+
+                        div.row.col-md-3
+                            div#img_wrapper
+                                img(src=scraped_record.img_title, style="height:100px;width:100%;")
+                                input(type="text", value=scraped_record.img_title, style="margin:0px;")
+
+                            div#video_wrapper
+                                iframe(scrolling="no", src=scraped_record.media_link.link, class="embed-responsive-item", allowfullscreen="true")
+                                input(type="text", value=scraped_record.media_link.link, style="margin:0px;")
+
+                    div.row
+                        div.col-md-6
+                            h5 Original Description
+                            textarea.text_box #{scraped_record.description}
+                        div.col-md-6
+                            h5 Paraphrased Description
+                            textarea.text_box #{scraped_record.description}
+
+                    div.row
+                        div.col-md-6.row
+                            div.col-md-6
+                                input(type="text", value=scraped_record.event_date)
+                        div.col-md-6
+
+                            h4 Categories
+                            - for(var category_index = 0; category_index < categories.length; category_index++){
+                                div
+                                    input.col-xs-2(type="checkbox", value=categories[category_index].cat_id)
+                                    label #{categories[category_index].name}
+                            - }
+
+                    div.row
+                        div.col-md-6.row
+                            h4 Data Source
+                            a(target="_blank", href=scraped_record.data_source) #{scraped_record.data_source}
+
+                        div.col-md-6.row
+
+                            h4 Highlights
+                            - for(var highlight_index = 0; highlight_index < scraped_record.highlights.length; highlight_index++){
+                                div
+                                    input.col-xs-2(type="checkbox")
+                                    input.col-xs-10(value=scraped_record.highlights[highlight_index] style="margin:0px;")
+                            - }
+
+                    div.row
+                        divcol-md-2.offset
+                            input(type="submit" value="Submit")
+    
+    append scripts
+        script(src="/component_controllers/scraped_event_data_form/scraped_event_data_form_controller.js")
