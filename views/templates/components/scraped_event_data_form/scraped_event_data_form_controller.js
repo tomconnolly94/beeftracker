@@ -1,8 +1,4 @@
-<<<<<<< dbce40eec60672d7189cf102975c320e52f3e596
 $(function(){
-=======
-$(function(){      
->>>>>>> scraping interface dev
     //brief basic validation to avoid using the server for trivial mistakes
     function validate_event_submission(event_submission){
         
