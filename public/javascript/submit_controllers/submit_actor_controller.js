@@ -187,7 +187,10 @@ $(function(){
         var link = null;
 
         if(media_link && media_link.length > 0 && media_link != "/images/no_preview_available.jpg"){
-            file = b64toBlob(media_link.split("base64,")[1]);
+            
+            if(media_link.indexOf("data:image") != -1){
+                file = b64toBlob(media_link.split("base64,")[1]);
+            }
         }
 
         var gallery_item_formatted = {

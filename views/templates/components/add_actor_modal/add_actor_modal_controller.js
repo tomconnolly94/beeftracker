@@ -1,3 +1,29 @@
+
+var load_data_into_add_actor_modal = function(scraped_actor_data, field_data_dump){
+
+    $("#actor_name").val(scraped_actor_data.stage_name);
+    $("#actor_photo_preview").attr("src", scraped_actor_data.img_title);
+    $("#actor_photo_preview").attr("x-media-link", scraped_actor_data.img_title);
+    $("#actor_photo_preview").attr("x-file-name", scraped_actor_data.img_title);
+    
+    $("#actor_bio").val(scraped_actor_data.bio);
+    
+    $("#add_list_input_add_actor_modal_data_sources").val(scraped_actor_data.data_source);
+    $("#add_actor_modal_data_sources_add_button").trigger("click");
+    
+    var title = $('<div class="row col-md-12"><h3> Data Dump </h3></div>');
+    $("#actor_data_dump").append(title);
+    
+    var field_data_dump_keys = Object.keys(field_data_dump);
+    
+    for(var i = 0; i < field_data_dump_keys.length; i++){
+        //create row of 
+        var row = $('<div class="row col-md-12"><div class="col-md-4"> <h4>' + field_data_dump_keys[i] + '</h4></div><div class="col-md-8"><textarea style="width:100%;">' + field_data_dump[field_data_dump_keys[i]] + '</textarea></div></div>');
+        
+        $("#actor_data_dump").append(row);
+    }
+}
+    
 $(function(){
     
     $(".actor-type-item").unbind().click(function(event){
@@ -59,4 +85,5 @@ $(function(){
     $(".disable").unbind().click(function(event){
         event.preventDefault();
     });
+        
 });

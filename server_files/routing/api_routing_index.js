@@ -20,7 +20,7 @@ var send_unsuccessful_response = responses_object.send_unsuccessful_response;
 router.use("/activity-logs", require("./api_sub_routing/activity_logs_routing.js"));
 router.use("/auth", require("./authentication_routing")); //routes send javascript functions which render HTML on the client side
 router.use("/actors", require("./api_sub_routing/activity_logs_routing.js"));
-router.use("/actor-variable-fields-config", require("./api_sub_routing/activity_logs_routing.js"));
+router.use("/actor-variable-fields-config", require("./api_sub_routing/actor_variable_fields_config_routing.js"));
 router.use("/comments", require("./api_sub_routing/comments_routing.js"));
 router.use("/contact-requests", require("./api_sub_routing/contact_requests_routing.js"));
 router.use("/event-categories", require("./api_sub_routing/event_categories_routing.js"));

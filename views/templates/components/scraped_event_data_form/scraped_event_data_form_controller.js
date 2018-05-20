@@ -57,7 +57,7 @@ $(function(){
                     console.log(JSON.parse(data.actor_object));
                     
                     //TODO: add function in add_actor_modal controller to allow loading the actor modal with data, invoke that function with the scraped actor_object.
-                    
+                    load_data_into_add_actor_modal(JSON.parse(data.actor_object), data.field_data_dump)
                     
                     $('#add_actor_modal').modal('show');
                     //location.reload();
