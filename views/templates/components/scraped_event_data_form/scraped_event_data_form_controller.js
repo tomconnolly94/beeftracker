@@ -145,7 +145,6 @@ $(function(){
                     post_scrape_function(data[0]);
                 }
                 else{//if server can find data for this actor
-                    
                     $.ajax({
                         url: "/api/scraped_data/actor/"+ actor_name,
                         //data: id_array_to_delete,
