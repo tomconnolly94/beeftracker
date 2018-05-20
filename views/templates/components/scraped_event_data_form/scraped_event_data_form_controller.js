@@ -146,6 +146,7 @@ $(function(){
                 }
                 else{//if server can find data for this actor
                     
+<<<<<<< f696d43e572b5fccc032abf25d62e6b2dd744a8e
                     $.ajax({
                         url: "/api/scraped_data/actor/"+ actor_name,
                         //data: id_array_to_delete,
@@ -174,6 +175,17 @@ $(function(){
                             console.log(errorThrown);
                         }
                     });
+=======
+                    var data = JSON.parse(data);
+                    console.log(data);
+                    console.log(JSON.parse(data.actor_object));
+                    
+                    //TODO: add function in add_actor_modal controller to allow loading the actor modal with data, invoke that function with the scraped actor_object.
+                    load_data_into_add_actor_modal(JSON.parse(data.actor_object), data.field_data_dump)
+                    
+                    $('#add_actor_modal').modal('show');
+                    //location.reload();
+>>>>>>> scraping interface dev
                 }
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) { 
