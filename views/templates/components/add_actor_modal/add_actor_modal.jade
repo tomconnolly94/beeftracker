@@ -5,13 +5,7 @@ include ../../layouts/modal.jade
 //include ../add_data_sources/add_data_sources.jade
 include ../add_actor_modal/add_actor_variable_field_panel.jade
 
-
-mixin add-actor-modal-js()
-    script(src="/component_controllers/add_actor_modal/add_actor_modal.js" async)
-    script(src="/component_controllers/add_actor_modal/add_actor_modal_controller.js" async)
-    script(src="/js/submit_controllers/submit_actor_controller.js" async)
-
-mixin add-actor-modal(actor_variable_fields)
+mixin add-actor-modal(actor_variable_fields, optional_scraped_actor_data)
     +modal('Add Actor', '#', false)(id="add_actor_modal", large_modal=true, class="add-actor-modal")
         div.row(id="submit_actor_error_panel")
             - var errors = []
@@ -19,24 +13,24 @@ mixin add-actor-modal(actor_variable_fields)
                 
         form
             #smartwizard
-              ul
-                li
-                  a(href='#step-1')
-                    | 1
-                    br
-                    small Actor Type
-                li
-                  a.disabled_anchor#step_2_anchor(href='#step-2')
-                    | 2
-                    br
-                    small Actor Description
-                li
-                  a.disabled_anchor#step_3_anchor(href='#step-3')
-                    | 3
-                    br
-                    small Additional Details
-              div
-                #step-1.actor-type-selector
+                ul
+                    li
+                        a(href='#step-1')
+                            | 1
+                            br
+                            small Actor Type
+                    li
+                        a.disabled_anchor#step_2_anchor(href='#step-2')
+                            | 2
+                            br
+                            small Actor Description
+                    li
+                        a.disabled_anchor#step_3_anchor(href='#step-3')
+                            | 3
+                            br
+                            small Additional Details
+                div
+                    #step-1.actor-type-selector
                         h4 Select Actor Type
                         
                         - for(var i = 0; i < actor_variable_fields.length; i += 2){  
@@ -72,77 +66,81 @@ mixin add-actor-modal(actor_variable_fields)
                                     div.title
                                         i.fas.fa-briefcase
                                         h3 Business
-                #step-2
-                  div.row
-                    div.col-md-4.photo_box
-                        img(src="/images/no_preview_available.jpg").img-thumbnail#actor_photo_preview
-                        input(type="file", name="actor_photo")#actor_photo
-                        //-label(for="actor_photo").btn.btn-primary Upload Photo
-                    div.col-md-8
+                    #step-2
+                        div.row
+                            div.col-md-4.photo_box
+                                img(src="/images/no_preview_available.jpg").img-thumbnail#actor_photo_preview
+                                input(type="file", name="actor_photo")#actor_photo
+                                //-label(for="actor_photo").btn.btn-primary Upload Photo
+                            div.col-md-8
+                                div.row
+                                    div.col-md-12
+                                        div.row
+                                            div.form-group.col-md-6
+                                                label(for="actor_name") Name
+                                                input(type="text").form-control#actor_name
+                                            //div.form-group.col-md-6
+                                                label(for="actor_name") Date of Birth
+                                                input(type="date").form-control#actor_dob
+                                    div.col-md-12
+                                        div.row#variable_fields_panel
+                                            +add_actor_variable_field_panel([])
+                                    div.col-md-12
+                                        div.row
+                                            div.form-group.col-md-12
+                                                label(for="actor_bio") Bio
+                                                textarea.form-control#actor_bio
+                        div.row#actor_data_dump
+                            
+                    #step-3
                         div.row
                             div.col-md-12
                                 div.row
                                     div.form-group.col-md-6
-                                        label(for="actor_name") Name
-                                        input(type="text").form-control#actor_name
-                                    //div.form-group.col-md-6
-                                        label(for="actor_name") Date of Birth
-                                        input(type="date").form-control#actor_dob
-                            div.col-md-12
-                                div.row#variable_fields_panel
-                                    +add_actor_variable_field_panel([])
-                            div.col-md-12
-                                div.row
-                                    div.form-group.col-md-12
-                                        label(for="actor_bio") Bio
-                                        textarea.form-control#actor_bio
-                #step-3
-                    div.row
-                        div.col-md-12
-                            div.row
-                                div.form-group.col-md-6
-                                    +add-list([], "add_actor_modal_data_sources", "Data Sources")
+                                        +add-list([], "add_actor_modal_data_sources", "Data Sources")
 
-                                div.form-group.col-md-6
-                                    div.row
-                                        div-col-12
-                                            Links
-                                        div-col-12
-                                            h4 Enter all that apply:
-                                            div.row
-                                                div.form-group.col-md-6
-                                                    label(for="add_actor_website_link") Website
-                                                    input(type="text").form-control#add_actor_website_link
-                                                div.form-group.col-md-6
-                                                    label(for="add_actor_wikipedia_link") Wikipedia
-                                                    input(type="text").form-control#add_actor_wikipedia_link
-                                                div.form-group.col-md-6
-                                                    label(for="add_actor_twitter_link") Twitter
-                                                    input(type="text").form-control#add_actor_twitter_link
-                                                div.form-group.col-md-6
-                                                    label(for="add_actor_instagram_link") Instagram
-                                                    input(type="text").form-control#add_actor_instagram_link
-                                                div.form-group.col-md-6
-                                                    label(for="add_actor_youtube_link") YouTube
-                                                    input(type="text").form-control#add_actor_youtube_link
-                                                div.form-group.col-md-6
-                                                    label(for="add_actor_spotify_link") Spotify
-                                                    input(type="text").form-control#add_actor_spotify_link
-                                                
-                    div.row
-                        div.col-12
-                            div.button-group.float-right
-                                //-a(href="#").btn.btn-secondary Cancel
-                                button(type="submit").btn.btn-primary.submit_new_actor_button Submit
-                                            
-                                                //+add-list([], "add_actor_links", "Links")
-                                        //div.row
-                                            div.col-md-12
-                                                label Associated Actors
-                                            div.col-md-12
-                                                select.form-control.associated-actors-select
-                                                    option(image_src="http://cdn.edgecast.steamstatic.com/steamcommunity/public/images/avatars/64/64e8917b85a0f5e20565651119c60f3d8d363898_full.jpg") Obama
-                                                    option(image_src="https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_400x400.jpg") Trump
+                                    div.form-group.col-md-6
+                                        div.row
+                                            div-col-12
+                                                Links
+                                            div-col-12
+                                                h4 Enter all that apply:
+                                                div.row
+                                                    div.form-group.col-md-6
+                                                        label(for="add_actor_website_link") Website
+                                                        input(type="text").form-control#add_actor_website_link
+                                                    div.form-group.col-md-6
+                                                        label(for="add_actor_wikipedia_link") Wikipedia
+                                                        input(type="text").form-control#add_actor_wikipedia_link
+                                                    div.form-group.col-md-6
+                                                        label(for="add_actor_twitter_link") Twitter
+                                                        input(type="text").form-control#add_actor_twitter_link
+                                                    div.form-group.col-md-6
+                                                        label(for="add_actor_instagram_link") Instagram
+                                                        input(type="text").form-control#add_actor_instagram_link
+                                                    div.form-group.col-md-6
+                                                        label(for="add_actor_youtube_link") YouTube
+                                                        input(type="text").form-control#add_actor_youtube_link
+                                                    div.form-group.col-md-6
+                                                        label(for="add_actor_spotify_link") Spotify
+                                                        input(type="text").form-control#add_actor_spotify_link
 
+                        div.row
+                            div.col-12
+                                div.button-group.float-right
+                                    //-a(href="#").btn.btn-secondary Cancel
+                                    button(type="submit").btn.btn-primary.submit_new_actor_button Submit
 
+                                                    //+add-list([], "add_actor_links", "Links")
+                                            //div.row
+                                                div.col-md-12
+                                                    label Associated Actors
+                                                div.col-md-12
+                                                    select.form-control.associated-actors-select
+                                                        option(image_src="http://cdn.edgecast.steamstatic.com/steamcommunity/public/images/avatars/64/64e8917b85a0f5e20565651119c60f3d8d363898_full.jpg") Obama
+                                                        option(image_src="https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_400x400.jpg") Trump
 
+    append scripts
+        script(src="/component_controllers/add_actor_modal/add_actor_modal.js" async)
+        script(src="/component_controllers/add_actor_modal/add_actor_modal_controller.js" async)
+        script(src="/js/submit_controllers/submit_actor_controller.js" async)
