@@ -258,7 +258,6 @@ $(function(){
             form_data.append("data", event_submission);
         
             console.log(event_submission);
-            
             $.ajax({
                 url: "/api/events",
                 data: form_data,
