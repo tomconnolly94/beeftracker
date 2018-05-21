@@ -29,7 +29,7 @@ mixin scraped-data-event-form(scraped_record)
                                             input.col-md-8.aggressor-name(type="text", value=scraped_record.relevant_actors[aggressor_index].name)
                                         div.col-md-4.text-center
                                             i.fa.fa-check(style="display:none;")
-                                            input.scrape-actor-button(type="button", value="Scrape", style="padding:1px;width:100%;text-align:center;")
+                                            input.scrape-actor-button(type="button", value="Scrape", style="padding:1px;width:100%;text-align:center;", x-identifier=scraped_record._id + "_scrape_button_" + aggressor_index, class=scraped_record._id + "_scrape_button_" + aggressor_index)
                                             //-, ng-click="scrape_actor(actor.name, event._id)">
                                 - }
 
@@ -44,7 +44,7 @@ mixin scraped-data-event-form(scraped_record)
                                             input.col-md-8.aggressor-name(type="text", value=scraped_record.relevant_actors[target_index].name) 
                                         div.col-md-4.text-center
                                             i.fa.fa-check(style="display:none;")
-                                            input.scrape-actor-button(type="button", value="Scrape", style="padding:1px;width:100%;text-align:center;")
+                                            input.scrape-actor-button(type="button", value="Scrape", style="padding:1px;width:100%;text-align:center;", x-identifier=scraped_record._id + "_scrape_button_" + target_index, class=scraped_record._id + "_scrape_button_" + target_index)
                                             //-, ng-click="scrape_actor(actor.name, event._id)">
                                 - }
 

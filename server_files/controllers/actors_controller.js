@@ -127,6 +127,7 @@ module.exports = {
             
             //deal with $match query
             if(query_parameters.match_name){ match_query = { name: { $regex : query_parameters.match_name, $options: "i" } } }
+            if(query_parameters.match_multi_names){ match_query = { $or : [{ name : query_parameters.match_multi_names }, { name_lower : query_parameters.match_multi_names }, { also_known_as : query_parameters.match_multi_names }, { also_known_as_lower : query_parameters.match_multi_names }] } }
             
             //deal with $limit query
             if(query_parameters.limit){ limit_query_content = typeof query_parameters.limit == "string" ? parseInt(query_parameters.limit) : query_parameters.limit }
