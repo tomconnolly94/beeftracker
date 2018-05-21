@@ -1,4 +1,4 @@
-$(function(){      
+$(function(){
     //brief basic validation to avoid using the server for trivial mistakes
     function validate_event_submission(event_submission){
         
