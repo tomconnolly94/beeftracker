@@ -125,7 +125,6 @@ $(function(){
                 $($(this).find("input[type=text]")[0]).val(actor.name)
                 $($(this).find("input[type=radio]")[0]).val(actor._id)
                 $($(this).find("input[type=checkbox]")[0]).val(actor._id)
-                
                 $($(this).find("input[type=radio]")[0]).prop("disabled", false);
                 $($(this).find("input[type=checkbox]")[0]).prop("disabled", false);
             });
@@ -179,6 +178,7 @@ $(function(){
                 console.log(errorThrown);
             }
         });
+        
     });
     
     //confirm event and add it to event_data table

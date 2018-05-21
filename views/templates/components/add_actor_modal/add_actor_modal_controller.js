@@ -24,6 +24,7 @@ var load_data_into_add_actor_modal = function(scraped_actor_data, field_data_dum
         
         $("#actor_data_dump").append(row);
     }
+    post_submit_actor_callback = callback;
 }
     
 $(function(){
