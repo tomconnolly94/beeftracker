@@ -125,7 +125,6 @@ $(function(){
                 $($(this).find("input[type=text]")[0]).val(actor.name)
                 $($(this).find("input[type=radio]")[0]).val(actor._id)
                 $($(this).find("input[type=checkbox]")[0]).val(actor._id)
-                
                 $($(this).find("input[type=radio]")[0]).prop("disabled", false);
                 $($(this).find("input[type=checkbox]")[0]).prop("disabled", false);
             });
@@ -145,8 +144,6 @@ $(function(){
                     post_scrape_function(data[0]);
                 }
                 else{//if server can find data for this actor
-                    
-<<<<<<< f696d43e572b5fccc032abf25d62e6b2dd744a8e
                     $.ajax({
                         url: "/api/scraped_data/actor/"+ actor_name,
                         //data: id_array_to_delete,
@@ -175,23 +172,13 @@ $(function(){
                             console.log(errorThrown);
                         }
                     });
-=======
-                    var data = JSON.parse(data);
-                    console.log(data);
-                    console.log(JSON.parse(data.actor_object));
-                    
-                    //TODO: add function in add_actor_modal controller to allow loading the actor modal with data, invoke that function with the scraped actor_object.
-                    load_data_into_add_actor_modal(JSON.parse(data.actor_object), data.field_data_dump)
-                    
-                    $('#add_actor_modal').modal('show');
-                    //location.reload();
->>>>>>> scraping interface dev
                 }
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) { 
                 console.log(errorThrown);
             }
         });
+        
     });
     
     //confirm event and add it to event_data table
