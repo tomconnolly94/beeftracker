@@ -7,7 +7,7 @@ var actor_controller = require('../../controllers/actors_controller');
 var actor_data_validator = require("../../validation/actor_validation");
 var token_authentication = require("../../tools/token_authentication.js"); //get token authentication object
 var memoryUpload = require("../../config/multer_config.js").get_multer_object(); //get multer config
-var responses_object = require("./endpoint_responses.js");
+var responses_object = require("./endpoint_response.js");
 
 //init response functions
 var send_successful_response = responses_object.send_successful_response;
@@ -28,7 +28,7 @@ router.route('/').get(function(request, response){
     });
     
 });//built, written, tested, needs query handling
-router.route('//actor_id').get(function(request, response){
+router.route('/:actor_id').get(function(request, response){
     
     var actor_id = request.params.actor_id;
     
@@ -56,7 +56,7 @@ router.route('/').post(memoryUpload, actor_data_validator.validate, function(req
     });
     
 });//built, written, tested
-router.route('//actor_id').put(token_authentication.authenticate_endpoint_with_admin_user_token, memoryUpload, actor_data_validator.validate, function(request, response){
+router.route('/:actor_id').put(token_authentication.authenticate_endpoint_with_admin_user_token, memoryUpload, actor_data_validator.validate, function(request, response){
     
     var data = request.locals.validated_data;
     var files = request.files;
