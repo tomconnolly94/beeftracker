@@ -1,4 +1,78 @@
 $(function(){
+      
+    //brief basic validation to avoid using the server for trivial mistakes
+    function validate_event_submission(event_submission){
+        
+        if(!event_submission.title || event_submission.title.length < 1){
+            return { location: "title", problem: "Please enter a title" };
+        }
+        
+        if(!event_submission.aggressors || event_submission.aggressors.length < 1){
+            return { location: "aggressors", problem: "Please add at least one aggressor" };
+        }
+        
+        if(!event_submission.targets || event_submission.targets.length < 1){
+            return { location: "targets", problem: "Please add at least one target" };
+        }
+        
+        if(!event_submission.date || event_submission.date.length < 1 || event_submission.date == "undefined/undefined/"){
+            return { location: "date", problem: "Please select the date" };
+        }
+        
+        if(!event_submission.description || event_submission.description.length < 1){
+            return { location: "description", problem: "Please enter a description" };
+        }
+        
+        if(!event_submission.categories || event_submission.categories.length < 1){
+            return { location: "categories", problem: "Please enter a category" };
+        }
+        
+        if(!event_submission.tags || event_submission.tags.length < 1){
+            return { location: "tags", problem: "Please enter at least one tag" };
+        }
+        
+        if(!event_submission.data_sources || event_submission.data_sources.length < 1){
+            return { location: "data_sources", problem: "Please enter at least one data source" };
+        }
+        
+        if(!event_submission.gallery_items || event_submission.gallery_items.length < 1){
+            return { location: "data_sources", problem: "Please enter at least one data source" };
+        }
+        else{
+            var cover_image_found;
+            var main_graphic_found;
+            
+            for(var i = 0; i < event_submission.gallery_items.length; i++){
+                if(event_submission.gallery_items[i].cover_image){
+                    cover_image_found = true;
+                }
+                if(event_submission.gallery_items[i].main_graphic){
+                    main_graphic_found = true;
+                }
+            }
+            
+            if(!cover_image_found){
+                return { location: "gallery_items", problem: "please select one of your gallery items as a 'cover image'" };
+            }
+            
+            if(!main_graphic_found){
+                return { location: "gallery_items", problem: "please select one of your gallery items as a 'main graphic'" };
+            }
+        }
+        
+        return "validation_successful";
+    }
+    
+    function render_error_messages(error_messages, scraped_event_id){
+
+        var template_dir = "error_panel";
+        var template_name = "error_panel";
+        var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
+
+        load_template_render_function(template_dir + "/" + template_name, function(status){
+            fade_new_content_to_div("#" + scraped_event_id + "_scraped_data_error_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, errors: error_messages }));
+        });
+    }
     
     //delete the eent of which the button was clicked, plus any events with their checkboxes selected
     $(".delete-button").unbind().click(function(){
@@ -50,6 +124,9 @@ $(function(){
             $("." + scrape_button_id).parent().parent().each(function(){
                 $($(this).find("input[type=text]")[0]).attr("x-resolved-db-id", actor._id)//assign returned record id to text input
                 $($(this).find("input[type=text]")[0]).val(actor.name)
+                $($(this).find("input[type=radio]")[0]).val(actor._id)
+                $($(this).find("input[type=checkbox]")[0]).val(actor._id)
+                
                 $($(this).find("input[type=radio]")[0]).prop("disabled", false);
                 $($(this).find("input[type=checkbox]")[0]).prop("disabled", false);
             });
@@ -111,5 +188,98 @@ $(function(){
     //confirm event and add it to event_data table
     $(".submit_event").unbind().click(function(){
         
+        //access event data
+        var event_id = $(this).attr("x-event-id");
+        var title = $("." + event_id + " > .panel-title").val();
+        //var aggressor = $("." + event_id + " > .aggressor-selection:checked").val();
+        var aggressors = $("." + event_id + " > .aggressor-selection:checked").map(function(){ return $(this).val(); });
+        var targets = $("." + event_id + " > .target-selection:checked").map(function(){ return $(this).val(); });
+        var date = $("." + event_id + " > .date").val().split("/");
+        var description = $("." + event_id + " > .description-selection").val();
+        var categories = $("." + event_id + " > .category:checked").map(function(){ return $(this).val(); });
+        var data_source = $("." + event_id + " > .data-source").val();
+        var tags = [];
+        
+        var gallery_items = [];
+        var form_data = new FormData();
+
+        var media_link = $("." + event_id + " > .img").attr("src");
+        var media_name = $("." + event_id + " > .img").attr("src");
+        var file = null;
+        var link = null;
+
+        if(media_link && media_link.length > 0 && media_link != "/images/no_preview_available.jpg"){
+            
+            if(media_link.indexOf("data:image") != -1){
+                file = b64toBlob(media_link.split("base64,")[1]);
+            }
+        }
+
+        var gallery_item_formatted = {
+            file: file,
+            media_type: "image",
+            link: media_name,
+            main_graphic: true,
+            cover_image: null
+        }
+
+        gallery_items.push(gallery_item_formatted);
+        
+        var event_submission = {
+            title: title,
+            aggressors: aggressors,
+            targets: targets,
+            date: date[2] + "/" + date[1] + "/" + date[0],
+            description: description,
+            categories: categories,
+            tags: tags,
+            data_sources: [ data_source ],
+            gallery_items: gallery_items,
+            record_origin: "scraped"
+        }
+        
+        var validation_result = validate_event_submission(event_submission)
+        
+        if(validation_result == "validation_successful"){
+            
+            form_data.append("data", JSON.stringify(event_submission));
+        
+            $.ajax({
+                url: "/api/events",
+                data: form_data,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: function(data){
+                    window.location.href = "/submission-success";
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                    
+                    if(XMLHttpRequest.status != 200){
+
+                        if(XMLHttpRequest && XMLHttpRequest.responseJSON){
+                            
+                            if(XMLHttpRequest.responseJSON.stage == "server_validation"){
+
+                                var errors = XMLHttpRequest.responseJSON.details.map(function(item){
+                                    return {
+                                        location: item.param,
+                                        problem: item.msg
+                                    }
+                                });
+
+                                render_error_messages(errors);
+                            }
+                        }
+                        else{
+                            console.log("URGENT SERVER ERROR.", XMLHttpRequest.statusText);
+                        }
+                    }
+                }
+            });
+        }
+        else{
+            render_error_messages([ validation_result ], event_id);
+        }
     });
 });
