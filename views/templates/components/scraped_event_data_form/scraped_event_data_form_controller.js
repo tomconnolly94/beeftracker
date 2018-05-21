@@ -178,6 +178,7 @@ $(function(){
                 console.log(errorThrown);
             }
         });
+        
     });
     
     //confirm event and add it to event_data table
