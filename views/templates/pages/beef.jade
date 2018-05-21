@@ -76,6 +76,18 @@ append body
     
     div.bt-content-full-width.beef-background-banner(style="background-image: url('" + file_server_url_prefix + "/events/" + event_data.cover_image + "')")
     
+    append head
+        title #{event_data.title}
+        //facebook meta tags
+        meta(property="og:title" content="Beeftracker - " + event_data.title)
+        meta(property="og:description" content=event_data.description)
+        meta(property="og:image" content=file_server_url_prefix + "/events/" + event_data.cover_image)
+        //twitter meta tags
+        meta(property="twitter:title" content="Beeftracker - " + event_data.title)
+        meta(property="twitter:description" content=event_data.description)
+        meta(property="twitter:image" content=file_server_url_prefix + "/events/" + event_data.cover_image)
+        meta(name="twitter:card" content="summary_large_image")
+    
     div.bt-content.bt-content-shift-up
         
         div.beef-content(class="beef-category-#{event_data.categories[0].name.toLowerCase()}")
