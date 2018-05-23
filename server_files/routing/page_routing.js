@@ -416,7 +416,7 @@ router.get("/profile", token_authentication.recognise_user_token, resolve_user_f
         });
     }
     else{
-        response.redirect("/login?redirected_from=/profile");
+        response.redirect("/login?redirected_from=/profile", view_parameters);
     }
 }); //actor page
 router.get("/register", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
