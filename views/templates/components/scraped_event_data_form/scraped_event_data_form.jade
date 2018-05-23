@@ -19,10 +19,6 @@ mixin scraped-data-event-form(scraped_record)
                     div.row(id=scraped_record._id + "_scraped_data_error_panel")
                         - var errors = []
                         +error-panel(errors, scraped_record._id + "_scraped_data_error_panel")
-<<<<<<< 73c3389224c293d166ef736d7923343297bcde17
-=======
-                        
->>>>>>> updated meta tags for beef page, scraper dev
                     div.row
                         div.row.col-md-8
                             div.col-md-6
@@ -76,13 +72,9 @@ mixin scraped-data-event-form(scraped_record)
                         div.col-md-6.row
                             div.col-md-6(class=String(scraped_record._id))
                                 input.date(type="text", value=scraped_record.event_date)
-<<<<<<< 73c3389224c293d166ef736d7923343297bcde17
                             div.form-group.col-md-12
                                 label(for="beef_tags") Tags
                                 select.beef-tags.form-control(name="beef_tags", multiple="multiple", id=scraped_record._id + "_beef_tags")
-                                    
-=======
->>>>>>> updated meta tags for beef page, scraper dev
                         div.col-md-6
                             h4 Categories
                             - for(var category_index = 0; category_index < categories.length; category_index++){
@@ -94,12 +86,8 @@ mixin scraped-data-event-form(scraped_record)
                     div.row
                         div.col-md-6.row(class=String(scraped_record._id))
                             h4 Data Source
-<<<<<<< 73c3389224c293d166ef736d7923343297bcde17
                             a.data-source(target="_blank", href=scraped_record.data_source) 
                                 | #{scraped_record.data_source}
-=======
-                            a.data-source(target="_blank", href=scraped_record.data_source) #{scraped_record.data_source}
->>>>>>> updated meta tags for beef page, scraper dev
 
                         div.col-md-6.row
 

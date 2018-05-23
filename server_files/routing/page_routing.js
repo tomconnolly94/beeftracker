@@ -499,7 +499,7 @@ router.get("/scraping_dump", token_authentication.recognise_user_token, resolve_
                     resolve(data);
                 });
             });
-
+            
             var categories_promise = new Promise(function(resolve, reject){
                category_controller.getEventCategories(function(data){
                    resolve(data);
