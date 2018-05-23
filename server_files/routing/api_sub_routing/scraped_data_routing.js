@@ -50,7 +50,7 @@ router.route('/actor/:name').get(token_authentication.authenticate_endpoint_with
     });
 });//built, written, tested
 
-router.route('/actor/:name').get(function(request, response){
+router.route('/actor/:name').get(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     
     var actor_name = request.params.name;
     
