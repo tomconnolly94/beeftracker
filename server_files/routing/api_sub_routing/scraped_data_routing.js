@@ -13,7 +13,7 @@ var send_successful_response = responses_object.send_successful_response;
 var send_unsuccessful_response = responses_object.send_unsuccessful_response;
 
 //Actor fields config endpoints
-router.route('/events').get(function(request, response){
+router.route('/events').get(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     scraped_data_controller.findScrapedEventData(function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
@@ -24,7 +24,7 @@ router.route('/events').get(function(request, response){
     });
 });//built, written, tested
 
-router.route('/events').delete(function(request, response){
+router.route('/events').delete(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     
     console.log(request.body);
     
@@ -38,7 +38,7 @@ router.route('/events').delete(function(request, response){
     });
 });//built, written, tested
 
-router.route('/actor/:name').get(function(request, response){
+router.route('/actor/:name').get(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     
     var actor_name = request.params.name;
     
