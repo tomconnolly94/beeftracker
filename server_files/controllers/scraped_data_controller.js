@@ -18,7 +18,14 @@ module.exports = {
             if(err){ console.log(err); }
             else{
                 
-                db.collection(db_ref.get_scraped_events_dump_table()).find({}).limit(limit).toArray(function(err, docs) {
+                db.collection(db_ref.get_scraped_events_dump_table()).aggregate([
+                    { $lookup: {
+                        from: db_ref.get_event_classification_table(),
+                        localField: "title",
+                        foreignField: "title",
+                        as: "classification_obj"
+                    }}
+                ]).limit(limit).toArray(function(err, docs) {
                     if(err){ console.log(err); }
                     else{
                         if(docs){

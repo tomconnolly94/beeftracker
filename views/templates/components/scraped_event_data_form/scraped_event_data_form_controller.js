@@ -192,13 +192,30 @@ $(function(){
         var event_id = $(this).attr("x-event-id");
         var title = $("." + event_id + " > .panel-title").val();
         //var aggressor = $("." + event_id + " > .aggressor-selection:checked").val();
-        var aggressors = $("." + event_id + " > .aggressor-selection:checked").map(function(){ return $(this).val(); });
-        var targets = $("." + event_id + " > .target-selection:checked").map(function(){ return $(this).val(); });
-        var date = $("." + event_id + " > .date").val().split("/");
+        var aggressors_jq = $("." + event_id + " > .aggressor-selection:checked").map(function(){ return $(this).val(); });
+        var targets_jq = $("." + event_id + " > .target-selection:checked").map(function(){ return $(this).val(); });
+        var date = $("." + event_id + " > .date").val()
         var description = $("." + event_id + " > .description-selection").val();
-        var categories = $("." + event_id + " > .category:checked").map(function(){ return $(this).val(); });
-        var data_source = $("." + event_id + " > .data-source").val();
-        var tags = [];
+        var categories_jq = $("." + event_id + " > .category:checked").map(function(){ return $(this).val(); });
+        var data_source = $("." + event_id + " > .data-source").attr("href");
+        var tags = $("#" + event_id + "_beef_tags").select2().val();
+        
+        var aggressors = [];
+        var targets = [];
+        var categories = [];
+                
+        //build js arrays
+        for(var i = 0; i < aggressors_jq.length; i++){
+            aggressors.push(aggressors_jq[i]);
+        }
+        
+        for(var i = 0; i < targets_jq.length; i++){
+            targets.push(targets_jq[i]);
+        }
+        
+        for(var i = 0; i < categories_jq.length; i++){
+            categories.push(categories_jq[i]);
+        }
         
         var gallery_items = [];
         var form_data = new FormData();
@@ -220,16 +237,16 @@ $(function(){
             media_type: "image",
             link: media_name,
             main_graphic: true,
-            cover_image: null
+            cover_image: true
         }
 
         gallery_items.push(gallery_item_formatted);
         
         var event_submission = {
             title: title,
-            aggressors: aggressors,
+            aggressors: aggressors.pop(),
             targets: targets,
-            date: date[2] + "/" + date[1] + "/" + date[0],
+            date: date,
             description: description,
             categories: categories,
             tags: tags,
@@ -242,8 +259,10 @@ $(function(){
         
         if(validation_result == "validation_successful"){
             
-            form_data.append("data", JSON.stringify(event_submission));
+            form_data.append("data", event_submission);
         
+            console.log(event_submission);
+            
             $.ajax({
                 url: "/api/events",
                 data: form_data,

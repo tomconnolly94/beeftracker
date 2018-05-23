@@ -47,7 +47,7 @@ $(function(event){
                         requires_admin: false 
                     },
                     success: function(auth_result) {
-                        window.location.href = "/user/" + register_result.user_id;
+                        window.location.href = "/profile";
                     },
                     error: function(err){
                         console.log("Authentication error, please try again.", err);

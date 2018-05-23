@@ -57,7 +57,7 @@ mixin scraped-data-event-form(scraped_record)
                                 img.img(src=scraped_record.img_title, style="height:100px;width:100%;")
                                 input(type="text", value=scraped_record.img_title, style="margin:0px;")
 
-                            div#video_wrapper
+                            //=div#video_wrapper
                                 iframe(scrolling="no", src=scraped_record.media_link.link, class="embed-responsive-item", allowfullscreen="true")
                                 input(type="text", value=scraped_record.media_link.link, style="margin:0px;")
 
@@ -73,6 +73,10 @@ mixin scraped-data-event-form(scraped_record)
                         div.col-md-6.row
                             div.col-md-6(class=String(scraped_record._id))
                                 input.date(type="text", value=scraped_record.event_date)
+                            div.form-group.col-md-12
+                                label(for="beef_tags") Tags
+                                select.beef-tags.form-control(name="beef_tags", multiple="multiple", id=scraped_record._id + "_beef_tags")
+                                    
                         div.col-md-6
                             h4 Categories
                             - for(var category_index = 0; category_index < categories.length; category_index++){
@@ -84,7 +88,8 @@ mixin scraped-data-event-form(scraped_record)
                     div.row
                         div.col-md-6.row(class=String(scraped_record._id))
                             h4 Data Source
-                            a.data-source(target="_blank", href=scraped_record.data_source) #{scraped_record.data_source}
+                            a.data-source(target="_blank", href=scraped_record.data_source) 
+                                | #{scraped_record.data_source}
 
                         div.col-md-6.row
 
@@ -101,3 +106,11 @@ mixin scraped-data-event-form(scraped_record)
     
     append scripts
         script(src="/component_controllers/scraped_event_data_form/scraped_event_data_form_controller.js")
+        script.
+            $('.beef-tags').select2({
+                //placeholder: 'Type in beef tags',
+                theme: 'classic',
+                tags: true,
+                tokenSeparators: [',', ' '],
+                width: "100%"
+            });

@@ -43,7 +43,7 @@ function resolve_user_from_locals_token(request, response, next){
     if(request.locals && request.locals.authenticated_user){
         user_controller.findUser(request.locals.authenticated_user.id, request.locals.authenticated_user.is_admin, function(data){
             if(data.failed){
-                response.render("pages/static/error.jade");
+                response.render("pages/static/error.jade", view_parameters);
             }
             else{
                 request.locals.authenticated_user = data;
@@ -157,7 +157,7 @@ router.get("/actor/:actor_id", token_authentication.recognise_user_token, resolv
         var actor_data_promise = new Promise(function(resolve, reject){
            actor_controller.findActor(actor_id, function(data){
                if(data.failed){
-                    response.render("pages/static/error.jade");
+                    response.render("pages/static/error.jade", view_parameters);
                 }
                 else{
                     resolve(data);
@@ -177,7 +177,7 @@ router.get("/actor/:actor_id", token_authentication.recognise_user_token, resolv
         });
     }
     else {
-        response.render("pages/static/error.jade");
+        response.render("pages/static/error.jade", view_parameters);
     }
 }); //actor page
 router.get("/add-beef", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
@@ -300,7 +300,7 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
         var main_event_data_promise = new Promise(function(resolve, reject){
             event_controller.findEvent(event_id, function(data){
                 if(data.failed){
-                    response.render("pages/static/error.jade");
+                    response.render("pages/static/error.jade", view_parameters);
                 }
                 else{
                     let data_object = { event_data: data };
@@ -316,7 +316,7 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
         var comment_data_promise = new Promise(function(resolve, reject){
            comment_controller.findCommentsFromBeefChain(beef_chain_id, function(data){
                 if(data.failed){
-                    response.render("pages/static/error.jade");
+                    response.render("pages/static/error.jade", view_parameters);
                 }
                 else{
                     resolve(data);
@@ -342,11 +342,11 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
             }
         }).catch(function(error){
             console.log(error);
-            response.render("pages/static/error.jade");
+            response.render("pages/static/error.jade", view_parameters);
         });
     }
     else {
-        response.render("pages/static/error.jade");
+        response.render("pages/static/error.jade", view_parameters);
     }
 }); //beef page
 router.get("/contact", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
@@ -406,16 +406,18 @@ router.get("/profile", token_authentication.recognise_user_token, resolve_user_f
         });
     }
     else{
-        response.redirect("/login?redirected_from=/profile");
+        response.redirect("/login?redirected_from=/profile", view_parameters);
     }
 }); //actor page
 router.get("/register", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
+    
+    var view_parameters = Object.assign({}, view_parameters_global);
     
     if(request.locals && request.locals.authenticated_user){ //is user token found, then do not allow them to access the register page
         response.redirect("/");
     }
     else{
-        response.render("pages/register.jade") 
+        response.render("pages/register.jade", view_parameters);
     }
 }); //actor page
 router.get("/login", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
@@ -471,36 +473,53 @@ router.get("/offline", token_authentication.recognise_user_token, resolve_user_f
     response.render("pages/static/offline.jade", view_parameters); 
 });
 
-router.get("/scraping_dump/", /*token_authentication.authenticate_admin_user_token, */function(request, response) {
-   
-    var scraped_event_data_promise = new Promise(function(resolve, reject){
-        scraped_data_controller.findScrapedEventData({ }, function(data){
-            resolve(data);
-        });
-    });
+//admin only pages
+router.get("/scraping_dump", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
     
-    var categories_promise = new Promise(function(resolve, reject){
-       category_controller.getEventCategories(function(data){
-           resolve(data);
-        });
-    });
-    
-    var actor_variable_fields_promise = new Promise(function(resolve, reject){
-       actor_controller.getVariableActorFieldsConfig(function(data){
-           resolve(data);
-        });
-    });
-    
-    Promise.all([ scraped_event_data_promise, categories_promise, actor_variable_fields_promise ]).then(function(values){
+    if(request.locals && request.locals.authenticated_user){
+        
         
         var view_parameters = Object.assign({}, view_parameters_global);
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
-        view_parameters.scraped_records = values[0];
-        view_parameters.categories = values[1];
-        view_parameters.actor_variable_fields = values[2];
 
-        response.render("pages/admin/scraping_dump.jade", view_parameters);
-    });
+        if(request.locals.authenticated_user.admin){
+            
+            var scraped_event_data_promise = new Promise(function(resolve, reject){
+                scraped_data_controller.findScrapedEventData({ }, function(data){
+                    //console.log(data[0])
+                    //console.log(data[0].classification_obj)
+                    resolve(data);
+                });
+            });
+
+            var categories_promise = new Promise(function(resolve, reject){
+               category_controller.getEventCategories(function(data){
+                   resolve(data);
+                });
+            });
+
+            var actor_variable_fields_promise = new Promise(function(resolve, reject){
+               actor_controller.getVariableActorFieldsConfig(function(data){
+                   resolve(data);
+                });
+            });
+
+            Promise.all([ scraped_event_data_promise, categories_promise, actor_variable_fields_promise ]).then(function(values){
+
+                view_parameters.scraped_records = values[0];
+                view_parameters.categories = values[1];
+                view_parameters.actor_variable_fields = values[2];
+
+                response.render("pages/admin/scraping_dump.jade", view_parameters);
+            });
+        }
+        else{
+            response.render("pages/static/error.jade", view_parameters);
+        }
+    }
+    else{
+        response.redirect("/login?redirected_from=/scraping_dump");
+    }
 }); // about_us page
 
 /*
