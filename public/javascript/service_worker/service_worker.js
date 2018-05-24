@@ -20,13 +20,12 @@ var urls_to_cache = [
     "/webfonts/fa-brands-400.ttf",
     "/images/got-beef.jpg",
     "/images/beefometers@small.png",
-    "/images/sad_cow.png",
-    
+    "/images/sad_cow.png"
 ];
-
 var urls_to_avoid_caching = [
-    "add-beef"
-]
+    "profile",
+    "add-beef"    
+];
 
 self.addEventListener('install', function(event) {
     event.waitUntil(
@@ -56,7 +55,8 @@ self.addEventListener('fetch', function(event) {
         event.respondWith(
             fetch(request) //attempt to fetch the resource
                 .then(function(response) { //run if fetch is successful
-                    if(urls_to_avoid_caching.indexOf(request.url.split("/").pop().split("?")[0]) == -1){ //do not cache the add beef page
+                    
+                    if(urls_to_avoid_caching.indexOf(request.url.split("/").pop().split("?")[0].split("#")[0]) == -1){ //do not cache the add beef page
                         var copy = response.clone();
                         caches.open(CACHE_NAME) //open cache and dynamically add page that has just been fetched to cache
                             .then(function(cache) {

@@ -117,6 +117,15 @@ app.get('/manifest.json', function(request, response) {
         }]
     });
 }); //web app manifest
+app.get("/sitemap", function(req, res) {
+    sitemap.toXML( function (err, xml) {
+        if (err) {
+            return res.status(500).end();
+        }
+        res.header("Content-Type", "application/xml");
+        res.send( xml );
+  });
+});
 
 // ### Serve an error page on unrecognised uri###
 app.get('/*', function(req, res, next) { res.render("pages/static/error.jade"); });

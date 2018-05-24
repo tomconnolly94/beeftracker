@@ -5,11 +5,11 @@ mixin vertical-beefs(data, data_type, image_resize_params)
     -   split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, image_resize_params);
     -   var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
     - }
-
+    
     div.vertical-list(class!=attributes.class)
         div.col-md-12
             each item in data
-                
+            
                 - if(item.event_date instanceof Date){}
                 - else{
                 -   item.event_date = new Date(item.event_date);

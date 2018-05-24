@@ -375,6 +375,8 @@ router.get("/profile", token_authentication.recognise_user_token, resolve_user_f
         
         var events_added_by_user_promise = new Promise(function(resolve, reject){
             event_controller.findEvents({ match_user_id: view_parameters.user_data._id.toHexString(), limit: 3 }, function(data){
+                console.log("events_added_by_user length:");
+                console.log(data.length);
                 resolve(data);
             });
         });
@@ -387,13 +389,21 @@ router.get("/profile", token_authentication.recognise_user_token, resolve_user_f
             
             event_controller.findEvents({ match_event_ids: view_parameters.user_data.viewed_beef_ids.map(function(item, index){ return item.id})}, function(data){
                 var recently_viewed_events_ordered = [];
+                
+                console.log("recently viewed dump: ");
+                console.log(data);
+                console.log("view_parameters.user_data.viewed_beef_ids: ");
+                console.log(view_parameters.user_data.viewed_beef_ids);
                                 
                 for(var i = 0; i < data.length; i++){
                     
                     var index = view_parameters.user_data.viewed_beef_ids.map(function(item, index){ return String(item.id); }).indexOf(String(data[i]._id));//find index of resolved event
-                    if(index != -1) recently_viewed_events_ordered[index] = data[i]; //if the index has been found, add it to the return array
-                    if(recently_viewed_events_ordered[0] && recently_viewed_events_ordered[1] && recently_viewed_events_ordered[2]) break; //break early if the first three slots in the array are filled
+                    if(index != -1) recently_viewed_events_ordered.push(data[i]); //if the index has been found, add it to the return array
+                    if(recently_viewed_events_ordered[0] && recently_viewed_events_ordered[1] && recently_viewed_events_ordered[2]) console.log("DONNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNE"); break; //break early if the first three slots in the array are filled
                 }
+                console.log("recently_viewed_events_ordered length:");
+                console.log(recently_viewed_events_ordered.length);
+                console.log(recently_viewed_events_ordered);
                 resolve(recently_viewed_events_ordered);
             });
         });
@@ -554,15 +564,5 @@ router.get("/reset-my-password/:id_token", function(request, response) {
     });
 
 }); // raw actor scraping page route
-
-router.get("/sitemap", function(req, res) {
-    sitemap.toXML( function (err, xml) {
-        if (err) {
-            return res.status(500).end();
-        }
-        res.header("Content-Type", "application/xml");
-        res.send( xml );
-  });
-});
 
 module.exports = router;
