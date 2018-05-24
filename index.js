@@ -98,10 +98,10 @@ app.use('/template_functions', require('./server_files/routing/template_function
 //################################################################################## TESTING AREA END
 
 // ### Search engine information/verification files ###
-app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/views/verification_files/google3fc5d5a06ad26a53.html'); }); //google verification
-app.get('/BingSiteAuth.xml', function(request, response) { response.sendFile(__dirname + '/views/verification_files/BingSiteAuth.xml'); });
-app.get('/robots.txt', function(request, response) { response.sendFile(__dirname + '/views/verification_files/robots.txt'); }); //robots config file
-app.get('/manifest.webmanifest', function(request, response) { 
+app.get('/google3fc5d5a06ad26a53.html', function(request, response) { response.sendFile(__dirname + '/public/verification_files/google3fc5d5a06ad26a53.html'); }); //google verification
+app.get('/BingSiteAuth.xml', function(request, response) { response.sendFile(__dirname + '/public/verification_files/BingSiteAuth.xml'); });
+app.get('/robots.txt', function(request, response) { response.sendFile(__dirname + '/public/verification_files/robots.txt'); }); //robots config file
+app.get('/manifest.json', function(request, response) { 
     response.send({
         "name": "Beeftracker",
         "short_name": "Beeftracker",

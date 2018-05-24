@@ -406,7 +406,7 @@ router.get("/profile", token_authentication.recognise_user_token, resolve_user_f
         });
     }
     else{
-        response.redirect("/login?redirected_from=/profile", view_parameters);
+        response.redirect("/login?redirected_from=/profile");
     }
 }); //actor page
 router.get("/register", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
@@ -426,7 +426,7 @@ router.get("/login", token_authentication.recognise_user_token, resolve_user_fro
     var view_parameters = Object.assign({}, view_parameters_global);
     
     if(request.locals && request.locals.authenticated_user){ //is user token found, then do not allow them to access the register page
-        response.redirect("/profile", view_parameters);
+        response.redirect("/profile");
     }
     else{
         view_parameters.redirected_from = redirected_from;
