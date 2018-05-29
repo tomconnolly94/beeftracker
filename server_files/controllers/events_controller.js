@@ -64,8 +64,7 @@ var increment_hit_counts = function(event_id){
 module.exports = {
     
     format_event_data: function(submission_data){
-    
-        var date = submission_data.date.split('/'); //split date by delimeter into "DD", "MM" and "YYYY"
+        
         var aggressor_ids = []; //create array to store target_ids
         var target_ids = []; //create array to store target_ids
         var gallery_items_formatted = [];
@@ -92,7 +91,7 @@ module.exports = {
             title: submission_data.title,
             aggressors: aggressor_ids,
             targets: target_ids,
-            event_date: new Date(date[2],date[1]-1,date[0]+1),
+            event_date: submission_data.date,
             date_added: new Date(),
             description: submission_data.description,
             links: submission_data.links,
