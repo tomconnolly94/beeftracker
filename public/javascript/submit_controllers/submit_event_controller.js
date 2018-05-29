@@ -152,11 +152,14 @@ $(function(){
             }
         }
         
+        console.log(date);
+        console.log(new Date(parseInt(date[0]), parseInt(date[1])-1, parseInt(date[2])));
+        
         var event_submission = {
             title: title,
             aggressors: aggressors,
             targets: targets,
-            date: new Date(parseInt(date[2]), parseInt(date[1])-1, parseInt(date[0])),
+            date: new Date(parseInt(date[0]), parseInt(date[1])-1, parseInt(date[2])),
             description: description,
             categories: [ category ],
             tags: tags,
