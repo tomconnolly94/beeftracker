@@ -31,6 +31,8 @@ var master_functions_object = {
         return true
     },
     test_valid_date: function(date){
+        
+        console.log(date)
 
         function pad(x){return (((''+x).length==2) ? '' : '0') + x; }
 
