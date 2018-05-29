@@ -156,7 +156,7 @@ $(function(){
             title: title,
             aggressors: aggressors,
             targets: targets,
-            date: date[2] + "/" + date[1] + "/" + date[0],
+            date: new Date(parseInt(date[2]), parseInt(date[1])-1, parseInt(date[0])),
             description: description,
             categories: [ category ],
             tags: tags,
