@@ -277,6 +277,7 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
     //extract data
     var event_id = request.params.event_id;    
     var beef_chain_id = request.params.beef_chain_id;
+    var page_url = request.headers.host + request.url;
     
     var regex = /[0-9A-Fa-f]{6}/g;
 
@@ -334,6 +335,7 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
             view_parameters.related_events = values[0].related_events;
             view_parameters.disable_voting = disable_voting;
             view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
+            view_parameters.page_url = page_url;
 
             response.render("pages/beef.jade", view_parameters);
 
