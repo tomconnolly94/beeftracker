@@ -399,7 +399,7 @@ router.get("/profile", token_authentication.recognise_user_token, resolve_user_f
                     
                     var index = view_parameters.user_data.viewed_beef_ids.map(function(item, index){ return String(item.id); }).indexOf(String(data[i]._id));//find index of resolved event
                     if(index != -1) recently_viewed_events_ordered.push(data[i]); //if the index has been found, add it to the return array
-                    if(recently_viewed_events_ordered[0] && recently_viewed_events_ordered[1] && recently_viewed_events_ordered[2]) console.log("DONNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNE"); break; //break early if the first three slots in the array are filled
+                    if(recently_viewed_events_ordered[0] && recently_viewed_events_ordered[1] && recently_viewed_events_ordered[2]) break; //break early if the first three slots in the array are filled
                 }
                 console.log("recently_viewed_events_ordered length:");
                 console.log(recently_viewed_events_ordered.length);

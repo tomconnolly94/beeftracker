@@ -80,9 +80,13 @@ append body
                                 div.form-group.col-md-6
                                     label(for="beef_title") Title
                                     input(type="text").form-control#beef_title
-                                 div.form-group.col-md-6
-                                    label(for="beef_date") Date
-                                    input(type="date").form-control#beef_date
+                                 div.form-group.col-md-6.row
+                                     div.form-group.col-md-6
+                                        label(for="beef_date") Date
+                                        input(type="date").form-control#beef_date
+                                     div.form-group.col-md-6
+                                        label(for="beef_time") Time
+                                        input(type="time", value="12:00").form-control#beef_time 
                             div.form-row
                                 div.form-group.col-md-6
                                     label(for="beef_category") Category

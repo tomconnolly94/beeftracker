@@ -13,7 +13,7 @@ var format_embeddable_items = require('../tools/formatting.js').format_embeddabl
 var Event = require("../schemas/event_schema");
 var EventContribution = require("../schemas/event_contribution_schema").model;
 
-var test_mode = false;
+var test_mode = true;
 var event_projection = {
     "_id": 1,
     "title": 1,
@@ -85,13 +85,13 @@ module.exports = {
             date_of_approval: null,
             contribution_details: [] 
         });
-
+        
         //format beef event record for insertion
         var event_insert = new Event({
             title: submission_data.title,
             aggressors: aggressor_ids,
             targets: target_ids,
-            event_date: submission_data.date,
+            event_date: new Date(submission_data.date),
             date_added: new Date(),
             description: submission_data.description,
             links: submission_data.links,
@@ -355,6 +355,7 @@ module.exports = {
                         
         if(test_mode){
             console.log("test mode is on.");
+            console.log(event_insert);
                         
             callback({ failed: true, test_mode: true, message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_insert });
         }

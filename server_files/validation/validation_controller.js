@@ -32,16 +32,16 @@ var master_functions_object = {
     },
     test_valid_date: function(date){
         
-        console.log(date)
+        console.log(date);
 
-        function pad(x){return (((''+x).length==2) ? '' : '0') + x; }
-
-        var m = date.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/)
-        var d = (m) ? new Date(m[3], m[2]-1, m[1]) : null
-        var matchesPadded = (d&&(date==[pad(d.getDate()),pad(d.getMonth()+1),d.getFullYear()].join('/')))
-        var matchesNonPadded = (d&&(date==[d.getDate(),d.getMonth()+1,d.getFullYear()].join('/')));
-
-        return (matchesPadded || matchesNonPadded) ? d : null;
+        var parsed_date = Date.parse(date);
+        
+        if(isNaN(parsed_date)){
+            return false;
+        }
+        else{ 
+            return true;
+        }
     },
     test_record_origin: function(input){
 
@@ -76,13 +76,13 @@ var master_functions_object = {
             }
             
 
-            if(gallery_item["media_type"] == 'undefined' || gallery_item["media_type"].length < 1){
+            if(!gallery_item["media_type"] || gallery_item["media_type"] == 'undefined' || gallery_item["media_type"].length < 1){
                 return false;
             }
-            else if(gallery_item["link"] == 'undefined' || gallery_item["link"].length < 1){
+            else if(!gallery_item["link"] || gallery_item["link"] == 'undefined' || gallery_item["link"].length < 1){
                 return false;
             }
-            else if(gallery_item["main_graphic"] == 'undefined'){
+            else if(!gallery_item["main_graphic"] || gallery_item["main_graphic"] == 'undefined'){
                 return false;
             }
         }

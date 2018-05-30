@@ -80,11 +80,9 @@ $(function(){
         //get form contents
         var title = $("#beef_title").val();
         var date = $("#beef_date").val().split("-");
-        /*var aggressor = $("#beefer_name").attr("x-actor-id");
-        var target = $("#beefee_name").attr("x-actor-id");*/
+        var time = $("#beef_time").val().split(":");
         var aggressors_li = $(".beefer");
         var targets_li = $(".beefee");
-        
         var category = $("#beef_category").select2().find(":selected").val();
         var tags = $("#beef_tags").select2().val();
         //var description = $("#beef_content_summernote").val();
@@ -152,14 +150,13 @@ $(function(){
             }
         }
         
-        console.log(date);
-        console.log(new Date(parseInt(date[0]), parseInt(date[1])-1, parseInt(date[2])));
+        var formatted_date = new Date(parseInt(date[0]), parseInt(date[1])-1, parseInt(date[2]), parseInt(time[0]), parseInt(time[1]));
         
         var event_submission = {
             title: title,
             aggressors: aggressors,
             targets: targets,
-            date: new Date(parseInt(date[0]), parseInt(date[1])-1, parseInt(date[2])),
+            date: formatted_date,
             description: description,
             categories: [ category ],
             tags: tags,
