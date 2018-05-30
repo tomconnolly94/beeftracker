@@ -74,13 +74,13 @@ var master_functions_object = {
             }
             
 
-            if(!gallery_item["media_type"] || gallery_item["media_type"] == 'undefined' || gallery_item["media_type"].length < 1){
+            if(gallery_item["media_type"] == 'undefined' || gallery_item["media_type"].length < 1){
                 return false;
             }
-            else if(!gallery_item["link"] || gallery_item["link"] == 'undefined' || gallery_item["link"].length < 1){
+            else if(gallery_item["link"] == 'undefined' || gallery_item["link"].length < 1){
                 return false;
             }
-            else if(!gallery_item["main_graphic"] || gallery_item["main_graphic"] == 'undefined'){
+            else if(gallery_item["main_graphic"] == 'undefined'){
                 return false;
             }
         }
