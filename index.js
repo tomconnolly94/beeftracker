@@ -36,10 +36,10 @@ sitemap = sitemap_generator.createSitemap ({
     cacheTime: 600000,        // 600 sec - cache purge period 
     urls: [
         { url: '/home/', changefreq: 'weekly', priority: 0.9 },
-        { url: '/actor/{{%20trustSrc(url)%20}}', changefreq: 'weekly',  priority: 0.6 },
-        { url: '/beef/{{%20trustSrc(url)%20}}', changefreq: 'weekly',  priority: 0.8 },
+        { url: '/actor/{{%20trustSrc(url)%20}}', changefreq: 'daily',  priority: 0.6 },
+        { url: '/beef/{{%20trustSrc(url)%20}}', changefreq: 'daily',  priority: 0.8 },
         { url: '/add_beef/', changefreq: 'weekly',  priority: 0.7 },
-        { url: '/add_actor/', changefreq: 'weekly',  priority: 0.7 },
+        { url: '/add_actor/', changefreq: 'weekly',  priority: 0.5 },
         { url: '/about_us/', changefreq: 'weekly',  priority: 0.3 },
         { url: '/contact_us/', changefreq: 'weekly',  priority: 0.3 },
         { url: '/error/', changefreq: 'weekly',  priority: 0.4 },
