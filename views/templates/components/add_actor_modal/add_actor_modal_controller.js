@@ -2,6 +2,10 @@
 var post_submit_actor_callback = function(){};
 
 var load_data_into_add_actor_modal = function(scraped_actor_data, field_data_dump, callback){
+//function to be run after actor is submitted successfully
+var post_submit_actor_callback = function(){};
+
+var load_data_into_add_actor_modal = function(scraped_actor_data, field_data_dump, callback){
 
     $("#actor_name").val(scraped_actor_data.stage_name);
     $("#actor_photo_preview").attr("src", scraped_actor_data.img_title);

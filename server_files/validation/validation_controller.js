@@ -31,8 +31,6 @@ var master_functions_object = {
         return true
     },
     test_valid_date: function(date){
-        
-        console.log(date);
 
         var parsed_date = Date.parse(date);
         
