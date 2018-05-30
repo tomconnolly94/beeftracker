@@ -277,7 +277,7 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
     //extract data
     var event_id = request.params.event_id;    
     var beef_chain_id = request.params.beef_chain_id;
-    var page_url = request.headers.host + request.url;
+    var page_url = "https://" + request.headers.host + request.url;
     
     var regex = /[0-9A-Fa-f]{6}/g;
 
