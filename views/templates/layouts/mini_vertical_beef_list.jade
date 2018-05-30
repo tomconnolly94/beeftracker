@@ -2,9 +2,9 @@ include ./vertical_list_beef_item.jade
 include ./vertical_list_actor_item.jade
 
 mixin mini-vertical-beef(data, data_type, image_resize_params)
-    div.mini-vertical-list.col-md-12(class!=attributes.class)
+    - if(data != "none"){
+        div.mini-vertical-list.col-md-12(class!=attributes.class)
         //div.col-md-12
-        - if(data != "none"){
             - if(data_type == "events"){
                 h4 Events
             - }
@@ -18,7 +18,7 @@ mixin mini-vertical-beef(data, data_type, image_resize_params)
                 - else if(data_type == "actors"){
                     +vertical-list-actor-item(item, image_resize_params)
                 - }
-        - }
+    - }
 
 - if(!data){
 -     data = "none";
