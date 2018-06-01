@@ -42,13 +42,15 @@ module.exports = {
         request.checkBody("description", "Field is empty").notEmpty();
         request.checkBody("description", "Field is null.").not_null();
         request.checkBody("description", xss_warning).detect_xss();
-        /*
+        
+        /* unneeded,links arent solicited on the add-beef form
         //validate data_soruces
         request.checkBody("links", "Field is empty").notEmpty();
         request.checkBody("links", "Field is null.").not_null();
         request.checkBody("links", xss_warning).detect_xss_in_array_of_objects_keys_and_fields();
         request.checkBody("links", "Not an array of links.").test_array_of_links();
         */
+        
         //validate gallery_items
         request.checkBody("gallery_items", "Field is empty").notEmpty();
         request.checkBody("gallery_items", "Field is null.").not_null();
@@ -64,7 +66,8 @@ module.exports = {
         request.checkBody("data_sources", "Field is null.").not_null();
         request.checkBody("data_sources", xss_warning).detect_xss_in_string_array();
         request.checkBody("data_sources", "Data sources are improperly formatted.").test_array_of_urls();
-        /*
+        
+        /* unnecessary as user is validated elsewhere
         //validate user id
         request.checkBody("user_id", "Field is empty").notEmpty();
         request.checkBody("user_id", "Field is null.").not_null();

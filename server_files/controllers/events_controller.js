@@ -13,7 +13,7 @@ var format_embeddable_items = require('../tools/formatting.js').format_embeddabl
 var Event = require("../schemas/event_schema");
 var EventContribution = require("../schemas/event_contribution_schema").model;
 
-var test_mode = false;
+var test_mode = true;
 var event_projection = {
     "_id": 1,
     "title": 1,
