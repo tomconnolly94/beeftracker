@@ -97,20 +97,7 @@ router.get("/", token_authentication.recognise_user_token, resolve_user_from_loc
         view_parameters.category_event_data = values[3];
         view_parameters.categories = values[4];
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
-        /*
-        //calculate grid_data events ratings
-        for(var i = 0; i < view_parameters.featured_data.length; i++){
-            view_parameters.featured_data[i].rating = calculate_event_rating(view_parameters.featured_data[i].votes);
-        }
-        //calculate grid_data events ratings
-        for(var i = 0; i < view_parameters.grid_data.length; i++){
-            view_parameters.grid_data[i].rating = calculate_event_rating(view_parameters.grid_data[i].votes);
-        }
-        //calculate slider_data events ratings
-        for(var i = 0; i < view_parameters.category_event_data.length; i++){
-            view_parameters.category_event_data[i].rating = calculate_event_rating(view_parameters.category_event_data[i].votes);
-        }
-        */
+        
         response.render("pages/home.jade", view_parameters);
     }).catch(function(error){
         console.log(error);
@@ -184,8 +171,6 @@ router.get("/add-beef", token_authentication.recognise_user_token, resolve_user_
 
     var actor_data_promise = new Promise(function(resolve, reject){
         actor_controller.findActors({ increasing_order: "name" }, function(data){
-            console.log(data);
-            console.log(data.length);
             resolve(data);
         });
     });
@@ -377,8 +362,6 @@ router.get("/profile", token_authentication.recognise_user_token, resolve_user_f
         
         var events_added_by_user_promise = new Promise(function(resolve, reject){
             event_controller.findEvents({ match_user_id: view_parameters.user_data._id.toHexString(), limit: 3 }, function(data){
-                console.log("events_added_by_user length:");
-                console.log(data.length);
                 resolve(data);
             });
         });
@@ -391,21 +374,13 @@ router.get("/profile", token_authentication.recognise_user_token, resolve_user_f
             
             event_controller.findEvents({ match_event_ids: view_parameters.user_data.viewed_beef_ids.map(function(item, index){ return item.id})}, function(data){
                 var recently_viewed_events_ordered = [];
-                
-                console.log("recently viewed dump: ");
-                console.log(data);
-                console.log("view_parameters.user_data.viewed_beef_ids: ");
-                console.log(view_parameters.user_data.viewed_beef_ids);
-                                
+                                                
                 for(var i = 0; i < data.length; i++){
                     
                     var index = view_parameters.user_data.viewed_beef_ids.map(function(item, index){ return String(item.id); }).indexOf(String(data[i]._id));//find index of resolved event
                     if(index != -1) recently_viewed_events_ordered.push(data[i]); //if the index has been found, add it to the return array
                     if(recently_viewed_events_ordered[0] && recently_viewed_events_ordered[1] && recently_viewed_events_ordered[2]) break; //break early if the first three slots in the array are filled
                 }
-                console.log("recently_viewed_events_ordered length:");
-                console.log(recently_viewed_events_ordered.length);
-                console.log(recently_viewed_events_ordered);
                 resolve(recently_viewed_events_ordered);
             });
         });
@@ -496,8 +471,6 @@ router.get("/scraping_dump", token_authentication.recognise_user_token, resolve_
             
             var scraped_event_data_promise = new Promise(function(resolve, reject){
                 scraped_data_controller.findScrapedEventData({ }, function(data){
-                    //console.log(data[0])
-                    //console.log(data[0].classification_obj)
                     resolve(data);
                 });
             });

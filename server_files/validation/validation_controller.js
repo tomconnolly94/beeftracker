@@ -209,7 +209,7 @@ var master_functions_object = {
         }
     },
     detect_xss: function(input){
-        var sanitised_input = sanitizer.escape(input);
+        var sanitised_input = sanitizer.sanitize(input);
 
         if(input === sanitised_input){
             return true;
@@ -223,7 +223,7 @@ var master_functions_object = {
         for(var i = 0; i < inputs.length; i++){
             
             var input = inputs[i];
-            var sanitised_input = sanitizer.escape(input);
+            var sanitised_input = sanitizer.sanitize(input);
 
             if(input === sanitised_input){
                 continue;
@@ -243,8 +243,8 @@ var master_functions_object = {
             var key = keys[i];
             var field = object[key];
             
-            var sanitised_key = sanitizer.escape(key);
-            var sanitised_field = sanitizer.escape(field);
+            var sanitised_key = sanitizer.sanitize(key);
+            var sanitised_field = sanitizer.sanitize(field);
 
             if(key === sanitised_key && field === sanitised_field){
                 continue;
@@ -269,8 +269,8 @@ var master_functions_object = {
                     var key = keys[i];
                     var field = object[key];
 
-                    var sanitised_key = sanitizer.escape(key);
-                    var sanitised_field = sanitizer.escape(field);
+                    var sanitised_key = sanitizer.sanitize(key);
+                    var sanitised_field = sanitizer.sanitize(field);
 
                     if(key === sanitised_key && field === sanitised_field){
                         continue;
