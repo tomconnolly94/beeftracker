@@ -11,6 +11,8 @@ module.exports = {
     },
     
     validate: function(request, response, next){
+        
+        var xss_warning = "Potential HTML code found, please remove this. Please also remove any uses of the ampersand '&' character as this is not allowed.";
                 
         //access form data and reassign it to the request body
         if (typeof request.body.data === 'string' || request.body.data instanceof String){
@@ -19,7 +21,7 @@ module.exports = {
         //validate title
         request.checkBody("title", "Field is empty").notEmpty();
         request.checkBody("title", "Field is null.").not_null();
-        request.checkBody("title", "Potential HTML code found, please remove this.").detect_xss();
+        request.checkBody("title", xss_warning).detect_xss();
         
         //validate aggressor ids
         request.checkBody("aggressors", "Field is empty").notEmpty();
@@ -39,12 +41,12 @@ module.exports = {
         //validate description
         request.checkBody("description", "Field is empty").notEmpty();
         request.checkBody("description", "Field is null.").not_null();
-        request.checkBody("description", "Potential HTML code found, please remove this.").detect_xss();
+        request.checkBody("description", xss_warning).detect_xss();
         /*
         //validate data_soruces
         request.checkBody("links", "Field is empty").notEmpty();
         request.checkBody("links", "Field is null.").not_null();
-        request.checkBody("links", "Potential HTML code found, please remove this.").detect_xss_in_array_of_objects_keys_and_fields();
+        request.checkBody("links", xss_warning).detect_xss_in_array_of_objects_keys_and_fields();
         request.checkBody("links", "Not an array of links.").test_array_of_links();
         */
         //validate gallery_items
@@ -60,7 +62,7 @@ module.exports = {
         //validate data_soruces
         request.checkBody("data_sources", "Field is empty").notEmpty();
         request.checkBody("data_sources", "Field is null.").not_null();
-        request.checkBody("data_sources", "Potential HTML code found, please remove this.").detect_xss_in_string_array();
+        request.checkBody("data_sources", xss_warning).detect_xss_in_string_array();
         request.checkBody("data_sources", "Data sources are improperly formatted.").test_array_of_urls();
         /*
         //validate user id
@@ -71,13 +73,13 @@ module.exports = {
         //validate record_origin
         request.checkBody("record_origin", "Field is empty").notEmpty();
         request.checkBody("record_origin", "Field is null.").not_null();
-        request.checkBody("record_origin", "Potential HTML code found, please remove this.").detect_xss();
+        request.checkBody("record_origin", xss_warning).detect_xss();
         request.checkBody("record_origin", "Record origin is invalid.").test_record_origin();
         
         //validate tags
         request.checkBody("tags", "Field is empty").notEmpty();
         request.checkBody("tags", "Field is null.").not_null();
-        request.checkBody("tags", "Potential HTML code found, please remove this.").detect_xss_in_string_array();
+        request.checkBody("tags", xss_warning).detect_xss_in_string_array();
         request.checkBody("tags", "Tags are not formatted correctly.").test_array_of_strings();
         
         //validate image files

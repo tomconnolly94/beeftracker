@@ -210,7 +210,7 @@ var master_functions_object = {
     },
     detect_xss: function(input){
         var sanitised_input = sanitizer.sanitize(input);
-
+        
         if(input === sanitised_input){
             return true;
         }

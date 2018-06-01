@@ -17,6 +17,8 @@ mixin comment-box-display(comments)
         - var year = comment.date_added.getFullYear();
         - var formatted_date =  day + '/' + monthIndex + '/' + year;
         
+        - comment.text = String(comment.text)
+        
          div.comment-box-item
             div.col-md-1.d-none.d-md-block.d-lg-block.d-xl-block
                 //img(src="http://www.girardatlarge.com/wp-content/uploads/2013/05/gravatar-60-grey.jpg").img-fluid
