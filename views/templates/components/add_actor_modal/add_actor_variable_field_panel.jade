@@ -7,10 +7,10 @@ mixin add_actor_variable_field_panel(variable_fields, active_classification)
         - if(field.actor_classification == active_classification){
 
             div.form-group.col-md-6
-                label(for="actor_name") #{field.place_of_origin_title}
+                label(for="actor_name") #{field.place_of_origin_title} *
                 input(type="text").form-control#actor_place_of_origin
             div.form-group.col-md-6
-                label(for="actor_name") #{field.date_of_origin_title}
+                label(for="actor_name") #{field.date_of_origin_title} *
                 input(type="date").form-control#actor_date_of_origin
             div.form-group.col-md-6.list
                 +add-list([], "add_actor_modal_also_known_as", "Also Known As:")

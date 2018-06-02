@@ -78,18 +78,18 @@ append body
                         div.col-12
                             div.form-row
                                 div.form-group.col-md-6
-                                    label(for="beef_title") Title
+                                    label(for="beef_title") Title *
                                     input(type="text").form-control#beef_title
                                  div.form-group.col-md-6.row
                                      div.form-group.col-md-6
-                                        label(for="beef_date") Date
+                                        label(for="beef_date") Date *
                                         input(type="date").form-control#beef_date
                                      div.form-group.col-md-6
-                                        label(for="beef_time") Time
+                                        label(for="beef_time") Time *
                                         input(type="time", value="12:00").form-control#beef_time 
                             div.form-row
                                 div.form-group.col-md-6
-                                    label(for="beef_category") Category
+                                    label(for="beef_category") Category *
                                     select#beef_category.form-control(name="beef_category")
                                         option(selected="selected", disabled="disabled") Select Category
                                         each category in categories
@@ -100,15 +100,15 @@ append body
                                     
                             div.form-row
                                 div.form-group.col-md-12
-                                    label(for="beef_content_summernote") What happened?
+                                    label(for="beef_content_summernote") What happened? *
                                     textarea.form-control#beef_description
                                     //-#beef_content_summernote
                             
-                            +add-list([], "add_event_data_sources", "Data sources")
+                            +add-list([], "add_event_data_sources", "Data Sources")
                             
                             div.form-row
                                 div.form-group.col-md-12
-                                    h2 Gallery
+                                    h2 Gallery *
                             div.row.gallery-manager#gallery_manager
                                 +gallery-manager()
                                 

@@ -80,11 +80,12 @@ module.exports = {
         request.checkBody("record_origin", "Record origin is invalid.").test_record_origin();
         
         //validate tags
-        request.checkBody("tags", "Field is empty").notEmpty();
-        request.checkBody("tags", "Field is null.").not_null();
-        request.checkBody("tags", xss_warning).detect_xss_in_string_array();
-        request.checkBody("tags", "Tags are not formatted correctly.").test_array_of_strings();
-        
+        /*request.checkBody("tags", "Field is empty").notEmpty();
+        request.checkBody("tags", "Field is null.").not_null();*/
+        if(request.body.tags.length > 0){
+            request.checkBody("tags", xss_warning).detect_xss_in_string_array();
+            request.checkBody("tags", "Tags are not formatted correctly.").test_array_of_strings();
+        }
         //validate image files
         for(var i = 0; i < request.files.length; i++){
             //var filename = typeof request.files[i] !== "undefined" ? request.files[i].originalname : '';
