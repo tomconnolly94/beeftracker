@@ -13,4 +13,4 @@ Dockerfile
 docker-compose.yml
 
 #submodules
-beeftracker_scraping
+/beeftracker_scraping/
