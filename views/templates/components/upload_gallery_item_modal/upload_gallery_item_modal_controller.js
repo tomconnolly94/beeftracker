@@ -28,6 +28,10 @@ $(function(){
         file_input_tag.wrap('<form>').closest('form').get(0).reset();
         file_input_tag.unwrap();
         
+        //hide add button, show update button and attach id to update button
+        $("#add_button_div").css("display", "block");
+        $("#update_button_div").css("display", "none");
+        
         $('#upload_type').val("default").trigger("change"); //reset media type input select box
         $("#upload_gallery_item_modal").modal("hide"); //hide modal
     }
@@ -55,7 +59,7 @@ $(function(){
         }
     });
     
-    //function to handle a image being added to the file input tag
+    //handler to handle a image being added to the file input tag
     $("#image_link").change(function() {
         let input = this;
         
@@ -78,7 +82,7 @@ $(function(){
         $("#media_submit_button").removeAttr("disabled"); //enable the "add" button        
     });
     
-    //function to handle a youtube link being added to the file input tag
+    //handler to handle a youtube link being added to the file input tag
     $("#youtube_video_link").on('input', function(e) {
         
         let youtube_id = this.value.split("watch?v=")[1];
@@ -92,7 +96,7 @@ $(function(){
         $("#media_submit_button").removeAttr("disabled"); //enable the "add" button
     });
     
-    //function to handle a youtube link being added to the file input tag
+    //handler to handle a youtube link being added to the file input tag
     $("#spotify_link").on('input', function(e) {
         
         var link;
@@ -116,11 +120,7 @@ $(function(){
         $("#media_submit_button").removeAttr("disabled"); //enable the "add" button
     });
     
-    //function to handle media being officially added to the gallery manager with the "add" button
-    $("#media_submit_button").click(function(event){
-        event.preventDefault();
-        
-        gallery_items.push({ src: $("#media_preview").attr("src"), media_type: $("#media_preview").attr("x-media-type"), file_name: $("#media_preview").attr("x-file-name"), link: $("#media_preview").attr("x-media-link") , main_graphic: $("#set_as_main_graphic_checkbox").prop("checked"), cover_image:  $("#set_as_cover_image_checkbox").prop("checked") });
+    function add_or_update_gallery_item(){
         
         if($("#set_as_main_graphic_checkbox").prop("checked")){
             set_as_main_graphic_used = true;
@@ -138,9 +138,37 @@ $(function(){
             //clear and close modal
             reset_modal();
         });
+    }
+    
+    //handler to handle media being officially added to the gallery manager with the "add" button
+    $("#media_submit_button").click(function(event){
+        event.preventDefault();
+        
+        gallery_items.push({ src: $("#media_preview").attr("src"), media_type: $("#media_preview").attr("x-media-type"), file_name: $("#media_preview").attr("x-file-name"), link: $("#media_preview").attr("x-media-link") , main_graphic: $("#set_as_main_graphic_checkbox").prop("checked"), cover_image:  $("#set_as_cover_image_checkbox").prop("checked") });
+        
+        add_or_update_gallery_item();
     });
     
-    //function to remove item from gallery manager
+    //handler to update a gallery_item based on the current contents of the modal
+    $("#media_update_button").click(function(event){
+        event.preventDefault();
+        
+        //access the gallery item index of the item being edited
+        var gallery_item_index = $(this).attr("x-gallery-item-index");
+        
+        gallery_items[gallery_item_index] = { 
+            src: $("#media_preview").attr("src"), 
+            media_type: $("#media_preview").attr("x-media-type"), 
+            file_name: $("#media_preview").attr("x-file-name"), 
+            link: $("#media_preview").attr("x-media-link") , 
+            main_graphic: $("#set_as_main_graphic_checkbox").prop("checked"), 
+            cover_image:  $("#set_as_cover_image_checkbox").prop("checked") 
+        };
+        
+        add_or_update_gallery_item();        
+    });
+    
+    //handler to remove item from gallery manager
     $("#gallery_manager").on("click", "#remove_gallery_item", function(event){
         event.preventDefault();
         $(this.parentElement).remove();
@@ -158,32 +186,41 @@ $(function(){
         }
     });
     
-    
-    //function to re-open modal with data loaded if user clicks on a gallery item
+    //handler to re-open modal with data loaded if user clicks on a gallery item
     $("#gallery_manager").on("click", ".gallery-manager-item", function(event){
         event.preventDefault();
         
         let media_type = $(this).children("img").attr("x-media-type");
         
-        set_as_main_graphic_used = false;
-        set_as_cover_image_used = false;
-
+        /*set_as_main_graphic_used = false;
+        set_as_cover_image_used = false;*/
+        console.log($(this).children("img").attr("x-cover-image") == "x-cover-image" ? "block" : "none");
         //set modal fields
         $("#media_preview").attr("src", $(this).children("img").attr("src"));
         $("#media_preview").attr("x-media-type", media_type);
         $("#media_preview").attr("x-file-name", $(this).children("img").attr("x-file-name"));
         $("#media_preview").attr("x-media-link", $(this).children("img").attr("x-media-link"));
         $("#set_as_main_graphic_checkbox").prop("checked", $(this).children("img").attr("x-main-graphic") == "x-main-graphic" ? true : false);
+        $("#set_as_main_graphic").css("display", $(this).children("img").attr("x-main-graphic") == "x-main-graphic" ? "block" : "none");
         $("#set_as_cover_image_checkbox").prop("checked", $(this).children("img").attr("x-cover-image") == "x-cover-image" ? true : false);
-        
+        console.log($("#set_as_cover_image").css("display"));
+        $("#set_as_cover_image").css("display", $(this).children("img").attr("x-cover-image") == "x-cover-image" ? "block" : "none");
+        console.log($("#set_as_cover_image").css("display"));
         //set upload type select2 val
         $("#upload_type").val(media_type).trigger("change");
         
+        //hide add button, show update button and attach id to update button
+        $("#add_button_div").css("display", "none");
+        $("#update_button_div").css("display", "block");
+        
+        //assign gallery_item array index to update button for use later
+        $("#media_update_button").attr("x-gallery-item-index", $($($(this)[0]).find("img")[0]).attr("x-gallery-item-index"));
+        
         $("#upload_gallery_item_modal").modal("show"); //show modal
     });
-    
+        
     $('#upload_gallery_item_modal').on('hidden.bs.modal', function () {
-        // do something…
+        //whenever modal is closed, on purpose or via losing focus, reset all fields
         reset_modal();
     });
     
