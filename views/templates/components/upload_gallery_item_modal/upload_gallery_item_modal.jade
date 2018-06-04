@@ -55,9 +55,12 @@ mixin upload-gallery-item-modal()
                     div.form-check#set_as_cover_image(style="display:none;", title="Check this box to set this gallery item as the cover image meaning it will be used as the thumbnail for the event, and as the faded background on the beef page.")
                             input.form-check-input(type="checkbox", value="")#set_as_cover_image_checkbox
                             label.form-check-label(for="set_as_cover_image_checkbox") Set as Cover Image
-                    div.form-row
+                    div.form-row#add_button_div
                         div.form-group.col-md-12
                             button(disabled).btn.btn-primary.float-right#media_submit_button Add
+                    div.form-row#update_button_div(style="display:none;")
+                        div.form-group.col-md-12
+                            button.btn.btn-primary.float-right#media_update_button Update
             div.col-md-6
                 div.preview-pane
                     img(id="media_preview", src="")
