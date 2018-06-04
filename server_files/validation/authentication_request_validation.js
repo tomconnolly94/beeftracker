@@ -11,10 +11,7 @@ module.exports = {
         }
     },
     
-    validate: function(request, response, next){
-        console.log("validator started.");
-        console.log(request.body);
-                        
+    validate: function(request, response, next){                        
         //validate title
         request.checkBody("username", "Field is empty").notEmpty();
         request.checkBody("username", "Field is null.").not_null();
