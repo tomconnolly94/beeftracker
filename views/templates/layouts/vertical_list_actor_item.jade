@@ -18,21 +18,20 @@ mixin vertical-list-actor-item(item, image_resize_params)
 
     //div.vertical-list-item.beef-category-music(class=item == data[2] ? "hidden_on_lg" : "")
     div.vertical-list-item.beef-category-default
-        div.col-6.vertical-list-item-thumbnail
-            a(href="/actor/" + item._id) 
-                img(src=server_url_prefix_with_image_formatting + "/actors/" + item.img_title_fullsize)
-        div.col-6.vertical-list-item-details
-            h5
-                a(href="/actor/#{data._id}") #{item.name.length > 40 ? item.name.slice(0,40)+ "..." : item.name}
-            ul.beef-info
-                    li #{formatted_date}
-                    li
-                        span.fas.fa-comments &nbsp;&nbsp;
-                        //| #{item.comments.length}
-                    //-li
-                        span.beefometer.small.two-beefs
-            //p.
-                #{item.description.slice(0, 90).trim()}...
+        a(href="/actor/" + item._id).row
+            div.col-6.vertical-list-item-thumbnail
+                img(src=server_url_prefix_with_image_formatting + "/actors/" + item.img_title_fullsize, style="width:100%;")
+            div.col-6.vertical-list-item-details
+                h5 #{item.name.length > 40 ? item.name.slice(0,40)+ "..." : item.name}
+                ul.beef-info
+                        li #{formatted_date}
+                        li
+                            span.fas.fa-comments &nbsp;&nbsp;
+                            //| #{item.comments.length}
+                        //-li
+                            span.beefometer.small.two-beefs
+                //p.
+                    #{item.description.slice(0, 90).trim()}...
                 
 - if(!item){
 -     item = "none";

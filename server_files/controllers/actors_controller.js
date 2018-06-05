@@ -170,6 +170,10 @@ module.exports = {
                 if(Object.keys(sort_query_content).length > 0){
                     aggregate_array.push({ $sort: sort_query_content });
                 }
+                
+                console.log(aggregate_array);
+                console.log(match_query);
+                
                 db.collection(db_ref.get_current_actor_table()).aggregate(aggregate_array).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
                     else{
