@@ -1,5 +1,5 @@
 mixin featured-beef-section(data, data_type, image_resize_params)
-    +section('F', 'eatured', 'fa fa-fire')(class="categories-browser-section")
+    +section('F', 'eatured', 'fa fa-fire', "Check out beef WE think YOU will enjoy!")(class="categories-browser-section")
         div.row.featured-beefs-section
             div.primary-featured-beef
                  //+medium-beef-thumbnail(data[0].title, file_server_url_prefix + data_type + data[0].img_title_fullsize, data[0].category, data[0]._id, data[0].event_date)(class="beef-category-#{data[0].categories[0].name.toLowerCase()}", beef_thumbnail_class='x-large')

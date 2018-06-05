@@ -5149,6 +5149,7 @@ section {
       margin-left: 0;
       padding-left: 0;
       color: #000;
+      float: left;
       text-transform: uppercase;
       font-size: 24px; }
       section .title h2 span {
@@ -5159,6 +5160,16 @@ section {
       text-align: right;
       color: #DF3E3E;
       font-size: 22px; }
+    section .title .tagline {
+      display: inline;
+      float: left;
+      height: 100%;
+      margin-left: 4px; }
+      section .title .tagline .tagline_text {
+        position: absolute;
+        bottom: 5px; }
+    section .title div {
+      padding: 0px; }
   section .content {
     padding-top: 20px; }
     @media (max-width: 575.98px) {

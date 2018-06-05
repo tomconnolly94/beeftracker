@@ -53,7 +53,6 @@ $(function(){
         if(!set_as_cover_image_used && media_type == "image"){
             $("#set_as_cover_image").css("display", "block"); //show set as cover checkbox input
         }
-        $("#media_submit_button").removeAttr("disabled"); //enable the "add" button
     });
     
     //function to handle a image being added to the file input tag
@@ -76,6 +75,7 @@ $(function(){
         $('#media_preview').attr('x-file-name', file_name);
         var file_name = $(this).val().split("\\").pop();
         
+        $("#media_submit_button").removeAttr("disabled"); //enable the "add" button        
     });
     
     //function to handle a youtube link being added to the file input tag
@@ -88,6 +88,8 @@ $(function(){
         $('#media_preview').attr('x-media-link', this.value);
         $('#media_preview').attr('x-file-name', youtube_src);
         $('#media_preview').attr('src', youtube_src);
+        
+        $("#media_submit_button").removeAttr("disabled"); //enable the "add" button
     });
     
     //function to handle a youtube link being added to the file input tag
@@ -110,6 +112,8 @@ $(function(){
         $('#media_preview').attr('x-media-link', link);
         $('#media_preview').attr('x-file-name', link);
         $('#media_preview').attr('src', "/images/no_preview_available.jpg");
+        
+        $("#media_submit_button").removeAttr("disabled"); //enable the "add" button
     });
     
     //function to handle media being officially added to the gallery manager with the "add" button
@@ -154,24 +158,33 @@ $(function(){
         }
     });
     
-    /*
+    
     //function to re-open modal with data loaded if user clicks on a gallery item
     $("#gallery_manager").on("click", ".gallery-manager-item", function(event){
         event.preventDefault();
         
         let media_type = $(this).children("img").attr("x-media-type");
+        
+        set_as_main_graphic_used = false;
+        set_as_cover_image_used = false;
 
         //set modal fields
         $("#media_preview").attr("src", $(this).children("img").attr("src"));
         $("#media_preview").attr("x-media-type", media_type);
         $("#media_preview").attr("x-file-name", $(this).children("img").attr("x-file-name"));
         $("#media_preview").attr("x-media-link", $(this).children("img").attr("x-media-link"));
-        $("#set_as_main_graphic_checkbox").prop("checked", $(this).children("img").attr("x-cover-image") == "x-cover-image" ? true : false);
-        $("#set_as_mcover_image_checkbox").prop("checked", $(this).children("img").attr("x-cover-image") == "x-cover-image" ? true : false);
+        $("#set_as_main_graphic_checkbox").prop("checked", $(this).children("img").attr("x-main-graphic") == "x-main-graphic" ? true : false);
+        $("#set_as_cover_image_checkbox").prop("checked", $(this).children("img").attr("x-cover-image") == "x-cover-image" ? true : false);
         
         //set upload type select2 val
         $("#upload_type").val(media_type).trigger("change");
         
         $("#upload_gallery_item_modal").modal("show"); //show modal
-    });*/
+    });
+    
+    $('#upload_gallery_item_modal').on('hidden.bs.modal', function () {
+        // do something…
+        reset_modal();
+    });
+    
 });

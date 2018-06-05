@@ -20,14 +20,14 @@ append body
     div.bt-content
         +featured-beef-section(featured_data, "events", "c_fill,g_face,h_215,w_350")
         +adsense-banner-ad()
-        +section('New', 'BEEF', 'fa-clock')
+        +section('New', 'BEEF', 'fa-clock', 'Check out the latest contributions to our site!')
             div.row
                 +thumbnail-grid(grid_data, "events")
         //+section('HOT', 'BEEFS')
             //+horizontal-slider('featured_beefs_slider', grid_data, "events")
 append body
     div.bt-content
-        +section('JOINTHE', 'COMMUNITY', 'fa fa-comments')
+        +section('JOINTHE', 'COMMUNITY', 'fa fa-comments', 'Discover more way to get involved with the project, vote and contribute now!')
             div.row
                 div.col-sm-8
                     h4
@@ -52,7 +52,7 @@ append body
 append body
     div.bt-content-full-width.dark
       div.container
-          +section('HOT', 'BEEF')
+          +section('HOT', 'BEEF','', "Check out what's hot right now!")
                +horizontal-slider('featured_beefs_slider_full', slider_data, "events", "c_fill,g_face,h_219,w_340")
 
 
