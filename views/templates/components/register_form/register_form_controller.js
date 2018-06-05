@@ -39,7 +39,7 @@ $(function(event){
                 
                 
                 $.ajax({
-                    url: "/api/authenticate",
+                    url: "/api/auth/local/authenticate",
                     type: "POST",
                     data: { 
                         username: register_username,

@@ -24,7 +24,7 @@ $(function(){
         var original_url = window.location.href;
         
         $.ajax({
-            url: "/api/authenticate",
+            url: "/api/auth/local/authenticate",
             type: "POST",
             data: { username: username, password: password, requires_admin: false },
             success: function(result) {
@@ -84,7 +84,7 @@ $(function(){
         var original_url = window.location.href;
                 
         $.ajax({
-            url: "/api/deauthenticate",
+            url: "/api/auth/local/deauthenticate",
             type: "GET",
             success: function(result) {
                 window.location.href = "/";

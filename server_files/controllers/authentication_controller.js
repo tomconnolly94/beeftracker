@@ -1,3 +1,5 @@
+//THIS CONTROLLER HAS BEEN DEPRECATED, AND REPLACED BY A PASSPORT.JS LOCAL STRATEGY
+
 //external dependencies
 var jwt = require("jsonwebtoken");
 
