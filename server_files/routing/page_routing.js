@@ -273,11 +273,14 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
         var disable_voting = false;
         var cookies = cookie_parser.parse_cookies(request);
 
+        var view_parameters = Object.assign({}, view_parameters_global);
         if(request.locals && request.locals.authenticated_user){ //if user is logged on, decide whether to disable voting panel based on user record voted_on_beef_ids field
 
             if(request.locals.authenticated_user.voted_on_beef_ids.indexOf(event_id) != -1){
                 disable_voting = true;
             }
+            view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
+        
         }
         else{ //if user is not logged in, use the browser cookies to decide whether to hide voting panel
             if(cookies.voted_on_beef_ids && cookies.voted_on_beef_ids.split(",").indexOf(event_id) != -1){
@@ -314,14 +317,12 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
 
         Promise.all([ main_event_data_promise, comment_data_promise ]).then(function(values) {
 
-            var view_parameters = Object.assign({}, view_parameters_global);
             view_parameters.current_beef_chain_id = beef_chain_id;
             view_parameters.event_data = values[0].event_data;
             //view_parameters.event_data.rating = calculate_event_rating(view_parameters.event_data.votes);
             view_parameters.comment_data = values[1];
             view_parameters.related_events = values[0].related_events;
             view_parameters.disable_voting = disable_voting;
-            view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
             view_parameters.page_url = page_url;
 
             response.render("pages/beef.jade", view_parameters);
