@@ -1,22 +1,10 @@
+include ../template_helper_functions/file_server_url_builder.jade
+include ../template_helper_functions/date_formatter.jade
+
 mixin medium-beef-thumbnail(data, data_type, image_resize_params)
     - if(data != "none"){
     
-        - if(data.event_date instanceof Date){}
-        - else{
-        -   data.event_date = new Date(data.event_date);
-        - }
-        
-        - var day = data.event_date.getDate();
-        - var monthIndex = data.event_date.getMonth();
-        - var year = data.event_date.getFullYear();
-        - var formatted_date =  day + '/' + monthIndex + '/' + year;
-            
-        - if(image_resize_params){
-        -   var split_server_url_prefix = file_server_url_prefix.split("/");
-        -   split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, image_resize_params);
-        -   var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
-        - }
-        
+        - var formatted_date = format_date(data.event_date);
         - var letter_mapping = ["one", "two", "three", "four", "five" ]
 
         a(href="/beef/" + data.beef_chain_ids[0]._id + "/" + data._id, class!=attributes.class, class!=attributes.beef_thumbnail_class)
@@ -33,9 +21,10 @@ mixin medium-beef-thumbnail(data, data_type, image_resize_params)
                         div.beefometer-container
                             div.beefometer.small(class=letter_mapping[data.rating - 1] + "-beefs")
                 - if(server_rendered)
-                    img(class="lazy" data-src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + data.cover_image + ".webp")
+                    img(class="lazy" data-src=file_server_url_builder(file_server_url_prefix, data_type, data.cover_image, image_resize_params))
                 - else
-                    img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + data.cover_image + ".webp")
+                    //-img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + data.cover_image + ".webp")
+                    img(src=file_server_url_builder(file_server_url_prefix, data_type, data.cover_image, image_resize_params))
     - }
     
 +medium-beef-thumbnail("none", "none", "none")

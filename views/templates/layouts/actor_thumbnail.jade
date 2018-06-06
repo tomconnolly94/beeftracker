@@ -1,21 +1,17 @@
+include ../template_helper_functions/file_server_url_builder.jade
+include ../template_helper_functions/date_formatter.jade
+
 mixin medium-actor-thumbnail(data, data_type, image_resize_params)
     - if(data != "none"){
-        - if(data.date_of_origin instanceof Date){}
-        - else{
-        -   data.date_of_origin = new Date(data.date_of_origin);
-        - }
-        
-        - var day = data.date_of_origin.getDate();
-        - var monthIndex = data.date_of_origin.getMonth();
-        - var year = data.date_of_origin.getFullYear();
-        - var formatted_date =  day + '/' + monthIndex + '/' + year;
-            
+    
         - if(image_resize_params){
         -   var split_server_url_prefix = file_server_url_prefix.split("/");
         -   split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, image_resize_params);
         -   var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
         - }
 
+        - var formatted_date = format_date(data.date_of_origin);
+        
         a.beef-category-default(href="/actor/#{data._id}", class!=attributes.class, class!=attributes.beef_thumbnail_class)
             div.beef-thumbnail(class!=attributes.beef_thumbnail_class)
                 div.info-overlay
@@ -31,7 +27,9 @@ mixin medium-actor-thumbnail(data, data_type, image_resize_params)
                             div.beefometer.small.four-beefs
                 - if(server_rendered)
                     img(class="lazy" data-src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + data.img_title_fullsize)
+                    img(class="lazy" data-src=file_server_url_builder(file_server_url_prefix, data_type, data.cover_image, image_resize_params))
                 - else
                     img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + data.img_title_fullsize)
+                    img(src=file_server_url_builder(file_server_url_prefix, data_type, data.cover_image, image_resize_params))
     - }
 +medium-actor-thumbnail("none", "none", "none")

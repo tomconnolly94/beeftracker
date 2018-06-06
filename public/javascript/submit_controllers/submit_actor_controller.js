@@ -110,7 +110,7 @@ $(function(){
         
         //get form contents
         var name = $("#actor_name").val();
-        var date_of_origin = $("#actor_date_of_origin").val() ? $("#actor_date_of_origin").val().split("-") : null;
+        var date_of_origin = $("#actor_date_of_origin").val().split("-");
         var place_of_origin = $("#actor_place_of_origin").val();
         var actor_bio = $("#actor_bio").val();
         var actor_classification = $("#step-1").parent().attr("x-selected-actor-type");
@@ -204,9 +204,11 @@ $(function(){
         gallery_items.push(gallery_item_formatted);
         form_data.append("file-" + i, gallery_item_formatted.file, gallery_item_formatted.link);
         
+        var formatted_date = new Date(parseInt(date_of_origin[0]), parseInt(date_of_origin[1])-1, parseInt(date_of_origin[2]), parseInt(12), parseInt(00));
+        
         var actor_submission = {
             name: name,
-            date_of_origin: date_of_origin ? date_of_origin[2] + "/" + date_of_origin[1] + "/" + date_of_origin[0] : null,
+            date_of_origin: formatted_date,
             place_of_origin: place_of_origin,
             description: actor_bio,
             data_sources: data_sources,

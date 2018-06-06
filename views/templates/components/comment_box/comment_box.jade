@@ -1,14 +1,7 @@
 include ./comment_box_display.jade
+include ../../template_helper_functions/date_formatter.jade
 
 mixin comment-box(comments, content_classification)
-
-    - //insert image resizing into the image URL
-    - var split_server_url_prefix = file_server_url_prefix.split("/");
-    - split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, "c_fill,g_face,h_65,w_65");
-    - var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
-
-    - console.log(content_classification)
-
     div.row.comment-box
         div.col-md-12
             div.row
@@ -20,9 +13,9 @@ mixin comment-box(comments, content_classification)
             div.row.new-comment
                 div.col-md-1.d-none.d-md-block.d-lg-block.d-xl-block
                     - if(user_data)
-                        img#user_img(src=server_url_prefix_with_image_formatting + "/user_profiles/" + user_data.img_title, x-user-id=user_data._id, x-content-type=content_classification).img-fluid
+                        img#user_img(src=file_server_url_builder(file_server_url_prefix, "user_profiles", user_data.img_title, "c_fill,g_face,h_65,w_65"), x-user-id=user_data._id, x-content-type=content_classification).img-fluid
                     - else
-                        img(src=server_url_prefix_with_image_formatting + "/user_profiles/default").img-fluid
+                        img(src=file_server_url_builder(file_server_url_prefix, "user_profiles", "default", "c_fill,g_face,h_65,w_65")).img-fluid
                 div.col-md-11
                     div.row
                         div.col-md-12

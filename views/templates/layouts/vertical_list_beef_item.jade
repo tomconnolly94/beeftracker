@@ -1,27 +1,17 @@
+include ../template_helper_functions/file_server_url_builder.jade
+include ../template_helper_functions/date_formatter.jade
+
 mixin vertical-list-beef-item(item, image_resize_params)
 
     - if(item != "none"){
-        - if(image_resize_params){
-        -   var split_server_url_prefix = file_server_url_prefix.split("/");
-        -   split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, image_resize_params);
-        -   var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
-        - }
-
-        - if(item.event_date instanceof Date){}
-        - else{
-        -   item.event_date = new Date(item.event_date);
-        - }
-
-        - var day = item.event_date.getDate();
-        - var monthIndex = item.event_date.getMonth();
-        - var year = item.event_date.getFullYear();
-        - var formatted_date =  day + '/' + monthIndex + '/' + year;
-
+    
+        - var formatted_date = format_date(data.event_date);
+        
         //div.vertical-list-item.beef-category-music(class=item == data[2] ? "hidden_on_lg" : "")
         div.vertical-list-item.beef-category-music
             a(href="/beef/" + item.beef_chain_ids[0]._id + "/" + item._id).row
                 div.col-6.vertical-list-item-thumbnail
-                    img(src=server_url_prefix_with_image_formatting + "/events/" + item.cover_image, style="width:100%;")
+                    img(src=file_server_url_builder(file_server_url_prefix, "/events/", item.cover_image, image_resize_params), style="width:100%;")
                 div.col-6.vertical-list-item-details
                     h5 #{item.title.length > 40 ? item.title.slice(0,40)+ "..." : item.title}
                         span.fas.fa-comments &nbsp;&nbsp;

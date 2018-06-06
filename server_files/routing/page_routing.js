@@ -29,6 +29,8 @@ if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if 
     });
 }
 
+
+
 var view_parameters_global = { 
     file_server_url_prefix: globals.file_server_url_prefix,
     server_rendered: true

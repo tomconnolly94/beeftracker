@@ -13,7 +13,7 @@ var format_embeddable_items = require('../tools/formatting.js').format_embeddabl
 var Event = require("../schemas/event_schema");
 var EventContribution = require("../schemas/event_contribution_schema").model;
 
-var test_mode = true;
+var test_mode = false;
 var event_projection = {
     "_id": 1,
     "title": 1,
@@ -364,9 +364,28 @@ module.exports = {
             event_insert.gallery_items = format_embeddable_items(event_insert.gallery_items, files);
             
             storage_interface.async_loop_upload_items(event_insert.gallery_items, "events", files, function(items){
-                                
+                
+                //function to remove file extension
+                var strip_file_ext = function(string){
+                    var split_string = string.split(".");
+                    
+                    if(split_string.length > 1){
+                        var ext = split_string.pop();
+                        string = string.replace(ext, "");
+                    }
+                    
+                    return string;
+                }                
+                
                 //remove file objects to avoid adding file buffer to the db
                 for(var i = 0; i < event_insert.gallery_items.length; i++){
+                    
+                    //remove file extension from all image gallery items
+                    if(event_insert.gallery_items[i].media_type == "image"){ //set file to null to avoid storing file buffer in db
+                        event_insert.gallery_items[i].link = strip_file_ext(event_insert.gallery_items[i].link);
+                        event_insert.gallery_items[i].file_name = strip_file_ext(event_insert.gallery_items[i].file_name);
+                    }
+                    
                     if(event_insert.gallery_items[i].file){ //set file to null to avoid storing file buffer in db
                         event_insert.gallery_items[i].file = null;
                     }

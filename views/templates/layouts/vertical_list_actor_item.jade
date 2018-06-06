@@ -1,26 +1,15 @@
+include ../template_helper_functions/file_server_url_builder.jade
+include ../template_helper_functions/date_formatter.jade
+
 mixin vertical-list-actor-item(item, image_resize_params)
 
-    - if(image_resize_params){
-    -   var split_server_url_prefix = file_server_url_prefix.split("/");
-    -   split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, image_resize_params);
-    -   var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
-    - }
-
-    - if(item.date_of_origin instanceof Date){}
-    - else{
-    -   item.date_of_origin = new Date(item.date_of_origin);
-    - }
-
-    - var day = item.date_of_origin.getDate();
-    - var monthIndex = item.date_of_origin.getMonth();
-    - var year = item.date_of_origin.getFullYear();
-    - var formatted_date =  day + '/' + monthIndex + '/' + year;
-
+    - var formatted_date = format_date(data.event_date);
+    
     //div.vertical-list-item.beef-category-music(class=item == data[2] ? "hidden_on_lg" : "")
     div.vertical-list-item.beef-category-default
         a(href="/actor/" + item._id).row
             div.col-6.vertical-list-item-thumbnail
-                img(src=server_url_prefix_with_image_formatting + "/actors/" + item.img_title_fullsize, style="width:100%;")
+                img(src=file_server_url_builder(file_server_url_prefix, "/actors/", item.img_title_fullsize, image_resize_params), style="width:100%;")
             div.col-6.vertical-list-item-details
                 h5 #{item.name.length > 40 ? item.name.slice(0,40)+ "..." : item.name}
                 ul.beef-info

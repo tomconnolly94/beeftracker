@@ -51,7 +51,7 @@ router.route('/').post(memoryUpload, actor_data_validator.validate, function(req
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            //send_successful_response(response, 201, data);
+            send_successful_response(response, 201, data);
         }
     });
     

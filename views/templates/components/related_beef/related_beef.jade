@@ -1,11 +1,7 @@
+include ../template_helper_functions/file_server_url_builder.jade
+
 mixin related-beefs(related_events, data_type, image_resize_params, main_event_id)
 
-    - if(image_resize_params){
-    -   var split_server_url_prefix = file_server_url_prefix.split("/");
-    -   split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, image_resize_params);
-    -   var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
-    - }
-    
     div.rounded-mini-thumbs.related-beefs
         h4 Related Beef
         ul
@@ -14,7 +10,7 @@ mixin related-beefs(related_events, data_type, image_resize_params, main_event_i
                 - if(String(related_event._id) != String(main_event_id)){
                     li
                         a(href="/beef/#{related_event.beef_chain_ids[0]._id}/#{related_event._id}")
-                            img(src=server_url_prefix_with_image_formatting + "/" + data_type + "/" + related_event.cover_image)
+                            img(src=file_server_url_builder(file_server_url_prefix, data_type, related_event.cover_image, image_resize_params))
                             div    
                                 p #{related_event.title.slice(0,20)}
                                 p #{related_event.aggressors[0].name.split(" ")[related_event.aggressors[0].name.split(" ").length-1]} v. #{related_event.targets[0].name.split(" ")[related_event.targets[0].name.split(" ").length-1]}

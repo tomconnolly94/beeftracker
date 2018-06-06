@@ -75,7 +75,7 @@ module.exports = {
         //format object for insertion into pending db
         var actor_insert = new Actor({
             name: submission_data.name,
-            date_of_origin: new Date(date_of_origin[2], date_of_origin[1]-1, date_of_origin[0]),
+            date_of_origin: new Date(submission_data.date_of_origin),
             place_of_origin: submission_data.place_of_origin,
             description: submission_data.description,
             associated_actors: [],
@@ -282,15 +282,34 @@ module.exports = {
 
                     actor_insert.gallery_items = items;
 
+                    //function to remove file extension
+                    var strip_file_ext = function(string){
+                        var split_string = string.split(".");
+
+                        if(split_string.length > 1){
+                            var ext = split_string.pop();
+                            string = string.replace(ext, "");
+                        }
+
+                        return string;
+                    }                
+                
                     //remove file objects to avoid adding file buffer to the db
                     for(var i = 0; i < actor_insert.gallery_items.length; i++){
+                        
+                        //remove file extension from all image gallery items
+                        if(actor_insert.gallery_items[i].media_type == "image"){ //set file to null to avoid storing file buffer in db
+                            actor_insert.gallery_items[i].link = strip_file_ext(actor_insert.gallery_items[i].link);
+                            actor_insert.gallery_items[i].file_name = strip_file_ext(actor_insert.gallery_items[i].file_name);
+                        }
+                    
                         if(actor_insert.gallery_items[i].file){
                             actor_insert.gallery_items[i].file = null;
                         }
 
                         if(actor_insert.gallery_items[i].main_graphic){
                             actor_insert.img_title_fullsize = actor_insert.gallery_items[i].link; //save fullsize main graphic ref
-                            actor_insert.img_title_thumbnail = actor_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
+                            //actor_insert.img_title_thumbnail = actor_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
                         }
                     }
 
