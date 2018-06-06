@@ -111,10 +111,16 @@ app.get('/manifest.json', function(request, response) {
         "background_color": "#000000",
         "theme_color": "#000000",
         "description": "Beeftracker is a brand new web application designed to bring you the very latest in beef-related news! Visit the site: beeftracker.co.uk.",
-        "icons": [{
-            "src": "logo/beeftracker_new_logo_cropped_small.ico",
-            "sizes": "256x256"
-        }]
+        "icons": [
+            {
+                "src": "logo/beeftracker_new_logo_cropped_small.ico",
+                "sizes": "256x256"
+            },
+            {
+                "src": "logo/beeftracker_new_logo_cropped_small_512x512.ico",
+                "sizes": "512x512"
+            }
+        ]
     });
 }); //web app manifest
 app.get("/sitemap", function(req, res) {
