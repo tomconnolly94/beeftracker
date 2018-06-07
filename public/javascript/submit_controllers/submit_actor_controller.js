@@ -165,7 +165,6 @@ $(function(){
         
         //extract data sources
         for(var i = 0; i < li_items_also_known_as.length; i++){
-            console.log(li_items_also_known_as[i]);
             also_known_as.push(li_items_also_known_as[i].textContent);
         }
         
@@ -174,7 +173,6 @@ $(function(){
         
         //extract data sources
         for(var i = 0; i < li_items_data_sources.length; i++){
-            console.log(li_items_data_sources[i]);
             data_sources.push(li_items_data_sources[i].textContent);
         }
         
@@ -220,8 +218,6 @@ $(function(){
             record_origin: "submitted"
         }
         
-        console.log(actor_submission);
-
         var validation_result = validate_actor_submission(actor_submission)
         
         if(validation_result == "validation_successful"){
