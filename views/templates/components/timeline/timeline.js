@@ -81,7 +81,7 @@ $(function() {
           if (clicking) {
             if (dragging) {
               //console.log(dragging);
-              e.preventDefault();
+              //e.preventDefault();
             }
             clicking = false;
 
@@ -94,7 +94,7 @@ $(function() {
         $("#timeline").on('mouseleave touchcancel', function(e) {
 
           if (clicking) {
-            e.preventDefault();
+            //e.preventDefault();
             clicking = false;
 
             setTimeout(function() {
@@ -107,7 +107,7 @@ $(function() {
 
           if (clicking) {
               dragging = true;
-              e.preventDefault();
+              //e.preventDefault();
               clientX = e.clientX || e.touches[0].clientX;
               clientY = e.clientY || e.touches[0].clientY;
               var directionX = (previousX - clientX) > 0 ? 1 : -1;
