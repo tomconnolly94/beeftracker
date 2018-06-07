@@ -28,7 +28,7 @@ router.use("/events", require("./api_sub_routing/events_routing.js"));
 router.use("/scraped_data", require("./api_sub_routing/scraped_data_routing"));
 router.use("/update-requests", require("./api_sub_routing/update_requests_routing.js"));
 router.use("/users", require("./api_sub_routing/users_routing.js"));
-router.use("/votes", require("./api_sub_routing/users_routing.js"));
+router.use("/votes", require("./api_sub_routing/votes_routing.js"));
 router.route("/authenticate").post(authentication_request_validator.validate, function(request, response){
     
     var auth_details = request.locals.validated_data;
