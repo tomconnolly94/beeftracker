@@ -1,27 +1,12 @@
 include ../template_helper_functions/file_server_url_builder.jade
+include ../template_helper_functions/date_formatter.jade
 
 mixin vertical-beefs(data, data_type, image_resize_params)
-
-    - if(image_resize_params){
-    -   var split_server_url_prefix = file_server_url_prefix.split("/");
-    -   split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, image_resize_params);
-    -   var server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
-    - }
-    
     div.vertical-list(class!=attributes.class)
         div.col-md-12
             each item in data
-            
-                - if(item.event_date instanceof Date){}
-                - else{
-                -   item.event_date = new Date(item.event_date);
-                - }
-
-                - var day = item.event_date.getDate();
-                - var monthIndex = item.event_date.getMonth();
-                - var year = item.event_date.getFullYear();
-                - var formatted_date =  day + '/' + monthIndex + '/' + year;
-            
+                - var formatted_date = format_date(data.event_date);
+                
                 div.vertical-list-item.beef-category-default
                     div.vertical-list-item-thumbnail
                         //div.header-panel
@@ -33,9 +18,9 @@ mixin vertical-beefs(data, data_type, image_resize_params)
                             a(href="/#{item.type}/#{item._id}") #{item.title}
                         ul.beef-info
                             li #{formatted_date}
-                            li
+                            //-li
                                 span.fas.fa-comments &nbsp;&nbsp;
-                                //| #{item.comments.length}
+                                //-| #{item.comments.length}
                             li
                                 span.beefometer.small.two-beefs
                         p.

@@ -22,7 +22,7 @@ html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   -ms-overflow-style: scrollbar;
-  -webkit-tap-highlight-color: transparent; }
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
 
 @-ms-viewport {
   width: device-width; }
@@ -5092,7 +5092,7 @@ nav {
       display: none; } }
   nav .social-navbar-nav .nav-item.search {
     background-color: #DF3E3E;
-    border: solid #DF3E3E; }
+    /*border: solid $brand-primary;*/ }
 
 footer {
   margin-top: 20px; }
@@ -5449,6 +5449,8 @@ section {
   .mini-vertical-list .vertical-list-item {
     height: 110px;
     margin-bottom: 5px; }
+    .mini-vertical-list .vertical-list-item a {
+      width: 100%; }
     .mini-vertical-list .vertical-list-item ul.beef-info {
       list-style-type: none;
       margin: 0;
@@ -5953,6 +5955,9 @@ div#smartwizard:before {
 
 .inline-beef-search-form .form-text.trending a {
   color: #DF3E3E; }
+
+#beef-search-container #search_results {
+  padding: 15px; }
 
 @media (max-width: 767.98px) {
   .js-grid {

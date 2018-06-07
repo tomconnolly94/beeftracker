@@ -194,7 +194,13 @@ module.exports = {
                         localField: "beef_chain_ids", 
                         foreignField: "_id", 
                         as: "beef_chain_ids"  
-                    }}, 
+                    }},/*
+                    { $lookup: { 
+                        from: "comments", 
+                        localField: "_id", 
+                        foreignField: "event_id", 
+                        as: "comments"  
+                    }},*/
                     /*{ $unwind: "$beef_chain_ids"}, 
                     { $lookup: { 
                         from: "event_data_v4", 
@@ -238,7 +244,7 @@ module.exports = {
                     if(err){ console.log(err); }
                     else{
                         if(docs){
-                            //console.log(docs)
+                            //console.log(docs[0])
                             callback( docs );
                         }
                         else{

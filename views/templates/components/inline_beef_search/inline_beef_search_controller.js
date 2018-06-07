@@ -18,7 +18,7 @@ $(function(){
                         });
                     }
                     else{
-                        fade_new_content_to_div("#" + section_display_div_id, "<h3 style='margin: 0 auto'> No Beef events or Actors found, please try a different search. </h3>")
+                        fade_new_content_to_div("#" + section_display_div_id, "<h3 style='margin: 0 auto;text-align:center;padding-left:15px;'> No Beef events or Actors found, please try a different search. </h3>")
                     }
                 });
             });
