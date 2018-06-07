@@ -21,7 +21,6 @@ mixin timeline-section(data, beef_chain_index)
             ol
                 //-- data.beef_chain_ids[beef_chain_index].events.reverse(); //-put events in the correct order
                 each thumbnail_data, index in data.beef_chain_ids[beef_chain_index].events
-                
                     - thumbnail_data.beef_chain_ids[beef_chain_index] = data.beef_chain_ids[beef_chain_index]
                 
                     //-insert empty li if two consecutive events are from the same actor
