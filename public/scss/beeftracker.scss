@@ -218,3 +218,13 @@ a.btn {
 #login_modal_warning_message{
     color: $brand-primary;
 }
+
+.loader{
+    position:fixed;
+    left:0px;
+    top:0px;
+    width: 100%;
+    height: 100%;
+    z-index:9999;
+    background: url("/logo/logo@256.png") no-repeat center;
+}

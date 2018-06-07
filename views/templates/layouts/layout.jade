@@ -44,6 +44,7 @@ html(lang="en")
             });
     
     body
+        div.loader
         div#file_server_url_prefix_store(value=file_server_url_prefix)
         header.container.d-none.d-md-block
             div.row
@@ -233,3 +234,7 @@ html(lang="en")
                     }
                 }
             });
+            
+            $(function(){
+                $(".loader").CSS("display", "none")
+            })
