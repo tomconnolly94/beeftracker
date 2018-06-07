@@ -7,14 +7,17 @@
     overflow-x: hidden;
     padding-top: 0;
     cursor:move;
+    p {
+        color: $brand-primary;
+    }
 }
 
 .timeline ol {
     font-size: 0;
     width: 100%;
-    padding: 250px 0;
+    padding: 250px 0px 0px;
     transition: all 1s;
-    min-height: 550px
+    min-height: 470px
 }
 
 .timeline ol li {

@@ -10,25 +10,21 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 // ### External Dependencies ###
-var express = require('express'); //server library
-var app = express();
-var bodyParser = require('body-parser'); //library to assist with parsing data to readable content
-var methodOverride = require('method-override');
-var path = require('path');
-var sitemap_generator = require('sitemap');
-var mime = require('mime-types');
-var multer = require('multer'); //library to assist with file storage
-var morgan = require("morgan"); //library to provide more detailed logs
-var jade = require('pug');
-var compression = require('compression');
-var validation_controller = require("./server_files/validation/validation_controller");
-var validator = require('express-validator');
-var fs = require('fs');
-
-//configure validator
-app.use(validator({
-    customValidators: validation_controller.get_all_custom_validation_functions()
-}));
+const express = require('express'); //server library
+const app = express();
+const spdy = require('spdy')
+const bodyParser = require('body-parser'); //library to assist with parsing data to readable content
+const methodOverride = require('method-override');
+const path = require('path');
+const sitemap_generator = require('sitemap');
+const mime = require('mime-types');
+const multer = require('multer'); //library to assist with file storage
+const morgan = require("morgan"); //library to provide more detailed logs
+const jade = require('pug');
+const compression = require('compression');
+const validation_controller = require("./server_files/validation/validation_controller");
+const validator = require('express-validator');
+const fs = require('fs');
 
 // ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({
@@ -46,7 +42,14 @@ sitemap = sitemap_generator.createSitemap ({
     ]
 });
 
-// ### Configure node variables ###
+// ### Middleware ###
+ 
+//configure validator
+app.use(validator({
+    customValidators: validation_controller.get_all_custom_validation_functions()
+}));
+
+// ### Configure node constiables ###
 app.set('port', (process.env.PORT || 5000));
 app.set('views', __dirname + '/views/templates');
 //app.set('view engine', 'ejs');
@@ -64,9 +67,11 @@ app.use(function(req, res, next) {
 app.use(compression());
 app.disable('etag');
 
+// ### Top level route config ###
+
 app.use('/logo', express.static(__dirname + '/public/assets/images/logo/v3')); //route to reference logo images
 app.use('/favicon.ico', function(request, response){
-    var img = fs.readFileSync('public/assets/images/logo/v3/beeftracker_new_logo_cropped_small.ico');
+    let img = fs.readFileSync('public/assets/images/logo/v3/beeftracker_new_logo_cropped_small.ico');
     response.writeHead(200, {'Content-Type': 'image/ico' });
     response.end(img, 'binary');
 }); //route to reference logo favicon
@@ -136,5 +141,30 @@ app.get("/sitemap", function(req, res) {
 // ### Serve an error page on unrecognised uri###
 app.get('/*', function(req, res, next) { res.render("pages/static/error.jade"); });
 
+var success_msg = "Node app is running on port: ";
+
 // ### Launch application ####
-app.listen(app.get('port'), function(){ console.log('Node app is running on port', app.get('port'), 'in', process.env.NODE_ENV, 'mode'); });
+app.listen(app.get('port'), function(){
+    console.log("NODE_ENV: " + process.env.NODE_ENV); 
+    console.log("HTTP " + success_msg + app.get('port'))
+});
+
+if(process.env.NODE_ENV.includes("local")){
+
+    let http2_port = parseInt(app.get('port')) + 1;
+    let options = {
+        key: fs.readFileSync(__dirname + '/server_files/config/http2_config/server.key'),
+        cert:  fs.readFileSync(__dirname + '/server_files/config/http2_config/server.crt'),
+        ca : fs.readFileSync(__dirname + '/server_files/config/http2_config/server.crt')
+    }
+
+    spdy.createServer(options, app).listen(http2_port, function(error){
+        if (error) {
+            console.error(error)
+            return process.exit(1)
+        }
+        else {
+            console.log("HTTPS/2 " + success_msg + http2_port);
+        }
+    });
+}

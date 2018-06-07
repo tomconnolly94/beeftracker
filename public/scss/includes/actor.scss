@@ -13,6 +13,11 @@
         height: 64px;
         width: 64px;
     }
+    
+    &.sml {
+        width: 75px !important;
+        height: 75px !important;
+    }
 }
 
 .actor-attributes {

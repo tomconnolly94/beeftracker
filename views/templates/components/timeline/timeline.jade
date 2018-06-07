@@ -7,15 +7,19 @@ mixin timeline-section(data, aggressor)
 
     +section('EXPLORE', 'TIMELINE', 'fa-clock')
         section.timeline-container
-          .arrows
+            .arrows
                 button.arrow.arrow__prev
                   i.fas.fa-chevron-left
                 button.arrow.arrow__next
                   i.fas.fa-chevron-right
-          div.timeline
-          
+            div.col-md-2.offset-5
+                //-h4(style="text-align: center;") #{event_data.aggressors[aggressor_index].name}
+                a(href="/actor/" + event_data.aggressors[aggressor_index]._id)
+                    //-img.actor-avatar(src="https://res.cloudinary.com/hghz4zts3/image/upload/c_fill,g_face,h_150,w_150/v1514066941/actors/220px-Official_portrait_of_Jeremy_Corbyn_crop_2" )
+                    img.actor-avatar.sml(src=file_server_url_builder(file_server_url_prefix, "actors", event_data.aggressors[aggressor_index].img_title_fullsize, "c_fill,g_face,h_75,w_75") )
+        div.timeline
             ol
-                each thumbnail_data in data.beef_chain_ids[0].events
+                each thumbnail_data, index in data.beef_chain_ids[0].events
                     - thumbnail_data.beef_chain_ids[0] = data.beef_chain_ids[0]
                 
                     - if(String(previous_aggressor_id) == String(thumbnail_data.aggressors[0])){
@@ -26,11 +30,19 @@ mixin timeline-section(data, aggressor)
                     - if(thumbnail_data.title == data.title){
                         li.active
                             +medium-beef-thumbnail(thumbnail_data, "events", "c_fill,g_face,h_262,w_315")(class="beef-category-default")
+                            - if(index == 0){
+                                p(style="float:left; margin:5px;") Now
+                            - }
+                    
                     - }
                     - else{
                         li 
                             +medium-beef-thumbnail(thumbnail_data, "events", "c_fill,g_face,h_185,w_270")(class="beef-category-default")
-                    - }
+                            - if(index == 0){
+                                p(style="float:left; margin:5px;") Now
+                            - }
+                    
+                    - }                    
                     
                     - previous_aggressor_id = thumbnail_data.aggressors[0]
 
@@ -40,3 +52,11 @@ mixin timeline-section(data, aggressor)
                     | &nbsp;
                 li.empty
                     | &nbsp;
+                    p(style="float:right; margin:5px;") The beginning of Time
+                    
+        
+            div.col-md-2.offset-5(style="margin-bottom:20px;")
+                //-h4(style="text-align: center;") #{event_data.targets[target_index].name}
+                a(href="/actor/" + event_data.targets[target_index]._id)
+                    //-img.actor-avatar(src="https://res.cloudinary.com/hghz4zts3/image/upload/c_fill,g_face,h_150,w_150/v1514066941/actors/220px-Official_portrait_of_Jeremy_Corbyn_crop_2" )
+                    img.actor-avatar.sml(src=file_server_url_builder(file_server_url_prefix, "actors", event_data.targets[target_index].img_title_fullsize, "c_fill,g_face,h_75,w_75") )

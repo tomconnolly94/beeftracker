@@ -22,7 +22,7 @@ html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   -ms-overflow-style: scrollbar;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
+  -webkit-tap-highlight-color: transparent; }
 
 @-ms-viewport {
   width: device-width; }
@@ -5687,6 +5687,9 @@ $categories: (
     .actor-avatar {
       height: 64px;
       width: 64px; } }
+  .actor-avatar.sml {
+    width: 75px !important;
+    height: 75px !important; }
 
 .actor-attributes {
   padding: 0;
@@ -6111,13 +6114,15 @@ figure.masonry-item.soundcloud-item .play-button {
   overflow-x: hidden;
   padding-top: 0;
   cursor: move; }
+  .timeline p {
+    color: #DF3E3E; }
 
 .timeline ol {
   font-size: 0;
   width: 100%;
-  padding: 250px 0;
+  padding: 250px 0px 0px;
   transition: all 1s;
-  min-height: 550px; }
+  min-height: 470px; }
 
 .timeline ol li {
   position: relative;
