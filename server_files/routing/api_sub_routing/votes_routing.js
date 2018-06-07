@@ -7,7 +7,7 @@ var votes_controller = require('../../controllers/votes_controller');
 var vote_data_validator = require("../../validation/vote_data_validation");
 var token_authentication = require("../../tools/token_authentication.js"); //get token authentication object
 var memoryUpload = require("../../config/multer_config.js").get_multer_object(); //get multer config
-var responses_object = require("./endpoint_responses.js");
+var responses_object = require("./endpoint_response.js");
 
 //init response functions
 var send_successful_response = responses_object.send_successful_response;

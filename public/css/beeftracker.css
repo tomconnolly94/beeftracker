@@ -6464,7 +6464,8 @@ figure.masonry-item.soundcloud-item .play-button {
     .beef-content .voting-panel h3 {
       margin: 10px auto; }
     .beef-content .voting-panel p {
-      margin: 0 auto; }
+      margin: 0 auto;
+      padding: 15px; }
 
 .icon-flipped {
   transform: scaleX(-1);
