@@ -5809,7 +5809,8 @@ form label {
   list-style: none;
   padding: 0; }
   .rounded-mini-thumbs ul li {
-    display: inline-block; }
+    display: inline-block;
+    margin: 0px 15px; }
     .rounded-mini-thumbs ul li img {
       background: #fff;
       border: 3px solid rgba(0, 0, 0, 0.1);
