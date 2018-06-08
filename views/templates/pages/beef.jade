@@ -146,14 +146,16 @@ append body
                     h4 #{event_data.targets[target_index].name}
                     a(href="/actor/" + event_data.targets[target_index]._id)
                         img(src=versus_panel_server_url_prefix_with_image_formatting + "/actors/" + event_data.targets[target_index].img_title_fullsize).actor-avatar
+        
         div.row(style="text-align:center")
-            - var beef_chain_id;
             div.col-md-4.offset-md-4
                 select.form-control.also-appears-in-select
                     option
                     each aggressor in event_data.aggressors
                         each target in event_data.targets                        
-                            - if(!(String(aggressor._id) == String(event_data.aggressors[aggressor_index]._id) && String(target._id) == String(event_data.targets[target_index]._id))){
+                            - if(!(String(aggressor._id) == String(event_data.aggressors[aggressor_index]._id) && String(target._id) == String(event_data.targets[target_index]._id))){ //-make sure neither the main aggressor or main target  are in the drop down
+                                
+                                - var beef_chain_id;
                                 
                                 - for(var i = 0; i < event_data.beef_chain_ids.length; i++){
                                                                 
@@ -167,7 +169,7 @@ append body
                             - }
                         
         div.row
-            +timeline-section(event_data)
+            +timeline-section(event_data, beef_chain_index)
             div.col-md-12.small_cta
                 h3 See something missing? 
                     a(href="/add-beef") Add a new event 

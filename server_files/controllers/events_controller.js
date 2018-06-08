@@ -337,6 +337,7 @@ module.exports = {
                             docs[0].beef_chain_ids[0].events.sort(compare_event_dates); //sort beef chain events using event dates using above compare function
                             
                             console.log(docs[0]);
+                            console.log(docs[0].events);
                             
                             callback( docs[0] );
                             
