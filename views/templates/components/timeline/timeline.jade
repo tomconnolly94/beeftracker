@@ -23,28 +23,31 @@ mixin timeline-section(data, beef_chain_index)
                 each thumbnail_data, index in data.beef_chain_ids[beef_chain_index].events
                     - thumbnail_data.beef_chain_ids[beef_chain_index] = data.beef_chain_ids[beef_chain_index]
                 
+                    //-insert empty li if two consecutive events are from the same actor
                     - if(String(previous_aggressor_id) == String(thumbnail_data.aggressors[0])){
                         li.empty
                             | &nbsp;
                     - }
                     
-                    - if(thumbnail_data.title == data.title){
-                        li.active
-                            +medium-beef-thumbnail(thumbnail_data, "events", "c_fill,g_face,h_262,w_315")(class="beef-category-default")
-                            - if(index == 0){
-                                p(style="float:left; margin:5px;") Now
-                            - }
-                    
+                    //insert hidden empty li if the first event is not from the main event aggressor to ensure all events end up on the correct side of the timeline
+                    - if(index == 0 && String(thumbnail_data.aggressors[0]._id) == String(event_data.targets[target_index]._id)){
+                        li.empty(style="display:none;")
+                            | &nbsp;
                     - }
-                    - else{
-                        li 
-                            +medium-beef-thumbnail(thumbnail_data, "events", "c_fill,g_face,h_185,w_270")(class="beef-category-default")
-                            - if(index == 0){
-                                p(style="float:left; margin:5px;") Now
-                            - }
                     
-                    - }                    
+                    - var li_class = "";
                     
+                    //if this thumbnail data is for the main event, add an active class so it is highlighted
+                    - if(thumbnail_data.title == data.title){
+                        - li_class = "active";
+                    - }
+                    
+                    //create list item tag with thumbnail data for the timeline
+                    li(class=li_class)
+                        +medium-beef-thumbnail(thumbnail_data, "events", "c_fill,g_face,h_262,w_315")(class="beef-category-default")
+                        - if(index == 0){
+                            p(style="float:left; margin:5px;") Now
+                        - }
                     - previous_aggressor_id = thumbnail_data.aggressors[0]
 
                 li.empty

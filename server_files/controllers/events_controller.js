@@ -334,7 +334,9 @@ module.exports = {
                             function compare_event_dates(a, b) {
                                 return b.event_date.valueOf() - a.event_date.valueOf();
                             }
-                            docs[0].beef_chain_ids[0].events.sort(compare_event_dates); //sort beef chain events using event dates using above compare function
+                            for(var i = 0; i < docs[0].beef_chain_ids.length; i++){
+                                docs[0].beef_chain_ids[i].events.sort(compare_event_dates); //sort beef chain events using event dates using above compare function
+                            }
                                                         
                             callback( docs[0] );
                             

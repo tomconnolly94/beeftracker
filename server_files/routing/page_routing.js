@@ -268,7 +268,7 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
     
     var regex = /[0-9A-Fa-f]{6}/g;
 
-    if(regex.test(event_id) && regex.test(beef_chain_id)) {//valida query params
+    if(regex.test(event_id) && regex.test(beef_chain_id)) {//validate query params
     
         var disable_voting = false;
         var cookies = cookie_parser.parse_cookies(request);
