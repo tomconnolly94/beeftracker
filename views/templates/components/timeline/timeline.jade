@@ -4,7 +4,6 @@ mixin timeline-section-js()
 mixin timeline-section(data, beef_chain_index)
 
     - var previous_aggressor_id = 0;
-    - console.log(beef_chain_index);
 
     +section('EXPLORE', 'TIMELINE', 'fa-clock')
         section.timeline-container
@@ -20,7 +19,7 @@ mixin timeline-section(data, beef_chain_index)
                     img.actor-avatar.sml(src=file_server_url_builder(file_server_url_prefix, "actors", event_data.aggressors[aggressor_index].img_title_fullsize, "c_fill,g_face,h_75,w_75") )
         div.timeline
             ol
-                - console.log(beef_chain_index);
+                - data.beef_chain_ids[beef_chain_index].events.reverse(); //-put events in the correct order
                 each thumbnail_data, index in data.beef_chain_ids[beef_chain_index].events
                     - thumbnail_data.beef_chain_ids[beef_chain_index] = data.beef_chain_ids[beef_chain_index]
                 
