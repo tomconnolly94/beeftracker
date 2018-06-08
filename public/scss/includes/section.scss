@@ -1,5 +1,11 @@
 section {
     padding-top:30px;
+    
+    @include media-breakpoint-down(sm) {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+
     .title {
         border-bottom: 2px solid #000;
         margin-left:0;
@@ -39,7 +45,10 @@ section {
             
             .tagline_text{
                 position: absolute;
-                bottom: 5px;   
+                bottom: 6px;
+                overflow: hidden;
+                max-height: 24px;
+                line-height: 12px;
             }
         }
         
@@ -51,8 +60,8 @@ section {
         padding-top: 20px;
 
         @include media-breakpoint-down(xs) {
-                padding:20px 10px;
-            }
+            padding:20px 10px;
+        }
     }
 }
 
