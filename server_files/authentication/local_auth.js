@@ -103,9 +103,6 @@ passport.use(new LocalStrategy({
 ));
 
 router.route('/authenticate').post(passport.authenticate('local', { session: "false" }), function(request, response){
-    //console.log(request, response);
-    console.log(request.user);
-    console.log("done");
     create_auth_cookies(request.user, response, request.headers, function(){
         response.status(200).send({})
     });
