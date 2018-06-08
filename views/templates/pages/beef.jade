@@ -147,6 +147,7 @@ append body
                     a(href="/actor/" + event_data.targets[target_index]._id)
                         img(src=versus_panel_server_url_prefix_with_image_formatting + "/actors/" + event_data.targets[target_index].img_title_fullsize).actor-avatar
         div.row(style="text-align:center")
+            - var beef_chain_id;
             div.col-md-4.offset-md-4
                 select.form-control.also-appears-in-select
                     option
@@ -154,7 +155,6 @@ append body
                         each target in event_data.targets                        
                             - if(!(String(aggressor._id) == String(event_data.aggressors[aggressor_index]._id) && String(target._id) == String(event_data.targets[target_index]._id))){
                                 
-                                - var beef_chain_id;
                                 - for(var i = 0; i < event_data.beef_chain_ids.length; i++){
                                                                 
                                     - if(event_data.beef_chain_ids[i].actors.map(function(e){ return String(e) }).indexOf(String(aggressor._id)) != -1 && event_data.beef_chain_ids[i].actors.map(function(e){ return String(e) }).indexOf(String(target._id)) != -1){

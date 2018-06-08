@@ -1,7 +1,7 @@
 mixin timeline-section-js()
     script(src="/component_controllers/timeline/timeline.js" async)
     
-mixin timeline-section(data, aggressor)
+mixin timeline-section(data)
 
     - var previous_aggressor_id = 0;
 
@@ -19,8 +19,8 @@ mixin timeline-section(data, aggressor)
                     img.actor-avatar.sml(src=file_server_url_builder(file_server_url_prefix, "actors", event_data.aggressors[aggressor_index].img_title_fullsize, "c_fill,g_face,h_75,w_75") )
         div.timeline
             ol
-                each thumbnail_data, index in data.beef_chain_ids[0].events
-                    - thumbnail_data.beef_chain_ids[0] = data.beef_chain_ids[0]
+                each thumbnail_data, index in data.beef_chain_ids[beef_chain_id].events
+                    - thumbnail_data.beef_chain_ids[beef_chain_id] = data.beef_chain_ids[beef_chain_id]
                 
                     - if(String(previous_aggressor_id) == String(thumbnail_data.aggressors[0])){
                         li.empty
