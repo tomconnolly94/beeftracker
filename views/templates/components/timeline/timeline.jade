@@ -30,7 +30,7 @@ mixin timeline-section(data, beef_chain_index)
                     - }
                     
                     //insert hidden empty li if the first event is not from the main event aggressor to ensure all events end up on the correct side of the timeline
-                    - if(index == 0 && String(thumbnail_data.aggressors[0]._id) == String(event_data.targets[target_index]._id)){
+                    - if(index == 0 && String(thumbnail_data.aggressors[0]) == String(event_data.targets[target_index]._id)){
                         li.empty(style="display:none;")
                             | &nbsp;
                     - }
