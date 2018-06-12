@@ -113,6 +113,11 @@ append body
                     - else if(main_graphic.media_type == "youtube_embed")
                         div.beef-body-content-youtube-video
                             iframe(height="315", scrolling="no", frameborder="no", src=main_graphic.link, allow="autoplay; encrypted-media")
+                    //- else if(main_graphic.media_type == "video_embed")
+                    div.beef-body-content-video
+                        video(controls)
+                            source(src="movie.mp4", type="video/mp4")
+                            source(src="movie.ogg", type="video/ogg")
                     - else if(main_graphic.media_type == "image")
                         div.row.col-md-6(style="margin: 0 auto;")
                             div.beef-body-content-image.col-md-12
