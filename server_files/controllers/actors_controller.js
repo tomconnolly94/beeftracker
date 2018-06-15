@@ -12,7 +12,7 @@ var format_embeddable_items = require('../tools/formatting.js').format_embeddabl
 //objects
 var Actor = require('../schemas/actor_schema');
 
-var test_mode = false;
+var test_mode = true;
 var actor_intermediate_projection = {
     $project: {
         _id: 1, 
@@ -273,6 +273,8 @@ module.exports = {
         if(test_mode){
             console.log("test mode is on.");
             console.log(actor_insert);
+            
+            callback(actor_insert);//{ failed: false, test_mode: true, message: "Test mode is on, the db was not updated, nothing was added to the file server.", actor: actor_insert });
         }
         else{        
             //find gallery items that need their embedding links generated

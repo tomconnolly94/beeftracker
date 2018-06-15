@@ -112,7 +112,7 @@ $(function(){
         var name = $("#actor_name").val();
         var date_of_origin = $("#actor_date_of_origin").val().split("-");
         var place_of_origin = $("#actor_place_of_origin").val();
-        var actor_bio = $("#actor_bio").val();
+        var actor_bio = $("#actor_bio").val().replace(/&/g, '+'); //XSS doesnt like the '&' character, replace it with a '+' to bypass validation
         var actor_classification = $("#step-1").parent().attr("x-selected-actor-type");
         var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
         
@@ -240,6 +240,7 @@ $(function(){
                     new_option.setAttribute("x-actor-name", actor_submission.name);
                     new_option.setAttribute("x-actor-id", data._id);
                     $("#select_actor").append(new_option).trigger("change");
+                    window.location.hash = "step-1";
                     
                     $("#selector_actor_modal").modal("show"); //show select_actor_modal
                 },

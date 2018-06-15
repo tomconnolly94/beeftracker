@@ -85,14 +85,49 @@ $(function(){
     //handler to handle a youtube link being added to the file input tag
     $("#youtube_video_link").on('input', function(e) {
         
-        let youtube_id = this.value.split("watch?v=")[1];
-        let youtube_src = "https://img.youtube.com/vi/" + youtube_id + "/0.jpg";
+        var input = this.value;
+        var params = {};
         
+        if(input.includes("youtube")){
+            var input_params = [];
+            if(input.includes("embed")){
+                params.v = input.split("/")[input.split("/").length - 1];
+                input = "https://www.youtube.com/watch?v=" + params.v;
+            }
+            else{
+                input_params = input.split("?")
+                
+                if(input_params.length > 1 && input_params[1].includes("v=")){
+                    input_params = input_params[1];
+
+                    input_params.split("&").forEach(function(part) {
+                        var item = part.split("=");
+                        params[item[0]] = decodeURIComponent(item[1]);
+                    });
+                }
+                else{
+                    params.v = "";
+                }
+            }
+        }
+        else{
+            params.v = "";
+        }
+        console.log(params);
+
+        let youtube_id = params.v;
+        let youtube_src = "";
+
+        if(youtube_id.length > 1){
+            youtube_src = "https://img.youtube.com/vi/" + youtube_id + "/0.jpg";
+            $("#media_submit_button").removeAttr("disabled"); //enable the "add" button
+        }
+
         $('#media_preview').attr('x-media-type', "youtube_embed");
-        $('#media_preview').attr('x-media-link', this.value);
+        $('#media_preview').attr('x-media-link', input);
         $('#media_preview').attr('x-file-name', youtube_src);
         $('#media_preview').attr('src', youtube_src);
-        
+
         $("#media_submit_button").removeAttr("disabled"); //enable the "add" button
     });
     

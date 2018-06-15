@@ -25,7 +25,8 @@ $(function(){
         }
     }
     
-    $("#search_box_form").unbind().submit(function(){
+    $("#search_box_form").unbind().submit(function(e){
+        e.preventDefault();
         make_search_request();
     });
 

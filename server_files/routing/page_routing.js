@@ -295,7 +295,7 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
                 }
                 else{
                     let data_object = { event_data: data };
-
+                    
                     event_controller.findEvents({ match_actor: data_object.event_data.aggressors[0]._id, limit: 6, decreasing_order: "date_added" }, function(data){
                         data_object.related_events = data;
                         resolve(data_object);

@@ -29,6 +29,7 @@ var load_data_into_add_actor_modal = function(scraped_actor_data, field_data_dum
     
 $(function(){
     
+    //handle user selecting an actor classification
     $(".actor-type-item").unbind().click(function(event){
         
         var id = $(this).attr("id");

@@ -37,7 +37,6 @@ $(function() {
         });
     });
 
-
     //Associated Actors
     function formatState (state) {
           if (!state.id) {

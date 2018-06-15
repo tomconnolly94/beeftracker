@@ -28,6 +28,19 @@ router.route('/').get(function(request, response){
         }
     });
 });//built, written, tested
+router.route('/:event_id').get(function(request, response){
+    
+    var existing_event_id = request.params.event_id;
+    
+    event_controller.findEvent(existing_event_id, function(data){
+        if(data.failed){
+            send_unsuccessful_response(response, 400, data.message);
+        }
+        else{
+            send_successful_response(response, 200, data);
+        }
+    });
+});//built, written, tested
 router.route('/').post(token_authentication.authenticate_endpoint_with_user_token, memoryUpload, event_data_validator.validate, function(request, response){
     
     var data = request.locals.validated_data;

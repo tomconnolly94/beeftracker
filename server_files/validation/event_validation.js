@@ -12,7 +12,7 @@ module.exports = {
     
     validate: function(request, response, next){
         
-        var xss_warning = "Potential HTML code found, please remove this. Please also remove any uses of the ampersand '&' character as this is not allowed.";
+        var xss_warning = "Potential HTML code found, please remove this.";
                 
         //access form data and reassign it to the request body
         if (typeof request.body.data === 'string' || request.body.data instanceof String){
