@@ -236,7 +236,7 @@ $(function(){
                     $("#add_actor_modal").modal("hide"); //close add_actor_modal
                     
                     var new_option = new Option(actor_submission.name, data._id, true, true);
-                    new_option.setAttribute("x-actor-image-link", file_server_url_prefix + "/actors/" + data.gallery_items[0].link);
+                    new_option.setAttribute("x-actor-image-link", data.gallery_items[0].link);
                     new_option.setAttribute("x-actor-name", actor_submission.name);
                     new_option.setAttribute("x-actor-id", data._id);
                     $("#select_actor").append(new_option).trigger("change");

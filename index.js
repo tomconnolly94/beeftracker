@@ -145,8 +145,8 @@ var success_msg = "Node app is running on port: ";
 
 // ### Launch application ####
 app.listen(app.get('port'), function(){
-    console.log("NODE_ENV: " + process.env.NODE_ENV); 
-    console.log("HTTP " + success_msg + app.get('port'))
+    console.log("> NODE_ENV: " + process.env.NODE_ENV); 
+    console.log("> HTTP " + success_msg + app.get('port'))
 });
 
 if(process.env.NODE_ENV.includes("local")){
@@ -164,7 +164,7 @@ if(process.env.NODE_ENV.includes("local")){
             return process.exit(1)
         }
         else {
-            console.log("HTTPS/2 " + success_msg + http2_port);
+            console.log("> HTTPS/2 " + success_msg + http2_port);
         }
     });
 }

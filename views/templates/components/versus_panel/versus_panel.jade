@@ -1,4 +1,4 @@
-
+include ../../template_helper_functions/file_server_url_builder.jade
 
 mixin versus-panel(aggressors, targets)
 
@@ -25,7 +25,7 @@ mixin versus-panel(aggressors, targets)
                     a.remove_actor(href="#")
                         i.fas.fa-times(style="float: left;")
                     a.selector.select_actor_beefer(id="select_actor_beefer_" + i)
-                        img.actor-avatar(src=aggressors[i].src)
+                        img.actor-avatar(src=file_server_url_builder(file_server_url_prefix, "actors", aggressors[i].src, "c_fill,g_face,h_150,w_150", "webp"))
                         //-i.fas.fa-plus
                     h4#beefer_name(x-actor-id=aggressors[i].id) #{aggressors[i].name}
         -}
@@ -52,7 +52,8 @@ mixin versus-panel(aggressors, targets)
                     a.remove_actor(href="#")
                         i.fas.fa-times(style="float: left;")
                     a.selector.select_actor_beefee(id="select_actor_beefer_" + i)
-                        img.actor-avatar(src=targets[i].src)
+                        - console.log(file_server_url_builder(file_server_url_prefix, "actors", targets[i].src, "c_fill,g_face,h_150,w_150", "webp"))
+                        img.actor-avatar(src=file_server_url_builder(file_server_url_prefix, "actors", targets[i].src, "c_fill,g_face,h_150,w_150", "webp"))
                         //-i.fas.fa-plus
                     h4#beefee_name(x-actor-id=targets[i].id) #{targets[i].name}
         -}

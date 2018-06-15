@@ -78,15 +78,8 @@ $(function(){
         $('#actor_photo_preview').attr('x-file-name', file_name);
         
     });
-    
-    $("#submit_actor").unbind().click(function(event){
-       
-        var actor_classification = $("#step-1").attr("x-selected-actor-type");
         
-    });
-    
     $(".disable").unbind().click(function(event){
         event.preventDefault();
-    });
-        
+    });     
 });

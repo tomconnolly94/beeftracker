@@ -54,22 +54,17 @@ block head_tags
     //facebook meta tags
     meta(property="og:title" content="Beeftracker - " + event_data.title)
     meta(property="og:description" content=event_data.description)
-    meta(property="og:image" content=file_server_url_prefix + "/events/" + event_data.cover_image)
+    meta(property="og:image" content=file_server_url_builder(file_server_url_prefix, "events", event_data.cover_image, "c_fill,g_face,h_150,w_150", "webp") )
     meta(property="og:url" content=page_url)
     meta(property="og:site_name" content="Beeftracker")
     meta(property="og:type" content="news")
     //twitter meta tags
     meta(property="twitter:title" content="Beeftracker - " + event_data.title)
     meta(property="twitter:description" content=event_data.description)
-    meta(property="twitter:image" content=file_server_url_prefix + "/events/" + event_data.cover_image)
+    meta(property="twitter:image" content=file_server_url_builder(file_server_url_prefix, "events", event_data.cover_image, "c_fill,g_face,h_150,w_150", "webp") )
     meta(name="twitter:card" content="summary_large_image")
     
 append body
-    - //insert image resizing into the image URL
-    - var split_server_url_prefix = file_server_url_prefix.split("/");
-    - split_server_url_prefix.splice(split_server_url_prefix.length-1, 0, "c_fill,g_face,h_150,w_150");
-    - var versus_panel_server_url_prefix_with_image_formatting = split_server_url_prefix.join("/");
-    
     - var main_graphic = {};
     
     - for(var i = 0; i < event_data.gallery_items.length; i++){
@@ -90,7 +85,7 @@ append body
 
     - target_index = event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) != -1 ? event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) : event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[1]))
     
-    div.bt-content-full-width.beef-background-banner(style="background-image: url('" + file_server_url_prefix + "/events/" + event_data.cover_image + "')")
+    div.bt-content-full-width.beef-background-banner(style="background-image: url('" + file_server_url_builder(file_server_url_prefix, "events", event_data.cover_image, "c_fill,g_face,h_150,w_150", "webp") + "')")
 
     div.bt-content.bt-content-shift-up
         
@@ -116,7 +111,7 @@ append body
                     - else if(main_graphic.media_type == "image")
                         div.row.col-md-6(style="margin: 0 auto;")
                             div.beef-body-content-image.col-md-12
-                                img(src=file_server_url_prefix + "/events/" + main_graphic.link).float-left.col-sm-12
+                                img(src=file_server_url_builder(file_server_url_prefix, "events", main_graphic.link, "c_fill,g_face,h_150,w_150", "webp")).float-left.col-sm-12
 
                     //div.beef-thumb
                         img(src=server_url_prefix_with_image_formatting + "/events/" + event_data.img_title_fullsize).float-left
@@ -137,7 +132,7 @@ append body
                 div
                     h4 #{event_data.aggressors[aggressor_index].name}
                     a(href="/actor/" + event_data.aggressors[aggressor_index]._id)
-                        img(src=versus_panel_server_url_prefix_with_image_formatting + "/actors/" + event_data.aggressors[aggressor_index].img_title_fullsize).actor-avatar
+                        img(src=file_server_url_builder(file_server_url_prefix, "actors", event_data.aggressors[aggressor_index].img_title_fullsize, "c_fill,g_face,h_150,w_150", "webp")).actor-avatar
 
             div.col-2.versus
                 h4 VS.
@@ -145,7 +140,7 @@ append body
                 div
                     h4 #{event_data.targets[target_index].name}
                     a(href="/actor/" + event_data.targets[target_index]._id)
-                        img(src=versus_panel_server_url_prefix_with_image_formatting + "/actors/" + event_data.targets[target_index].img_title_fullsize).actor-avatar
+                        img(src=file_server_url_builder(file_server_url_prefix, "actors", event_data.targets[target_index].img_title_fullsize, "c_fill,g_face,h_150,w_150", "webp")).actor-avatar
         
         div.row(style="text-align:center")
             div.col-md-4.offset-md-4
@@ -165,7 +160,7 @@ append body
                                     - }
                                 - }
                                 
-                                option(image_src=file_server_url_prefix + "/events/" + event_data.cover_image, value="/beef/" + beef_chain_id + "/") #{aggressor.name} v. #{target.name}
+                                option(image_src=file_server_url_builder(file_server_url_prefix, "events", event_data.cover_image, "c_fill,g_face,h_150,w_150", "webp"), value="/beef/" + beef_chain_id + "/") #{aggressor.name} v. #{target.name}
                             - }
                         
         div.row

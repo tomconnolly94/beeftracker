@@ -36,7 +36,7 @@ mixin select-actor-modal()
                         select#select_actor.form-control(name="select_actor")
                             option(value="default", selected="true", disabled="disabled") Select Actor 
                             each actor in actor_data
-                                option(value=actor._id, x-actor-image-link=file_server_url_builder(file_server_url_prefix, "actors", actor.img_title_fullsize, "c_fill,g_face,h_150,w_150", "webp"), x-actor-name=actor.name, x-actor-id=actor._id) #{actor.name}
+                                option(value=actor._id, x-actor-image-link=actor.img_title_fullsize, x-actor-name=actor.name, x-actor-id=actor._id) #{actor.name}
                 div.form-row
                     div.col-md-12
                         a#add_new_actor(href="#") Add New Actor

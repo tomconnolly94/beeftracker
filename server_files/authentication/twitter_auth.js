@@ -5,17 +5,17 @@ var router = express.Router()
 var passport = require("passport");
 var TwitterStrategy = require("passport-twitter").Strategy;
 
-router.use(passport.initialize());
-router.use(session({ secret: 'SECRET' })); // session secret
-router.use(passport.session()); // persistent login sessions
-
 //internal dependencies
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
 var db_ref = require("../config/db_config.js");
 var users_controller = require('../controllers/users_controller');
 var authentication_controller = require('../controllers/authentication_controller');
 
-passport.serializeUser(function(strategy_data, done){
+router.use(passport.initialize());
+/*router.use(session({ secret: 'SECRET' })); // session secret
+router.use(passport.session()); // persistent login sessions*/
+
+/*passport.serializeUser(function(strategy_data, done){
    console.log("serialize user.");
    done(null, 0)
 });
@@ -23,7 +23,7 @@ passport.serializeUser(function(strategy_data, done){
 passport.deserializeUser(function(id, done){
    console.log("deserialize user.");
     done(id);
-});
+});*/
 
 passport.use(new TwitterStrategy({
         consumerKey: process.env.TWITTER_API_KEY,
