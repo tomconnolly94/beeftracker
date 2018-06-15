@@ -113,15 +113,13 @@ append body
                     - else if(main_graphic.media_type == "youtube_embed")
                         div.beef-body-content-youtube-video
                             iframe(height="315", scrolling="no", frameborder="no", src=main_graphic.link, allow="autoplay; encrypted-media")
-                    //- else if(main_graphic.media_type == "video_embed")
-                    div.beef-body-content-video
-                        video(controls)
-                            source(src="movie.mp4", type="video/mp4")
-                            source(src="movie.ogg", type="video/ogg")
                     - else if(main_graphic.media_type == "image")
                         div.row.col-md-6(style="margin: 0 auto;")
                             div.beef-body-content-image.col-md-12
                                 img(src=file_server_url_prefix + "/events/" + main_graphic.link).float-left.col-sm-12
+                    - else if(main_graphic.media_type == "video_embed")
+                        div.beef-body-content-video
+                            iframe(scrolling="no" src=main_graphic.link frameborder="0" allowtransparency="true")
 
                     //div.beef-thumb
                         img(src=server_url_prefix_with_image_formatting + "/events/" + event_data.img_title_fullsize).float-left

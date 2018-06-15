@@ -6567,6 +6567,20 @@ figure.masonry-item.soundcloud-item .play-button {
       z-index: -1; }
     .beef-content-container .beef-content-left-side .beef-content-thumb img {
       border-radius: 3px; }
+  .beef-content-container .beef-body-content-video {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 35px;
+    height: 0;
+    overflow: hidden; }
+    .beef-content-container .beef-body-content-video iframe {
+      border: 5px solid #DF3E3E;
+      border-radius: 5px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%; }
   .beef-content-container .beef-body-content-youtube-video, .beef-content-container .beef-body-content-soundcloud {
     text-align: center;
     padding-bottom: 50px; }
