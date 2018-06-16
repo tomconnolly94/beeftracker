@@ -189,7 +189,7 @@ router.get("/add-beef", token_authentication.recognise_user_token, resolve_user_
         });
     });
     
-    if(request.locals && request.locals.authenticated_user){ //is user token found, then do not allow them to access the register page
+    if(true || request.locals && request.locals.authenticated_user){ //is user token found, then do not allow them to access the register page
         
         Promise.all([ actor_data_promise, categories_promise, actor_variable_fields_promise ]).then(function(values){
 
@@ -273,6 +273,8 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
         var disable_voting = false;
         var cookies = cookie_parser.parse_cookies(request);
 
+        console.log(cookies)
+        
         var view_parameters = Object.assign({}, view_parameters_global);
         if(request.locals && request.locals.authenticated_user){ //if user is logged on, decide whether to disable voting panel based on user record voted_on_beef_ids field
 

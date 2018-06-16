@@ -41,7 +41,7 @@ function create_auth_cookies(new_refresh_token, user_details, response, headers,
     }
 
     //generate an auth token
-    var auth_token = jwt.sign({ exp: auth_expiry_timestamp, username: user_details.username, _id: user_details._id, admin: user_details.admin, ip_loc: ip_loc }, process.env.JWT_SECRET);
+    var auth_token = jwt.sign({ exp: auth_expiry_timestamp, username: user_details.username, _id: user_details._id, admin: user_details.admin, ip_loc: ip_loc, type: "auth" }, process.env.JWT_SECRET);
 
     //set auth token for verification and logged_in token so client javascript knows how to behave
     response.cookie("bftkr_auth", auth_token, { expires: new Date(auth_expiry_timestamp), httpOnly: cookies_http_only, secure: cookies_secure });
@@ -50,7 +50,7 @@ function create_auth_cookies(new_refresh_token, user_details, response, headers,
     if(new_refresh_token){
         
         var refresh_expiry_timestamp = Math.floor(Date.now() + (1000 * 60 * 60 * 24 * 7)); //7 days
-        var refresh_token = jwt.sign({ exp: refresh_expiry_timestamp, username: user_details.username, _id: user_details._id, admin: user_details.admin, ip_loc: ip_loc }, process.env.JWT_SECRET);
+        var refresh_token = jwt.sign({ exp: refresh_expiry_timestamp, username: user_details.username, _id: user_details._id, admin: user_details.admin, ip_loc: ip_loc, type: "refresh" }, process.env.JWT_SECRET);
         
         response.cookie("bftkr_auth_refresh", refresh_token, { expires: new Date(refresh_expiry_timestamp), httpOnly: cookies_http_only, secure: cookies_secure });
         response.cookie("bftkr_auth_refresh_token_present", "true", { expires: new Date(refresh_expiry_timestamp), httpOnly: false });
@@ -137,28 +137,39 @@ router.route('/deauthenticate').post(function(request, response){
 router.route('/refresh_auth_token').post(function(request, response){
     
     var cookies = cookie_parser.parse_cookies(request);
+    console.log(cookies);
         
     if(cookies.bftkr_auth_refresh){
+        var refresh_token = cookies["bftkr_auth_refresh"]
         var db_url = process.env.MONGODB_URI; //get db uri
-        //insert refresh token into users record in the db
-        db_ref.get_db_object().connect(db_url, function(err, db) {
-            if(err){ console.log(err); }
+        
+        jwt.verify(refresh_token, process.env.JWT_SECRET, function(error, auth_token){
+            if(error){ 
+                console.log(error);
+                token_authentication.reset_auth(response, true, { stage: "refresh_token_authentication", message: "Refresh token is invalid."}, null);
+            }
             else{
-                //query to match username to database to ensure user exists
-                db.collection(db_ref.get_user_details_table()).find({ refresh_token: refresh_token }).toArray(function(err, data){
-                    if(err) console.log(err);
-                    else if(data.length > 0){
-                        create_auth_cookies(false, request.user, response, request.headers, function(){
-                            response.status(200).send({})
-                        });
-                    }
+                
+                //insert refresh token into users record in the db
+                db_ref.get_db_object().connect(db_url, function(err, db) {
+                    if(err){ console.log(err); }
                     else{
-                        response.status(401).send({ failed: true, stage: "token_authentication", message: "Refresh token is invalid."});
+                        //query to match username to database to ensure user exists
+                        db.collection(db_ref.get_user_details_table()).find({ refresh_token: refresh_token }).toArray(function(err, data){
+                            if(err) console.log(err);
+                            else if(data.length > 0){
+                                create_auth_cookies(false, { username: auth_token.username, _id: auth_token._id, admin: auth_token.admin }, response, request.headers, function(){
+                                    response.status(200).send({});
+                                });
+                            }
+                            else{
+                                response.status(401).send({ failed: true, stage: "refresh_token_authentication", message: "Refresh token is invalid."});
+                            }
+                        });
                     }
                 });
             }
         });
-        response.status(200).send({})
     }
     else{
         response.status(401).send({ failed: true, stage: "cookie_parsing", message: "No refresh token found, required for this route."});

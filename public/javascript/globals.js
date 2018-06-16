@@ -108,7 +108,7 @@ function attempt_to_obtain_new_access_token(callback){
         //make request to /refresh_auth_token
         $.ajax({
             url: "/api/auth/local/refresh_auth_token",
-            data: form_data,
+            data: {},
             processData: false,
             contentType: false,
             type: 'POST',
@@ -117,7 +117,7 @@ function attempt_to_obtain_new_access_token(callback){
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 console.log("ERROR: ", XMLHttpRequest);
-                callback(false);
+                window.location = "/login";
             }
         });
     }

@@ -74,6 +74,50 @@ $(function(){
         });
     }
     
+    function submit_http_post_req(form_data){
+        $.ajax({
+            url: "/api/events",
+            data: form_data,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function(data){
+                window.location.href = "/submission-success";
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) { 
+
+                if(XMLHttpRequest.status != 200){
+
+                    if(XMLHttpRequest && XMLHttpRequest.responseJSON){
+
+                        if(XMLHttpRequest.responseJSON.stage == "server_validation"){
+
+                            var errors = XMLHttpRequest.responseJSON.details.map(function(item){
+                                return {
+                                    location: item.param,
+                                    problem: item.msg
+                                }
+                            });
+
+                            render_error_messages(errors);
+                        }
+                        else if(XMLHttpRequest.responseJSON.stage == "token_authentication"){
+                            attempt_to_obtain_new_access_token(function(success){
+                                if(success){
+                                    //make request again
+                                    submit_http_post_req(form_data);
+                                }
+                            });
+                        }
+                    }
+                    else{
+                        console.log("URGENT SERVER ERROR.", XMLHttpRequest.statusText);
+                    }
+                }
+            }
+        });
+}
+    
     $(".submit_new_event_button").unbind().click(function(event){
         event.preventDefault();
         
@@ -171,44 +215,7 @@ $(function(){
             
             form_data.append("data", JSON.stringify(event_submission));
         
-            $.ajax({
-                url: "/api/events",
-                data: form_data,
-                processData: false,
-                contentType: false,
-                type: 'POST',
-                success: function(data){
-                    window.location.href = "/submission-success";
-                },
-                error: function(XMLHttpRequest, textStatus, errorThrown) { 
-                    
-                    if(XMLHttpRequest.status != 200){
-
-                        if(XMLHttpRequest && XMLHttpRequest.responseJSON){
-                            
-                            if(XMLHttpRequest.responseJSON.stage == "server_validation"){
-
-                                var errors = XMLHttpRequest.responseJSON.details.map(function(item){
-                                    return {
-                                        location: item.param,
-                                        problem: item.msg
-                                    }
-                                });
-
-                                render_error_messages(errors);
-                            }
-                            else if(XMLHttpRequest.responseJSON.stage == "token_authentication"){
-                                attempt_to_obtain_new_access_token(function(success){
-                                    //make request again
-                                });
-                            }
-                        }
-                        else{
-                            console.log("URGENT SERVER ERROR.", XMLHttpRequest.statusText);
-                        }
-                    }
-                }
-            });
+            submit_http_post_req(form_data);
         }
         else{
             render_error_messages([ validation_result ]);

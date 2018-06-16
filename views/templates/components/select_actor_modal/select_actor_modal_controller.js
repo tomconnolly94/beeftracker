@@ -17,8 +17,6 @@ $(function(){
         });
         
         $(".remove_actor").unbind().click(function(){
-             console.log($(this));
-             console.log(aggressors);
             
             for(var i = 0; i < aggressors.length; i++){
                 if(aggressors[i].id == $(this).parent().children("h4").attr("x-actor-id")){
@@ -86,7 +84,6 @@ $(function(){
     });
     
     $("#select_actor").unbind().change(function(){
-        console.log(this);
         $("#select_actor_modal_submit").removeAttr("disabled")
     });
     

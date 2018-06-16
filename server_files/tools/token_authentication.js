@@ -9,20 +9,6 @@ var cookie_parser = require('../tools/cookie_parsing.js');
 var auth_disabled = false;
 var auto_refresh_auth_token = false;
 
-//delete all auth cookies and redirect to login page
-var reset_auth = function(response, deny_access_on_fail, next){
-    response.cookie("auth", "0", { expires: new Date(0), httpOnly: true });
-    response.cookie("logged_in", "false", { expires: new Date(0) });
-    //response.render('pages/authentication/admin_login.ejs');
-    
-    if(deny_access_on_fail){
-        response.status(401).send({ stage: "token_authentication", failed: true, message: "Authentication failed."});
-    }
-    else{
-        next();
-    }
-}
-
 //confirm authentication, refresh cookie, and let page route continue executing
 var confirm_auth = function(request, response, token, next){
     if(auto_refresh_auth_token){
@@ -62,7 +48,7 @@ var authentication_procedure = function(request, response, deny_access_on_fail, 
         jwt.verify(cookies.bftkr_auth, process.env.JWT_SECRET, function(error, auth_token){
             if(error){ 
                 console.log(error);
-                reset_auth(response, deny_access_on_fail, next);
+                module.exports.reset_auth(response, deny_access_on_fail, { stage: "token_authentication", message: "Token Authentication failed please login" }, next);
             }
             else{
                 if((!request.route_requires_admin && auth_token.admin == false) || //route is not admin, ensure provided user_id matches the _id in the auth token
@@ -76,7 +62,7 @@ var authentication_procedure = function(request, response, deny_access_on_fail, 
                             confirm_auth(request, response, auth_token, next);
                         }
                         else{
-                            reset_auth(response, deny_access_on_fail, next);
+                            module.exports.reset_auth(response, deny_access_on_fail, { stage: "token_authentication", message: "Token Authentication failed please login" }, next);
                         }
                     }
                     else{
@@ -85,19 +71,34 @@ var authentication_procedure = function(request, response, deny_access_on_fail, 
                 }
                 else{
                     console.log("Token does not have correct authorisation");
-                    reset_auth(response, deny_access_on_fail, next);
+                    module.exports.reset_auth(response, deny_access_on_fail, { stage: "token_authentication", message: "Token Authentication failed please login" }, next);
                 }
             }
         });
     }
     else{
         console.log("Token Authentication: No cookie provided")
-        reset_auth(response, deny_access_on_fail, next);
+        module.exports.reset_auth(response, deny_access_on_fail, { stage: "token_authentication", message: "Token Authentication failed please login" }, next);
     }
 }
 
 module.exports = {
     
+    reset_auth: function(response, deny_access_on_fail, error_details, next){
+        response.cookie("auth", "0", { expires: new Date(0), httpOnly: true });
+        response.cookie("logged_in", "false", { expires: new Date(0) });
+        response.cookie("bftkr_auth_refresh", "0", { expires: new Date(0), httpOnly: true });
+        response.cookie("bftkr_auth_refresh_token_present", "false", { expires: new Date(0) });
+        //response.render('pages/authentication/admin_login.ejs');
+
+        if(deny_access_on_fail){
+            response.status(401).send({ stage: error_details.stage, failed: true, message: error_details.message});
+        }
+        else{
+            next();
+        }
+    },
+
     authenticate_endpoint_with_user_token : function(request, response, next) {
         if(auth_disabled){
             next();
