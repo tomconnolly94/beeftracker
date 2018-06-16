@@ -5,16 +5,13 @@ $(function(){
     let set_as_main_graphic_used = false;
     let set_as_cover_image_used = false;
     
-    //clear all data from modal and reset it to its original state
+    //clear all data form modal and reset it to its original state
     function reset_modal(){
         $('#media_preview').attr('src', ""); //reset media preview element        
         $('#media_preview').attr('x-media-type', "");
         $('#media_preview').attr('x-file-name', "");
         $('#set_as_main_graphic_checkbox').prop("checked", false); //reset set as main graphic input checkbox
         $('#set_as_cover_image_checkbox').prop("checked", false); //reset set as cover input checkbox
-        
-        $('#set_as_main_graphic').css("display", "none"); //hide set as main graphic input div
-        $('#set_as_cover_image').css("display", "none"); //hide set as cover input div
         
         //hide all input divs in modal
         $("#image_input_div").css("display", "none"); 
@@ -33,7 +30,34 @@ $(function(){
         $("#update_button_div").css("display", "none");
         
         $('#upload_type').val("default").trigger("change"); //reset media type input select box
-        $("#upload_gallery_item_modal").modal("hide"); //hide modal
+        
+        $('#set_as_main_graphic').css("display", "none"); //hide set as main graphic input div
+        $('#set_as_cover_image').css("display", "none"); //hide set as cover input div
+        $("#set_as_main_graphic *").attr("disabled", false).off('click');
+        $("#set_as_cover_image *").attr("disabled", false).off('click');
+        
+        //$("#upload_gallery_item_modal").modal("hide"); //hide modal
+    }
+    
+    function add_or_update_gallery_item(){
+        
+        if($("#set_as_main_graphic_checkbox").prop("checked")){
+            set_as_main_graphic_used = true;
+            $("#set_as_main_graphic").css("display", "none"); //hide set as cover checkbox input
+        }
+        
+        if($("#set_as_cover_image_checkbox").prop("checked")){
+            set_as_cover_image_used = true;
+            $("#set_as_cover_image").css("display", "none"); //hide set as cover checkbox input
+        }
+        
+        load_template_render_function("gallery_manager/gallery_manager", function(status){
+            $("#gallery_manager").html(window["gallery_manager_tmpl_render_func"]({ gallery_items: gallery_items }));
+
+            //clear and close modal
+            //reset_modal();
+            $("#upload_gallery_item_modal").modal("hide"); //hide modal
+        });
     }
     
     //onchange event for when a media type is selected
@@ -51,12 +75,15 @@ $(function(){
         
         $("#" + media_type + "_input_div").css("display", "block"); //show text input tag
         
-        if(!set_as_main_graphic_used){
-            $("#set_as_main_graphic").css("display", "block"); //show main graphic checkbox input
+        if(set_as_main_graphic_used){
+            $("#set_as_main_graphic *").attr("disabled", "disabled").off('click'); //show main graphic checkbox input
         }
-        if(!set_as_cover_image_used && media_type == "image"){
-            $("#set_as_cover_image").css("display", "block"); //show set as cover checkbox input
+        if(set_as_cover_image_used && media_type == "image"){
+            $("#set_as_cover_image *").attr("disabled", "disabled").off('click'); //show set as cover checkbox input
         }
+        
+        $("#set_as_main_graphic").css("display", "block"); //show main graphic checkbox input
+        $("#set_as_cover_image").css("display", "block"); //show set as cover checkbox input
     });
     
     //handler to handle a image being added to the file input tag
@@ -113,7 +140,6 @@ $(function(){
         else{
             params.v = "";
         }
-        console.log(params);
 
         let youtube_id = params.v;
         let youtube_src = "";
@@ -155,26 +181,6 @@ $(function(){
         $("#media_submit_button").removeAttr("disabled"); //enable the "add" button
     });
     
-    function add_or_update_gallery_item(){
-        
-        if($("#set_as_main_graphic_checkbox").prop("checked")){
-            set_as_main_graphic_used = true;
-            $("#set_as_main_graphic").css("display", "none"); //hide set as cover checkbox input
-        }
-        
-        if($("#set_as_cover_image_checkbox").prop("checked")){
-            set_as_cover_image_used = true;
-            $("#set_as_cover_image").css("display", "none"); //hide set as cover checkbox input
-        }
-        
-        load_template_render_function("gallery_manager/gallery_manager", function(status){
-            $("#gallery_manager").html(window["gallery_manager_tmpl_render_func"]({ gallery_items: gallery_items }));
-
-            //clear and close modal
-            reset_modal();
-        });
-    }
-    
     //handler to handle media being officially added to the gallery manager with the "add" button
     $("#media_submit_button").click(function(event){
         event.preventDefault();
@@ -206,7 +212,9 @@ $(function(){
     //handler to remove item from gallery manager
     $("#gallery_manager").on("click", "#remove_gallery_item", function(event){
         event.preventDefault();
+        event.stopPropagation(); //prevent click listener for element beneath the bin button from firing
         $(this.parentElement).remove();
+        
         for(var i = 0; i < gallery_items.length; i++){
             if(this.parentElement.children[1].attributes[0].value == gallery_items[i].src){
                 if(gallery_items[i].main_graphic){
@@ -229,20 +237,26 @@ $(function(){
         
         /*set_as_main_graphic_used = false;
         set_as_cover_image_used = false;*/
-        console.log($(this).children("img").attr("x-cover-image") == "x-cover-image" ? "block" : "none");
         //set modal fields
+        $("#upload_gallery_item_modal").modal("show"); //show modal
         $("#media_preview").attr("src", $(this).children("img").attr("src"));
         $("#media_preview").attr("x-media-type", media_type);
         $("#media_preview").attr("x-file-name", $(this).children("img").attr("x-file-name"));
         $("#media_preview").attr("x-media-link", $(this).children("img").attr("x-media-link"));
-        $("#set_as_main_graphic_checkbox").prop("checked", $(this).children("img").attr("x-main-graphic") == "x-main-graphic" ? true : false);
-        $("#set_as_main_graphic").css("display", $(this).children("img").attr("x-main-graphic") == "x-main-graphic" ? "block" : "none");
-        $("#set_as_cover_image_checkbox").prop("checked", $(this).children("img").attr("x-cover-image") == "x-cover-image" ? true : false);
-        console.log($("#set_as_cover_image").css("display"));
-        $("#set_as_cover_image").css("display", $(this).children("img").attr("x-cover-image") == "x-cover-image" ? "block" : "none");
-        console.log($("#set_as_cover_image").css("display"));
         //set upload type select2 val
         $("#upload_type").val(media_type).trigger("change");
+                
+        $("#set_as_main_graphic_checkbox").prop("checked", $(this).children("img").attr("x-main-graphic") == "x-main-graphic" ? true : false);
+        $("#set_as_main_graphic").css("display", "block");// $(this).children("img").attr("x-main-graphic") == "x-main-graphic" ? "block" : "none");
+        $("#set_as_cover_image_checkbox").prop("checked", $(this).children("img").attr("x-cover-image") == "x-cover-image" ? true : false);
+        $("#set_as_cover_image").css("display", "block");// $(this).children("img").attr("x-cover-image") == "x-cover-image" ? "block" : "none");
+        
+        if( $(this).children("img").attr("x-main-graphic") == "x-main-graphic" || !set_as_main_graphic_used){
+            $("#set_as_main_graphic *").attr("disabled", false).off('click'); //show main graphic checkbox input
+        }
+        if($(this).children("img").attr("x-cover-image") == "x-cover-image" || !set_as_cover_image_used){
+            $("#set_as_cover_image *").attr("disabled", false).off('click'); //show set as cover checkbox input
+        }
         
         //hide add button, show update button and attach id to update button
         $("#add_button_div").css("display", "none");
@@ -251,7 +265,6 @@ $(function(){
         //assign gallery_item array index to update button for use later
         $("#media_update_button").attr("x-gallery-item-index", $($($(this)[0]).find("img")[0]).attr("x-gallery-item-index"));
         
-        $("#upload_gallery_item_modal").modal("show"); //show modal
     });
         
     $('#upload_gallery_item_modal').on('hidden.bs.modal', function () {

@@ -189,7 +189,7 @@ router.get("/add-beef", token_authentication.recognise_user_token, resolve_user_
         });
     });
     
-    if(true || request.locals && request.locals.authenticated_user){ //is user token found, then do not allow them to access the register page
+    if(request.locals && request.locals.authenticated_user){ //is user token found, then do not allow them to access the register page
         
         Promise.all([ actor_data_promise, categories_promise, actor_variable_fields_promise ]).then(function(values){
 

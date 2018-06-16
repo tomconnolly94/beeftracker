@@ -6105,7 +6105,8 @@ figure.masonry-item.soundcloud-item .play-button {
   position: relative; }
   .gallery-manager .gallery-manager-item img {
     width: 100%;
-    height: 240px; }
+    height: 240px;
+    cursor: pointer; }
   .gallery-manager .gallery-manager-item .remove-gallery-item {
     color: #fff;
     position: absolute;

@@ -12,7 +12,7 @@ var format_embeddable_items = require('../tools/formatting.js').format_embeddabl
 //objects
 var Actor = require('../schemas/actor_schema');
 
-var test_mode = true;
+var test_mode = false;
 var actor_intermediate_projection = {
     $project: {
         _id: 1, 
@@ -170,9 +170,6 @@ module.exports = {
                 if(Object.keys(sort_query_content).length > 0){
                     aggregate_array.push({ $sort: sort_query_content });
                 }
-                
-                console.log(aggregate_array);
-                console.log(match_query);
                 
                 db.collection(db_ref.get_current_actor_table()).aggregate(aggregate_array).toArray(function(queryErr, docs) {
                     if(queryErr){ console.log(queryErr); }
