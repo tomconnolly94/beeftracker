@@ -10,6 +10,7 @@ var token_authentication = require("../tools/token_authentication.js"); //get to
 var authentication_controller = require('../controllers/authentication_controller');
 var db_ref = require("../config/db_config.js");
 var hashing = require("../tools/hashing.js");
+var cookie_parser = require('../tools/cookie_parsing.js');
 
 //cookie config
 var cookies_http_only = true;
@@ -28,10 +29,10 @@ passport.deserializeUser(function(id, done){
 });*/
 
     
-function create_auth_cookies(user_details, response, headers, callback){
+function create_auth_cookies(new_refresh_token, user_details, response, headers, callback){
 
     //create exp date
-    var expiry_timestamp = Math.floor(Date.now() + (1000 * 60 * 60));
+    var auth_expiry_timestamp = Math.floor(Date.now() + (1000 * 60 * 60)); //1 hour
     var ip_loc = null;
 
     //if client provides an ip address, extract it
@@ -40,11 +41,31 @@ function create_auth_cookies(user_details, response, headers, callback){
     }
 
     //generate an auth token
-    var auth_token = jwt.sign({ exp: expiry_timestamp, username: user_details.username, _id: user_details._id, admin: user_details.admin, ip_loc: ip_loc }, process.env.JWT_SECRET);
+    var auth_token = jwt.sign({ exp: auth_expiry_timestamp, username: user_details.username, _id: user_details._id, admin: user_details.admin, ip_loc: ip_loc }, process.env.JWT_SECRET);
 
     //set auth token for verification and logged_in token so client javascript knows how to behave
-    response.cookie("bftkr_auth", auth_token, { expires: new Date(expiry_timestamp), httpOnly: cookies_http_only, secure: cookies_secure });
-    response.cookie("bftkr_logged_in", "true", { expires: new Date(expiry_timestamp), httpOnly: false });
+    response.cookie("bftkr_auth", auth_token, { expires: new Date(auth_expiry_timestamp), httpOnly: cookies_http_only, secure: cookies_secure });
+    response.cookie("bftkr_logged_in", "true", { expires: new Date(auth_expiry_timestamp), httpOnly: false });
+
+    if(new_refresh_token){
+        
+        var refresh_expiry_timestamp = Math.floor(Date.now() + (1000 * 60 * 60 * 24 * 7)); //7 days
+        var refresh_token = jwt.sign({ exp: refresh_expiry_timestamp, username: user_details.username, _id: user_details._id, admin: user_details.admin, ip_loc: ip_loc }, process.env.JWT_SECRET);
+        
+        response.cookie("bftkr_auth_refresh", refresh_token, { expires: new Date(refresh_expiry_timestamp), httpOnly: cookies_http_only, secure: cookies_secure });
+        response.cookie("bftkr_auth_refresh_token_present", "true", { expires: new Date(refresh_expiry_timestamp), httpOnly: false });
+
+        var db_url = process.env.MONGODB_URI; //get db uri
+        //insert refresh token into users record in the db
+        db_ref.get_db_object().connect(db_url, function(err, db) {
+            if(err){ console.log(err); }
+            else{
+                //query to match username to database to ensure user exists
+                db.collection(db_ref.get_user_details_table()).update({ username: user_details.username }, { $set: { refresh_token: refresh_token }});
+            }
+        });
+    }
+    
     callback();
 }
     
@@ -62,8 +83,6 @@ passport.use(new LocalStrategy({
             username: username,
             password: password
         }
-    
-        //extract data for use later
         var db_url = process.env.MONGODB_URI; //get db uri
 
         //store data temporarily until submission is confirmed
@@ -103,7 +122,7 @@ passport.use(new LocalStrategy({
 ));
 
 router.route('/authenticate').post(passport.authenticate('local', { session: "false" }), function(request, response){
-    create_auth_cookies(request.user, response, request.headers, function(){
+    create_auth_cookies(true, request.user, response, request.headers, function(){
         response.status(200).send({})
     });
 });
@@ -113,6 +132,37 @@ router.route('/deauthenticate').post(function(request, response){
     response.cookie( "bftkr_auth", "0", { expires: new Date(0), httpOnly: cookies_http_only, secure: cookies_secure });
     response.cookie( "bftkr_logged_in", "false", { expires: new Date(0), httpOnly: false });
     response.status(200).send({})
+});
+
+router.route('/refresh_auth_token').post(function(request, response){
+    
+    var cookies = cookie_parser.parse_cookies(request);
+        
+    if(cookies.bftkr_auth_refresh){
+        var db_url = process.env.MONGODB_URI; //get db uri
+        //insert refresh token into users record in the db
+        db_ref.get_db_object().connect(db_url, function(err, db) {
+            if(err){ console.log(err); }
+            else{
+                //query to match username to database to ensure user exists
+                db.collection(db_ref.get_user_details_table()).find({ refresh_token: refresh_token }).toArray(function(err, data){
+                    if(err) console.log(err);
+                    else if(data.length > 0){
+                        create_auth_cookies(false, request.user, response, request.headers, function(){
+                            response.status(200).send({})
+                        });
+                    }
+                    else{
+                        response.status(401).send({ failed: true, stage: "token_authentication", message: "Refresh token is invalid."});
+                    }
+                });
+            }
+        });
+        response.status(200).send({})
+    }
+    else{
+        response.status(401).send({ failed: true, stage: "cookie_parsing", message: "No refresh token found, required for this route."});
+    }
 });
 
 module.exports = router;

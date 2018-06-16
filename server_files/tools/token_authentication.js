@@ -3,7 +3,7 @@ var db_ref = require("../config/db_config.js");
 //var BSON = require('bson');
 var bodyParser = require("body-parser");
 var jwt = require("jsonwebtoken");
-var os = require("os");
+//var os = require("os");
 var cookie_parser = require('../tools/cookie_parsing.js');
 
 var auth_disabled = false;
@@ -16,7 +16,7 @@ var reset_auth = function(response, deny_access_on_fail, next){
     //response.render('pages/authentication/admin_login.ejs');
     
     if(deny_access_on_fail){
-        response.status(401).send({message: "Authentication failed."});
+        response.status(401).send({ stage: "token_authentication", failed: true, message: "Authentication failed."});
     }
     else{
         next();
@@ -31,7 +31,7 @@ var confirm_auth = function(request, response, token, next){
         var cookies_secure = process.env.NODE_ENV == "heroku_production" ? true : false; //use secure cookies when on heroku server, dont use when running local server
 
         //refresh token expiry date
-        var expiry_timestamp = Math.floor(Date.now() + (1000 * 60 * 60)); //create new exp date
+        var expiry_timestamp = Math.floor(Date.now() + 1000);// (1000 * 60 * 60)); //create new exp date
         var new_auth_token = jwt.sign({ exp: expiry_timestamp, username: token.username, ip_loc: token.ip_loc }, process.env.JWT_SECRET);
 
         //set auth token for verification and logged_in token so client javascript knows how to behave

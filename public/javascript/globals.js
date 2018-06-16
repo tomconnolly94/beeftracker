@@ -101,3 +101,27 @@ function b64toBlob(b64Data, contentType, sliceSize) {
     var blob = new Blob(byteArrays, {type: contentType});
     return blob;
 }
+
+function attempt_to_obtain_new_access_token(callback){
+    //check if browser has a refresh token
+    if(getCookie("bftkr_auth_refresh_token_present")){
+        //make request to /refresh_auth_token
+        $.ajax({
+            url: "/api/auth/local/refresh_auth_token",
+            data: form_data,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function(data){
+                callback(true);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                console.log("ERROR: ", XMLHttpRequest);
+                callback(false);
+            }
+        });
+    }
+    else{
+        callback(false);
+    }
+}

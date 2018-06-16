@@ -197,6 +197,11 @@ $(function(){
 
                                 render_error_messages(errors);
                             }
+                            else if(XMLHttpRequest.responseJSON.stage == "token_authentication"){
+                                attempt_to_obtain_new_access_token(function(success){
+                                    //make request again
+                                });
+                            }
                         }
                         else{
                             console.log("URGENT SERVER ERROR.", XMLHttpRequest.statusText);
