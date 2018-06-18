@@ -32,8 +32,8 @@ gulp.task('css_fonts', function() {
     .pipe( connect.reload() );
 
 });
-/*
 
+/*
 gulp.task('js', function() {
   return gulp.src('src/scripts/*.js')
     // .pipe( uglify() )
