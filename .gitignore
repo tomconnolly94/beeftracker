@@ -16,4 +16,4 @@ docker-compose.yml
 /beeftracker_scraping/*
 
 #clinic
-*clinic-doctor*
+#*clinic-doctor*
