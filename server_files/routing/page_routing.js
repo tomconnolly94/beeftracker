@@ -67,6 +67,7 @@ function detect_browser(request, response){
     }
 }
 
+
 //function to include code that should be run as middleware directly before the final functiion on all page endpoints
 function blanket_middleware(request, response, next){
     
