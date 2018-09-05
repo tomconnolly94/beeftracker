@@ -10,10 +10,11 @@
     
     - image_url += "/" + image_id;
     
-    - var extension = "webp"; //static extension
+    - var extension = ""; //extension
     
+    - console.log("brwser: " + browser);
     -if(extension){ //extension is optional
-        - image_url += "." + extension
+        - image_url += extension
     - }
     
     - return image_url

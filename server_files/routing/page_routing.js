@@ -29,8 +29,6 @@ if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if 
     });
 }
 
-
-
 var view_parameters_global = { 
     file_server_url_prefix: globals.file_server_url_prefix,
     server_rendered: true
@@ -41,24 +39,45 @@ function calculate_event_rating(votes){
     return rating;
 }
 
-function resolve_user_from_locals_token(request, response, next){
+function resolve_user_from_locals_token(request, response){
     if(request.locals && request.locals.authenticated_user){
         user_controller.findUser(request.locals.authenticated_user.id, request.locals.authenticated_user.is_admin, function(data){
             if(data.failed){
-                response.render("pages/static/error.jade", view_parameters);
+                response.render("pages/static/error.jade", view_parameters_global);
             }
             else{
                 request.locals.authenticated_user = data;
-                next();
+                //next();
+                return;
             }
         });
     }
     else{
-        next();
+        //next();
+        return;
     }
 }
 
-router.get("/", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response){
+function detect_browser(request, response){
+    if(request.headers["user-agent"].indexOf("Firefox") !== -1){
+        return "firefox";
+    }
+    else{
+        return "chrome/safari";
+    }
+}
+
+//function to include code that should be run as middleware directly before the final functiion on all page endpoints
+function blanket_middleware(request, response, next){
+    
+    resolve_user_from_locals_token(request, response);
+    
+    request.browser = detect_browser(request, response);
+    console.log(request.browser)
+    next();
+}
+
+router.get("/", token_authentication.recognise_user_token, blanket_middleware, function(request, response){
     
     var featured_data_promise = new Promise(function(resolve, reject){
         event_controller.findEvents({ limit: 3, featured: true, decreasing_order: "date_added" }, function(data){
@@ -99,13 +118,14 @@ router.get("/", token_authentication.recognise_user_token, resolve_user_from_loc
         view_parameters.category_event_data = values[3];
         view_parameters.categories = values[4];
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
+        view_parameters.browser = request.browser;
         
         response.render("pages/home.jade", view_parameters);
     }).catch(function(error){
         console.log(error);
     });
 }); //home page
-router.get("/about", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
+router.get("/about", token_authentication.recognise_user_token, blanket_middleware, function(request, response) {
     
     var view_parameters = Object.assign({}, view_parameters_global);
     view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
@@ -113,7 +133,7 @@ router.get("/about", token_authentication.recognise_user_token, resolve_user_fro
     
     response.render("pages/static/about.jade", view_parameters);
 }); // about_us page
-router.get("/actors", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
+router.get("/actors", token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
     
     //access data from db
     var actors_promise = new Promise(function(resolve, reject){
@@ -133,7 +153,7 @@ router.get("/actors", token_authentication.recognise_user_token, resolve_user_fr
         console.log(error);
     });
 }); // about_us page
-router.get("/actor/:actor_id", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
+router.get("/actor/:actor_id", token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
 
     //extract data
     var actor_id = request.params.actor_id;
@@ -169,7 +189,7 @@ router.get("/actor/:actor_id", token_authentication.recognise_user_token, resolv
         response.render("pages/static/error.jade", view_parameters);
     }
 }); //actor page
-router.get("/add-beef", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
+router.get("/add-beef", token_authentication.recognise_user_token, blanket_middleware, function(request, response) {
 
     var actor_data_promise = new Promise(function(resolve, reject){
         actor_controller.findActors({ increasing_order: "name" }, function(data){
@@ -208,7 +228,7 @@ router.get("/add-beef", token_authentication.recognise_user_token, resolve_user_
     }
     
 }); // submit beefdata page page
-router.get("/beef", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
+router.get("/beef", token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
     
     var events_data_promise = new Promise(function(resolve, reject){
        event_controller.findEvents({ decreasing_order: "date_added", limit: 12 }, function(data){
@@ -259,7 +279,7 @@ router.get("/beef", token_authentication.recognise_user_token, resolve_user_from
         response.render("pages/beefs.jade", view_parameters); 
     });
 }); //beef page
-router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
+router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
 
     //extract data
     var event_id = request.params.event_id;    
@@ -341,7 +361,7 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
         response.render("pages/static/error.jade", view_parameters);
     }
 }); //beef page
-router.get("/contact", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
+router.get("/contact", token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
     
     var trending_data_promise = new Promise(function(resolve, reject){
         event_controller.findEvents({ limit: 3, featured: true }, function(data){
@@ -358,7 +378,7 @@ router.get("/contact", token_authentication.recognise_user_token, resolve_user_f
         response.render("pages/static/contact.jade", view_parameters); 
     });
 }); // contact us page
-router.get("/profile", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) { 
+router.get("/profile", token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
 
     if(request.locals && request.locals.authenticated_user){
 
@@ -401,7 +421,7 @@ router.get("/profile", token_authentication.recognise_user_token, resolve_user_f
         response.redirect("/login?redirected_from=/profile", view_parameters);
     }
 }); //actor page
-router.get("/register", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
+router.get("/register", token_authentication.recognise_user_token, blanket_middleware, function(request, response) {
     
     var view_parameters = Object.assign({}, view_parameters_global);
     
@@ -412,7 +432,7 @@ router.get("/register", token_authentication.recognise_user_token, resolve_user_
         response.render("pages/register.jade", view_parameters);
     }
 }); //actor page
-router.get("/login", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
+router.get("/login", token_authentication.recognise_user_token, blanket_middleware, function(request, response) {
     
     var redirected_from = request.query && request.query.redirected_from ? request.query.redirected_from : null; //if user has been denied entry to a page and then redirected to login, access the page they were attempting to access
     var view_parameters = Object.assign({}, view_parameters_global);
@@ -427,21 +447,21 @@ router.get("/login", token_authentication.recognise_user_token, resolve_user_fro
 }); //actor page
 
 //peripheral page routes
-router.get("/privacy-policy", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response){ 
+router.get("/privacy-policy", token_authentication.recognise_user_token, blanket_middleware, function(request, response){ 
     
     var view_parameters = Object.assign({}, view_parameters_global);
     view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
     
     response.render("pages/static/peripheral_pages/privacy_policy.jade", view_parameters); 
 });
-router.get("/terms-and-conditions", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response){
+router.get("/terms-and-conditions", token_authentication.recognise_user_token, blanket_middleware, function(request, response){
     
     var view_parameters = Object.assign({}, view_parameters_global);
     view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
     
     response.render("pages/static/peripheral_pages/terms_and_conditions.jade", view_parameters); 
 });
-router.get("/disclaimer", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response){
+router.get("/disclaimer", token_authentication.recognise_user_token, blanket_middleware, function(request, response){
     
     var view_parameters = Object.assign({}, view_parameters_global);
     view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
@@ -450,14 +470,14 @@ router.get("/disclaimer", token_authentication.recognise_user_token, resolve_use
 });
 
 //landing page routes
-router.get("/submission-success", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response){
+router.get("/submission-success", token_authentication.recognise_user_token, blanket_middleware, function(request, response){
     
     var view_parameters = Object.assign({}, view_parameters_global);
     view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
     
     response.render("pages/static/successful_submission.jade", view_parameters); 
 });
-router.get("/offline", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response){
+router.get("/offline", token_authentication.recognise_user_token, blanket_middleware, function(request, response){
     
     var view_parameters = Object.assign({}, view_parameters_global);
     view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
@@ -466,7 +486,7 @@ router.get("/offline", token_authentication.recognise_user_token, resolve_user_f
 });
 
 //admin only pages
-router.get("/scraping_dump", token_authentication.recognise_user_token, resolve_user_from_locals_token, function(request, response) {
+router.get("/scraping_dump", token_authentication.recognise_user_token, blanket_middleware, function(request, response) {
     
     if(request.locals && request.locals.authenticated_user){    
         
@@ -517,7 +537,7 @@ router.get("/raw_actor_scraping_html/", token_authentication.authenticate_admin_
 router.get("/broken_fields_stats/", token_authentication.authenticate_admin_user_token, function(request, response) { response.render("pages/admin_pages/scraping_control/broken_fields_stats.ejs"); }); // raw actor scraping page route
 router.get("/admin_login/", function(request, response) { response.render("pages/authentication/admin_login.ejs"); }); // raw actor scraping page route*/
 
-router.get("/reset-my-password/:id_token", function(request, response) { 
+router.get("/reset-my-password/:id_token", blanket_middleware, function(request, response) { 
     
     var id_token = request.params.id_token;
     
