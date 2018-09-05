@@ -10,9 +10,12 @@
     
     - image_url += "/" + image_id;
     
-    - var extension = ""; //extension
+    - var extension;
     
-    - console.log("brwser: " + browser);
+    -if(browser != "firefox"){ //firefox does not support webp image format
+        - extension = ".webp";
+    -}
+    
     -if(extension){ //extension is optional
         - image_url += extension
     - }

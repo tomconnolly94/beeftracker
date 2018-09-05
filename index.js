@@ -25,13 +25,13 @@ const compression = require('compression');
 const validation_controller = require("./server_files/validation/validation_controller");
 const validator = require('express-validator');
 const fs = require('fs');
-const dotenv_result = require("dotenv").config()
+/*const dotenv_result = require("dotenv").config()
  
 if (dotenv_result.error) {
   throw dotenv_result.error
 }
  
-console.log(dotenv_result.parsed)
+console.log(dotenv_result.parsed)*/
 console.log(process.env.CLOUDINARY_URL);
 
 // ## Sitemap generation ###
