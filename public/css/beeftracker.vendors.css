@@ -2671,7 +2671,7 @@ readers do not read off random characters that represent icons */
   font-family: 'Font Awesome 5 Brands'; }
 
 /**
- * Swiper 4.3.3
+ * Swiper 4.2.2
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * http://www.idangero.us/swiper/
  *
@@ -2679,7 +2679,7 @@ readers do not read off random characters that represent icons */
  *
  * Released under the MIT License
  *
- * Released on: June 5, 2018
+ * Released on: April 1, 2018
  */
 .swiper-container {
   margin: 0 auto;
