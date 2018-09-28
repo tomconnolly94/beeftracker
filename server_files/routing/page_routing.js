@@ -73,7 +73,7 @@ function blanket_middleware(request, response, next){
     
     resolve_user_from_locals_token(request, response);
     
-    request.browser = detect_browser(request, response);
+    view_parameters_global.browser = detect_browser(request, response);
     console.log(request.browser)
     next();
 }
@@ -119,7 +119,6 @@ router.get("/", token_authentication.recognise_user_token, blanket_middleware, f
         view_parameters.category_event_data = values[3];
         view_parameters.categories = values[4];
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
-        view_parameters.browser = request.browser;
         
         response.render("pages/home.jade", view_parameters);
     }).catch(function(error){
