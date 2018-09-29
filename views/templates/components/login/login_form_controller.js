@@ -6,10 +6,9 @@ $(function(){
 
         var template_dir = "error_panel";
         var template_name = "error_panel";
-        var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
 
         load_template_render_function(template_dir + "/" + template_name, function(status){
-            fade_new_content_to_div("#login_error_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, errors: error_messages }));
+            fade_new_content_to_div("#login_error_panel", window[template_name + "_tmpl_render_func"]({ errors: error_messages }));
         });
     }
     

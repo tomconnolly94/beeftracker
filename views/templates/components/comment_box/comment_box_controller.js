@@ -10,6 +10,7 @@ $(function(){
         var beef_chain_id;
         var actor_id;
         var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
+        var browser = $("#browser").attr("value"); //extract browser type from hidden div
         
         if(content_classification == "event"){
             event_id = window.location.pathname.split("/")[3];
@@ -41,7 +42,7 @@ $(function(){
                     console.log(comments);
                     
                     load_template_render_function(template_dir + "/" + template_name, function(status){
-                        fade_new_content_to_div("#comment_box_display", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, comments: comments }));
+                        fade_new_content_to_div("#comment_box_display", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, browser: browser, comments: comments }));
                         $("#comment_text_area").val("");
                     });
                 });

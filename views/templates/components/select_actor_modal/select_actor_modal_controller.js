@@ -5,6 +5,7 @@ $(function(){
     var template_dir = "versus_panel";
     var template_name = "versus_panel";
     var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
+    var browser = $("#browser").attr("value"); //extract browser type from hidden div
     
     function assign_click_listeners(){
 
@@ -32,7 +33,7 @@ $(function(){
             
             
             load_template_render_function(template_dir + "/" + template_name, function(status){
-                fade_new_content_to_div("#versus_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, aggressors: aggressors, targets: targets }), function(){
+                fade_new_content_to_div("#versus_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, browser: browser, aggressors: aggressors, targets: targets }), function(){
                     assign_click_listeners();
                 });
 
@@ -73,7 +74,8 @@ $(function(){
         }
         
         load_template_render_function(template_dir + "/" + template_name, function(status){
-            fade_new_content_to_div("#versus_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, aggressors: aggressors, targets: targets }), function(){
+                        
+            fade_new_content_to_div("#versus_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, browser: browser, aggressors: aggressors, targets: targets }), function(){
                 assign_click_listeners();
             });
             
