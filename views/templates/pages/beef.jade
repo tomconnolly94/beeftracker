@@ -77,9 +77,9 @@ append body
     
     - var aggressor_index;
     - var target_index;
-
-    //- find the beef_chain index using the beef chain accessed from the db and the current_beef_chain_id accessed via the path of the page request
-    - beef_chain_index = event_data.beef_chain_ids.map(function(e){ return String(e._id) } ).indexOf(String(current_beef_chain_id));
+    
+    - console.log(event_data.beef_chain_ids);
+    - console.log(beef_chain_index);
     
     - aggressor_index = event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) != -1 ? event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) : event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[1]))
 

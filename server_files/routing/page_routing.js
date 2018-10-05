@@ -262,6 +262,7 @@ router.get("/beef", token_authentication.recognise_user_token, blanket_middlewar
         view_parameters.categories = values[2];
         view_parameters.slider_data = values[3];
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
+        
         /*
         //calculate grid_data events ratings
         for(var i = 0; i < view_parameters.grid_data.length; i++){
@@ -338,19 +339,32 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
         });
 
         Promise.all([ main_event_data_promise, comment_data_promise ]).then(function(values) {
+            //- find the beef_chain index using the beef chain accessed from the db and the current_beef_chain_id accessed via the path of the page request
+            beef_chain_index = values[0].event_data.beef_chain_ids.map(function(e){ return String(e._id) } ).indexOf(String(beef_chain_id));
+            
+            console.log(beef_chain_id);
+            console.log(beef_chain_index);
+            
+            //if beef chain index is not larger than 0 then the selected event cannot be found in the requested beef_chain
+            if(beef_chain_index >= 0){
+                view_parameters.current_beef_chain_id = beef_chain_id;
+                view_parameters.event_data = values[0].event_data;
+                //view_parameters.event_data.rating = calculate_event_rating(view_parameters.event_data.votes);
+                view_parameters.comment_data = values[1];
+                view_parameters.related_events = values[0].related_events;
+                view_parameters.disable_voting = disable_voting;
+                view_parameters.page_url = page_url;
 
-            view_parameters.current_beef_chain_id = beef_chain_id;
-            view_parameters.event_data = values[0].event_data;
-            //view_parameters.event_data.rating = calculate_event_rating(view_parameters.event_data.votes);
-            view_parameters.comment_data = values[1];
-            view_parameters.related_events = values[0].related_events;
-            view_parameters.disable_voting = disable_voting;
-            view_parameters.page_url = page_url;
 
-            response.render("pages/beef.jade", view_parameters);
+                response.render("pages/beef.jade", view_parameters);
 
-            if(view_parameters.user_data){
-                user_controller.addViewedBeefEventToUser(view_parameters.user_data._id.toHexString(), event_id, function(data){});
+                if(view_parameters.user_data){
+                    user_controller.addViewedBeefEventToUser(view_parameters.user_data._id.toHexString(), event_id, function(data){});
+                }
+            }
+            else{
+                console.log("ERROR: event for the provided event_id is not in the beef chain for the provided beef_chain_id")
+                response.render("pages/static/error.jade", view_parameters);
             }
         }).catch(function(error){
             console.log(error);
