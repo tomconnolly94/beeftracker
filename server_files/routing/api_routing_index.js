@@ -29,6 +29,8 @@ router.use("/scraped_data", require("./api_sub_routing/scraped_data_routing"));
 router.use("/update-requests", require("./api_sub_routing/update_requests_routing.js"));
 router.use("/users", require("./api_sub_routing/users_routing.js"));
 router.use("/votes", require("./api_sub_routing/votes_routing.js"));
+
+//auth
 router.route("/authenticate").post(authentication_request_validator.validate, function(request, response){
     
     var auth_details = request.locals.validated_data;
@@ -53,6 +55,11 @@ router.route("/deauthenticate").get(function(request, response){
         }
     });
 });//built, written, not tested
+
+//broken link reporting
+router.route("/report-broken-link").get(function(request, response){
+   console.log("link reported broken.") 
+});
 
 //handle errors
 router.route("/*").get(function(request, response) {response.status(400).send({success: false, message: "endpoint not found"}); });

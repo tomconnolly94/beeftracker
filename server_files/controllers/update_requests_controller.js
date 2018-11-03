@@ -5,7 +5,7 @@ var jsdiff = require('diff');
 var db_ref = require("../config/db_config.js");
 var storage_ref = require("../config/storage_config.js");
 var storage_interface = require('../interfaces/storage_interface.js');
-var db_interface = require('../interfaces/db_insert_interface.js');
+var db_interface = require('../interfaces/db_interface.js');
 var format_embeddable_items = require('../tools/formatting.js').format_embeddable_items;
 var format_event_data = require("./events_controller.js").format_event_data;
 var format_actor_data = require("./actors_controller.js").format_actor_data;
@@ -69,7 +69,7 @@ module.exports = {
                                 user_id: incoming_data.user_id
                             }
 
-                            db_interface.insert_record_into_db(insert_wrapper, db_ref.get_event_update_requests_table(), db_options, function(id){
+                            db_interface.insert(insert_wrapper, db_ref.get_event_update_requests_table(), db_options, function(id){
                                 callback(id);
                             });
                         }

@@ -32,7 +32,6 @@ if (dotenv_result.error) {
 }
  
 console.log(dotenv_result.parsed)*/
-console.log(process.env.CLOUDINARY_URL);
 
 // ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({

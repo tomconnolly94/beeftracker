@@ -1,5 +1,6 @@
 //get database reference object
 var db_ref = require("../config/db_config.js");
+var db_interface = require("../config/db_interface.js");
 //var BSON = require('bson');
 var bodyParser = require("body-parser");
 var jwt = require("jsonwebtoken");

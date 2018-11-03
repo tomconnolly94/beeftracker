@@ -48,6 +48,28 @@ append body_scripts
             //alert("new_url_path " + new_url_path);
             window.location = new_url_path;
         });
+        
+        $.ajax({
+            url: document.getElementById("youtube_iframe").src,
+            type: 'GET',
+            success: function(ytresponse, more, more2){
+                //link loaded correctly
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                console.log("ERROR: ", XMLHttpRequest);
+                $.ajax({
+                    url: "/api/report-broken-link",
+                    type: 'GET',
+                    success: function(ytresponse, more, more2){
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        console.log("ERROR: ", XMLHttpRequest);
+                        //window.location = "/login";
+
+                    }
+                });
+            }
+        });
     
 block head_tags
     title #{event_data.title}
@@ -107,7 +129,8 @@ append body
                             iframe(height="300", scrolling="no", frameborder="no", allow="autoplay", src=main_graphic.link)
                     - else if(main_graphic.media_type == "youtube_embed")
                         div.beef-body-content-youtube-video
-                            iframe(height="315", scrolling="no", frameborder="no", src=main_graphic.link, allow="autoplay; encrypted-media")
+                            //iframe(id="youtube_iframe", height="315", scrolling="no", frameborder="no", src=main_graphic.link, allow="autoplay; encrypted-media")
+                            iframe(id="youtube_iframe", height="315", scrolling="no", frameborder="no", onerror="handle_youtube_error()" src="https://www.youtube.com/embed/VmwOMtkDxtk", allow="autoplay; encrypted-media")
                     - else if(main_graphic.media_type == "image")
                         div.row.col-md-6(style="margin: 0 auto;")
                             div.beef-body-content-image.col-md-12

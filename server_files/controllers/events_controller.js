@@ -6,7 +6,7 @@ var BSON = require('bson');
 var db_ref = require("../config/db_config.js");
 var storage_ref = require("../config/storage_config.js");
 var storage_interface = require('../interfaces/storage_interface.js');
-var db_interface = require('../interfaces/db_insert_interface.js');
+var db_interface = require('../interfaces/db_interface.js');
 var format_embeddable_items = require('../tools/formatting.js').format_embeddable_items;
 
 //objects
@@ -409,7 +409,7 @@ module.exports = {
                     add_to_scraped_confirmed_table: record_origin == "scraped" ? true : false
                 };
 
-                db_interface.insert_record_into_db(event_insert, db_ref.get_current_event_table(), db_options, function(id){
+                db_interface.insert(event_insert, db_ref.get_current_event_table(), db_options, function(id){
                     callback(id);
                 });
             });

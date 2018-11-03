@@ -5,6 +5,7 @@ var jwt = require("jsonwebtoken");
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
+var db_interface = require("../config/db_interface.js");
 var hashing = require("../tools/hashing.js");
 
 //cookie config
@@ -37,42 +38,46 @@ module.exports = {
         //extract data for use later
         var db_url = process.env.MONGODB_URI; //get db uri
 
-        //store data temporarily until submission is confirmed
-        db_ref.get_db_object().connect(db_url, function(err, db) {
+        var query_config = {
+            table: db_ref.get_user_details_table(),
+            aggregate_array: [
+                { 
+                    $match: { 
+                        username: auth_details.username 
+                    } 
+                }
+            ]
+        }
+
+        db.get(query_config, function(results){
+
             if(err){ console.log(err); }
+            else if(results.length < 1){                            
+                callback({ failed: true, stage: "authentication", message: "Validation faled, please format input data properly.", details: [{ location: "Your Username/Password", problem: "Please check your log in details, we don't seem to recognise them."}] });
+            }
             else{
 
-                //query to determine whether a 
-                db.collection(db_ref.get_user_details_table()).aggregate([{ $match: { username: auth_details.username } }]).toArray(function(err, auth_arr){
-                    if(err){ console.log(err); }
-                    else if(auth_arr.length < 1){                            
-                        callback({ failed: true, stage: "authentication", message: "Validation faled, please format input data properly.", details: [{ location: "Your Username/Password", problem: "Please check your log in details, we don't seem to recognise them."}] });
+                var user_details = results[0];
+                var possible_peppers = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+                var response_sent = false;
+
+                //loop through possible peppers to find the appropriate one
+                for(var i = 0; i < possible_peppers.length; i++ ){
+
+                    //compare the hashed password from the db with a fresh hash of the password + possible pepper and provided salt
+                    if(user_details.hashed_password == hashing.hash_password(auth_details.password, user_details.salt, possible_peppers[i]).hashed_password){
+
+                        module.exports.create_auth_cookies(user_details, response, headers, function(){
+                            callback({ auth_failed: false }/*, { auth_token: auth_token, expiry_timestamp: expiry_timestamp, cookies_http_only: cookies_http_only, cookies_secure: cookies_secure }*/);
+                        });
+
+                        response_sent = true;
+                        break;// ensure loop does not continue
                     }
-                    else{
-
-                        var user_details = auth_arr[0];
-                        var possible_peppers = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-                        var response_sent = false;
-
-                        //loop through possible peppers to find the appropriate one
-                        for(var i = 0; i < possible_peppers.length; i++ ){
-
-                            //compare the hashed password from the db with a fresh hash of the password + possible pepper and provided salt
-                            if(user_details.hashed_password == hashing.hash_password(auth_details.password, user_details.salt, possible_peppers[i]).hashed_password){
-
-                                module.exports.create_auth_cookies(user_details, response, headers, function(){
-                                    callback({ auth_failed: false }/*, { auth_token: auth_token, expiry_timestamp: expiry_timestamp, cookies_http_only: cookies_http_only, cookies_secure: cookies_secure }*/);
-                                });
-
-                                response_sent = true;
-                                break;// ensure loop does not continue
-                            }
-                        }
-                        if(!response_sent){ //if the password hash is not found send a failed auth response
-                            callback({ failed: true, stage: "authentication", message: "Validation faled, please format input data properly.", details: [{ location: "Your Username/Password", problem: "Please check your log in details, we don't seem to recognise them."}] });
-                        }
-                    }
-                });
+                }
+                if(!response_sent){ //if the password hash is not found send a failed auth response
+                    callback({ failed: true, stage: "authentication", message: "Validation faled, please format input data properly.", details: [{ location: "Your Username/Password", problem: "Please check your log in details, we don't seem to recognise them."}] });
+                }
             }
         });
     },
