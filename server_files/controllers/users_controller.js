@@ -60,7 +60,7 @@ var insert_new_user = function(insert_object, table, callback){
         callback(error_object);
     });
 }
-        
+
 module.exports = {
     
     findUser: function(user_id, is_admin, callback){
@@ -224,7 +224,14 @@ module.exports = {
                             }
                         }
                         else{
-                            storage_interface.upload_image(image_requires_download, storage_ref.get_user_images_folder(), insert_object.img_title, files[0], false, function(img_title){
+                            
+                            var upload_config = {
+                                record_type: storage_ref.get_user_images_folder(),
+                                items: [ insert_object ],
+                                files: files
+                            };
+                            
+                            storage_interface.upload(upload_config, function(img_title){
                                 insert_new_user(insert_object, db_ref.get_pending_registered_admin_users_table(), function(result){
                                     if(!result.failed){
                                         result.message = "Requires approval from an existing admin.";
@@ -249,7 +256,14 @@ module.exports = {
                     insert_object.contribution_score = 0;
 
                     if(insert_object.img_title != "default"){
-                        storage_interface.upload_image(image_requires_download, storage_ref.get_user_images_folder(), insert_object.img_title, file_buffer, false, function(img_title){
+                        
+                        var upload_config = {
+                            record_type: storage_ref.get_user_images_folder(),
+                            items: [ insert_object ],
+                            files: files
+                        };
+                        
+                        storage_interface.upload(upload_config, function(img_title){
                             insert_new_user(insert_object, db_ref.get_user_details_table(), function(result){
                                 callback(result);
                             });
@@ -311,66 +325,74 @@ module.exports = {
             file_buffer = files[0].buffer;
         }
         
+        var query_config = {
+            table: db_ref.get_user_details_table(),
+            aggregate_array: [
+                {
+                    $match: { _id: existing_user_id_object }
+                }
+            ]
+        }
         
-        console.log(file_buffer);
-        console.log(files);
+        db_interface.get(query_config, function(auth_arr){
+            if(auth_arr.length == 1){ //ensure only one user matches the provided _id 
 
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-                
-                db.collection(db_ref.get_user_details_table()).find({ _id: existing_user_id_object }).toArray(function(err, auth_arr){
-                    if(err){ console.log(err); }
-                    else{
-                        if(auth_arr.length == 1){ //ensure only one user matches the provided _id 
+                if(ip_address != null){
+                    //add ip address
+                    insert_object.ip_addresses = auth_arr[0].ip_addresses;
+                    insert_object.ip_addresses.push(ip_address)
+                }
+
+                if(auth_arr[0].img_title == insert_object.img_title){ //if image text is equal then no updates are necessary TODO: is that correct? wont it compare the uploaded image title to the cloudinary generated id?
+                    
+                    var update_config = {
+                        record: insert_object,
+                        table: db_ref.get_user_details_table(),
+                        options: {},
+                        existing_object_id: existing_user_id_object,
+                    };
+
+                    db_interface.update(update_config, function(){
+                        callback({ user_id: existing_object_id, message: "User updated." });
+                    },
+                    function(error_object){
+                        callback(error_object);
+                    });
+                }
+                else{
+
+                    var delete_config = {
+                        items: [{ link: auth_arr[0].img_title }],
+                        record_type: storage_ref.get_user_images_folder()
+                    };
+
+                    //delete previous images
+                    storage_interface.remove(delete_config, function(){
+                        
+                        var upload_config = {
+                            record_type: storage_ref.get_user_images_folder(),
+                            item_data: [ insert_object ],
+                            files: [ file_buffer ]
+                        };
+
+                        storage_interface.upload(upload_config, function(img_title){
+
+                            var update_config = {
+                                record: insert_object,
+                                table: db_ref.get_user_details_table(),
+                                options: {},
+                                existing_object_id: existing_user_id_object,
+                            };
                             
-                            if(ip_address != null){
-                                //add ip address
-                                insert_object.ip_addresses = auth_arr[0].ip_addresses;
-                                insert_object.ip_addresses.push(ip_address)
-                            }
-                            
-                            console.log(auth_arr[0]);
-                            console.log("#'#############################");
-                            console.log(insert_object);
-                            
-                            if(auth_arr[0].img_title == insert_object.img_title){
-                                //insert new user record
-                                db.collection(db_ref.get_user_details_table()).update({ _id: existing_user_id_object }, { $set: insert_object }, function(err, document){
-                                    if(err){ console.log(err); }
-                                    else{
-                                        callback({ user_id: existing_object_id, message: "User updated." });
-                                    }
-                                });
-                            }
-                            else{
-                                
-                                //delete previous images
-                                storage_interface.delete_image(storage_ref.get_user_images_folder(), auth_arr[0].img_title_fullsize, function(){
-                                    storage_interface.delete_image(storage_ref.get_user_images_folder(), auth_arr[0].img_title_thumbnail, function(){
-                                                                
-                                        storage_interface.upload_image(image_requires_download, storage_ref.get_user_images_folder(), insert_object.img_title, file_buffer, false, function(img_title){
-
-                                            insert_object.img_title_fullsize = img_title;
-
-                                            storage_interface.upload_image(image_requires_download, storage_ref.get_user_images_folder(), insert_object.img_title, file_buffer, true, function(thumbnail_img_title){
-
-                                                insert_object.img_title_thumbnail = thumbnail_img_title;
-                                                //insert new user record
-                                                db.collection(db_ref.get_user_details_table()).update({ _id: existing_user_id_object }, { $set: insert_object }, function(err, document){
-                                                    if(err){ console.log(err); }
-                                                    else{
-                                                        callback({ user_id: existing_object_id, message: "User updated." });
-                                                    }
-                                                });
-                                            });
-                                        });
-                                    });
-                                });
-                            }
-                        }
-                    }
-                });
+                            db_interface.update(update_config, function(){
+                                callback({ user_id: existing_object_id, message: "User updated." });
+                            },
+                            function(error_object){
+                                callback(error_object);
+                            });
+                        });
+                    });
+                }
             }
         });
     },
@@ -378,33 +400,42 @@ module.exports = {
     deleteUser: function(request, response, callback){
         
         //extract data
-        var user_id = request.params.user_id;
+        var user_id_object = BSON.ObjectID.createFromHexString(request.params.user_id);
 
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-                var user_id_object = BSON.ObjectID.createFromHexString(user_id);
+        var query_config = {
+            table: db_ref.get_user_details_table(),
+            aggregate_array: [
+                {  $match: { _id: user_id_object } }
+            ]
+        };
+        db_interface.get(query_config, function(result){
+            
+            if(result && result[0]){
                 
-                db.collection(db_ref.get_user_details_table()).findOne({ _id: user_id_object }, function(queryErr, user_obj) {
-                    if(queryErr){ console.log(queryErr); }
-                    else{
-                        if(user_obj){
-                            storage_interface.delete_image(storage_ref.get_user_images_folder(), user_obj.img_title_fullsize, function(img_title){
-                            
-                                storage_interface.delete_image(storage_ref.get_user_images_folder(), user_obj.img_title_thumbnail, function(thumbnail_img_title){
-                                
-                                     db.collection(db_ref.get_user_details_table()).deleteOne({ _id: user_id_object }, function(queryErr, docs) {
-                                        if(queryErr){ console.log(queryErr); }
-                                        else{
-                                            callback({ message: "User has been deleted." });
-                                        }
-                                    });
-                                });
-                            });
-                        }
-                    }
+                var user = result[0];
+                
+                var remove_config = {
+                    items: [ user ],
+                    record_type: storage_ref.get_user_images_folder()
+                };
+                
+                storage_interface.remove(remove_config, function(img_title){
+
+                    var delete_config = {
+                        match_query: { _id: user_id_object }
+                    };
+                    
+                    db_interface.delete(delete_config, function(){
+                        callback({ message: "User has been deleted." });
+                    },
+                    function(error_object){
+                        callback(error_object);
+                    });
                 });
             }
+        },
+        function(error_object){
+            callback(error_object);
         });
     },
     
