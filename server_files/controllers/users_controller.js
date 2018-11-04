@@ -233,6 +233,7 @@ module.exports = {
                             }
                         }
                         else{
+
                             var upload_config = {
                                 record_type: storage_ref.get_user_images_folder(),
                                 items: [ insert_object ],
