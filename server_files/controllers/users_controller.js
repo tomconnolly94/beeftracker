@@ -34,7 +34,7 @@ var check_details_against_user_table = function(user_details, insert_object, cal
                     ]
                 }
             }
-        ];
+        ]
     }
 
     db_interface.get(query_config, function(results){
@@ -219,7 +219,7 @@ module.exports = {
                                     ] 
                                 } 
                             }
-                        ];
+                        ]
                     }
 
                     db_interface.get(query_config, function(results){
@@ -233,7 +233,6 @@ module.exports = {
                             }
                         }
                         else{
-                            
                             var upload_config = {
                                 record_type: storage_ref.get_user_images_folder(),
                                 items: [ insert_object ],

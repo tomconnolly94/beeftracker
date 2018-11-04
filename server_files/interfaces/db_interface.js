@@ -149,7 +149,7 @@ module.exports = {
             }
         });        
     },
-    
+
     update: function(update_config, success_callback, failure_callback){
     
         var update_clause = update_config.update_clause;
