@@ -306,7 +306,7 @@ describe('Module: actors_controller', function () {
                 callback(query_config.aggregate_array); 
             };
 
-            storage_interface.async_loop_upload_items = function(gallery_items, "actors", files, callback){
+            storage_interface.async_loop_upload_items = function(gallery_items, record_type, files, callback){
                 callback(query_config.aggregate_array); 
             };
 

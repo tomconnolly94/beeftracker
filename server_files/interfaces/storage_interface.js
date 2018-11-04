@@ -119,12 +119,15 @@ module.exports = {
     },
         
     //format gallery items for db storage, also store them in the provided folder on the file server
-    async_loop_upload_items: function(items, file_server_folder, files, callback){
+    async_loop_upload_items: function(upload_config, callback){
         
         var loop_count = 0;
+        var file_server_folder = upload_config.record_type;
+        var item_data = upload_config.item_data;
+        var files = upload_config.files;
                 
-        //use an asynchronous loop to cycle through gallery items, if item is an image, save image to cloudinary and update gallery item link
-        loop(items, function(item, next){
+        //use an asynchronous loop to cycle through gallery item_data, if item is an image, save image to cloudinary and update gallery item link
+        loop(item_data, function(item, next){
 
             loop_count++;
             
@@ -147,7 +150,7 @@ module.exports = {
                             module.exports.upload_image(requires_download, file_server_folder, file_name, file_buffer, true, function(img_dl_title){
                                 item.thumbnail_img_title = img_dl_title;
 
-                                if(loop_count == items.length){
+                                if(loop_count == item_data.length){
                                     next(null, loop.END_LOOP);
                                 }
                                 else{
@@ -157,7 +160,7 @@ module.exports = {
                             });
                         }
                         else{*/
-                            if(loop_count == items.length){
+                            if(loop_count == item_data.length){
                                 next(null, loop.END_LOOP);
                             }
                             else{
@@ -167,7 +170,7 @@ module.exports = {
                     });
                 }
                 else{
-                    if(loop_count == items.length){
+                    if(loop_count == item_data.length){
                         next(null, loop.END_LOOP);
                     }
                     else{
@@ -179,7 +182,7 @@ module.exports = {
                 next();
             }
         }, function(){
-            callback(items);
+            callback(item_data);
         });
     },
     
