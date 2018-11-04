@@ -91,75 +91,107 @@ var post_insert_procedure = function(db, document, insert_object, table, options
 
 module.exports = {
     
-    get: function(query_config, callback){
+    get: function(query_config, success_callback, failure_callback){
         
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
+            if(err){ 
+                console.log(err); 
+                failure_callback({ failed: true, module: "db_interface", function: "get", message: "Failed at db connection"});
+            }
             else{
                 //standard query to match an event and resolve aggressor and targets references
                 db.collection(query_config.table).aggregate(query_config.aggregate_array).toArray(function(err, results) {
                     //handle error
-                    if(err) { console.log(err);}
+                    if(err) { 
+                        console.log(err);
+                        failure_callback({ failed: true, module: "db_interface", function: "get", message: "Failed at db query"});
+                    }
                     else{
-                        callback(results);
+                        success_callback(results);
                     }
                 });
             }
         });
     },
     
-    delete: function(query_config, callback){
+    insert: function(insert_config, success_callback, failure_callback){
+        var record = insert_config.record
+        var table = insert_config.table;
+        var options = insert_config.options;
         
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-                //standard query to match an event and resolve aggressor and targets references
-                db.collection(query_config.table).deleteOne(query_config.match_query).toArray(function(err, results) {
-                    //handle error
-                    if(err) { console.log(err);}
-                    else{
-                        callback(results);
-                    }
-                });
-            }
-        });
-    },
-    
-    insert: function(insert_object, table, options, fn_callback){    
         db_ref.get_db_object().connect(db_url, function(err, db) {
-            if(err){ console.log(err); }
+            if(err){
+                console.log(err); 
+                failure_callback({ failed: true, module: "db_interface", function: "insert", message: "Failed at db connection"});
+            }
             else{
                 //standard query to insert into live events table
-                db.collection(table).insert(insert_object, function(err, document){
-                    if(err){ console.log(err); }
+                db.collection(table).insert(record, function(err, document){
+                    if(err){
+                        console.log(err);
+                        failure_callback({ failed: true, module: "db_interface", function: "insert", message: "Failed at db query"});
+                    }
                     else{
                         options.operation = "insert";
-                        post_insert_procedure(db, document, insert_object, table, options);
-                        fn_callback({ id: insert_object._id });
+                        post_insert_procedure(db, document, record, table, options);
+                        success_callback({ id: record._id });
                     }
                 });
             }
         });        
     },
     
-    update_record_in_db: function(insert_object, table, options, existing_object_id, fn_callback){
+    update: function(update_config, fn_callback, failure_callback){
     
+        var record = update_config.record;
+        var table = update_config.table;
+        var options = update_config.options;
+        var existing_object_id = update_config.existing_object_id;
+        
         db_ref.get_db_object().connect(db_url, function(err, db) {
-            if(err){ console.log(err); }
+            if(err){ 
+                console.log(err); 
+                failure_callback({ failed: true, module: "db_interface", function: "update", message: "Failed at db connection"});
+            }
             else{
                 var object = BSON.ObjectID.createFromHexString(existing_object_id);
                                 
                 //standard query to insert into live events table
-                db.collection(table).findOneAndUpdate({_id: object}, { $set: insert_object }, function(err, document){
-                    if(err){ console.log(err); }
+                db.collection(table).findOneAndUpdate({_id: object}, { $set: record }, function(err, document){
+                    if(err){
+                        console.log(err);
+                        failure_callback({ failed: true, module: "db_interface", function: "update", message: "Failed at db query"});
+                    }
                     else{
                         options.operation = "update";
-                        post_insert_procedure(db, document, insert_object, table, options);
-                        fn_callback(insert_object);
+                        post_insert_procedure(db, document, record, table, options);
+                        fn_callback(record);
                     }
                 });
             }
         });        
-    }
+    },
     
+    delete: function(delete_config, success_callback, failure_callback){
+        
+        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
+            if(err){
+                console.log(err); 
+                failure_callback({ failed: true, module: "db_interface", function: "delete", message: "Failed at db connection"});
+            }
+            else{
+                //standard query to match an event and resolve aggressor and targets references
+                db.collection(query_config.table).deleteOne(delete_config.match_query).toArray(function(err, results) {
+                    //handle error
+                    if(err){
+                        console.log(err);
+                        failure_callback({ failed: true, module: "db_interface", function: "delete", message: "Failed at db query"});
+                    }
+                    else{
+                        success_callback(results);
+                    }
+                });
+            }
+        });
+    }    
 }

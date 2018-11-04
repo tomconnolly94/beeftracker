@@ -184,6 +184,9 @@ module.exports = {
             else{
                 callback({ failed: true, message: "Actors not found." });
             }
+        },
+        function(error_object){
+            callback(error_object)
         });
     },
     
@@ -266,6 +269,9 @@ module.exports = {
             else{
                 callback({ failed: true, message: "Actor not found." });
             }
+        },
+        function(error_object){
+            callback(error_object)
         });
     },
     
@@ -284,7 +290,13 @@ module.exports = {
             //find gallery items that need their embedding links generated
             actor_insert.gallery_items = format_embeddable_items(actor_insert.gallery_items, files);
             
-            storage_interface.async_loop_upload_items(actor_insert.gallery_items, "actors", files, function(items){
+            var upload_config = {
+                record_type: "actors",
+                item_data: actor_insert.gallery_items,
+                files: files
+            }
+            
+            storage_interface.async_loop_upload_items(upload_config, function(items){
 
                 actor_insert.gallery_items = items;
 
@@ -324,10 +336,19 @@ module.exports = {
                     email_notification_text: "Beef",
                     add_to_scraped_confirmed_table: record_origin == "scraped" ? true : false
                 };
+                
+                var insert_config = {
+                    table: db_ref.get_current_actor_table(),
+                    record: actor_insert,
+                    db_options: db_options
+                };
 
-                db_interface.insert(actor_insert, db_ref.get_current_actor_table(), db_options, function(id){
+                db_interface.insert(insert_config, function(id){
                     actor_insert._id = id;
                     callback(actor_insert);
+                },
+                function(error_object){
+                    callback(error_object)
                 });
             });
         }
@@ -349,7 +370,13 @@ module.exports = {
             //find gallery items that need their embedding links generated
             actor_insert.gallery_items = format_embeddable_items(actor_insert.gallery_items, files);
             
-            storage_interface.async_loop_upload_items(actor_insert.gallery_items, "actors", files, function(items){
+            var upload_config = {
+                record_type: "actors",
+                item_data: actor_insert.gallery_items,
+                files: files
+            }
+            
+            storage_interface.async_loop_upload_items(upload_config, function(items){
                 
                 actor_insert.gallery_items = items;
                 
@@ -387,8 +414,15 @@ module.exports = {
                     if(results && results[0]){
                         original_actor = results[0];
 
+                        var update_config = {
+                            record: actor_insert,
+                            table: db_ref.get_current_actor_table(),
+                            options: db_options,
+                            existing_object_id: existing_object_id
+                        }
+                        
                         //call to update the db record
-                        db_interface.update_record_in_db(actor_insert, db_ref.get_current_actor_table(), db_options, existing_object_id, function(document){
+                        db_interface.update(update_config, function(document){
 
                             var gallery_items_to_remove = [];
 
@@ -422,6 +456,9 @@ module.exports = {
                     else{
                         callback({ failed: true, message: "Actor not found." });
                     }
+                },
+                function(error_object){
+                    callback(error_object)
                 });                
             });
         }
@@ -454,12 +491,12 @@ module.exports = {
 
                 storage_interface.async_loop_remove_items(actor_obj.gallery_items, "actors", function(){
 
-                    var query_config = {
+                    var delete_config = {
                         table: db_ref.get_current_actor_table(),
                         match_query: { _id: actor_id_object }
                     }
 
-                    db_interface.delete(query_config, function(){
+                    db_interface.delete(delete_config, function(){
                         callback({});
                     });
                 });
@@ -467,6 +504,9 @@ module.exports = {
             else{
                 callback({ failed: true, message: "Actor not in database."});
             }
+        },
+        function(error_object){
+            callback(error_object)
         });
     },
     
@@ -483,6 +523,9 @@ module.exports = {
 
         db_interface.get(query_config, function(results){
             callback(results);
+        },
+        function(error_object){
+            callback(error_object)
         });
     },
     
