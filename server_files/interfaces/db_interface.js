@@ -141,7 +141,7 @@ module.exports = {
         });        
     },
     
-    update: function(update_config, fn_callback, failure_callback){
+    update: function(update_config, success_callback, failure_callback){
     
         var record = update_config.record;
         var table = update_config.table;
@@ -165,7 +165,7 @@ module.exports = {
                     else{
                         options.operation = "update";
                         post_insert_procedure(db, document, record, table, options);
-                        fn_callback(record);
+                        success_callback(record);
                     }
                 });
             }

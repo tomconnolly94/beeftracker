@@ -198,9 +198,7 @@ module.exports = {
             table: db_ref.get_current_actor_table(),
             aggregate_array: [
                 { 
-                    $match: { 
-                        _id: actor_id_object 
-                    }
+                    $match: { _id: actor_id_object }
                 },
                 { $lookup : { 
                     from: db_ref.get_current_event_table(),
@@ -291,12 +289,12 @@ module.exports = {
             actor_insert.gallery_items = format_embeddable_items(actor_insert.gallery_items, files);
             
             var upload_config = {
-                record_type: "actors",
+                record_type: storage_ref.get_actor_images_folder(),
                 item_data: actor_insert.gallery_items,
                 files: files
             }
             
-            storage_interface.async_loop_upload_items(upload_config, function(items){
+            storage_interface.upload(upload_config, function(items){
 
                 actor_insert.gallery_items = items;
 
@@ -371,12 +369,12 @@ module.exports = {
             actor_insert.gallery_items = format_embeddable_items(actor_insert.gallery_items, files);
             
             var upload_config = {
-                record_type: "actors",
+                record_type: storage_ref.get_actor_images_folder(),
                 item_data: actor_insert.gallery_items,
                 files: files
             }
             
-            storage_interface.async_loop_upload_items(upload_config, function(items){
+            storage_interface.upload(upload_config, function(items){
                 
                 actor_insert.gallery_items = items;
                 
@@ -446,7 +444,7 @@ module.exports = {
 
                             if(gallery_items_to_remove.length > 0){
                                 //remove all old gallery_items
-                                storage_interface.async_loop_remove_items(gallery_items_to_remove, "actors", function(items){
+                                storage_interface.remove(gallery_items_to_remove, storage_ref.get_actor_images_folder(), function(items){
                                     console.log("finish")
                                 });
                             }
@@ -489,7 +487,7 @@ module.exports = {
                 //add thumbnail image to list
                 actor_obj.gallery_items.push({link: actor_obj.img_title_thumbnail, media_type: "image"});
 
-                storage_interface.async_loop_remove_items(actor_obj.gallery_items, "actors", function(){
+                storage_interface.remove(actor_obj.gallery_items, storage_ref.get_actor_images_folder(), function(){
 
                     var delete_config = {
                         table: db_ref.get_current_actor_table(),
