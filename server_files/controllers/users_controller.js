@@ -1,12 +1,21 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Module: 
+// Author: Tom Connolly
+// Description: 
+// Testing script:
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //external dependencies
 var BSON = require("bson");
-var nodemailer = require('nodemailer');
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
 var db_interface = require("../config/db_interface.js");
 var storage_ref = require("../config/storage_config.js");
 var storage_interface = require('../interfaces/storage_interface.js');
+var email_interface = require('../interfaces/email_interface.js');
 var hashing = require("../tools/hashing.js");
 var random_id = require("random-id");
 
@@ -346,7 +355,7 @@ module.exports = {
                 if(auth_arr[0].img_title == insert_object.img_title){ //if image text is equal then no updates are necessary TODO: is that correct? wont it compare the uploaded image title to the cloudinary generated id?
                     
                     var update_config = {
-                        record: insert_object,
+                        update_clause: { $set: insert_object },
                         table: db_ref.get_user_details_table(),
                         options: {},
                         existing_object_id: existing_user_id_object,
@@ -378,7 +387,7 @@ module.exports = {
                         storage_interface.upload(upload_config, function(img_title){
 
                             var update_config = {
-                                record: insert_object,
+                                update_clause: { $set: insert_object },
                                 table: db_ref.get_user_details_table(),
                                 options: {},
                                 existing_object_id: existing_user_id_object,
@@ -441,63 +450,53 @@ module.exports = {
     
     requestPasswordReset: function(email_address, callback){
         
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
+        var query_config = {
+            table: db_ref.get_user_details_table(),
+            aggregate_array: [
+                { $match: { email_address: email_address} }
+            ]
+        };
+
+        db_interface.get(query_config, function(users){
+
+            if(auth_arr.length < 1){
+                callback({ failed: true, module: "users_controllers", function: "requestPasswordReset", message: "Email address not found."});
+            }
             else{
-                db.collection(db_ref.get_user_details_table()).find({ email_address: email_address}).toArray(function(err, auth_arr){
-                    if(err){ console.log(err); }
-                    else{
-                        if(auth_arr.length < 1){
-                            callback({ failed: true, message: "Email address not found."});
-                        }
-                        else{
-                            var existing_user_details = auth_arr[0];
-                            
-                            //generate unique token
-                            var id_token = random_id(40);
-                            
-                            var insert_object = {
-                                user_email: email_address,
-                                id_token: id_token
-                            };
-                            
-                            //insert reset request token into the database to be accessed and checked later
-                            db.collection(db_ref.get_password_reset_request_table()).update({ user_email: email_address }, insert_object, {upsert: true}, function(err, document){
-                                console.log("Password reset request document inserted.")
-                            });
-                            
-                            //send email with link in it to a page where a user can reset their password
-                            var transporter = nodemailer.createTransport({
-                                service: 'Gmail',
-                                auth: {
-                                    user: process.env.SERVER_EMAIL_ADDRESS,
-                                    pass: process.env.SERVER_EMAIL_PASSWORD
-                                }
-                            });
-                            
-                            var reset_url = "https://beeftracker.co.uk/reset-my-password/" + id_token;
+                var existing_user_details = users[0];
 
-                            //config mail options
-                            var mailOptions = {
-                                from: 'noreply@beeftracker.com', // sender address
-                                to: email_address, // list of receivers
-                                subject: "Beeftracker password reset", // Subject line
-                                //text: text //, // plaintext body
-                                html: '<b>Reset link</b> <a href=' + reset_url + '>Reset</a>' // You can choose to send an HTML body instead
-                            };
+                var insert_object = {                    
+                    user_email: email_address,
+                    id_token: id_token
+                };
 
-                            //send email notifying beeftracker account new submisson
-                            transporter.sendMail(mailOptions, function(error, info){
-                                if(error){ console.log(error); }
-                                else{
-                                    console.log('Message sent: ' + info.response);
-                                    //callback({ id: insert_object._id });
-                                    //callback(null);
-                                };
-                            });
-                            callback({ message: "Email address found, endpoint not yet implemented."});
-                        }
-                    }
+                var update_config = {
+                    update_clause: { $set: insert_object },
+                    table: db_ref.get_password_reset_request_table(),
+                    options: {},
+                    existing_object_id: existing_user_details._id,
+                };
+
+                //insert reset request token into the database to be accessed and checked later
+                db_interface.update(update_config, function(record){
+                    console.log("Password reset request document inserted.");
+                });
+
+                //generate unique token
+                var id_token = random_id(40);
+                var reset_url = "https://beeftracker.co.uk/reset-my-password/" + id_token;
+
+                var send_email_config = {
+                    email_title: "Beeftracker password reset",
+                    email_html: "<b>Reset link</b> <a href=" + reset_url + ">Reset</a>",
+                    recipient_address: email_address
+                }
+                
+                email_interface.send(send_email_config, function(){
+                    callback({ message: "Email sent."});                    
+                },
+                function(error_object){
+                    callback(error_object);
                 });
             }
         });
@@ -505,54 +504,50 @@ module.exports = {
     
     executePasswordReset: function(id_token, new_password, callback){
         
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
+        var delete_config = {
+            table: db_ref.get_password_reset_request_table(),
+            match_query: { id_token: id_token }
+        };
+
+        db_interface.delete(delete_config, function(record){
+
+            if(!record){
+                callback({ failed: true, module: "users_controller", function: "executePasswordReset", message: "Password reset request not found."});
+            }
             else{
-                db.collection(db_ref.get_password_reset_request_table()).findOneAndDelete({ id_token: id_token}).toArray(function(err, password_reset_documents){
-                    if(err){ console.log(err); }
-                    else{
-                        if(password_reset_documents.length < 1){
-                            callback({ failed: true, message: "Password reset request not found."});
-                        }
-                        else{
-                            var password_reset_request = password_reset_documents[0];
-                            
-                            password_data = hashing.hash_password(new_password);
-                            
-                            var insert_object = {
-                                hashed_password: password_data.hashed_password,
-                                salt: password_data.salt
-                            };
-                            
-                            //insert reset request token into the database to be accessed and checked later
-                            db.collection(db_ref.get_password_reset_request_table()).update({ user_email: email_address }, { $set: insert_object } , function(err, document){
-                                console.log("Password reset request document inserted.")
-                            });
-                            
-                            callback({ message: "Email address found, endpoint not yet implemented."});
-                        }
-                    }
+                password_data = hashing.hash_password(new_password);
+
+                var insert_object = {
+                    hashed_password: password_data.hashed_password,
+                    salt: password_data.salt
+                };
+
+                //insert reset request token into the database to be accessed and checked later
+                db.collection(db_ref.get_password_reset_request_table()).update({ user_email: email_address }, { $set: insert_object } , function(err, document){
+                    console.log("Password reset request document inserted.")
+                    callback({ message: "Email address found, endpoint not yet implemented."});
                 });
+
             }
         });
     },
     
     addViewedBeefEventToUser(user_id, event_id, callback){
-        
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-                
-                var user_id_object = BSON.ObjectID.createFromHexString(user_id);
-                var event_id_object = BSON.ObjectID.createFromHexString(event_id);
-                
-                db.collection(db_ref.get_user_details_table()).update({ _id: user_id_object }, { $push: { viewed_beef_ids: { id: event_id_object, date: new Date() }}}, function(err, document){
-                    if(err){ console.log(err);}
-                    else{
-                        callback(document);
-                    }
-                });
-            }
+                        
+        var event_id_object = BSON.ObjectID.createFromHexString(event_id);
+
+        var update_config = {
+            update_clause: { $push: { viewed_beef_ids: { id: event_id_object, date: new Date() }}},
+            table: db_ref.get_user_details_table(),
+            options: {},
+            existing_object_id: user_id
+        }
+
+        db_interface.update(update_config, function(record){
+            callback(record);
+        },
+        function(error_object){
+            callback(error_object);
         });
     },
         
