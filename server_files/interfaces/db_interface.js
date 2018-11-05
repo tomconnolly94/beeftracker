@@ -1,3 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Module: 
+// Author: Tom Connolly
+// Description: 
+// Testing script:
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //file to hold all functions involving the server's interfacing with the database
 var db_ref = require("../config/db_config.js");
 var nodemailer = require('nodemailer');
@@ -143,7 +152,7 @@ module.exports = {
     
     update: function(update_config, success_callback, failure_callback){
     
-        var record = update_config.record;
+        var update_clause = update_config.update_clause;
         var table = update_config.table;
         var options = update_config.options;
         var existing_object_id = update_config.existing_object_id;
@@ -157,7 +166,7 @@ module.exports = {
                 var object = BSON.ObjectID.createFromHexString(existing_object_id);
                                 
                 //standard query to insert into live events table
-                db.collection(table).findOneAndUpdate({_id: object}, { $set: record }, function(err, document){
+                db.collection(table).findOneAndUpdate({_id: object}, update_clause, { $upsert: true }, function(err, document){
                     if(err){
                         console.log(err);
                         failure_callback({ failed: true, module: "db_interface", function: "update", message: "Failed at db query"});
@@ -174,6 +183,9 @@ module.exports = {
     
     delete: function(delete_config, success_callback, failure_callback){
         
+        var table = delete_config.table;
+        var match_query = delete_config.match_query;
+        
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){
                 console.log(err); 
@@ -181,14 +193,14 @@ module.exports = {
             }
             else{
                 //standard query to match an event and resolve aggressor and targets references
-                db.collection(query_config.table).deleteOne(delete_config.match_query).toArray(function(err, results) {
+                db.collection(table).findOneAndDelete(match_query).toArray(function(err, results) {
                     //handle error
                     if(err){
                         console.log(err);
                         failure_callback({ failed: true, module: "db_interface", function: "delete", message: "Failed at db query"});
                     }
                     else{
-                        success_callback(results);
+                        success_callback(results[0]);
                     }
                 });
             }

@@ -1,3 +1,13 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Module: actors_controller
+// Author: Tom Connolly
+// Description: Controller to take responsibility for all CRUD operations on actor objects in the
+//              db
+// Testing script: /testing/unit_testing/controller_tests/actors_controller.test.js
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //external dependencies
 var loop = require("async-looper");
 var BSON = require('bson');
