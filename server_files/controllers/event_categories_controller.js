@@ -2,6 +2,7 @@
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
+var db_interface = require("../config/db_interface.js");
 
 //objects
 var EventCategory = require("../schemas/event_category_schema");

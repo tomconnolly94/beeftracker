@@ -47,10 +47,11 @@ $(function(){
         var template_dir = "add_actor_modal";
         var template_name = "add_actor_variable_field_panel";
         var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
+        var browser = $("#browser").attr("value"); //extract file server url prefix from hidden div
         
         $.get("/api/actor-variable-fields-config", {}, function(data){
             load_template_render_function(template_dir + "/" + template_name, function(status){
-                fade_new_content_to_div("#variable_fields_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, variable_fields: data, active_classification: id }))
+                fade_new_content_to_div("#variable_fields_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, browser: browser, variable_fields: data, active_classification: id }))
             });
         });
         

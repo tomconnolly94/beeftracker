@@ -5,6 +5,7 @@ var os = require("os");
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
+var db_interface = require("../config/db_interface.js");
 
 module.exports = {
 

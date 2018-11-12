@@ -5,7 +5,7 @@ mixin vertical-beefs(data, data_type, image_resize_params)
     div.vertical-list(class!=attributes.class)
         div.col-md-12
             each item in data
-                - var formatted_date = format_date(data.event_date);
+                - var formatted_date = format_date(item.event_date);
                 
                 div.vertical-list-item.beef-category-default
                     div.vertical-list-item-thumbnail

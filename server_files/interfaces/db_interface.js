@@ -90,8 +90,42 @@ var post_insert_procedure = function(db, document, insert_object, table, options
 }
 
 module.exports = {
-       
-    insert_record_into_db: function(insert_object, table, options, fn_callback){    
+    
+    get: function(query_config, callback){
+        
+        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
+            if(err){ console.log(err); }
+            else{
+                //standard query to match an event and resolve aggressor and targets references
+                db.collection(query_config.table).aggregate(query_config.aggregate_array).toArray(function(err, results) {
+                    //handle error
+                    if(err) { console.log(err);}
+                    else{
+                        callback(results);
+                    }
+                });
+            }
+        });
+    },
+    
+    delete: function(query_config, callback){
+        
+        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
+            if(err){ console.log(err); }
+            else{
+                //standard query to match an event and resolve aggressor and targets references
+                db.collection(query_config.table).deleteOne(query_config.match_query).toArray(function(err, results) {
+                    //handle error
+                    if(err) { console.log(err);}
+                    else{
+                        callback(results);
+                    }
+                });
+            }
+        });
+    },
+    
+    insert: function(insert_object, table, options, fn_callback){    
         db_ref.get_db_object().connect(db_url, function(err, db) {
             if(err){ console.log(err); }
             else{

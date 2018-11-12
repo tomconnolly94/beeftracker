@@ -6,7 +6,7 @@ var BSON = require('bson');
 var db_ref = require("../config/db_config.js");
 var storage_ref = require("../config/storage_config.js");
 var storage_interface = require('../interfaces/storage_interface.js');
-var db_interface = require('../interfaces/db_insert_interface.js');
+var db_interface = require('../interfaces/db_interface.js');
 var format_embeddable_items = require('../tools/formatting.js').format_embeddable_items;
 
 //objects
@@ -133,18 +133,22 @@ module.exports = {
             if(query_parameters.limit){ limit_query_content = typeof query_parameters.limit == "string" ? parseInt(query_parameters.limit) : query_parameters.limit }
         }
 
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-
-                var aggregate_array = [
-                    { $match: match_query },
-                    { $lookup : { 
+        var query_config = {
+            table: db_ref.get_current_actor_table(),
+            aggregate_array: [
+                { 
+                    $match: match_query 
+                },
+                { 
+                    $lookup : {
                         from: db_ref.get_current_event_table(),
                         localField: "_id",
                         foreignField: "aggressors",
-                        as: "related_events" }}, 
-                    { $group : { 
+                        as: "related_events" 
+                    }
+                }, 
+                { 
+                    $group : {
                         _id: "$_id", 
                         name: { "$max": "$name" },
                         date_of_origin: { "$max": "$date_of_origin" },
@@ -160,62 +164,66 @@ module.exports = {
                         date_added: { "$max": "$date_added" },
                         name_lower: { "$max": "$name_lower" },
                         also_known_as_lower: { "$max": "$also_known_as_lower" }
-                    }}
-                ];
-
-                if(limit_query_content != 0){
-                    aggregate_array.splice(1, 0, { $limit: limit_query_content });
-                }
-                
-                if(Object.keys(sort_query_content).length > 0){
-                    aggregate_array.push({ $sort: sort_query_content });
-                }
-                
-                db.collection(db_ref.get_current_actor_table()).aggregate(aggregate_array).toArray(function(queryErr, docs) {
-                    if(queryErr){ console.log(queryErr); }
-                    else{
-                        if(docs){
-                            callback( docs );
-                        }
-                        else{
-                            callback({ failed: true, message: "Actors not found." });
-                        }
                     }
-                });            
+                }
+            ]
+        }
+
+        if(limit_query_content != 0){
+            query_config.aggregate_array.splice(1, 0, { $limit: limit_query_content });
+        }
+
+        if(Object.keys(sort_query_content).length > 0){
+            query_config.aggregate_array.push({ $sort: sort_query_content });
+        }
+
+        db_interface.get(query_config, function(results){
+            if(results){
+                callback( results );
+            }
+            else{
+                callback({ failed: true, message: "Actors not found." });
             }
         });
     },
     
     findActor: function(actor_id, callback){
         
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-                
-                var actor_id_object = BSON.ObjectID.createFromHexString(actor_id);
-                console.log(actor_id);
-                console.log(actor_id_object);
-                
-                db.collection(db_ref.get_current_actor_table()).aggregate([
-                    { $match: { _id: actor_id_object } },
-                    { $lookup : { 
-                        from: db_ref.get_current_event_table(),
-                        localField: "_id",
-                        foreignField: "aggressors",
-                        as: "related_events" }},
-                    { $unwind: {
+        var actor_id_object = BSON.ObjectID.createFromHexString(actor_id);
+
+        var query_config = {
+            table: db_ref.get_current_actor_table(),
+            aggregate_array: [
+                { 
+                    $match: { 
+                        _id: actor_id_object 
+                    }
+                },
+                { $lookup : { 
+                    from: db_ref.get_current_event_table(),
+                    localField: "_id",
+                    foreignField: "aggressors",
+                    as: "related_events" }},
+                { 
+                    $unwind: {
                         "path": "$related_events",
                         "preserveNullAndEmptyArrays": true
-                    } },
-                    { $unwind: {
+                    } 
+                },
+                { 
+                    $unwind: {
                         "path": "$related_events.aggressors",
                         "preserveNullAndEmptyArrays": true
-                    } },
-                    { $unwind: {
+                    } 
+                },
+                { 
+                    $unwind: {
                         "path": "$related_events.targets" ,
                         "preserveNullAndEmptyArrays": true
-                    } },
-                    { $group: {
+                    } 
+                },
+                {
+                    $group: {
                         _id: "$_id", 
                         name: { $first: "$name"},
                         date_of_origin: { $addToSet: "$date_of_origin" },
@@ -236,28 +244,27 @@ module.exports = {
                         related_actors_aggressors: { $addToSet: "$related_events.aggressors" },
                         related_actors_targets: { $addToSet: "$related_events.targets" },
                         related_events: { $first: "$img_title_thumbnail"}
-                    }},
-                    actor_intermediate_projection,
-                    { $lookup: {
+                    }
+                },
+                actor_intermediate_projection,
+                { 
+                    $lookup: {
                         from: db_ref.get_current_actor_table(),
                         localField: "related_actors",
                         foreignField: "_id",
                         as: "related_actors"
-                    }},
-                    actor_projection
-                ]).toArray(function(queryErr, docs) {
-                    if(queryErr){ console.log(queryErr); }
-                    else{
-                        
-                        console.log(docs);
-                        if(docs[0]){
-                            callback( docs[0] );
-                        }
-                        else{
-                            callback({ failed: true, message: "Actor not found." });
-                        }
                     }
-                });            
+                },
+                actor_projection
+            ]
+        }
+
+        db_interface.get(query_config, function(results){
+            if(results && results[0]){
+                callback( results[0] );
+            }
+            else{
+                callback({ failed: true, message: "Actor not found." });
             }
         });
     },
@@ -276,62 +283,53 @@ module.exports = {
         else{        
             //find gallery items that need their embedding links generated
             actor_insert.gallery_items = format_embeddable_items(actor_insert.gallery_items, files);
-            try{
-                storage_interface.async_loop_upload_items(actor_insert.gallery_items, "actors", files, function(items){
+            
+            storage_interface.async_loop_upload_items(actor_insert.gallery_items, "actors", files, function(items){
 
-                    actor_insert.gallery_items = items;
+                actor_insert.gallery_items = items;
 
-                    //function to remove file extension
-                    var strip_file_ext = function(string){
-                        var split_string = string.split(".");
+                //function to remove file extension
+                var strip_file_ext = function(string){
+                    var split_string = string.split(".");
 
-                        if(split_string.length > 1){
-                            var ext = split_string.pop();
-                            string = string.replace(ext, "");
-                        }
-
-                        return string;
-                    }                
-                
-                    //remove file objects to avoid adding file buffer to the db
-                    for(var i = 0; i < actor_insert.gallery_items.length; i++){
-                        
-                        //remove file extension from all image gallery items
-                        if(actor_insert.gallery_items[i].media_type == "image"){ //set file to null to avoid storing file buffer in db
-                            actor_insert.gallery_items[i].link = strip_file_ext(actor_insert.gallery_items[i].link);
-                            actor_insert.gallery_items[i].file_name = strip_file_ext(actor_insert.gallery_items[i].file_name);
-                        }
-                    
-                        if(actor_insert.gallery_items[i].file){
-                            actor_insert.gallery_items[i].file = null;
-                        }
-
-                        if(actor_insert.gallery_items[i].main_graphic){
-                            actor_insert.img_title_fullsize = actor_insert.gallery_items[i].link; //save fullsize main graphic ref
-                            //actor_insert.img_title_thumbnail = actor_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
-                        }
+                    if(split_string.length > 1){
+                        var ext = split_string.pop();
+                        string = string.replace(ext, "");
                     }
 
-                    var db_options = {
-                        send_email_notification: true,
-                        email_notification_text: "Beef",
-                        add_to_scraped_confirmed_table: record_origin == "scraped" ? true : false
-                    };
+                    return string;
+                }                
 
-                    try{
-                        db_interface.insert_record_into_db(actor_insert, db_ref.get_current_actor_table(), db_options, function(id){
-                            actor_insert._id = id;
-                            callback(actor_insert);
-                        });
+                //remove file objects to avoid adding file buffer to the db
+                for(var i = 0; i < actor_insert.gallery_items.length; i++){
+
+                    //remove file extension from all image gallery items
+                    if(actor_insert.gallery_items[i].media_type == "image"){ //set file to null to avoid storing file buffer in db
+                        actor_insert.gallery_items[i].link = strip_file_ext(actor_insert.gallery_items[i].link);
+                        actor_insert.gallery_items[i].file_name = strip_file_ext(actor_insert.gallery_items[i].file_name);
                     }
-                    catch(err){
-                        callback({ failed: true, message: "Problem with database."});
+
+                    if(actor_insert.gallery_items[i].file){
+                        actor_insert.gallery_items[i].file = null;
                     }
+
+                    if(actor_insert.gallery_items[i].main_graphic){
+                        actor_insert.img_title_fullsize = actor_insert.gallery_items[i].link; //save fullsize main graphic ref
+                        //actor_insert.img_title_thumbnail = actor_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
+                    }
+                }
+
+                var db_options = {
+                    send_email_notification: true,
+                    email_notification_text: "Beef",
+                    add_to_scraped_confirmed_table: record_origin == "scraped" ? true : false
+                };
+
+                db_interface.insert(actor_insert, db_ref.get_current_actor_table(), db_options, function(id){
+                    actor_insert._id = id;
+                    callback(actor_insert);
                 });
-            }
-            catch(err){
-                callback({ failed: true, message: "Problem with file server."});
-            }
+            });
         }
     },
     
@@ -347,8 +345,7 @@ module.exports = {
             console.log("test mode is on.");
             console.log(actor_insert);
         }
-        else{
-            
+        else{            
             //find gallery items that need their embedding links generated
             actor_insert.gallery_items = format_embeddable_items(actor_insert.gallery_items, files);
             
@@ -368,61 +365,64 @@ module.exports = {
                         
                     }
                 }
-                
+                                
                 var db_options = {
                     send_email_notification: true,
                     email_notification_text: "Beef",
                     add_to_scraped_confirmed_table: request.body.data.record_origin == "scraped" ? true : false
                 };
                 
-                db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-                    if(err){ console.log(err); }
-                    else{
-                
-                        //get the pre-update actor object to sort gallery items
-                        db.collection(db_ref.get_current_actor_table()).find({ _id: existing_actor_id_object } ).toArray(function(queryErr, original_actor) {
-                            
-                            original_actor = original_actor[0];
+                var query_config = {
+                    table: db_ref.get_current_actor_table(),
+                    aggregate_array: [
+                        { 
+                            $match: {
+                                _id: existing_actor_id_object
+                            }
+                        }
+                    ]
+                }
 
-                            try{
-                                //call to update the db record
-                                db_interface.update_record_in_db(actor_insert, db_ref.get_current_actor_table(), db_options, existing_object_id, function(document){
+                db_interface.get(query_config, function(results){
+                    if(results && results[0]){
+                        original_actor = results[0];
 
-                                    var gallery_items_to_remove = [];
+                        //call to update the db record
+                        db_interface.update_record_in_db(actor_insert, db_ref.get_current_actor_table(), db_options, existing_object_id, function(document){
 
-                                    //if new thumbnail doesnt match the existing one the new image will have been uploaded so remove the old file
-                                    if(document.img_title_thumbnail != original_actor.img_title_thumbnail){
-                                        gallery_items_to_remove.push({link: original_actor.img_title_thumbnail, media_type: "image"});
+                            var gallery_items_to_remove = [];
+
+                            //if new thumbnail doesnt match the existing one the new image will have been uploaded so remove the old file
+                            if(document.img_title_thumbnail != original_actor.img_title_thumbnail){
+                                gallery_items_to_remove.push({link: original_actor.img_title_thumbnail, media_type: "image"});
+                            }
+
+                            //if new gallery_item doesnt match the existing one the new image will have been uploaded so remove the old file
+                            for(var i = 0; i < original_actor.gallery_items.length; i++){
+                                var gallery_item_found = false;
+                                for(var j = 0; j < document.gallery_items.length; j++){
+                                    if(original_actor.gallery_items[i].link == document.gallery_items[j].link){
+                                        gallery_item_found = true;
                                     }
+                                }
+                                if(!gallery_item_found){
+                                    gallery_items_to_remove.push(original_actor.gallery_items[i]);
+                                }
+                            }
 
-                                    //if new gallery_item doesnt match the existing one the new image will have been uploaded so remove the old file
-                                    for(var i = 0; i < original_actor.gallery_items.length; i++){
-                                        var gallery_item_found = false;
-                                        for(var j = 0; j < document.gallery_items.length; j++){
-                                            if(original_actor.gallery_items[i].link == document.gallery_items[j].link){
-                                                gallery_item_found = true;
-                                            }
-                                        }
-                                        if(!gallery_item_found){
-                                            gallery_items_to_remove.push(original_actor.gallery_items[i]);
-                                        }
-                                    }
-
-                                    if(gallery_items_to_remove.length > 0){
-                                        //remove all old gallery_items
-                                        storage_interface.async_loop_remove_items(gallery_items_to_remove, "actors", function(items){
-                                            console.log("finish")
-                                        });
-                                    }
-                                    callback(existing_object_id);
+                            if(gallery_items_to_remove.length > 0){
+                                //remove all old gallery_items
+                                storage_interface.async_loop_remove_items(gallery_items_to_remove, "actors", function(items){
+                                    console.log("finish")
                                 });
                             }
-                            catch(err){
-                                callback({ failed: true, message: "Problem with database."});
-                            }
+                            callback(existing_object_id);
                         });
                     }
-                });
+                    else{
+                        callback({ failed: true, message: "Actor not found." });
+                    }
+                });                
             });
         }
     },
@@ -431,66 +431,58 @@ module.exports = {
         //extract data
         var actor_id = request.params.actor_id;
 
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-                var actor_id_object = BSON.ObjectID.createFromHexString(actor_id);
-                
-                try{
-                    db.collection(db_ref.get_current_actor_table()).findOne({ _id: actor_id_object }, function(queryErr, actor_obj) {
-                        if(queryErr){ console.log(queryErr); }
-                        else{
-                            if(actor_obj){
+        var actor_id_object = BSON.ObjectID.createFromHexString(actor_id);
 
-                                //add thumbnail image to list
-                                actor_obj.gallery_items.push({link: actor_obj.img_title_thumbnail, media_type: "image"});
+        var query_config = {
+            table: db_ref.get_current_actor_table(),
+            aggregate_array: [
+                {
+                    $match: { 
+                        _id: actor_id_object 
+                    }
+                }
+            ]
+        }
 
-                                try{
-                                    storage_interface.async_loop_remove_items(actor_obj.gallery_items, "actors", function(){
+        db_interface.get(query_config, function(results){
+            if(results && results[0]){
 
-                                        db.collection(db_ref.get_current_actor_table()).deleteOne({ _id: actor_id_object }, function(queryErr, docs) {
-                                            if(queryErr){ console.log(queryErr); }
-                                            else{
-                                                callback({});
-                                            }
-                                        });
-                                    });
-                                }
-                                catch(err){
-                                    callback({ failed: true, message: "Problem with database."});
-                                }
-                            }
-                            else{
-                                callback({ failed: true, message: "Actor not in database."});
-                            }
-                        }
+                var actor_obj = results[0];
+
+                //add thumbnail image to list
+                actor_obj.gallery_items.push({link: actor_obj.img_title_thumbnail, media_type: "image"});
+
+                storage_interface.async_loop_remove_items(actor_obj.gallery_items, "actors", function(){
+
+                    var query_config = {
+                        table: db_ref.get_current_actor_table(),
+                        match_query: { _id: actor_id_object }
+                    }
+
+                    db_interface.delete(query_config, function(){
+                        callback({});
                     });
-                }
-                catch(err){
-                    callback({ failed: true, message: "Problem with database."});
-                }
+                });
+            }
+            else{
+                callback({ failed: true, message: "Actor not in database."});
             }
         });
     },
     
     getVariableActorFieldsConfig: function(callback){
 
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-                
-                try{
-                    db.collection(db_ref.get_actor_variable_fields_config()).find({}).toArray(function(queryErr, docs) {
-                        if(queryErr){ console.log(queryErr); }
-                        else{
-                            callback(docs);
-                        }
-                    });
+        var query_config = {
+            table: db_ref.get_actor_variable_fields_config(),
+            aggregate_array: [
+                {
+                    $match: {}
                 }
-                catch(err){
-                    callback({ failed: true, message: "Problem with database."})
-                }
-            }
+            ]
+        }
+
+        db_interface.get(query_config, function(results){
+            callback(results);
         });
     },
     

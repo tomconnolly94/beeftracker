@@ -20,7 +20,8 @@ var urls_to_cache = [
     "/webfonts/fa-brands-400.ttf",
     "/images/got-beef.jpg",
     "/images/beefometers@small.png",
-    "/images/sad_cow.png"
+    "/images/sad_cow.png",
+    "/favicon",
 ];
 var urls_to_avoid_caching = [
     "profile",
