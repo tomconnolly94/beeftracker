@@ -25,14 +25,6 @@ describe('Module: authentication_controller', function () {
 
     it('authenticateUser', function () {
         
-        authentication_controller.deauthenticateUser({}, response, callback_spy);
-        
-        assert(cookie_spy.callCount, 2);
-        assert(callback_spy.called);
-    });
-
-    it('deauthenticateUser', function () {
-        
         db_interface.get = function(query_config, callback){
 
             var return_object = [{
@@ -44,9 +36,17 @@ describe('Module: authentication_controller', function () {
             callback(return_object); 
         }
 
-        //authentication_controller.deauthenticateUser({}, response, callback_spy);
+        authentication_controller.authenticateUser({}, response, callback_spy);
         
         assert(cookie_spy.called);
+        assert(callback_spy.called);
+    });
+
+    it('deauthenticateUser', function () {
+        
+        authentication_controller.deauthenticateUser({}, response, callback_spy);
+        
+        assert(cookie_spy.callCount, 2);
         assert(callback_spy.called);
     });
 });
