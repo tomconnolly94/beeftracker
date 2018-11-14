@@ -4,7 +4,7 @@ var async = require("async");
 
 //internal dependencies
 var db_ref = require("../config/db_config.js"); //get database reference object
-var db_interface = require("../config/db_interface.js"); //get database reference object
+var db_interface = require("../interfaces/db_interface.js"); //get database reference object
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
 var globals = require("../config/globals.js")
 var cookie_parser = require("../tools/cookie_parsing.js");

@@ -3,7 +3,7 @@ var BSON = require('bson');
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
-var db_interface = require("../config/db_interface.js");
+var db_interface = require("../interfaces/db_interface.js");
 
 function add_vote_to_user_record(db, event_id, user_id){
     

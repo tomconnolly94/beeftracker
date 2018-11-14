@@ -4,7 +4,7 @@ var nodemailer = require("nodemailer");
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
-var db_interface = require("../config/db_interface.js");
+var db_interface = require("../interfaces/db_interface.js");
 
 //objects
 var ContactRequest = require("../schemas/contact_request_schema").model;

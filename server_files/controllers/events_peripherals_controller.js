@@ -4,7 +4,7 @@ var loop = require("async-looper");
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
-var db_interface = require("../config/db_interface.js");
+var db_interface = require("../interfaces/db_interface.js");
 
 //objects
 var event_projection = require("./events_controller.js").event_projection;

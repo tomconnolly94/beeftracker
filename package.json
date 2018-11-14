@@ -69,6 +69,7 @@
     "autocannon": "^2.4.1",
     "chai": "^4.2.0",
     "clinic": "^0.8.1",
+    "commander": "^2.19.0",
     "connect-livereload": "^0.6.0",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",

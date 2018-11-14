@@ -4,7 +4,7 @@ var nodemailer = require('nodemailer');
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
-var db_interface = require("../config/db_interface.js");
+var db_interface = require("../interfaces/db_interface.js");
 var storage_ref = require("../config/storage_config.js");
 var storage_interface = require('../interfaces/storage_interface.js');
 var hashing = require("../tools/hashing.js");

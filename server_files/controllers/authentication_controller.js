@@ -5,7 +5,7 @@ var jwt = require("jsonwebtoken");
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
-var db_interface = require("../config/db_interface.js");
+var db_interface = require("../interfaces/db_interface.js");
 var hashing = require("../tools/hashing.js");
 
 //cookie config
@@ -49,11 +49,22 @@ module.exports = {
             ]
         }
 
-        db.get(query_config, function(results){
+        db_interface.get(query_config, function(results){
 
+            var formatting_error_object = { 
+                failed: true, 
+                module: "authentication_controller", 
+                function: "authenticateUser", 
+                message: "Validation faled, please format input data properly.", 
+                details: [{ 
+                    location: "Your Username/Password", 
+                    problem: "Please check your log in details, we don't seem to recognise them."
+                }] 
+            };
+            
             if(err){ console.log(err); }
             else if(results.length < 1){                            
-                callback({ failed: true, stage: "authentication", message: "Validation faled, please format input data properly.", details: [{ location: "Your Username/Password", problem: "Please check your log in details, we don't seem to recognise them."}] });
+                callback(formatting_error_object);
             }
             else{
 
@@ -68,7 +79,7 @@ module.exports = {
                     if(user_details.hashed_password == hashing.hash_password(auth_details.password, user_details.salt, possible_peppers[i]).hashed_password){
 
                         module.exports.create_auth_cookies(user_details, response, headers, function(){
-                            callback({ auth_failed: false }/*, { auth_token: auth_token, expiry_timestamp: expiry_timestamp, cookies_http_only: cookies_http_only, cookies_secure: cookies_secure }*/);
+                            callback({ auth_failed: false });
                         });
 
                         response_sent = true;
@@ -76,7 +87,7 @@ module.exports = {
                     }
                 }
                 if(!response_sent){ //if the password hash is not found send a failed auth response
-                    callback({ failed: true, stage: "authentication", message: "Validation faled, please format input data properly.", details: [{ location: "Your Username/Password", problem: "Please check your log in details, we don't seem to recognise them."}] });
+                    callback(formatting_error_object);
                 }
             }
         });

@@ -7,6 +7,7 @@ var BSON = require("bson");
 
 //objects
 var Actor = require('../../../server_files/schemas/actor_schema');
+var globals = require('../globals.js');
 
 describe('Module: actors_controller', function () {
 
@@ -24,17 +25,28 @@ describe('Module: actors_controller', function () {
             description: "description",
             associated_actors: [],
             data_sources: [ "data_source" ],
-            also_known_as: [ "also_known_as" ],
+            also_known_as: ["also_known_as"],
             classification: "classification",
             variable_field_values: {},
             links: [],
-            gallery_items: [],
+            gallery_items: [{
+                media_type: "image",
+                link: "link1",
+                file_name: "image1",
+                file: { name: "file1" }
+            },
+            {
+                media_type: "image",
+                link: "link2",
+                file_name: "image2",
+                file: { name: "file2" }
+            }],
             img_title_thumbnail: "img_title_thumbnail",
             img_title_fullsize: "img_title_fullsize",
             rating: 0,
             date_added: new Date(),
             name_lower: "name_lower",
-            also_known_as_lower: "also_known_as_lower",
+            also_known_as_lower: ["also_known_as"],
             record_origin: "record_origin"
         };
             
@@ -285,9 +297,9 @@ describe('Module: actors_controller', function () {
             callback(query_config.aggregate_array); 
         };
         
-        var actor_id = "5a69027a01e599f97e278f73";
+        var actor_id = globals.dummy_object_id;
         
-        var expected_results = { '$match': { _id: BSON.ObjectID.createFromHexString("5a69027a01e599f97e278f73") } };
+        var expected_results = { '$match': { _id: BSON.ObjectID.createFromHexString(actor_id) } };
         
         actors_controller.findActor(actor_id, function(result){
             assert.deepEqual(result, expected_results);
@@ -301,22 +313,44 @@ describe('Module: actors_controller', function () {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     
     it('createActor', function () {
-        if(false){
-            db_interface.get = function(query_config, callback){
-                callback(query_config.aggregate_array); 
-            };
+        
+        db_interface.insert = function(insert_object, table, options, callback){
+            callback(globals.dummy_object_id); 
+        };
+        
+        var files = [{ name: "file1" }, { name: "file2" }];
 
-            storage_interface.async_loop_upload_items = function(gallery_items, "actors", files, callback){
-                callback(query_config.aggregate_array); 
-            };
+        storage_interface.async_loop_upload_items = function(items, file_server_folder, files_storage, callback){
+            
+            assert.deepEqual(files_storage, files);
+            assert.equal(file_server_folder, "actors");
+            assert.deepEqual(files_storage, files);
+            
+            callback(files_storage);
+        };
 
-            var actor_id = "5a69027a01e599f97e278f73";
-
-            var expected_results = { '$match': { _id: BSON.ObjectID.createFromHexString("5a69027a01e599f97e278f73") } };
-
-            actors_controller.createActor(actor_example, files, function(result){
-                assert.deepEqual(result, expected_results);
-            });
-        }
+        actors_controller.createActor(actor_example, files, function(result){
+            
+            var actor_example_copy = actor_example;
+            actor_example_copy._id = result._id;
+            
+            result = result["_doc"];
+            result.rating = 0;
+            
+            var result_keys = Object.keys(result).sort();
+            var actor_example_keys = Object.keys(actor_example_copy).sort();
+            
+            assert.deepEqual(result_keys, actor_example_keys);
+            
+            for(var i = 0; i < result_keys.length; i++){
+                
+                var key = result_keys[i];
+                var fields_to_skip = [ "date_added" ];
+                
+                if(fields_to_skip.indexOf(result[key]) != -1){
+                    assert.deepEqual(result[key], actor_example_copy[key]);
+                }
+            }
+        });
     });
 });
