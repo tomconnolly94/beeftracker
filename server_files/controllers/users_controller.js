@@ -26,9 +26,9 @@ var check_details_against_user_table = function(user_details, insert_object, cal
     var query_config = {
         table: db_ref.get_user_details_table(),
         aggregate_array: [
-            { 
-                $match: { 
-                    $or: [ 
+            {
+                $match: {
+                    $or: [
                         { username: user_details.username }, 
                         { email_address: user_details.email_address } 
                     ]

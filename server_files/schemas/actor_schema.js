@@ -22,6 +22,7 @@ var actor_schema = new Schema({
         _id : { id: false },
         media_type: String,
         link: String,
+        file_name: String,
         main_graphic: Boolean,
         file: {}
     }],

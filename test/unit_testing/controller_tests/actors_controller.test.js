@@ -314,19 +314,14 @@ describe('Module: actors_controller', function () {
     
     it('createActor', function () {
         
-        db_interface.insert = function(insert_object, table, options, callback){
+        db_interface.insert = function(insert_config, callback){
             callback(globals.dummy_object_id); 
         };
         
-        var files = [{ name: "file1" }, { name: "file2" }];
-
-        storage_interface.async_loop_upload_items = function(items, file_server_folder, files_storage, callback){
-            
-            assert.deepEqual(files_storage, files);
-            assert.equal(file_server_folder, "actors");
-            assert.deepEqual(files_storage, files);
-            
-            callback(files_storage);
+        var files = actor_example.gallery_items;
+        
+        storage_interface.upload = function(upload_config, callback){            
+            callback(upload_config.item_data);
         };
 
         actors_controller.createActor(actor_example, files, function(result){

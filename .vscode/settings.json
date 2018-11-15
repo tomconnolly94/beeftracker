@@ -1,2 +1,7 @@
 {
+
+  // Mocha: Environment variables to run your tests
+  "mocha.env": {
+    "CLOUDINARY_URL":"cloudinary//default@username:password"
+  }
 }
