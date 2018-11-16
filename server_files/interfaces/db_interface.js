@@ -101,6 +101,9 @@ var post_insert_procedure = function(db, document, insert_object, table, options
 module.exports = {
     
     get: function(query_config, success_callback, failure_callback){
+
+        var table = query_config.table;
+        var aggregate_array = query_config.aggregate_array;
         
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ 
@@ -109,7 +112,7 @@ module.exports = {
             }
             else{
                 //standard query to match an event and resolve aggressor and targets references
-                db.collection(query_config.table).aggregate(query_config.aggregate_array).toArray(function(err, results) {
+                db.collection(table).aggregate(aggregate_array).toArray(function(err, results) {
                     //handle error
                     if(err) { 
                         console.log(err);
@@ -124,6 +127,7 @@ module.exports = {
     },
     
     insert: function(insert_config, success_callback, failure_callback){
+        
         var record = insert_config.record
         var table = insert_config.table;
         var options = insert_config.options;

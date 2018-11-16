@@ -62,8 +62,7 @@ module.exports = {
                 }] 
             };
             
-            if(err){ console.log(err); }
-            else if(results.length < 1){                            
+            if(results.length < 1){                            
                 callback(formatting_error_object);
             }
             else{
@@ -79,7 +78,7 @@ module.exports = {
                     if(user_details.hashed_password == hashing.hash_password(auth_details.password, user_details.salt, possible_peppers[i]).hashed_password){
 
                         module.exports.create_auth_cookies(user_details, response, headers, function(){
-                            callback({ auth_failed: false });
+                            callback({});
                         });
 
                         response_sent = true;
@@ -90,10 +89,12 @@ module.exports = {
                     callback(formatting_error_object);
                 }
             }
+        }, function(error_object){
+            callback(error_object);
         });
     },
     
-    deauthenticateUser: function(request, response, callback){
+    deauthenticateUser: function(response, callback){
         //set all cookies to expire immediately
         response.cookie( "bftkr_auth", "0", { expires: new Date(0), httpOnly: cookies_http_only, secure: cookies_secure });
         response.cookie( "bftkr_logged_in", "false", { expires: new Date(0), httpOnly: false });

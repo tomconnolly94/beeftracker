@@ -4,6 +4,7 @@ var mocha = require('mocha');
 var chai = require('chai');
 var assert = chai.assert;
 var BSON = require("bson");
+var sinon = require("sinon");
 
 //objects
 var Actor = require('../../../server_files/schemas/actor_schema');
@@ -11,7 +12,7 @@ var globals = require('../globals.js');
 
 describe('Module: actors_controller', function () {
 
-    var actors_controller, db_interface, actor_example;
+    var actors_controller, db_interface, actor_example, callback_spy;
 
     before(function () {
         
@@ -19,7 +20,7 @@ describe('Module: actors_controller', function () {
         this.timeout(7000);
         
         actor_example = {
-            name: "name",
+            name: "Name",
             date_of_origin: "01/01/2001",
             place_of_origin: "place_of_origin",
             description: "description",
@@ -41,11 +42,11 @@ describe('Module: actors_controller', function () {
                 file_name: "image2",
                 file: { name: "file2" }
             }],
-            img_title_thumbnail: "img_title_thumbnail",
-            img_title_fullsize: "img_title_fullsize",
+            img_title_thumbnail: "",
+            img_title_fullsize: "",
             rating: 0,
             date_added: new Date(),
-            name_lower: "name_lower",
+            name_lower: "name",
             also_known_as_lower: ["also_known_as"],
             record_origin: "record_origin"
         };
@@ -56,6 +57,10 @@ describe('Module: actors_controller', function () {
         actors_controller = proxyquire("../../../server_files/controllers/actors_controller", {"../interfaces/db_interface.js": db_interface, "../interfaces/storage_interface.js": storage_interface});
     });
     
+    before(function(){
+        callback_spy = sinon.spy();
+    });
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // 'format_actor_data' tests
@@ -65,10 +70,22 @@ describe('Module: actors_controller', function () {
     it('format_actor_data', function () {
                 
         var expected_results = new Actor(actor_example);
+        var result = actors_controller.format_actor_data(actor_example);
+
+        var result_keys = Object.keys(result._doc).sort();
+        var expected_results_keys = Object.keys(expected_results._doc).sort();
         
-        actors_controller.format_actor_data(actor_example, function(result){
-            assert.equal(result, expected_results);
-        });
+        assert.deepEqual(result_keys, expected_results_keys);
+        
+        for(var i = 0; i < result_keys.length; i++){
+            
+            var key = result_keys[i];
+            var fields_to_skip = [ "date_added" ];
+            
+            if(fields_to_skip.indexOf(result[key]) != -1){
+                assert.deepEqual(result[key], expected_results[key]);
+            }
+        }
     });
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,8 +107,11 @@ describe('Module: actors_controller', function () {
         ];
         
         actors_controller.findActors({}, function(results){
+            callback_spy();
             assert.equal(results, expected_results);
         });
+        
+        assert(callback_spy.called);
     });
         
     it('findActors: multi', function () {
@@ -110,8 +130,11 @@ describe('Module: actors_controller', function () {
         ];
         
         actors_controller.findActors({}, function(results){
+            callback_spy();
             assert.equal(results, expected_results);
         });
+        
+        assert(callback_spy.called);
     });
     
     it('findActors: date_added order query', function () {
@@ -129,9 +152,13 @@ describe('Module: actors_controller', function () {
         }
         
         actors_controller.findActors(req_query_dec, function(results){
+            callback_spy();
             var result = results[3]["$sort"];
             assert.deepEqual(result, expected_results_dec);
         });
+        
+        assert(callback_spy.called);
+        callback_spy = sinon.spy(); //reset spy
         
         var req_query_inc = {
             increasing_order: "date_added"
@@ -142,9 +169,12 @@ describe('Module: actors_controller', function () {
         }
         
         actors_controller.findActors(req_query_inc, function(results){
+            callback_spy();
             var result = results[3]["$sort"];
             assert.deepEqual(result, expected_query_inc);
         });
+        
+        assert(callback_spy.called);
     });
     
     it('findActors: popularity order query', function () {
@@ -162,9 +192,13 @@ describe('Module: actors_controller', function () {
         }
         
         actors_controller.findActors(req_query_dec, function(results){
+            callback_spy();
             var result = results[3]["$sort"];
             assert.deepEqual(result, expected_results_dec);
         });
+        
+        assert(callback_spy.called);
+        callback_spy = sinon.spy(); //reset spy
         
         var req_query_inc = {
             increasing_order: "popularity"
@@ -175,9 +209,12 @@ describe('Module: actors_controller', function () {
         }
         
         actors_controller.findActors(req_query_inc, function(results){
+            callback_spy();
             var result = results[3]["$sort"];
             assert.deepEqual(result, expected_query_inc);
         });
+
+        assert(callback_spy.called);
     });
     
     it('findActors: name order query', function () {
@@ -195,9 +232,13 @@ describe('Module: actors_controller', function () {
         }
         
         actors_controller.findActors(req_query_dec, function(results){
+            callback_spy();
             var result = results[3]["$sort"];
             assert.deepEqual(result, expected_results_dec);
         });
+        
+        assert(callback_spy.called);
+        callback_spy = sinon.spy(); //reset spy
         
         var req_query_inc = {
             increasing_order: "name"
@@ -208,9 +249,12 @@ describe('Module: actors_controller', function () {
         }
         
         actors_controller.findActors(req_query_inc, function(results){
+            callback_spy();
             var result = results[3]["$sort"];
             assert.deepEqual(result, expected_query_inc);
         });
+        
+        assert(callback_spy.called);
     });
     
     it('findActors: name match query', function () {
@@ -233,9 +277,12 @@ describe('Module: actors_controller', function () {
         }
         
         actors_controller.findActors(req_query, function(results){
+            callback_spy();
             var result = results[0]["$match"];
             assert.deepEqual(result, expected_results);
         });
+        
+        assert(callback_spy.called);
     });
     
     it('findActors: multi name match query', function () {
@@ -260,9 +307,12 @@ describe('Module: actors_controller', function () {
         }
         
         actors_controller.findActors(req_query, function(results){
+            callback_spy();
             var result = results[0]["$match"];
             assert.deepEqual(result, expected_results);
         });
+        
+        assert(callback_spy.called);
     });
     
     it('findActors: limit query', function () {
@@ -280,9 +330,12 @@ describe('Module: actors_controller', function () {
         var expected_results = limit;
         
         actors_controller.findActors(req_query, function(results){
+            callback_spy();
             var result = results[1]["$limit"];
             assert.deepEqual(result, expected_results);
         });
+        
+        assert(callback_spy.called);
     });
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -302,8 +355,11 @@ describe('Module: actors_controller', function () {
         var expected_results = { '$match': { _id: BSON.ObjectID.createFromHexString(actor_id) } };
         
         actors_controller.findActor(actor_id, function(result){
+            callback_spy();
             assert.deepEqual(result, expected_results);
         });
+        
+        assert(callback_spy.called);
     });
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -325,6 +381,7 @@ describe('Module: actors_controller', function () {
         };
 
         actors_controller.createActor(actor_example, files, function(result){
+            callback_spy();
             
             var actor_example_copy = actor_example;
             actor_example_copy._id = result._id;
@@ -347,5 +404,7 @@ describe('Module: actors_controller', function () {
                 }
             }
         });
+        
+        assert(callback_spy.called);
     });
 });

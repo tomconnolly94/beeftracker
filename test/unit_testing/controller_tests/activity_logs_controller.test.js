@@ -4,10 +4,11 @@ var mocha = require('mocha');
 var chai = require('chai');
 var assert = chai.assert;
 var BSON = require("bson");
+var sinon = require("sinon");
 
 describe('Module: activity_logs_controllers', function () {
 
-    var activity_logs_controller, expected_results;
+    var activity_logs_controller, expected_results, callback_spy;
 
     beforeEach(function () {
 
@@ -26,6 +27,10 @@ describe('Module: activity_logs_controllers', function () {
         }
     });
 
+    before(function(){
+        callback_spy = sinon.spy();
+    });
+
     it('events', function () {
         
         var request = {
@@ -35,8 +40,11 @@ describe('Module: activity_logs_controllers', function () {
         }
         
         activity_logs_controller.findActivityLogsFromEvent(request, function(results){
+            callback_spy();
             assert.equal(results, expected_results);
         });
+
+        assert(callback_spy.called);
     });
     
     it('actors', function () {
@@ -47,7 +55,10 @@ describe('Module: activity_logs_controllers', function () {
         }
         
         activity_logs_controller.findActivityLogsFromActor(request, function(results){
+            callback_spy();
             assert.equal(results, expected_results);
         });
+
+        assert(callback_spy.called);
     });
 });
