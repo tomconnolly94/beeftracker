@@ -46,7 +46,7 @@ router.route("/authenticate").post(authentication_request_validator.validate, fu
     });
 });//built, written, not tested
 router.route("/deauthenticate").get(function(request, response){
-    authentication_controller.deauthenticateUser(request, response, function(data){
+    authentication_controller.deauthenticateUser(response, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }

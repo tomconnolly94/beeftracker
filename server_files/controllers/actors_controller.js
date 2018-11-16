@@ -66,7 +66,7 @@ var actor_projection = {
         name_lower: 1,
         also_known_as_lower: 1,
         related_actors: 1,
-        related_events: 1
+        related_events: 1 
     }
 }
 
