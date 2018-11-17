@@ -21,19 +21,38 @@ var ContactRequest = require("../schemas/contact_request_schema").model;
 module.exports = {
     
     findContactRequests: function(callback){
-        
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-                //standard query to match an event and resolve aggressor and targets references
-                db.collection(db_ref.get_contact_requests_table()).find({}, function(err, docs) {
-                    //handle error
-                    if(err) { console.log(err);}
-                    else{
-                        callback(docs);
-                    }
-                });
-            }
+
+        var query_config = {
+            table: db_ref.get_contact_requests_table(),
+            aggregate_array: [
+                {
+                    $match: {}
+                }
+            ]
+        }
+        db_interface.get(query_config, function(results){
+            callback(results);
+        },
+        function(error_object){
+            callback(error_object);
+        });
+    },
+    
+    findContactRequest: function(email_address, callback){
+
+        var query_config = {
+            table: db_ref.get_contact_requests_table(),
+            aggregate_array: [
+                {
+                    $match: { email_address: email_address }
+                }
+            ]
+        }
+        db_interface.get(query_config, function(results){
+            callback(results);
+        },
+        function(error_object){
+            callback(error_object);
         });
     },
     

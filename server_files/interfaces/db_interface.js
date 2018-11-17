@@ -65,6 +65,8 @@ var post_insert_procedure = function(db, document, insert_object, table, options
 
         if(options.send_email_notification){ //deal with sending email notification
 
+            var 
+
             //parse json directly to string with indents
             var text = JSON.stringify(insert_object, null, 2);
 
