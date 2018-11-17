@@ -64,6 +64,25 @@ module.exports = {
             subject: contact_request_data.subject,
             message: contact_request_data.message
         });
+
+        var insert_config = {
+            record: contact_request_record,
+            table: db_ref.get_contact_requests_table(),
+            options: {
+                email_config: {
+                    email_title: "New Contact Request from: " + contact_request_data.email_address, // Subject line
+                    email_html: "<html> <h1> Record </h1> <h5> ENV: " + process.env.NODE_ENV + " </h5> <p>" + JSON.stringify(contact_request_record) + "</p> </html>",
+                    recipient_address: contact_request_data.email_address
+                }
+            }
+        }
+
+        db_interface.insert(insert_config, function(result){
+            callback(result);
+        },
+        function(error_object){
+            callback(error_object);
+        });
         
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
             if(err){ console.log(err); }
