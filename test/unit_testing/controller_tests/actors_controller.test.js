@@ -7,7 +7,7 @@ var BSON = require("bson");
 var sinon = require("sinon");
 
 //objects
-var Actor = require('../../../server_files/schemas/actor_schema');
+var Actor = require('../../../server_files/schemas/actor.schema');
 var globals = require('../globals.js');
 
 describe('Module: actors_controller', function () {

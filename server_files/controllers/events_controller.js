@@ -20,7 +20,7 @@ var format_embeddable_items = require('../tools/formatting.js').format_embeddabl
 
 //objects
 var Event = require("../schemas/event_schema");
-var EventContribution = require("../schemas/event_contribution_schema").model;
+var EventContribution = require("../schemas/event_contribution.schema").model;
 
 var test_mode = false;
 var event_projection = {

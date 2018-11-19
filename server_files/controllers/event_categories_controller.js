@@ -14,7 +14,7 @@ var db_ref = require("../config/db_config.js");
 var db_interface = require("../interfaces/db_interface.js");
 
 //objects
-var EventCategory = require("../schemas/event_category_schema");
+var EventCategory = require("../schemas/event_category.schema");
 
 module.exports = {
     

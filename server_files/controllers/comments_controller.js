@@ -16,7 +16,7 @@ var db_interface = require("../interfaces/db_interface.js");
 var logging = require("../tools/logging.js");
 
 //objects
-var Comment = require("../schemas/comment_schema");
+var Comment = require("../schemas/comment.schema");
 
 module.exports = {
     

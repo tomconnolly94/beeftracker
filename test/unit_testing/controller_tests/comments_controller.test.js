@@ -7,7 +7,7 @@ var assert = chai.assert;
 var BSON = require("bson");
 
 //objects
-var Comment = require('../../../server_files/schemas/comment_schema');
+var Comment = require('../../../server_files/schemas/comment.schema');
 var globals = require('../globals.js');
 
 

@@ -16,17 +16,17 @@ var db_ref = require("../config/db_config.js");
 var db_interface = require("../interfaces/db_interface.js");
 
 //objects
-var ContactRequest = require("../schemas/contact_request_schema").model;
+var ContactRequest = require("../schemas/contact_request.schema").model;
 
 module.exports = {
     
-    findContactRequests: function(callback){
+    findContactRequest: function(query, callback){
 
         var query_config = {
             table: db_ref.get_contact_requests_table(),
             aggregate_array: [
                 {
-                    $match: {}
+                    $match: { email_address: email_address }
                 }
             ]
         }
@@ -38,13 +38,15 @@ module.exports = {
         });
     },
     
-    findContactRequest: function(email_address, callback){
+    findContactRequests: function(query, callback){
+
+        var match_query = {};
 
         var query_config = {
             table: db_ref.get_contact_requests_table(),
             aggregate_array: [
                 {
-                    $match: { email_address: email_address }
+                    $match: query
                 }
             ]
         }

@@ -20,7 +20,7 @@ var db_interface = require('../interfaces/db_interface.js');
 var format_embeddable_items = require('../tools/formatting.js').format_embeddable_items;
 
 //objects
-var Actor = require('../schemas/actor_schema');
+var Actor = require('../schemas/actor.schema');
 
 var test_mode = false;
 var actor_intermediate_projection = {

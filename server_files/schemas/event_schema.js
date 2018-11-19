@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var ContributionSchema = require("./event_contribution_schema").schema;
+var ContributionSchema = require("./event_contribution.schema").schema;
 
 var event_schema = new Schema({
     _id: Schema.ObjectId,
