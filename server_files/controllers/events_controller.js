@@ -19,7 +19,7 @@ var db_interface = require('../interfaces/db_interface.js');
 var format_embeddable_items = require('../tools/formatting.js').format_embeddable_items;
 
 //objects
-var Event = require("../schemas/event_schema");
+var Event = require("../schemas/event.schema");
 var EventContribution = require("../schemas/event_contribution.schema").model;
 
 var test_mode = false;

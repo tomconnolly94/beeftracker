@@ -19,49 +19,60 @@ var EventCategory = require("../schemas/event_category.schema");
 module.exports = {
     
     getEventCategories: function(callback){
-        
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
 
-                //standard query to match an event and resolve aggressor and targets references
-                db.collection(db_ref.get_event_categories_table()).find({}).toArray(function(err, docs) {
-                    //handle error
-                    if(err) { console.log(err);}
-                    else{
-                        callback(docs);
-                    }
-                });
-            }
+        var query_config = {
+            table: db_ref.get_event_categories_table(),
+            aggregate_array: [
+                {
+                    $match: {}
+                }
+            ]
+        };
+
+        db_interface.find(query_config, function(results){
+            callback(results);
+        },
+        function(error_object){
+            callback(error_object);
         });
     },
     
-    createEventCategory: function(event_category_data){
+
+    createEventCategory: function(event_category_data, callback){
+
+        var count_title = "event_category_count";
+
+        var query_config = {
+            table: db_ref.get_event_categories_table(),
+            aggregate_array: [
+                {
+                    $count: "event_category_count"
+                }
+            ]
+        };
+
+        db_interface.find(query_config, function(result){
         
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
- 
-                db.collection(db_ref.get_event_categories_table()).find({}).count(function(err, count) {
-                    //handle error
-                    if(err) { console.log(err);}
-                    else{
-                        
-                        var new_category_record = EventCategory({
-                            cat_id: count,
-                            name: request.body.name
-                        });
-                        
-                        db.collection(db_ref.get_event_categories_table()).insert(new_category_record, function(err, count) {
-                            //handle error
-                            if(err) { console.log(err);}
-                            else{
-                                callback({ failed: false, message: "Category created." });
-                            }
-                        });
-                    }
-                });
-            }
+            var new_category_record = EventCategory({
+                cat_id: result[count_title],
+                name: event_category_data
+            });
+
+            var insert_config = {
+                record: new_category_record,
+                table: db_ref.get_event_categories_table(),
+                options: {}
+            };
+
+            db_interface.insert(insert_config, function(result){
+                callback(result);
+            },
+            function(error_object){
+                callback(error_object);
+            });
+        },
+        function(error_object){
+            callback(error_object);
         });
     }
 }

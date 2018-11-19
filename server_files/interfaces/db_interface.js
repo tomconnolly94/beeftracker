@@ -100,7 +100,7 @@ module.exports = {
     
     insert: function(insert_config, success_callback, failure_callback){
         
-        var record = insert_config.record
+        var record = insert_config.record;
         var table = insert_config.table;
         var options = insert_config.options;
         
