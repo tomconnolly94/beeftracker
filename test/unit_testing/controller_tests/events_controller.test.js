@@ -101,26 +101,17 @@ event_example
         assert.equal(event_example.tags.length, formatted_event.tags.length);
     });
 
-    it('createEventCategory', function () {
+    it('findEvents', function () {
 
-        var db_interface_find_callback_spy = sinon.spy();
-        var db_interface_insert_callback_spy = sinon.spy();
+        var db_interface_callback_spy = sinon.spy();
 
         var event_category_count = 5;
         
-        db_interface.find = function(query_config, callback){
-            db_interface_find_callback_spy();
+        db_interface.get = function(query_config, callback){
+            db_interface_callback_spy();
             assert.equal(db_ref.get_event_categories_table(), query_config.table);
             assert.exists(query_config.aggregate_array[0]["$count"]);
             callback({ event_category_count: event_category_count }); 
-        };
-
-        db_interface.insert = function(insert_config, callback){
-            db_interface_insert_callback_spy();
-            assert.exists(insert_config.record);
-            assert.equal(event_category_count, insert_config.record.cat_id);
-            assert.exists(insert_config.table);
-            callback({ _id: insert_config.record.id }); 
         };
 
         events_controller.createEventCategory(event_category_name, function(result){

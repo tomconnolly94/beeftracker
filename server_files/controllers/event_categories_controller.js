@@ -29,7 +29,7 @@ module.exports = {
             ]
         };
 
-        db_interface.find(query_config, function(results){
+        db_interface.get(query_config, function(results){
             callback(results);
         },
         function(error_object){
@@ -51,7 +51,7 @@ module.exports = {
             ]
         };
 
-        db_interface.find(query_config, function(result){
+        db_interface.get(query_config, function(result){
         
             var new_category_record = EventCategory({
                 cat_id: result[count_title],

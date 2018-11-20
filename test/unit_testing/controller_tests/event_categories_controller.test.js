@@ -38,7 +38,7 @@ describe('Module: event_categories_controller', function () {
 
         var db_interface_callback_spy = sinon.spy();
         
-        db_interface.find = function(query_config, callback){
+        db_interface.get = function(query_config, callback){
             db_interface_callback_spy();
             assert.equal(db_ref.get_event_categories_table(), query_config.table);
             assert.exists(query_config.aggregate_array[0]["$match"]);
@@ -62,7 +62,7 @@ describe('Module: event_categories_controller', function () {
 
         var event_category_count = 5;
         
-        db_interface.find = function(query_config, callback){
+        db_interface.get = function(query_config, callback){
             db_interface_find_callback_spy();
             assert.equal(db_ref.get_event_categories_table(), query_config.table);
             assert.exists(query_config.aggregate_array[0]["$count"]);

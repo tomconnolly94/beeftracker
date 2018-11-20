@@ -167,100 +167,95 @@ module.exports = {
             if(query_parameters.limit){ limit_query_content = typeof query_parameters.limit == "string" ? parseInt(query_parameters.limit) : query_parameters.limit }
                         
         }
+
+        var aggregate_array = [
+            { $match: match_query_content },
+            { $unwind : "$aggressors"},
+            { $lookup : {
+                from: db_ref.get_current_actor_table(),
+                localField: "aggressors",
+                foreignField: "_id",
+                as: "aggressors" 
+            }},
+            { $unwind : "$aggressors"},
+            { $unwind : "$targets"},
+            { $lookup : { 
+                from: db_ref.get_current_actor_table(),
+                localField: "targets",
+                foreignField: "_id",
+                as: "targets" 
+            }},
+            { $unwind : "$targets"},
+            { $unwind : "$categories"},
+            { $lookup : { 
+                from: db_ref.get_event_categories_table(),
+                localField: "categories",
+                foreignField: "cat_id",
+                as: "categories" 
+            }},
+            { $unwind : "$categories"},
+            { $lookup: { 
+                from: "beef_chains", 
+                localField: "beef_chain_ids", 
+                foreignField: "_id", 
+                as: "beef_chain_ids"  
+            }},/*
+            { $lookup: { 
+                from: "comments", 
+                localField: "_id", 
+                foreignField: "event_id", 
+                as: "comments"  
+            }},*/
+            /*{ $unwind: "$beef_chain_ids"}, 
+            { $lookup: { 
+                from: "event_data_v4", 
+                localField: "beef_chain_ids.events", 
+                foreignField: "_id", 
+                as: "beef_chain_ids.events"
+            }},*/
+            { $unwind: "$beef_chain_ids"},
+            { $group: {
+                _id: "$_id", 
+                title: { $first: "$title"},
+                aggressors: { $addToSet: "$aggressors" },
+                targets: { $addToSet: "$targets"},
+                event_date: { $first: "$event_date"},
+                date_added: { $first: "$date_added"},
+                description: { $first: "$description"},
+                links: { $first: "$links"},
+                categories: { $addToSet: "$categories"},
+                hit_counts: { $first: "$hit_counts"},
+                gallery_items: { $first: "$gallery_items"},
+                img_title_thumbnail: { $first: "$img_title_thumbnail"},
+                cover_image: { $first: "$cover_image"},
+                rating: { $first: "$rating"},
+                data_sources: { $first: "$data_sources"},
+                beef_chain_ids: { $addToSet: "$beef_chain_ids"},
+                contributions: { $first: "$contributions"},
+                tags: { $first: "$tags"},
+                featured: { $first: "$featured"},
+                votes: { $first: "$votes"},
+            }},
+            { $project: event_projection }
+        ];
         
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{                
-                var aggregate_array = [
-                    { $match: match_query_content },
-                    { $unwind : "$aggressors"},
-                    { $lookup : {
-                        from: db_ref.get_current_actor_table(),
-                        localField: "aggressors",
-                        foreignField: "_id",
-                        as: "aggressors" 
-                    }},
-                    { $unwind : "$aggressors"},
-                    { $unwind : "$targets"},
-                    { $lookup : { 
-                        from: db_ref.get_current_actor_table(),
-                        localField: "targets",
-                        foreignField: "_id",
-                        as: "targets" 
-                    }},
-                    { $unwind : "$targets"},
-                    { $unwind : "$categories"},
-                    { $lookup : { 
-                        from: db_ref.get_event_categories_table(),
-                        localField: "categories",
-                        foreignField: "cat_id",
-                        as: "categories" 
-                    }},
-                    { $unwind : "$categories"},
-                    { $lookup: { 
-                        from: "beef_chains", 
-                        localField: "beef_chain_ids", 
-                        foreignField: "_id", 
-                        as: "beef_chain_ids"  
-                    }},/*
-                    { $lookup: { 
-                        from: "comments", 
-                        localField: "_id", 
-                        foreignField: "event_id", 
-                        as: "comments"  
-                    }},*/
-                    /*{ $unwind: "$beef_chain_ids"}, 
-                    { $lookup: { 
-                        from: "event_data_v4", 
-                        localField: "beef_chain_ids.events", 
-                        foreignField: "_id", 
-                        as: "beef_chain_ids.events"
-                    }},*/
-                    { $unwind: "$beef_chain_ids"},
-                    { $group: {
-                        _id: "$_id", 
-                        title: { $first: "$title"},
-                        aggressors: { $addToSet: "$aggressors" },
-                        targets: { $addToSet: "$targets"},
-                        event_date: { $first: "$event_date"},
-                        date_added: { $first: "$date_added"},
-                        description: { $first: "$description"},
-                        links: { $first: "$links"},
-                        categories: { $addToSet: "$categories"},
-                        hit_counts: { $first: "$hit_counts"},
-                        gallery_items: { $first: "$gallery_items"},
-                        img_title_thumbnail: { $first: "$img_title_thumbnail"},
-                        cover_image: { $first: "$cover_image"},
-                        rating: { $first: "$rating"},
-                        data_sources: { $first: "$data_sources"},
-                        beef_chain_ids: { $addToSet: "$beef_chain_ids"},
-                        contributions: { $first: "$contributions"},
-                        tags: { $first: "$tags"},
-                        featured: { $first: "$featured"},
-                        votes: { $first: "$votes"},
-                    }},
-                    { $project: event_projection }
-                ];
-                
-                if(Object.keys(sort_query_content).length > 0){
-                    aggregate_array.push({ $sort: sort_query_content });
-                }
-                
-                aggregate_array.push({ $limit: limit_query_content });
-                
-                db.collection(db_ref.get_current_event_table()).aggregate(aggregate_array).toArray(function(err, docs) {
-                    if(err){ console.log(err); }
-                    else{
-                        if(docs){
-                            //console.log(docs[0])
-                            callback( docs );
-                        }
-                        else{
-                            callback({ failed: true, message: "Events not found." });
-                        }
-                    }
-                });
-            }
+        if(Object.keys(sort_query_content).length > 0){
+            aggregate_array.push({ $sort: sort_query_content });
+        }
+        
+        aggregate_array.push({ $limit: limit_query_content });
+        
+
+        var query_config = {
+            table: db_ref.get_current_event_table(),
+            aggregate_array: aggregate_array
+        };
+        
+        db_interface.get(query_config, function(results){
+            callback(results)
+        },
+        function(error_object){
+            callback(error_object);
         });
     },
     
