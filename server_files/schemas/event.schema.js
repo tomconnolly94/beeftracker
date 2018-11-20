@@ -16,7 +16,7 @@ var event_schema = new Schema({
         url : String
     }],
     categories: [ Number ],
-    hit_count: {
+    hit_counts: {
         total: Number, 
         last_day: Number,
         last_two_days: Number,
@@ -37,6 +37,7 @@ var event_schema = new Schema({
     contributions: [ ContributionSchema ],
     featured: Boolean,
     tags: [ String ],
+    record_origin: String,
     user: Schema.ObjectId
 });
 

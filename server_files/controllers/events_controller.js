@@ -76,7 +76,6 @@ module.exports = {
         
         var aggressor_ids = []; //create array to store target_ids
         var target_ids = []; //create array to store target_ids
-        var gallery_items_formatted = [];
         
         //format target_ids array
         for(var i = 0; i < submission_data.aggressors.length; i++){
