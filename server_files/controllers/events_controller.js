@@ -70,6 +70,10 @@ var increment_hit_counts = function(event_id){
     });
 }
 
+var compare_event_dates = function (a, b) {
+    return b.event_date.valueOf() - a.event_date.valueOf();
+}
+
 module.exports = {
     
     format_event_data: function(submission_data){
@@ -244,7 +248,6 @@ module.exports = {
         }
         
         aggregate_array.push({ $limit: limit_query_content });
-        
 
         var query_config = {
             table: db_ref.get_current_event_table(),
@@ -261,98 +264,91 @@ module.exports = {
     
     findEvent: function(event_id, callback){
 
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{                
-                var event_id_object = BSON.ObjectID.createFromHexString(event_id);
-                
-                db.collection(db_ref.get_current_event_table()).aggregate([
-                    { $match: { _id: event_id_object } },
-                    { $unwind : "$aggressors"},
-                    { $lookup : {
-                        from: db_ref.get_current_actor_table(),
-                        localField: "aggressors",
-                        foreignField: "_id",
-                        as: "aggressors" 
-                    }},
-                    { $unwind : "$aggressors"},
-                    { $unwind : "$targets"},
-                    { $lookup : { 
-                        from: db_ref.get_current_actor_table(),
-                        localField: "targets",
-                        foreignField: "_id",
-                        as: "targets" 
-                    }},
-                    { $unwind : "$targets"},
-                    { $unwind : "$categories"},
-                    { $lookup : { 
-                        from: db_ref.get_event_categories_table(),
-                        localField: "categories",
-                        foreignField: "cat_id",
-                        as: "categories" 
-                    }},
-                    { $unwind : "$categories"},
-                    { $lookup: { 
-                        from: "beef_chains", 
-                        localField: "beef_chain_ids", 
-                        foreignField: "_id", 
-                        as: "beef_chain_ids"  
-                    }}, 
-                    { $unwind: "$beef_chain_ids"}, 
-                    { $lookup: { 
-                        from: "event_data_v4", 
-                        localField: "beef_chain_ids.events", 
-                        foreignField: "_id", 
-                        as: "beef_chain_ids.events"
-                    }},
-                    { $unwind: "$beef_chain_ids" },
-                    { $group: {
-                        _id: "$_id", 
-                        title: { $first: "$title"},
-                        aggressors: { $addToSet: "$aggressors" },
-                        targets: { $addToSet: "$targets"},
-                        event_date: { $first: "$event_date"},
-                        date_added: { $first: "$date_added"},
-                        description: { $first: "$description"},
-                        links: { $first: "$links"},
-                        categories: { $addToSet: "$categories"},
-                        hit_counts: { $first: "$hit_counts"},
-                        gallery_items: { $first: "$gallery_items"},
-                        img_title_thumbnail: { $first: "$img_title_thumbnail"},
-                        cover_image: { $first: "$cover_image"},
-                        rating: { $first: "$rating"},
-                        data_sources: { $first: "$data_sources"},
-                        beef_chain_ids: { $addToSet: "$beef_chain_ids"},
-                        contributions: { $first: "$contributions"},
-                        tags: { $first: "$tags"},
-                        featured: { $first: "$featured"},
-                        votes: { $first: "$votes"},
-                    }},
-                    { $project: event_projection }
-                ]).toArray(function(queryErr, docs) {
-                    if(queryErr){ console.log(queryErr); }
-                    else{
-                        if(docs && docs.length > 0){
-                            
-                            function compare_event_dates(a, b) {
-                                return b.event_date.valueOf() - a.event_date.valueOf();
-                            }
-                            for(var i = 0; i < docs[0].beef_chain_ids.length; i++){
-                                docs[0].beef_chain_ids[i].events.sort(compare_event_dates); //sort beef chain events using event dates using above compare function
-                            }
-                                                        
-                            callback( docs[0] );
-                            
-                            if(process.env.NODE_ENV == "heroku_production"){//only increment hit counts if codebase is in production
-                                increment_hit_counts(docs[0]._id);
-                            }
-                        }
-                        else{
-                            callback({ failed: true, message: "Event not found."});
-                        }
-                    }
-                });            
+        var query_config = {
+            table: db_ref.get_current_event_table(),
+            record: [
+                { $match: { _id: BSON.ObjectID.createFromHexString(event_id) } },
+                { $unwind : "$aggressors"},
+                { $lookup : {
+                    from: db_ref.get_current_actor_table(),
+                    localField: "aggressors",
+                    foreignField: "_id",
+                    as: "aggressors" 
+                }},
+                { $unwind : "$aggressors"},
+                { $unwind : "$targets"},
+                { $lookup : { 
+                    from: db_ref.get_current_actor_table(),
+                    localField: "targets",
+                    foreignField: "_id",
+                    as: "targets" 
+                }},
+                { $unwind : "$targets"},
+                { $unwind : "$categories"},
+                { $lookup : { 
+                    from: db_ref.get_event_categories_table(),
+                    localField: "categories",
+                    foreignField: "cat_id",
+                    as: "categories" 
+                }},
+                { $unwind : "$categories"},
+                { $lookup: { 
+                    from: "beef_chains", 
+                    localField: "beef_chain_ids", 
+                    foreignField: "_id", 
+                    as: "beef_chain_ids"  
+                }}, 
+                { $unwind: "$beef_chain_ids"}, 
+                { $lookup: { 
+                    from: "event_data_v4", 
+                    localField: "beef_chain_ids.events", 
+                    foreignField: "_id", 
+                    as: "beef_chain_ids.events"
+                }},
+                { $unwind: "$beef_chain_ids" },
+                { $group: {
+                    _id: "$_id", 
+                    title: { $first: "$title"},
+                    aggressors: { $addToSet: "$aggressors" },
+                    targets: { $addToSet: "$targets"},
+                    event_date: { $first: "$event_date"},
+                    date_added: { $first: "$date_added"},
+                    description: { $first: "$description"},
+                    links: { $first: "$links"},
+                    categories: { $addToSet: "$categories"},
+                    hit_counts: { $first: "$hit_counts"},
+                    gallery_items: { $first: "$gallery_items"},
+                    img_title_thumbnail: { $first: "$img_title_thumbnail"},
+                    cover_image: { $first: "$cover_image"},
+                    rating: { $first: "$rating"},
+                    data_sources: { $first: "$data_sources"},
+                    beef_chain_ids: { $addToSet: "$beef_chain_ids"},
+                    contributions: { $first: "$contributions"},
+                    tags: { $first: "$tags"},
+                    featured: { $first: "$featured"},
+                    votes: { $first: "$votes"},
+                }},
+                { $project: event_projection }
+            ]
+        };
+
+        db_interface.get(query_config, function(results){
+
+            var result = results[0];
+            
+            //sort beef chain events using event dates using above compare function
+            for(var i = 0; i < result.beef_chain_ids.length; i++){
+                result.beef_chain_ids[i].events.sort(compare_event_dates); 
             }
+            
+            callback(result);
+            
+            if(process.env.NODE_ENV == "heroku_production"){//only increment hit counts if codebase is in production
+                increment_hit_counts(result._id);
+            }
+        },
+        function(error_object){
+            callback(error_object);
         });
     },
     
@@ -374,7 +370,13 @@ module.exports = {
             //find gallery items that need their embedding links generated
             event_insert.gallery_items = format_embeddable_items(event_insert.gallery_items, files);
             
-            storage_interface.async_loop_upload_items(event_insert.gallery_items, "events", files, function(items){
+            var upload_config = {
+                record_type: storage_ref.get_event_images_folder(),
+                item_data: event_insert.gallery_items,
+                files: files
+            };
+
+            storage_interface.upload(upload_config, function(items){
                 
                 //function to remove file extension
                 var strip_file_ext = function(string){
@@ -421,7 +423,7 @@ module.exports = {
     
     updateEvent: function(event_data, event_files, existing_object_id, callback){
         
-            var files = event_files;
+        var files = event_files;
         
         //extract data for use later
         var existing_event_id_object = BSON.ObjectID.createFromHexString(existing_object_id);

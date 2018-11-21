@@ -91,7 +91,12 @@ module.exports = {
                         failure_callback({ failed: true, module: "db_interface", function: "get", message: "Failed at db query"});
                     }
                     else{
-                        success_callback(results);
+                        if(results.length > 0){
+                            success_callback(results);
+                        }
+                        else{
+                            failure_callback({failed: true, module: "db_interface", function: "get", message: "No results found" })
+                        }
                     }
                 });
             }

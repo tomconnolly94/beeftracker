@@ -134,10 +134,6 @@ module.exports = {
         var item_data = upload_config.item_data;
         var files = upload_config.files;
         var loop_count = 0;
-        var file_server_folder = upload_config.record_type;
-        var item_data = upload_config.item_data;
-        var files = upload_config.files;
-        var loop_count = 0;
                 
         //use an asynchronous loop to cycle through gallery item_data, if item is an image, save image to cloudinary and update gallery item link
         loop(item_data, function(item, next){
