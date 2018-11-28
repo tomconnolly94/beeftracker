@@ -43,27 +43,27 @@ var event_projection = {
     "tags": 1,
     "featured": 1,
     "votes": 1,
-    "rating": { $ceil: { $multiply: [ 5, { $divide: [ "$votes.upvotes", { $add : [ "$votes.upvotes", "$votes.downvotes"] }] }] }}
+    "rating": { $ceil: { $multiply: [5, { $divide: ["$votes.upvotes", { $add: ["$votes.upvotes", "$votes.downvotes"] }] }] } }
 };
 
-var check_end_or_next = function(event, item, next){
+var check_end_or_next = function (event, item, next) {
     //if last item, exit loop, else carry on to next iteration
-    if(event.gallery_items[event.gallery_items.length-1].link == item.link){
+    if (event.gallery_items[event.gallery_items.length - 1].link == item.link) {
         next(null, loop.END_LOOP);
     }
-    else{
+    else {
         next();
     }
 }
 
-var increment_hit_counts = function(event_id){
-    
-    db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-        if(err){ console.log(err); }
-        else{
+var increment_hit_counts = function (event_id) {
+
+    db_ref.get_db_object().connect(process.env.MONGODB_URI, function (err, db) {
+        if (err) { console.log(err); }
+        else {
             //var event_id_object = BSON.ObjectID.createFromHexString(event_id);
 
-            db.collection(db_ref.get_current_event_table()).update({ _id: event_id }, { $inc: { "hit_counts.total": 1, "hit_counts.today": 1, "hit_counts.this_month": 1 } }, function(err, result){
+            db.collection(db_ref.get_current_event_table()).update({ _id: event_id }, { $inc: { "hit_counts.total": 1, "hit_counts.today": 1, "hit_counts.this_month": 1 } }, function (err, result) {
                 //callback();
             })
         }
@@ -74,39 +74,47 @@ var compare_event_dates = function (a, b) {
     return b.event_date.valueOf() - a.event_date.valueOf();
 }
 
-var get_aggregate_array = function(match_query, additional_aggregate_stages){
+var get_aggregate_array = function (match_query, additional_aggregate_stages) {
     var aggregate_array = [
         { $match: match_query },
-        { $unwind : "$aggressors"},
-        { $lookup : {
-            from: db_ref.get_current_actor_table(),
-            localField: "aggressors",
-            foreignField: "_id",
-            as: "aggressors" 
-        }},
-        { $unwind : "$aggressors"},
-        { $unwind : "$targets"},
-        { $lookup : { 
-            from: db_ref.get_current_actor_table(),
-            localField: "targets",
-            foreignField: "_id",
-            as: "targets" 
-        }},
-        { $unwind : "$targets"},
-        { $unwind : "$categories"},
-        { $lookup : { 
-            from: db_ref.get_event_categories_table(),
-            localField: "categories",
-            foreignField: "cat_id",
-            as: "categories" 
-        }},
-        { $unwind : "$categories"},
-        { $lookup: { 
-            from: "beef_chains", 
-            localField: "beef_chain_ids", 
-            foreignField: "_id", 
-            as: "beef_chain_ids"  
-        }},/*
+        { $unwind: "$aggressors" },
+        {
+            $lookup: {
+                from: db_ref.get_current_actor_table(),
+                localField: "aggressors",
+                foreignField: "_id",
+                as: "aggressors"
+            }
+        },
+        { $unwind: "$aggressors" },
+        { $unwind: "$targets" },
+        {
+            $lookup: {
+                from: db_ref.get_current_actor_table(),
+                localField: "targets",
+                foreignField: "_id",
+                as: "targets"
+            }
+        },
+        { $unwind: "$targets" },
+        { $unwind: "$categories" },
+        {
+            $lookup: {
+                from: db_ref.get_event_categories_table(),
+                localField: "categories",
+                foreignField: "cat_id",
+                as: "categories"
+            }
+        },
+        { $unwind: "$categories" },
+        {
+            $lookup: {
+                from: "beef_chains",
+                localField: "beef_chain_ids",
+                foreignField: "_id",
+                as: "beef_chain_ids"
+            }
+        },/*
         { $lookup: { 
             from: "comments", 
             localField: "_id", 
@@ -120,53 +128,55 @@ var get_aggregate_array = function(match_query, additional_aggregate_stages){
             foreignField: "_id", 
             as: "beef_chain_ids.events"
         }},*/
-        { $unwind: "$beef_chain_ids"},
-        { $group: {
-            _id: "$_id", 
-            title: { $first: "$title"},
-            aggressors: { $addToSet: "$aggressors" },
-            targets: { $addToSet: "$targets"},
-            event_date: { $first: "$event_date"},
-            date_added: { $first: "$date_added"},
-            description: { $first: "$description"},
-            links: { $first: "$links"},
-            categories: { $addToSet: "$categories"},
-            hit_counts: { $first: "$hit_counts"},
-            gallery_items: { $first: "$gallery_items"},
-            img_title_thumbnail: { $first: "$img_title_thumbnail"},
-            cover_image: { $first: "$cover_image"},
-            rating: { $first: "$rating"},
-            data_sources: { $first: "$data_sources"},
-            beef_chain_ids: { $addToSet: "$beef_chain_ids"},
-            contributions: { $first: "$contributions"},
-            tags: { $first: "$tags"},
-            featured: { $first: "$featured"},
-            votes: { $first: "$votes"},
-        }},
+        { $unwind: "$beef_chain_ids" },
+        {
+            $group: {
+                _id: "$_id",
+                title: { $first: "$title" },
+                aggressors: { $addToSet: "$aggressors" },
+                targets: { $addToSet: "$targets" },
+                event_date: { $first: "$event_date" },
+                date_added: { $first: "$date_added" },
+                description: { $first: "$description" },
+                links: { $first: "$links" },
+                categories: { $addToSet: "$categories" },
+                hit_counts: { $first: "$hit_counts" },
+                gallery_items: { $first: "$gallery_items" },
+                img_title_thumbnail: { $first: "$img_title_thumbnail" },
+                cover_image: { $first: "$cover_image" },
+                rating: { $first: "$rating" },
+                data_sources: { $first: "$data_sources" },
+                beef_chain_ids: { $addToSet: "$beef_chain_ids" },
+                contributions: { $first: "$contributions" },
+                tags: { $first: "$tags" },
+                featured: { $first: "$featured" },
+                votes: { $first: "$votes" },
+            }
+        },
         { $project: event_projection }
     ];
 
     var initial_index = aggregate_array.length - 3;
 
-    for(var i = initial_index; i < additional_aggregate_stages.length; i++){
+    for (var i = initial_index; i < additional_aggregate_stages.length; i++) {
         aggregate_array[i] = additional_aggregate_stages[i];
     }
 }
 
 module.exports = {
-    
-    format_event_data: function(submission_data){
-        
+
+    format_event_data: function (submission_data) {
+
         var aggressor_ids = []; //create array to store target_ids
         var target_ids = []; //create array to store target_ids
-        
+
         //format target_ids array
-        for(var i = 0; i < submission_data.aggressors.length; i++){
+        for (var i = 0; i < submission_data.aggressors.length; i++) {
             aggressor_ids.push(BSON.ObjectID.createFromHexString(submission_data.aggressors[i]));
         }
 
         //format target_ids array
-        for(var i = 0; i < submission_data.targets.length; i++){
+        for (var i = 0; i < submission_data.targets.length; i++) {
             target_ids.push(BSON.ObjectID.createFromHexString(submission_data.targets[i]));
         }
 
@@ -174,9 +184,9 @@ module.exports = {
             user: BSON.ObjectID.createFromHexString(submission_data.user_id),
             date_of_submission: new Date(),
             date_of_approval: null,
-            contribution_details: [] 
+            contribution_details: []
         });
-        
+
         //format beef event record for insertion
         var event_insert = new Event({
             title: submission_data.title,
@@ -198,58 +208,58 @@ module.exports = {
             cover_image: "",
             rating: 0,
             data_sources: submission_data.data_sources,
-            contributions: [ initial_event_contribution ],
+            contributions: [initial_event_contribution],
             record_origin: submission_data.record_origin,
             featured: false,
             tags: submission_data.tags
         });
-        
+
         //add _id field if it exists
-        if(submission_data._id){ event_insert._id = submission._id; }
+        if (submission_data._id) { event_insert._id = submission._id; }
 
         return event_insert;
     },
 
-    findEvents: function(query_parameters, callback){
-        
+    findEvents: function (query_parameters, callback) {
+
         var match_query_content = {};
         var sort_query_content = {};
         var query_present = Object.keys(query_parameters).length === 0 && query_parameters.constructor === Object ? false : true; //check if request comes with query
         var limit_query_content = 30; //max amount of records to return
         var query_table = db_ref.get_current_event_table();
-        
-        if(query_present){
-            
+
+        if (query_present) {
+
             //deal with $sort queries
             var sort_field_name;
-            
-            if(query_parameters.increasing_order == "name"){ sort_field_name = "name"; }
-            else if(query_parameters.increasing_order == "rating" || query_parameters.decreasing_order == "rating"){ sort_field_name = "rating"; }
-            else if(query_parameters.increasing_order == "popularity" || query_parameters.decreasing_order == "popularity"){ sort_field_name = "hit_count.total"; }
-            else if(query_parameters.increasing_order == "currently_trending" || query_parameters.decreasing_order == "currently_trending"){ sort_field_name = "hit_counts.today"; }
-            else if(query_parameters.increasing_order == "date_added" || query_parameters.decreasing_order == "date_added"){ sort_field_name = "date_added"; }
-            else{ query_present = false; }// if no valid queries provided, disallow a sort query
 
-            if(query_parameters.increasing_order){
+            if (query_parameters.increasing_order == "name") { sort_field_name = "name"; }
+            else if (query_parameters.increasing_order == "rating" || query_parameters.decreasing_order == "rating") { sort_field_name = "rating"; }
+            else if (query_parameters.increasing_order == "popularity" || query_parameters.decreasing_order == "popularity") { sort_field_name = "hit_count.total"; }
+            else if (query_parameters.increasing_order == "currently_trending" || query_parameters.decreasing_order == "currently_trending") { sort_field_name = "hit_counts.today"; }
+            else if (query_parameters.increasing_order == "date_added" || query_parameters.decreasing_order == "date_added") { sort_field_name = "date_added"; }
+            else { query_present = false; }// if no valid queries provided, disallow a sort query
+
+            if (query_parameters.increasing_order) {
                 sort_query_content[sort_field_name] = 1;
             }
-            else if(query_parameters.decreasing_order){
+            else if (query_parameters.decreasing_order) {
                 sort_query_content[sort_field_name] = -1;
             }
 
-            sort_query_content = { $sort: sort_query_content};
-            
+            sort_query_content = { $sort: sort_query_content };
+
             //deal with $match queries
-            if(query_parameters.featured != null){ match_query_content = { featured: query_parameters.featured } }
-            else if(query_parameters.match_title){ match_query_content = { title: { $regex : query_parameters.match_title, $options: "i" } } }
-            else if(query_parameters.match_actor){ match_query_content = { $or: [ { aggressors: query_parameters.match_actor }, { targets: query_parameters.match_actor }] } }
-            else if(query_parameters.match_category){ match_query_content = { categories: typeof query_parameters.match_category == "string" ? parseInt(query_parameters.match_category) : query_parameters.match_category } }
-            else if(query_parameters.match_beef_chain_id){ match_query_content = { beef_chain_ids: query_parameters.match_beef_chain_id} }
-            else if(query_parameters.match_user_id){ match_query_content = { contributions: { $elemMatch: { user: BSON.ObjectID.createFromHexString(query_parameters.match_user_id) }}} }
-            else if(query_parameters.match_event_ids){ match_query_content = { _id: { $in: query_parameters.match_event_ids } }}
-            
+            if (query_parameters.featured != null) { match_query_content = { featured: query_parameters.featured } }
+            else if (query_parameters.match_title) { match_query_content = { title: { $regex: query_parameters.match_title, $options: "i" } } }
+            else if (query_parameters.match_actor) { match_query_content = { $or: [{ aggressors: query_parameters.match_actor }, { targets: query_parameters.match_actor }] } }
+            else if (query_parameters.match_category) { match_query_content = { categories: typeof query_parameters.match_category == "string" ? parseInt(query_parameters.match_category) : query_parameters.match_category } }
+            else if (query_parameters.match_beef_chain_id) { match_query_content = { beef_chain_ids: query_parameters.match_beef_chain_id } }
+            else if (query_parameters.match_user_id) { match_query_content = { contributions: { $elemMatch: { user: BSON.ObjectID.createFromHexString(query_parameters.match_user_id) } } } }
+            else if (query_parameters.match_event_ids) { match_query_content = { _id: { $in: query_parameters.match_event_ids } } }
+
             //deal with $limit query
-            if(query_parameters.limit){ limit_query_content = typeof query_parameters.limit == "string" ? parseInt(query_parameters.limit) : query_parameters.limit }
+            if (query_parameters.limit) { limit_query_content = typeof query_parameters.limit == "string" ? parseInt(query_parameters.limit) : query_parameters.limit }
         }
 
         var additional_aggregate_stages = [
@@ -275,140 +285,140 @@ module.exports = {
         ];
 
         var aggregate_array = get_aggregate_array(match_query_content, additional_aggregate_stages);
-        
+
         var query_config = {
             table: db_ref.get_current_event_table(),
             aggregate_array: aggregate_array
         };
-        
-        db_interface.get(query_config, function(results){
+
+        db_interface.get(query_config, function (results) {
             callback(results)
         },
-        function(error_object){
+        function (error_object) {
             callback(error_object);
         });
     },
-    
-    findEvent: function(event_id, callback){
+
+    findEvent: function (event_id, callback) {
 
         var query_config = {
             table: db_ref.get_current_event_table(),
             record: get_aggregate_array({ _id: BSON.ObjectID.createFromHexString(event_id) }, [])
         };
 
-        db_interface.get(query_config, function(results){
+        db_interface.get(query_config, function (results) {
 
             var result = results[0];
-            
+
             //sort beef chain events using event dates using above compare function
-            for(var i = 0; i < result.beef_chain_ids.length; i++){
-                result.beef_chain_ids[i].events.sort(compare_event_dates); 
+            for (var i = 0; i < result.beef_chain_ids.length; i++) {
+                result.beef_chain_ids[i].events.sort(compare_event_dates);
             }
-            
+
             callback(result);
-            
-            if(process.env.NODE_ENV == "heroku_production"){//only increment hit counts if codebase is in production
+
+            if (process.env.NODE_ENV == "heroku_production") {//only increment hit counts if codebase is in production
                 increment_hit_counts(result._id);
             }
         },
-        function(error_object){
-            callback(error_object);
-        });
+            function (error_object) {
+                callback(error_object);
+            });
     },
-    
-    createEvent: function(event_data, event_files, callback){
-    
+
+    createEvent: function (event_data, event_files, callback) {
+
         var files = event_files;
         var record_origin = event_data.record_origin;
-        
+
         //format event record for insertion
         var event_insert = module.exports.format_event_data(event_data);
-                        
-        if(test_mode){
+
+        if (test_mode) {
             console.log("test mode is on.");
             console.log(event_insert);
-                        
+
             callback({ failed: true, test_mode: true, message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_insert });
         }
-        else{
+        else {
             //find gallery items that need their embedding links generated
             event_insert.gallery_items = format_embeddable_items(event_insert.gallery_items, files);
-            
+
             var upload_config = {
                 record_type: storage_ref.get_event_images_folder(),
                 item_data: event_insert.gallery_items,
                 files: files
             };
 
-            storage_interface.upload(upload_config, function(items){
-                
+            storage_interface.upload(upload_config, function (items) {
+
                 //function to remove file extension
-                var strip_file_ext = function(string){
+                var strip_file_ext = function (string) {
                     var split_string = string.split(".");
-                    
-                    if(split_string.length > 1){
+
+                    if (split_string.length > 1) {
                         var ext = split_string.pop();
                         string = string.replace(ext, "");
                     }
-                    
+
                     return string;
-                }                
-                
+                }
+
                 //remove file objects to avoid adding file buffer to the db
-                for(var i = 0; i < event_insert.gallery_items.length; i++){
-                    
+                for (var i = 0; i < event_insert.gallery_items.length; i++) {
+
                     //remove file extension from all image gallery items
-                    if(event_insert.gallery_items[i].media_type == "image"){ //set file to null to avoid storing file buffer in db
+                    if (event_insert.gallery_items[i].media_type == "image") { //set file to null to avoid storing file buffer in db
                         event_insert.gallery_items[i].link = strip_file_ext(event_insert.gallery_items[i].link);
                         event_insert.gallery_items[i].file_name = strip_file_ext(event_insert.gallery_items[i].file_name);
                     }
-                    
-                    if(event_insert.gallery_items[i].file){ //set file to null to avoid storing file buffer in db
+
+                    if (event_insert.gallery_items[i].file) { //set file to null to avoid storing file buffer in db
                         event_insert.gallery_items[i].file = null;
                     }
-                    
-                    if(event_insert.gallery_items[i].cover_image){
+
+                    if (event_insert.gallery_items[i].cover_image) {
                         event_insert.cover_image = event_insert.gallery_items[i].link; //save thumbnail main graphic ref
                     }
                 }
-                
+
                 var db_options = {
                     send_email_notification: false,
                     email_notification_text: "Beef",
                     add_to_scraped_confirmed_table: record_origin == "scraped" ? true : false
                 };
 
-                db_interface.insert(event_insert, db_ref.get_current_event_table(), db_options, function(id){
+                db_interface.insert(event_insert, db_ref.get_current_event_table(), db_options, function (id) {
                     callback(id);
                 });
             });
         }
     },
-    
-    updateEvent: function(event_data, event_files, existing_object_id, callback){
-        
+
+    updateEvent: function (event_data, event_files, existing_object_id, callback) {
+
         var files = event_files;
-        
+
         //extract data for use later
         var existing_event_id_object = BSON.ObjectID.createFromHexString(existing_object_id);
 
         //format event record for insertion
         var new_event = module.exports.format_event_data(event_data);
-        
-        if(test_mode){
+
+        if (test_mode) {
             console.log("test mode is on.");
-            
+
             //remove file objects to avoid clogging up the console
-            for(var i = 0; i < event_insert.gallery_items.length; i++){ 
-                if(event_insert.gallery_items[i].file){
+            for (var i = 0; i < event_insert.gallery_items.length; i++) {
+                if (event_insert.gallery_items[i].file) {
                     event_insert.gallery_items[i].file = null;
                 }
             }
-            
+
             console.log(event_insert);
             callback({ failed: true, test_mode: true, message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_insert });
         }
-        else{
+        else {
             var db_options = {
                 send_email_notification: true,
                 email_notification_text: "Beef",
@@ -424,11 +434,11 @@ module.exports = {
                 ]
             };
 
-            db_interface.get(query_config, function(results){
+            db_interface.get(query_config, function (results) {
 
                 var original_event = results[0];
 
-                var check_original_event_gallery_items_links = function(gallery_item) {
+                var check_original_event_gallery_items_links = function (gallery_item) {
                     return original_event.gallery_items.map(gallery_item => gallery_item.link).indexOf(gallery_item.link) != -1;
                 }
 
@@ -438,61 +448,61 @@ module.exports = {
                 //
             });
 
-            db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-                if(err){ console.log(err); }
-                else{
+            db_ref.get_db_object().connect(process.env.MONGODB_URI, function (err, db) {
+                if (err) { console.log(err); }
+                else {
 
                     //get the pre-update event object to sort gallery items
-                    db.collection(db_ref.get_current_event_table()).find({ _id: existing_event_id_object } ).toArray(function(queryErr, original_event) {
-                        if(err){ console.log(err); }
-                        else{
+                    db.collection(db_ref.get_current_event_table()).find({ _id: existing_event_id_object }).toArray(function (queryErr, original_event) {
+                        if (err) { console.log(err); }
+                        else {
                             original_event = original_event[0];
 
                             //find gallery items that need their embedding links generated
                             event_insert.gallery_items = format_embeddable_items(event_insert.gallery_items, files);
 
-                            storage_interface.async_loop_upload_items(event_insert.gallery_items, "events", files, function(items){
+                            storage_interface.async_loop_upload_items(event_insert.gallery_items, "events", files, function (items) {
 
                                 event_insert.gallery_items = items;
 
                                 //remove file objects to avoid adding file buffer to the db
-                                for(var i = 0; i < event_insert.gallery_items.length; i++){
-                                    if(event_insert.gallery_items[i].file){
+                                for (var i = 0; i < event_insert.gallery_items.length; i++) {
+                                    if (event_insert.gallery_items[i].file) {
                                         event_insert.gallery_items[i].file = null;
                                     }
 
-                                    if(event_insert.gallery_items[i].cover_image){
+                                    if (event_insert.gallery_items[i].cover_image) {
                                         event_insert.cover_image = event_insert.gallery_items[i].link; //save fullsize main graphic ref
                                     }
                                 }
 
 
                                 //call to update the db record
-                                db_interface.update_record_in_db(event_insert, db_ref.get_current_event_table(), db_options, existing_object_id, function(document){
+                                db_interface.update_record_in_db(event_insert, db_ref.get_current_event_table(), db_options, existing_object_id, function (document) {
 
                                     var gallery_items_to_remove = [];
 
                                     //if new thumbnail doesnt match the existing one the new image will have been uploaded so remove the old file
-                                    if(event_insert.img_title_thumbnail != original_event.img_title_thumbnail){
-                                        gallery_items_to_remove.push({link: original_event.img_title_thumbnail, media_type: "image"});
+                                    if (event_insert.img_title_thumbnail != original_event.img_title_thumbnail) {
+                                        gallery_items_to_remove.push({ link: original_event.img_title_thumbnail, media_type: "image" });
                                     }
 
                                     //if new gallery_item doesnt match the existing one the new image will have been uploaded so remove the old file
-                                    for(var i = 0; i < original_event.gallery_items.length; i++){
+                                    for (var i = 0; i < original_event.gallery_items.length; i++) {
                                         var gallery_item_found = false;
-                                        for(var j = 0; j < event_insert.gallery_items.length; j++){
-                                            if(original_event.gallery_items[i].link == event_insert.gallery_items[j].link){
+                                        for (var j = 0; j < event_insert.gallery_items.length; j++) {
+                                            if (original_event.gallery_items[i].link == event_insert.gallery_items[j].link) {
                                                 gallery_item_found = true;
                                             }
                                         }
-                                        if(!gallery_item_found){
+                                        if (!gallery_item_found) {
                                             gallery_items_to_remove.push(original_event.gallery_items[i]);
                                         }
                                     }
 
-                                    if(gallery_items_to_remove.length > 0){
+                                    if (gallery_items_to_remove.length > 0) {
                                         //remove all old gallery_items
-                                        storage_interface.async_loop_remove_items(gallery_items_to_remove, "events", function(items){
+                                        storage_interface.async_loop_remove_items(gallery_items_to_remove, "events", function (items) {
                                             console.log("finish")
                                         });
                                     }
@@ -505,38 +515,38 @@ module.exports = {
             });
         }
     },
-    
-    deleteEvent: function(request, response, callback){
-        
+
+    deleteEvent: function (request, response, callback) {
+
         //extract data
         var event_id = request.params.event_id;
 
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
+        db_ref.get_db_object().connect(process.env.MONGODB_URI, function (err, db) {
+            if (err) { console.log(err); }
+            else {
                 var event_id_object = BSON.ObjectID.createFromHexString(event_id);
-                
-                db.collection(db_ref.get_current_event_table()).findOne({ _id: event_id_object }, function(queryErr, event_obj) {
-                    if(queryErr){ console.log(queryErr); }
-                    else{
-                        if(event_obj){                            
+
+                db.collection(db_ref.get_current_event_table()).findOne({ _id: event_id_object }, function (queryErr, event_obj) {
+                    if (queryErr) { console.log(queryErr); }
+                    else {
+                        if (event_obj) {
                             var beef_chain_ids = event_obj.beef_chain_ids;
-                                                        
+
                             //add thumbnail image to list
-                            event_obj.gallery_items.push({link: event_obj.img_title_thumbnail, media_type: "image"});
-                                            
-                            storage_interface.async_loop_remove_items(event_obj.gallery_items, "events", function(){
-                                 db.collection(db_ref.get_current_event_table()).deleteOne({ _id: event_id_object }, function(queryErr, docs) {
-                                    if(queryErr){ console.log(queryErr); }
-                                    else{
-                                        db.collection(db_ref.get_beef_chain_table()).remove({ "_id" : { $in: beef_chain_ids }, events: { $size: 1 }, "events.0" : event_id_object }, function(queryErr, beef_chain_docs) {
-                                            callback( docs[0] );
+                            event_obj.gallery_items.push({ link: event_obj.img_title_thumbnail, media_type: "image" });
+
+                            storage_interface.async_loop_remove_items(event_obj.gallery_items, "events", function () {
+                                db.collection(db_ref.get_current_event_table()).deleteOne({ _id: event_id_object }, function (queryErr, docs) {
+                                    if (queryErr) { console.log(queryErr); }
+                                    else {
+                                        db.collection(db_ref.get_beef_chain_table()).remove({ "_id": { $in: beef_chain_ids }, events: { $size: 1 }, "events.0": event_id_object }, function (queryErr, beef_chain_docs) {
+                                            callback(docs[0]);
                                         });
                                     }
                                 });
                             });
                         }
-                        else{
+                        else {
                             callback({ failed: true, message: "Event cannot be found, and so was not deleted." });
                         }
                     }
@@ -544,5 +554,5 @@ module.exports = {
             }
         });
     },
-    
+
 }
