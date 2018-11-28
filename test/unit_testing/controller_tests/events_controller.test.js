@@ -106,6 +106,30 @@ event_example
         var db_interface_callback_spy = sinon.spy();
 
         var event_category_count = 5;
+        var event_category_name = "new_event_category";
+        
+        db_interface.get = function(query_config, callback){
+            db_interface_callback_spy();
+            assert.equal(db_ref.get_event_categories_table(), query_config.table);
+            assert.exists(query_config.aggregate_array[0]["$count"]);
+            callback({ event_category_count: event_category_count }); 
+        };
+
+        events_controller.createEventCategory(event_category_name, function(result){
+            callback_spy();
+            assert.exists(result._id);
+        });
+        
+        assert(db_interface_find_callback_spy.called);
+        assert(db_interface_insert_callback_spy.called);
+        assert(callback_spy.called);
+    });
+
+    it('findEvent', function () {
+
+        var db_interface_callback_spy = sinon.spy();
+
+        var event_category_count = 5;
         
         db_interface.get = function(query_config, callback){
             db_interface_callback_spy();

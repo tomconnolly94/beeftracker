@@ -71,21 +71,12 @@ describe('Module: actors_controller', function () {
                 
         var expected_results = new Actor(actor_example);
         var result = actors_controller.format_actor_data(actor_example);
+        var fields_to_skip = [ "date_added" ];
 
         var result_keys = Object.keys(result._doc).sort();
         var expected_results_keys = Object.keys(expected_results._doc).sort();
         
-        assert.deepEqual(result_keys, expected_results_keys);
-        
-        for(var i = 0; i < result_keys.length; i++){
-            
-            var key = result_keys[i];
-            var fields_to_skip = [ "date_added" ];
-            
-            if(fields_to_skip.indexOf(result[key]) != -1){
-                assert.deepEqual(result[key], expected_results[key]);
-            }
-        }
+        globals.compare_objects(result._doc, expected_results._doc, fields_to_skip);
     });
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -385,24 +376,12 @@ describe('Module: actors_controller', function () {
             
             var actor_example_copy = actor_example;
             actor_example_copy._id = result._id;
+            var fields_to_skip = [ "date_added" ];
             
             result = result["_doc"];
             result.rating = 0;
-            
-            var result_keys = Object.keys(result).sort();
-            var actor_example_keys = Object.keys(actor_example_copy).sort();
-            
-            assert.deepEqual(result_keys, actor_example_keys);
-            
-            for(var i = 0; i < result_keys.length; i++){
-                
-                var key = result_keys[i];
-                var fields_to_skip = [ "date_added" ];
-                
-                if(fields_to_skip.indexOf(result[key]) != -1){
-                    assert.deepEqual(result[key], actor_example_copy[key]);
-                }
-            }
+
+            globals.compare_objects(result, actor_example_copy, fields_to_skip);
         });
         
         assert(callback_spy.called);
