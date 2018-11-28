@@ -4,6 +4,7 @@ var mocha = require('mocha');
 var chai = require('chai');
 var sinon = require("sinon");
 var assert = chai.assert;
+var expect = chai.expect;
 var BSON = require("bson");
 
 //internal dependencies
@@ -15,7 +16,7 @@ var globals = require('../globals.js');
 
 describe('Module: event_controller', function () {
 event_example
-    var events_controller, db_interface, event_example, event_category_input, callback_spy;
+    var events_controller, db_interface, event_example, callback_spy;
 
     before(function(){
         
@@ -104,24 +105,21 @@ event_example
     it('findEvents', function () {
 
         var db_interface_callback_spy = sinon.spy();
-
-        var event_category_count = 5;
-        var event_category_name = "new_event_category";
         
-        db_interface.get = function(query_config, callback){
+        db_interface.get = function(query_config, success_callback){
             db_interface_callback_spy();
-            assert.equal(db_ref.get_event_categories_table(), query_config.table);
-            assert.exists(query_config.aggregate_array[0]["$count"]);
-            callback({ event_category_count: event_category_count }); 
+            assert.exists(query_config.aggregate_array);
+            var aggregate_array_fields = query_config.aggregate_array.map(obj => Object.keys(obj)).join().split(",");
+            expect(aggregate_array_fields).to.include("$match");
+            success_callback([ event_example ]); 
         };
 
-        events_controller.createEventCategory(event_category_name, function(result){
+        events_controller.findEvents({}, function(results){
             callback_spy();
-            assert.exists(result._id);
+            assert.equal(1, results.length);
         });
         
-        assert(db_interface_find_callback_spy.called);
-        assert(db_interface_insert_callback_spy.called);
+        assert(db_interface_callback_spy.called);
         assert(callback_spy.called);
     });
 

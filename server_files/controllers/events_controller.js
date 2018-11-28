@@ -161,6 +161,7 @@ var get_aggregate_array = function (match_query, additional_aggregate_stages) {
     for (var i = initial_index; i < additional_aggregate_stages.length; i++) {
         aggregate_array[i] = additional_aggregate_stages[i];
     }
+    return aggregate_array;
 }
 
 module.exports = {
