@@ -70,6 +70,63 @@ var actor_projection = {
     }
 }
 
+var get_aggregate_array = function (match_query_content, additional_aggregate_stages) {
+    var aggregate_array = [
+        { 
+            $match: match_query_content 
+        },
+        { 
+            $lookup : {
+                from: db_ref.get_current_event_table(),
+                localField: "_id",
+                foreignField: "aggressors",
+                as: "related_events" 
+            }
+        }, 
+        {
+            $group: {
+                _id: "$_id", 
+                name: { $first: "$name"},
+                date_of_origin: { $addToSet: "$date_of_origin" },
+                place_of_origin: { $addToSet: "$place_of_origin"},
+                description: { $first: "$description"},
+                data_sources: { $first: "$data_sources"},
+                also_known_as: { $first: "$also_known_as"},
+                classification: { $first: "$classification"},
+                variable_field_values: { $first: "$variable_field_values"},
+                links: { $first: "$links"},
+                gallery_items: { $first: "$gallery_items"},
+                img_title_thumbnail: { $first: "$img_title_thumbnail"},
+                img_title_fullsize: { $first: "$img_title_fullsize"},
+                rating: { $first: "$rating"},
+                date_added: { $addToSet: "$date_added"},
+                name_lower: { $first: "$name_lower"},
+                also_known_as_lower: { $first: "$also_known_as_lower"},
+                related_actors_aggressors: { $addToSet: "$related_events.aggressors" },
+                related_actors_targets: { $addToSet: "$related_events.targets" },
+                related_events: { $first: "$img_title_thumbnail"}
+            }
+        },
+        actor_intermediate_projection,
+        { 
+            $lookup: {
+                from: db_ref.get_current_actor_table(),
+                localField: "related_actors",
+                foreignField: "_id",
+                as: "related_actors"
+            }
+        },
+        actor_projection
+    ];
+
+    var initial_index = aggregate_array.length - 4;
+
+    for (var i = initial_index; i - initial_index < additional_aggregate_stages.length; i++) {
+        aggregate_array.splice(i, 0, additional_aggregate_stages[i - initial_index]);
+    }
+    return aggregate_array;
+}
+
 module.exports = {    
     
     format_actor_data: function(submission_data){
@@ -110,7 +167,7 @@ module.exports = {
     findActors: function(query_parameters, callback){
         
         //var query_parameters = request.query;
-        var match_query = {};
+        var match_query_content = {};
         var sort_query_content = {};
         var query_present = Object.keys(query_parameters).length === 0 && query_parameters.constructor === Object ? false : true; //check if request comes with query
         var limit_query_content = 0; //max amount of records to return
@@ -120,12 +177,9 @@ module.exports = {
             //deal with $sort queries
             var sort_field_name;
             
-            if(query_parameters.increasing_order == "date_added"){ sort_field_name = "date_added"; }
-            else if(query_parameters.decreasing_order == "date_added"){ sort_field_name = "date_added"; }
-            else if(query_parameters.increasing_order == "popularity"){ sort_field_name = "popularity"; }
-            else if(query_parameters.decreasing_order == "popularity"){ sort_field_name = "popularity"; }
-            else if(query_parameters.increasing_order == "name"){ sort_field_name = "name"; }
-            else if(query_parameters.decreasing_order == "name"){ sort_field_name = "name"; }
+            if(query_parameters.increasing_order == "date_added" || query_parameters.decreasing_order == "date_added"){ sort_field_name = "date_added"; }
+            else if(query_parameters.increasing_order == "popularity" || query_parameters.decreasing_order == "popularity"){ sort_field_name = "popularity"; }
+            else if(query_parameters.increasing_order == "name" || query_parameters.decreasing_order == "name"){ sort_field_name = "name"; }
             else{ query_present = false; }// if no valid queries provided, disallow a sort query
 
             if(query_parameters.increasing_order){
@@ -136,55 +190,26 @@ module.exports = {
             }
             
             //deal with $match query
-            if(query_parameters.match_name){ match_query = { name: { $regex : query_parameters.match_name, $options: "i" } } }
-            if(query_parameters.match_multi_names){ match_query = { $or : [{ name : query_parameters.match_multi_names }, { name_lower : query_parameters.match_multi_names }, { also_known_as : query_parameters.match_multi_names }, { also_known_as_lower : query_parameters.match_multi_names }] } }
+            if(query_parameters.match_name){ match_query_content = { name: { $regex : query_parameters.match_name, $options: "i" } } }
+            if(query_parameters.match_multi_names){ match_query_content = { $or : [{ name : query_parameters.match_multi_names }, { name_lower : query_parameters.match_multi_names }, { also_known_as : query_parameters.match_multi_names }, { also_known_as_lower : query_parameters.match_multi_names }] } }
             
             //deal with $limit query
             if(query_parameters.limit){ limit_query_content = typeof query_parameters.limit == "string" ? parseInt(query_parameters.limit) : query_parameters.limit }
         }
 
-        var query_config = {
-            table: db_ref.get_current_actor_table(),
-            aggregate_array: [
-                { 
-                    $match: match_query 
-                },
-                { 
-                    $lookup : {
-                        from: db_ref.get_current_event_table(),
-                        localField: "_id",
-                        foreignField: "aggressors",
-                        as: "related_events" 
-                    }
-                }, 
-                { 
-                    $group : {
-                        _id: "$_id", 
-                        name: { "$max": "$name" },
-                        date_of_origin: { "$max": "$date_of_origin" },
-                        place_of_origin: { "$max": "$place_of_origin" },
-                        description: { "$max": "$description" },
-                        associated_actors: { "$max": "$associated_actors" },
-                        data_sources: { "$max": "$data_sources" },
-                        also_known_as: { "$max": "$also_known_as" },
-                        img_title_fullsize: { "$max": "$img_title_fullsize"},
-                        classification: { "$max": "$classification" },
-                        variable_field_values: { "$max": "$variable_field_values" },
-                        links: { "$max": "$links" },
-                        date_added: { "$max": "$date_added" },
-                        name_lower: { "$max": "$name_lower" },
-                        also_known_as_lower: { "$max": "$also_known_as_lower" }
-                    }
-                }
-            ]
+        var additional_aggregate_stages = [];
+
+        if(Object.keys(sort_query_content).length > 0){
+            additional_aggregate_stages.push({ $sort: sort_query_content });
         }
 
         if(limit_query_content != 0){
-            query_config.aggregate_array.splice(1, 0, { $limit: limit_query_content });
+            additional_aggregate_stages.push({ $limit: limit_query_content });
         }
 
-        if(Object.keys(sort_query_content).length > 0){
-            query_config.aggregate_array.push({ $sort: sort_query_content });
+        var query_config = {
+            table: db_ref.get_current_actor_table(),
+            aggregate_array: get_aggregate_array(match_query_content, additional_aggregate_stages)
         }
 
         db_interface.get(query_config, function(results){

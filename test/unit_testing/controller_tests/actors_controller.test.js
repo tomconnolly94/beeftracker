@@ -12,7 +12,7 @@ var globals = require('../globals.js');
 
 describe('Module: actors_controller', function () {
 
-    var actors_controller, db_interface, actor_example, callback_spy;
+    var actors_controller, db_interface, actor_example, callback_spy, index_of_sort_query, index_of_match_query, index_of_limit_query;
 
     before(function () {
         
@@ -55,6 +55,9 @@ describe('Module: actors_controller', function () {
         db_interface = require("../module_mocking/db_interface.mock.js");
         storage_interface = require("../module_mocking/storage_interface.mock.js");
         actors_controller = proxyquire("../../../server_files/controllers/actors_controller", {"../interfaces/db_interface.js": db_interface, "../interfaces/storage_interface.js": storage_interface});
+        index_of_sort_query = 2;
+        index_of_match_query = 0;
+        index_of_limit_query = 2;
     });
     
     before(function(){
@@ -144,7 +147,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query_dec, function(results){
             callback_spy();
-            var result = results[3]["$sort"];
+            var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_results_dec);
         });
         
@@ -161,7 +164,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query_inc, function(results){
             callback_spy();
-            var result = results[3]["$sort"];
+            var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_query_inc);
         });
         
@@ -184,7 +187,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query_dec, function(results){
             callback_spy();
-            var result = results[3]["$sort"];
+            var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_results_dec);
         });
         
@@ -201,7 +204,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query_inc, function(results){
             callback_spy();
-            var result = results[3]["$sort"];
+            var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_query_inc);
         });
 
@@ -224,7 +227,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query_dec, function(results){
             callback_spy();
-            var result = results[3]["$sort"];
+            var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_results_dec);
         });
         
@@ -241,7 +244,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query_inc, function(results){
             callback_spy();
-            var result = results[3]["$sort"];
+            var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_query_inc);
         });
         
@@ -269,7 +272,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query, function(results){
             callback_spy();
-            var result = results[0]["$match"];
+            var result = results[index_of_match_query]["$match"];
             assert.deepEqual(result, expected_results);
         });
         
@@ -299,7 +302,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query, function(results){
             callback_spy();
-            var result = results[0]["$match"];
+            var result = results[index_of_match_query]["$match"];
             assert.deepEqual(result, expected_results);
         });
         
@@ -322,7 +325,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query, function(results){
             callback_spy();
-            var result = results[1]["$limit"];
+            var result = results[index_of_limit_query]["$limit"];
             assert.deepEqual(result, expected_results);
         });
         

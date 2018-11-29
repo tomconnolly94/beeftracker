@@ -20,48 +20,35 @@ var event_projection = require("./events_controller.js").event_projection;
 
 module.exports = {
     
-    findEventsFromBeefChain: function(request, response, callback){
-        
-        //extract data
-        var beef_chain_id = request.params.beef_chain_id;
+    findEventsFromBeefChain: function(beef_chain_id, callback){
 
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-                
-                console.log(beef_chain_id)
-                var beef_chain_id_object = BSON.ObjectID.createFromHexString(beef_chain_id);
-                
-                console.log(beef_chain_id_object)
-                db.collection(db_ref.get_current_event_table()).aggregate([
-                    { $match: { beef_chain_ids: beef_chain_id_object } },
-                    { $unwind : "$aggressors"},
-                    { $lookup : {
-                        from: db_ref.get_current_actor_table(),
-                        localField: "aggressors",
-                        foreignField: "_id",
-                        as: "aggressors" 
-                    }},
-                    { $unwind : "$targets"},
-                    { $lookup : { 
-                        from: db_ref.get_current_actor_table(),
-                        localField: "targets",
-                        foreignField: "_id",
-                        as: "targets" 
-                    }},/*
-                    { $project: { event_projection } }*/
-                   ]).toArray(function(queryErr, docs) {
-                if(queryErr){ console.log(queryErr); }
-                else{
-                    if(docs && docs.length > 0){
-                        callback( docs );
-                    }
-                    else{
-                        callback({ failed: true, message: "Event not found." });
-                    }
-                }
-                });            
-            }
+        var query_config = {
+            table: db_ref.get_current_event_table(),
+            aggregate_array: [
+                { $match: { beef_chain_ids: BSON.ObjectID.createFromHexString(beef_chain_id) } },
+                { $unwind : "$aggressors"},
+                { $lookup : {
+                    from: db_ref.get_current_actor_table(),
+                    localField: "aggressors",
+                    foreignField: "_id",
+                    as: "aggressors" 
+                }},
+                { $unwind : "$targets"},
+                { $lookup : { 
+                    from: db_ref.get_current_actor_table(),
+                    localField: "targets",
+                    foreignField: "_id",
+                    as: "targets" 
+                }},/*
+                { $project: { event_projection } }*/
+            ]
+        };
+
+        db_interface.get(query_config, function(result){
+            callback(results);
+        },
+        function(error_object){
+            callback(error_object);
         });
     },
     

@@ -74,9 +74,9 @@ var compare_event_dates = function (a, b) {
     return b.event_date.valueOf() - a.event_date.valueOf();
 }
 
-var get_aggregate_array = function (match_query, additional_aggregate_stages) {
+var get_aggregate_array = function (match_query_content, additional_aggregate_stages) {
     var aggregate_array = [
-        { $match: match_query },
+        { $match: match_query_content },
         { $unwind: "$aggressors" },
         {
             $lookup: {
@@ -156,10 +156,10 @@ var get_aggregate_array = function (match_query, additional_aggregate_stages) {
         { $project: event_projection }
     ];
 
-    var initial_index = aggregate_array.length - 3;
+    var initial_index = aggregate_array.length - 4;
 
-    for (var i = initial_index; i < additional_aggregate_stages.length; i++) {
-        aggregate_array[i] = additional_aggregate_stages[i];
+    for (var i = initial_index; i - initial_index < additional_aggregate_stages.length; i++) {
+        aggregate_array.splice(i, 0, additional_aggregate_stages[i - initial_index]);
     }
     return aggregate_array;
 }
@@ -234,7 +234,7 @@ module.exports = {
             //deal with $sort queries
             var sort_field_name;
 
-            if (query_parameters.increasing_order == "name") { sort_field_name = "name"; }
+            if (query_parameters.increasing_order == "name" || query_parameters.decreasing_order == "name") { sort_field_name = "name"; }
             else if (query_parameters.increasing_order == "rating" || query_parameters.decreasing_order == "rating") { sort_field_name = "rating"; }
             else if (query_parameters.increasing_order == "popularity" || query_parameters.decreasing_order == "popularity") { sort_field_name = "hit_count.total"; }
             else if (query_parameters.increasing_order == "currently_trending" || query_parameters.decreasing_order == "currently_trending") { sort_field_name = "hit_counts.today"; }
@@ -247,8 +247,6 @@ module.exports = {
             else if (query_parameters.decreasing_order) {
                 sort_query_content[sort_field_name] = -1;
             }
-
-            sort_query_content = { $sort: sort_query_content };
 
             //deal with $match queries
             if (query_parameters.featured != null) { match_query_content = { featured: query_parameters.featured } }
@@ -281,9 +279,15 @@ module.exports = {
                     as: "beef_chain_ids.events"
                 }
             }*/
-            sort_query_content,
-            { $limit: limit_query_content },
         ];
+
+        if(Object.keys(sort_query_content).length > 0){
+            additional_aggregate_stages.push({ $sort: sort_query_content });
+        }
+
+        if(limit_query_content != 0){
+            additional_aggregate_stages.push({ $limit: limit_query_content });
+        }
 
         var aggregate_array = get_aggregate_array(match_query_content, additional_aggregate_stages);
 
@@ -322,9 +326,9 @@ module.exports = {
                 increment_hit_counts(result._id);
             }
         },
-            function (error_object) {
-                callback(error_object);
-            });
+        function (error_object) {
+            callback(error_object);
+        });
     },
 
     createEvent: function (event_data, event_files, callback) {
@@ -391,6 +395,9 @@ module.exports = {
 
                 db_interface.insert(event_insert, db_ref.get_current_event_table(), db_options, function (id) {
                     callback(id);
+                },
+                function(error_object){
+                    callback(error_object);
                 });
             });
         }
