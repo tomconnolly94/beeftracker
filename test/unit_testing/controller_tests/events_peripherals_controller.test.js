@@ -5,74 +5,102 @@ var chai = require('chai');
 var sinon = require("sinon");
 var assert = chai.assert;
 var BSON = require("bson");
-var globals = require("../globals.js")
+var globals = require("../globals.js");
 
-describe('Module: event_peripherals_controller', function () {
+//internal dependencies
+var db_ref = require("../../../server_files/config/db_config.js");
 
-    var event_peripherals_controller, db_interface, cookie_spy, response, callback_spy;
+describe('Module: events_peripherals_controller', function () {
+
+    var events_peripherals_controller, db_interface, cookie_spy, db_single_response_object, db_multi_response_object, callback_spy, db_get_callback_spy;
 
     before(function(){
+
+        //set timeout
+        this.timeout(7000);
+
         //db_interface stub
         db_interface = require("../module_mocking/db_interface.mock.js");
         hashing = require("../module_mocking/hashing.mock.js");
-        event_peripherals_controller = proxyquire("../../../server_files/controllers/event_peripherals_controller", { "../interfaces/db_interface.js": db_interface, "../tools/hashing.js": hashing });
-    });
-    
-    beforeEach(function () {
-        cookie_spy = sinon.spy();
-        response = { cookie: cookie_spy };
-        callback_spy = sinon.spy();
-    });
+        events_peripherals_controller = proxyquire("../../../server_files/controllers/events_peripherals_controller", { "../interfaces/db_interface.js": db_interface, "../tools/hashing.js": hashing });
 
-    it('findEventsFromBeefChain', function () {
-        
-        var db_get_callback_spy = sinon.spy();
+        db_single_response_object = [
+            {
+                event_id: globals.dummy_object_id,
+                aggressors: [
+                    globals.dummy_object_id,
+                    globals.dummy_object_id,
+                    globals.dummy_object_id,
+                    globals.dummy_object_id,
+                    globals.dummy_object_id,
+                ],
+                targets: [
+                    globals.dummy_object_id,
+                    globals.dummy_object_id,
+                    globals.dummy_object_id,
+                    globals.dummy_object_id,
+                    globals.dummy_object_id
+                ]
+            }
+        ];
+
+        db_multi_response_object = [
+            { event_id: globals.dummy_object_id },
+            { event_id: globals.dummy_object_id },
+            { event_id: globals.dummy_object_id },
+            { event_id: globals.dummy_object_id },
+            { event_id: globals.dummy_object_id },
+            { event_id: globals.dummy_object_id },
+            { event_id: globals.dummy_object_id }
+        ]
 
         db_interface.get = function(query_config, callback){
 
-            var return_object = [{
-                username: "username",
-                hashed_password: "hashed_password",
-                salt: "salt"
-            }];
-
-            db_get_callback_spy();
-            callback(return_object); 
+            db_get_callback_spy(); 
+            if(query_config.aggregate_array[0]["$match"].hasOwnProperty("$or")){
+                callback(db_multi_response_object);
+            }
+            else{
+                callback(db_single_response_object);
+            }
         };
+    });
+    
+    beforeEach(function () {
+        callback_spy = sinon.spy();
+        db_get_callback_spy = sinon.spy();
+    });
 
-        var headers = {
-            "x-forwarded-for": "192.168.0.1"
-        }
+    it('findEventsFromBeefChain', function () {
 
-        var auth_details = {
-            _id: globals.dummy_object_id,
-            username: "username",
-            admin: true,
-            password: "password"
-        }
-
-        authentication_controller.authenticateUser(auth_details, headers, response, function(result){
-            assert(result, {});
+        events_peripherals_controller.findEventsFromBeefChain(globals.dummy_object_id, function(result){
+            assert(db_multi_response_object, result);
             callback_spy();
         });
-        
-        assert.equal(cookie_spy.callCount, 2);
+    
+        assert(db_get_callback_spy.called);
         assert(callback_spy.called);
     });
 
     it('findEventsRelatedToEvent', function () {
         
-        authentication_controller.deauthenticateUser(response, callback_spy);
-        
-        assert.equal(cookie_spy.callCount, 2);
+        events_peripherals_controller.findEventsRelatedToEvent(globals.dummy_object_id, function(result){
+            assert(return_object, result);
+            callback_spy();
+        });
+    
+        assert(db_get_callback_spy.called);
         assert(callback_spy.called);
     });
 
     it('findEventsRelatedToActor', function () {
-        
-        authentication_controller.deauthenticateUser(response, callback_spy);
-        
-        assert.equal(cookie_spy.callCount, 2);
+
+        events_peripherals_controller.findEventsRelatedToActor(globals.dummy_object_id, function(result){
+            assert(db_multi_response_object, result);
+            callback_spy();
+        });
+    
+        assert(db_get_callback_spy.called);
         assert(callback_spy.called);
     });
 });
