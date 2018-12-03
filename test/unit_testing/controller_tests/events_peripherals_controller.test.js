@@ -84,13 +84,12 @@ describe('Module: events_peripherals_controller', function () {
 
     it('findEventsRelatedToEvent', function () {
         
-        events_peripherals_controller.findEventsRelatedToEvent(globals.dummy_object_id, function(result){
-            assert(return_object, result);
-            callback_spy();
+        events_peripherals_controller.findEventsRelatedToEvent(globals.dummy_object_id, function(results){
+            assert.equal(db_multi_response_object[0], results[0]);
+            assert.equal(12, results.length);
+            assert(db_get_callback_spy.called);
         });
     
-        assert(db_get_callback_spy.called);
-        assert(callback_spy.called);
     });
 
     it('findEventsRelatedToActor', function () {

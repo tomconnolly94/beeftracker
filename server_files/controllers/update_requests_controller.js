@@ -38,6 +38,22 @@ module.exports = {
         }
                 
         var insert = function(insert_object, incoming_data){
+
+            var query_config = {
+                table: db_ref.get_current_event_table(),
+                aggregate_array: [
+                    {
+                        $match: { _id: insert_object._id }
+                    }
+                ]
+            };
+
+            db_interface,get(query_config, function(){
+
+            },
+            function(error_object){
+                callback(error_object);
+            });
             
             db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
                 if(err){ console.log(err); }
@@ -114,5 +130,4 @@ module.exports = {
             insert(insert_object, incoming_data);
         }
     }
-    
 }

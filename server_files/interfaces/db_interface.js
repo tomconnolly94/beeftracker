@@ -165,6 +165,7 @@ module.exports = {
     delete: function(delete_config, success_callback, failure_callback){
         
         var table = delete_config.table;
+        var delete_multiple_records = delete_config.delete_multiple_records; //if false, deleted item is returned in callback parameter, if true, multiple items can be deleted with the single delete query
         var match_query = delete_config.match_query;
         
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
@@ -173,17 +174,33 @@ module.exports = {
                 failure_callback({ failed: true, module: "db_interface", function: "delete", message: "Failed at db connection"});
             }
             else{
-                //standard query to match an event and resolve aggressor and targets references
-                db.collection(table).findOneAndDelete(match_query).toArray(function(err, results) {
-                    //handle error
-                    if(err){
-                        console.log(err);
-                        failure_callback({ failed: true, module: "db_interface", function: "delete", message: "Failed at db query"});
-                    }
-                    else{
-                        success_callback(results[0]);
-                    }
-                });
+                if(delete_multiple_records){
+
+                    //standard query to match an event and resolve aggressor and targets references
+                    db.collection(table).remove(match_query).toArray(function(err) {
+                        //handle error
+                        if(err){
+                            console.log(err);
+                            failure_callback({ failed: true, module: "db_interface", function: "delete", message: "Failed at db query"});
+                        }
+                        else{
+                            success_callback({});
+                        }
+                    });
+                }
+                else{
+                    //standard query to match an event and resolve aggressor and targets references
+                    db.collection(table).findOneAndDelete(match_query).toArray(function(err, results) {
+                        //handle error
+                        if(err){
+                            console.log(err);
+                            failure_callback({ failed: true, module: "db_interface", function: "delete", message: "Failed at db query"});
+                        }
+                        else{
+                            success_callback(results[0]);
+                        }
+                    });
+                }
             }
         });
     }    

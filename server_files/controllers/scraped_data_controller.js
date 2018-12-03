@@ -21,32 +21,33 @@ module.exports = {
     findScrapedEventData: function(query_parameters, callback){
         
         var limit = 10;
-        
-        if(query_parameters.limit) limit = query_parameters.limit;
+        var sort_field = { date_added: -1 };
 
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-                db.collection(db_ref.get_scraped_events_dump_table()).aggregate([
-                    { $lookup: {
-                        from: db_ref.get_event_classification_table(),
-                        localField: "title",
-                        foreignField: "title",
-                        as: "classification_obj"
-                    }}
-                ]).limit(limit).toArray(function(err, docs) {
-                    if(err){ console.log(err); }
-                    else{
-                        if(docs){
-                            //console.log(docs)
-                            callback( docs );
-                        }
-                        else{
-                            callback({ failed: true, message: "Events not found." });
-                        }
-                    }
-                });   
-            }
+        if(query_parameters.limit) limit = query_parameters.limit;
+        if(query_parameters.sort_field) {
+            sort_field = {};
+            sort_field[query_parameters.sort_field] = -1;
+        }
+
+        var query_config = {
+            table: db_ref.get_scraped_events_dump_table(),
+            aggregate_array: [
+                { $lookup: {
+                    from: db_ref.get_event_classification_table(),
+                    localField: "title",
+                    foreignField: "title",
+                    as: "classification_obj"
+                }},
+                { $sort: sort_field },
+                { $limit: limit }
+            ]
+        };
+
+        db_interface.get(query_config, function(results){
+            callback(results);
+        },
+        function(error_object){
+            callback(error_object);
         });
     },
     
@@ -57,18 +58,18 @@ module.exports = {
             console.log(id_array[i]);
             id_object_array.push(BSON.ObjectID.createFromHexString(id_array[i]))
         }
-        
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-                
-                db.collection(db_ref.get_scraped_events_dump_table()).remove({ _id: { $in: id_object_array }}, function(err, docs) {
-                    if(err){ console.log(err); }
-                    else{
-                        callback({});
-                    }
-                });   
-            }
+
+        var delete_config = {
+            table: db_ref.get_scraped_events_dump_table(),
+            delete_multiple_records: true,
+            match_query: { _id: { $in: id_object_array } }
+        };
+
+        db_interface.delete(delete_config, function(results){
+            callback({});
+        },
+        function(error_object){
+            callback(error_object);
         });
     },
     
@@ -111,7 +112,7 @@ module.exports = {
             }
         }
 
-        var pyshell = PythonShell.run('scrape_actor.py', options, function (err, result) {
+        PythonShell.run('scrape_actor.py', options, function (err, result) {
             if(err){ console.log(err) }
             
             if(!result || !result[0] || result[0] == "404 error\r" || result[0] == "404 error"){

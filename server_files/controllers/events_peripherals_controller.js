@@ -67,21 +67,23 @@ module.exports = {
         db_interface.get(query_config, function(results){
             
             var event = results[0];
-            var actors = event.aggressors.slice(0, 3).concat(event.targets.slice(0, 3));
-            var event_limit_per_actor = Math.ceil(10 / actors.length);
             var events = [];
-            var loop_count = 0;
             var actor_query_promises = [];
+
+            var actor_limit = 3;
+
+            var actors = event.aggressors.slice(0, actor_limit).concat(event.targets.slice(0, actor_limit));
+            var event_limit_per_actor = Math.ceil(10 / actors.length);
 
             for(var actor_index = 0; actor_index < actors.length; actor_index++){
                 actor_query_promises.push(
                     new Promise(function(resolve, reject){
-                        module.exports.findEventsRelatedToActor(actor_id, function(results){
+                        module.exports.findEventsRelatedToActor(actors[actor_index], function(results){
                             if(results.failed){
-                                reject(data);
+                                reject(results);
                             }
                             else{
-                                resolve(data);
+                                resolve(results);
                             }
                         });
                     })
@@ -91,7 +93,7 @@ module.exports = {
             Promise.all(actor_query_promises).then(function(values) {
                 
                 for(var i = 0; i < values.length; i++){
-                    events.concat(values[i].slice(0, event_limit_per_actor));
+                    events = events.concat(values[i].slice(0, event_limit_per_actor));
                 }
 
                 callback(events);
@@ -100,27 +102,6 @@ module.exports = {
                 console.log(error);
                 callback(error);
             });
-            
-            /*loop(actors, function(actor_id, next){
-                module.exports.findEventsRelatedToActor(actor_id, function(results){
-
-                    if(!results.failed){
-                        events.concat(results.slice(0, event_limit_per_actor));
-                    }
-                    
-                    loop_count++;
-                    
-                    if(loop_count == actors.length){
-                        next(null, loop.END_LOOP);
-                    }
-                    else{
-                        next();
-                    }
-                });
-                                                
-            }, function(){
-                callback( events );
-            });*/
         });
     },
     
