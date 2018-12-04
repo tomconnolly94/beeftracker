@@ -48,59 +48,109 @@ module.exports = {
                 ]
             };
 
-            db_interface,get(query_config, function(){
+            db_interface,get(query_config, function(results){
+                var diffs = [];
+                var existing_event_record = results[0];
 
+                for(var i = 0; i < Object.keys(insert_object).length; i++){
+                    
+                    var field_name = Object.keys(insert_object)[i];
+                    
+                    if(field_name != "_id"){
+                        
+                        if(existing_event_record[field_name] && insert_object[field_name]){
+                            diffs.push(jsdiff.diffWords(existing_event_record[field_name], insert_object[field_name]));
+                        }
+                    }
+                }
+
+                //create contribution record
+                var new_contribution = EventContribution({
+                    user: incoming_data.user_id,
+                    date_of_submission: new Date(),
+                    contribution_details: diffs
+                });
+
+                var db_options = {
+                    send_email_notification: true,
+                    email_notification_text: "Update request",
+                    add_to_scraped_confirmed_table: false
+                };
+
+                var insert_config = {
+                    table: db_ref.get_event_update_requests_table(),
+                    record: {
+                        update_data: insert_object,
+                        existing_event_id: incoming_data.existing_event_id,
+                        user_id: incoming_data.user_id
+                    },
+                    options: db_options
+                };
+                
+                db_interface.insert(insert_config, function(result){
+                    callback(result);
+                });
+
+                // var insert_wrapper = {
+                //     update_data: insert_object,
+                //     existing_event_id: incoming_data.existing_event_id,
+                //     user_id: incoming_data.user_id
+                // };
+
+                // db_interface.insert(insert_wrapper, db_ref.get_event_update_requests_table(), db_options, function(id){
+                //     callback(id);
+                // });
             },
             function(error_object){
                 callback(error_object);
             });
             
-            db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-                if(err){ console.log(err); }
-                else{
-                    db.collection(db_ref.get_current_event_table()).find({ _id: insert_object._id }).toArray(function(err, existing_event_record){
-                        if(err){ console.log(err); }
-                        else{
-                            var diffs = [];
+            // db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
+            //     if(err){ console.log(err); }
+            //     else{
+            //         db.collection(db_ref.get_current_event_table()).find({ _id: insert_object._id }).toArray(function(err, existing_event_record){
+            //             if(err){ console.log(err); }
+            //             else{
+            //                 var diffs = [];
 
-                            for(var i = 0; i < Object.keys(insert_object).length; i++){
+            //                 for(var i = 0; i < Object.keys(insert_object).length; i++){
                                 
-                                var field_name = Object.keys(insert_object)[i];
+            //                     var field_name = Object.keys(insert_object)[i];
                                 
-                                if(field_name != "_id"){
+            //                     if(field_name != "_id"){
                                     
-                                    if(existing_event_record[field_name] && insert_object[field_name]){
-                                        diffs.push(jsdiff.diffWords(existing_event_record[field_name], insert_object[field_name]));
-                                    }
-                                }
-                            }
+            //                         if(existing_event_record[field_name] && insert_object[field_name]){
+            //                             diffs.push(jsdiff.diffWords(existing_event_record[field_name], insert_object[field_name]));
+            //                         }
+            //                     }
+            //                 }
 
-                            //create contribution record
-                            var new_contribution = EventContribution({
-                                user: incoming_data.user_id,
-                                date_of_submission: new Date(),
-                                contribution_details: diffs
-                            });
+            //                 //create contribution record
+            //                 var new_contribution = EventContribution({
+            //                     user: incoming_data.user_id,
+            //                     date_of_submission: new Date(),
+            //                     contribution_details: diffs
+            //                 });
 
-                            var db_options = {
-                                send_email_notification: true,
-                                email_notification_text: "Update request",
-                                add_to_scraped_confirmed_table: false
-                            };
+            //                 var db_options = {
+            //                     send_email_notification: true,
+            //                     email_notification_text: "Update request",
+            //                     add_to_scraped_confirmed_table: false
+            //                 };
                             
-                            var insert_wrapper = {
-                                update_data: insert_object,
-                                existing_event_id: incoming_data.existing_event_id,
-                                user_id: incoming_data.user_id
-                            }
+            //                 var insert_wrapper = {
+            //                     update_data: insert_object,
+            //                     existing_event_id: incoming_data.existing_event_id,
+            //                     user_id: incoming_data.user_id
+            //                 }
 
-                            db_interface.insert(insert_wrapper, db_ref.get_event_update_requests_table(), db_options, function(id){
-                                callback(id);
-                            });
-                        }
-                    });
-                }
-            });
+            //                 db_interface.insert(insert_wrapper, db_ref.get_event_update_requests_table(), db_options, function(id){
+            //                     callback(id);
+            //                 });
+            //             }
+            //         });
+            //     }
+            // });
         }
         
         if(insert_object.gallery_items && insert_object.gallery_items.length > 0){
