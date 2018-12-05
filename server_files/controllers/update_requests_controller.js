@@ -22,18 +22,20 @@ var EventContribution = require("../schemas/event_contribution.schema.js").model
 
 module.exports = {
     
-    createUpdateRequest: function(incoming_data, files, callback){
+    createUpdateRequest: function(update_request, files, callback){
         
-        var submission_data = incoming_data.data;
+        var object_data = update_request.data;
         var object_type;
         var insert_object;
         
-        if(incoming_data.event){
-            insert_object = format_event_data(submission_data);
+        if(update_request.event){
+            insert_object = format_event_data(object_data);
+            insert_object._id = update_request.existing_event_id;
             object_type = "events";
         }
-        else if(incoming_data.actor){
-            insert_object = format_actor_data(submission_data);
+        else if(update_request.actor){
+            insert_object = format_actor_data(object_data);
+            insert_object._id = update_request.existing_actor_id;
             object_type = "actors";
         }
                 
@@ -48,7 +50,7 @@ module.exports = {
                 ]
             };
 
-            db_interface,get(query_config, function(results){
+            db_interface.get(query_config, function(results){
                 var diffs = [];
                 var existing_event_record = results[0];
 
@@ -57,7 +59,6 @@ module.exports = {
                     var field_name = Object.keys(insert_object)[i];
                     
                     if(field_name != "_id"){
-                        
                         if(existing_event_record[field_name] && insert_object[field_name]){
                             diffs.push(jsdiff.diffWords(existing_event_record[field_name], insert_object[field_name]));
                         }
@@ -90,67 +91,10 @@ module.exports = {
                 db_interface.insert(insert_config, function(result){
                     callback(result);
                 });
-
-                // var insert_wrapper = {
-                //     update_data: insert_object,
-                //     existing_event_id: incoming_data.existing_event_id,
-                //     user_id: incoming_data.user_id
-                // };
-
-                // db_interface.insert(insert_wrapper, db_ref.get_event_update_requests_table(), db_options, function(id){
-                //     callback(id);
-                // });
             },
             function(error_object){
                 callback(error_object);
             });
-            
-            // db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            //     if(err){ console.log(err); }
-            //     else{
-            //         db.collection(db_ref.get_current_event_table()).find({ _id: insert_object._id }).toArray(function(err, existing_event_record){
-            //             if(err){ console.log(err); }
-            //             else{
-            //                 var diffs = [];
-
-            //                 for(var i = 0; i < Object.keys(insert_object).length; i++){
-                                
-            //                     var field_name = Object.keys(insert_object)[i];
-                                
-            //                     if(field_name != "_id"){
-                                    
-            //                         if(existing_event_record[field_name] && insert_object[field_name]){
-            //                             diffs.push(jsdiff.diffWords(existing_event_record[field_name], insert_object[field_name]));
-            //                         }
-            //                     }
-            //                 }
-
-            //                 //create contribution record
-            //                 var new_contribution = EventContribution({
-            //                     user: incoming_data.user_id,
-            //                     date_of_submission: new Date(),
-            //                     contribution_details: diffs
-            //                 });
-
-            //                 var db_options = {
-            //                     send_email_notification: true,
-            //                     email_notification_text: "Update request",
-            //                     add_to_scraped_confirmed_table: false
-            //                 };
-                            
-            //                 var insert_wrapper = {
-            //                     update_data: insert_object,
-            //                     existing_event_id: incoming_data.existing_event_id,
-            //                     user_id: incoming_data.user_id
-            //                 }
-
-            //                 db_interface.insert(insert_wrapper, db_ref.get_event_update_requests_table(), db_options, function(id){
-            //                     callback(id);
-            //                 });
-            //             }
-            //         });
-            //     }
-            // });
         }
         
         if(insert_object.gallery_items && insert_object.gallery_items.length > 0){
@@ -158,7 +102,13 @@ module.exports = {
             //find gallery items that need their embedding links generated
             insert_object.gallery_items = format_embeddable_items(insert_object.gallery_items, files);
 
-            storage_interface.async_loop_upload_items(insert_object.gallery_items, storage_ref.get_update_requests_folder() + "/" + object_type, files, function(items){
+            var upload_config = {
+                record_type: storage_ref.get_update_requests_folder() + "/" + object_type,
+                item_data: insert_object.gallery_items,
+                files: files
+            };
+
+            storage_interface.upload(upload_config, function(items){
 
                 insert_object.gallery_items = items;
 
@@ -173,11 +123,11 @@ module.exports = {
                         insert_object.img_title_thumbnail = insert_object.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
                     }
                 }
-                insert(insert_object, incoming_data);
+                insert(insert_object, update_request);
             });
         }
         else{
-            insert(insert_object, incoming_data);
+            insert(insert_object, update_request);
         }
     }
 }

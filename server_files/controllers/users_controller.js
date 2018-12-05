@@ -553,53 +553,53 @@ module.exports = {
         
     updateUserImage: function(user_id, new_gallery_item, new_file, callback){
 
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-                var user_id_object = BSON.ObjectID.createFromHexString(user_id);
-                
-                
-                console.log("#############");
-                console.log(new_gallery_item);
-                console.log(new_file);
-                
-                db.collection(db_ref.get_user_details_table()).find({ _id: user_id_object }).toArray(function(queryErr, docs) {
-                    if(queryErr){ console.log(queryErr); }
-                    else{
-                        
-                        console.log(docs);
-                        
-                        var existing_user = docs[0];
-                        var existing_user_img = docs[0].img_title;
-                        
-                        storage_interface.upload_image(false, storage_ref.get_user_images_folder(), new_gallery_item.link, new_file.buffer, false, function(img_title){
-                            db.collection(db_ref.get_user_details_table()).update({ _id: user_id_object }, { $set: { img_title: img_title } }, function(queryErr, docs) {
-                                if(queryErr){ console.log(queryErr); }
-                                else{
+        var query_config = {
+            table: db_ref.get_user_details_table(),
+            aggregate_array: [
+                {
+                    $match: { _id: user_id_object }
+                }
+            ]
+        };
 
-                                    console.log(docs);
-                                    console.log("UPDATED");
-                                    callback({});
-                                }
-                            });
-                        });
-                        
-                        if(existing_user_img != "default"){
-                            //delete old image
-                            storage_interface.delete_image(storage_ref.get_user_images_folder(), existing_user_img, function(){
-                                console.log("old user image deleted");
-                            })
-                        }
-                        /*if(docs[0]){
-                            callback( docs[0] );
-                        }
-                        else{
-                            callback({ failed: true, message: "Actor not found." });
-                        }*/
-                    }
-                });            
+        db_interface.get(query_config, function(results){
+
+            var existing_user = results[0];
+            var existing_user_img = results[0].img_title;
+
+            var upload_config = {
+                record_type: storage_ref.get_user_images_folder(),
+                item_data: [ new_gallery_item.link ],
+                files: [ new_file.buffer ]
+            };
+            
+            storage_interface.upload(upload_config, function(item_data){
+            //storage_interface.upload_image(false, storage_ref.get_user_images_folder(), new_gallery_item.link, new_file.buffer, false, function(img_title){
+
+                var update_config = {
+                    table: db_ref.get_user_details_table(),
+                    existing_object_id: user_id,
+                    update_clause: { $set: { img_title: item_data[0].img_title } },
+                    options: {}
+                };
+
+                db_interface.update(update_config, function(results){
+                    callback({});
+                },
+                function(error_object){
+                    callback(error_object);
+                });
+            });
+            
+            if(existing_user_img != "default"){
+                //delete old image
+                storage_interface.delete_image(storage_ref.get_user_images_folder(), existing_user_img, function(){
+                    console.log("old user image deleted");
+                })
             }
+        },
+        function(error_object){
+            callback(error_object);
         });
     },
-    
 }

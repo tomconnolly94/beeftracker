@@ -8,9 +8,9 @@ var globals = require("../globals.js");
 //internal dependencies
 var db_ref = require("../../../server_files/config/db_config.js");
 
-describe('Module: update_requests_controller', function () {
+describe('Module: users_controller', function () {
 
-    var update_requests_controller, db_interface, callback_spy, db_get_callback_spy, db_insert_callback_spy, storage_upload_callback_spy;
+    var users_controller, db_interface, callback_spy, db_get_callback_spy, db_insert_callback_spy, storage_upload_callback_spy;
 
     before(function(){
 

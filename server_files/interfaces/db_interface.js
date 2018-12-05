@@ -105,8 +105,8 @@ module.exports = {
     
     insert: function(insert_config, success_callback, failure_callback){
         
-        var record = insert_config.record;
         var table = insert_config.table;
+        var record = insert_config.record;
         var options = insert_config.options;
         
         db_ref.get_db_object().connect(db_url, function(err, db) {
@@ -133,10 +133,10 @@ module.exports = {
 
     update: function(update_config, success_callback, failure_callback){
     
-        var update_clause = update_config.update_clause;
         var table = update_config.table;
-        var options = update_config.options;
         var existing_object_id = update_config.existing_object_id;
+        var update_clause = update_config.update_clause;
+        var options = update_config.options;
         
         db_ref.get_db_object().connect(db_url, function(err, db) {
             if(err){ 

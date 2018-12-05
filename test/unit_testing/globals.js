@@ -1,6 +1,8 @@
 
+var dummy_object_id = "5a69027a01e599f97e278f73";
+
 module.exports = {
-    dummy_object_id: "5a69027a01e599f97e278f73",
+    dummy_object_id: dummy_object_id,
 
     compare_object_fields: function(object_1, object_2){
         var object_1_keys = Object.keys(object_1);
@@ -52,5 +54,50 @@ module.exports = {
             }
         }
         return true;
+    },
+
+    event_example: {
+        title: "title",
+        aggressors: [ dummy_object_id ],
+        targets: [ dummy_object_id, dummy_object_id ],
+        date: new Date(),
+        description: "description",
+        links: [
+            {
+                "title" : "Spotify",
+                "url" : "https://spotify-link"
+            },
+            {
+                "title" : "Genius",
+                "url" : "https://genius-link"
+            }
+        ],
+        gallery_items: [
+            {
+                "media_type" : "youtube_embed",
+                "link" : "https://www.youtube.com/embed/0ePQKD9iBfU",
+                "main_graphic" : true,
+                "file" : null,
+                "file_name" : null
+            },
+            {
+                "media_type" : "image",
+                "link" : "image",
+                "main_graphic" : false,
+                "file" : null,
+                "file_name" : "image"
+            }
+        ],
+        categories: [
+            1,
+            4
+        ],
+        data_sources: [
+            "data_source_1",
+            "data_source_2",
+        ],
+        record_origin: "record_origin",
+        tags: [ "tag_1", "tag_2"],
+        user_id: dummy_object_id
     }
 }

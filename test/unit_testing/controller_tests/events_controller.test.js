@@ -1,17 +1,12 @@
 //external dependencies
 var proxyquire = require("proxyquire");
-var mocha = require('mocha');
 var chai = require('chai');
 var sinon = require("sinon");
 var assert = chai.assert;
 var expect = chai.expect;
-var BSON = require("bson");
 
 //internal dependencies
 var db_ref = require("../../../server_files/config/db_config");
-
-//objects
-var Event = require('../../../server_files/schemas/event.schema');
 var globals = require('../globals.js');
 
 describe('Module: event_controller', function () {
@@ -26,50 +21,7 @@ describe('Module: event_controller', function () {
         db_interface = require("../module_mocking/db_interface.mock.js");
         events_controller = proxyquire("../../../server_files/controllers/events_controller", { "../interfaces/db_interface.js": db_interface });
 
-        event_example = {
-            title: "title",
-            aggressors: [ globals.dummy_object_id ],
-            targets: [ globals.dummy_object_id, globals.dummy_object_id ],
-            date: new Date(),
-            description: "description",
-            links: [
-                {
-                    "title" : "Spotify",
-                    "url" : "https://spotify-link"
-                },
-                {
-                    "title" : "Genius",
-                    "url" : "https://genius-link"
-                }
-            ],
-            gallery_items: [
-                {
-                    "media_type" : "youtube_embed",
-                    "link" : "https://www.youtube.com/embed/0ePQKD9iBfU",
-                    "main_graphic" : true,
-                    "file" : null,
-                    "file_name" : null
-                },
-                {
-                    "media_type" : "image",
-                    "link" : "image",
-                    "main_graphic" : false,
-                    "file" : null,
-                    "file_name" : "image"
-                }
-            ],
-            categories: [
-                1,
-                4
-            ],
-            data_sources: [
-                "data_source_1",
-                "data_source_2",
-            ],
-            record_origin: "record_origin",
-            tags: [ "tag_1", "tag_2"],
-            user_id: globals.dummy_object_id
-        };
+        event_example = globals.event_example;
 
         beef_chain_ids = [
             {
