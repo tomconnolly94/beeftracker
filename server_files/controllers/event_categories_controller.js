@@ -1,9 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Module: 
+// Module: event_categories_controller
 // Author: Tom Connolly
-// Description: 
-// Testing script:
+// Description: Module to handling accessing a list of titles, at least one of which is used to 
+// classify every single event in the bftr db
+// Testing script: test/unit_testing/controller_tests/event_categories_controller.test.js
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -37,7 +38,6 @@ module.exports = {
         });
     },
     
-
     createEventCategory: function(event_category_data, callback){
 
         var count_title = "event_category_count";

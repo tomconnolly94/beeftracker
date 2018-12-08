@@ -6,9 +6,11 @@ var sinon = require("sinon");
 var assert = chai.assert;
 var BSON = require("bson");
 
+//internal dependencies
+var globals = require('../testing_globals.js');
+
 //objects
 var Comment = require('../../../server_files/schemas/comment.schema');
-var globals = require('../globals.js');
 
 
 describe('Module: comments_controller', function () {

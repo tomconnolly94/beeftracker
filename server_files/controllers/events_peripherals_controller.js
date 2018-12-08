@@ -1,9 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Module: 
+// Module: event_peripherals_controller
 // Author: Tom Connolly
-// Description: 
-// Testing script:
+// Description: Module to store extra operations that help encapsulate repeated operations that are
+// required for event objects but are not part of core 'event' functionality
+// Testing script: test/unit_testing/controller_tests/event_peripherals_controller.test.js
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

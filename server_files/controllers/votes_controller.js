@@ -1,9 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Module: 
+// Module: votes_controller
 // Author: Tom Connolly
-// Description: 
-// Testing script:
+// Description: Module to handle updating event and user objects when a user votes up or down on an 
+// event
+// Testing script: test/unit_testing/controller_tests/votes_controller.test.js
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -13,18 +14,22 @@ var BSON = require('bson');
 //internal dependencies
 var db_ref = require("../config/db_config.js");
 var db_interface = require("../interfaces/db_interface.js");
+var logger = require("../tools/logging");
 
 function add_vote_to_user_record(db, event_id, user_id){
-    
-    var user_id_object = BSON.ObjectID.createFromHexString(user_id);
-                                                        
-    //standard query to match an event and resolve aggressor and targets references
-    db.collection(db_ref.get_user_details_table()).update({ _id: user_id_object }, { $push: { voted_on_beef_ids : event_id }}, function(err, docs) {
-        //handle error
-        if(err) { console.log(err);}
-        else{
-            console.log(docs);
-        }
+
+    var update_config = {
+        table: db_ref.get_user_details_table(),
+        existing_object_id: user_id,
+        update_clause: { $push: { voted_on_beef_ids : event_id }},
+        options: {}
+    };
+
+    db_interface.update(update_config, function(result){
+        logger.submit_log(logger.LOG_TYPE.SUCCESS, "votes_controller", "Updated field 'voted_on_beef_ids' for user: " + user_id + " event: " + event_id);
+    },
+    function(error_object){
+        logger.submit_log(logger.LOG_TYPE.ERROR, "votes_controller", "Attempt to update 'voted_on_beef_ids' field, to add " + event_id + " for user: " + user_id + " failed.");
     });
 }
 
@@ -32,44 +37,44 @@ function add_vote_to_user_record(db, event_id, user_id){
 module.exports = {
     
     addVoteToEvent: function(event_id, vote_direction, user_id, callback){
+                        
+        var update_clause = {};
         
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-                var event_id_object = BSON.ObjectID.createFromHexString(event_id);
-                
-                var update_query = {};
-                
-                if(vote_direction == 1){
-                    update_query = {
-                        $inc: {
-                            "votes.upvotes": 1
-                        }
-                    }
+        if(vote_direction == 1){
+            update_clause = {
+                $inc: {
+                    "votes.upvotes": 1
                 }
-                else if(vote_direction == 0){
-                    update_query = {
-                        $inc: {
-                            "votes.downvotes": 1
-                        }
-                    }
-                }
-                else{
-                    callback({ failed: true, message: "vote_direction is invalid."})
-                }
-                
-                //standard query to match an event and resolve aggressor and targets references
-                db.collection(db_ref.get_current_event_table()).update({ _id: event_id_object }, update_query, function(err, docs) {
-                    //handle error
-                    if(err) { console.log(err);}
-                    else{
-                        callback(docs);
-                        if(user_id){
-                            add_vote_to_user_record(db, event_id, user_id);
-                        }
-                    }
-                });
             }
+        }
+        else if(vote_direction == 0){
+            update_clause = {
+                $inc: {
+                    "votes.downvotes": 1
+                }
+            }
+        }
+        else{
+            callback({ failed: true, message: "vote_direction is invalid."})
+        }
+
+        var update_config = {
+            table: db_ref.get_current_event_table(),
+            existing_object_id: event_id,
+            update_clause: update_clause,
+            options: {}
+        };
+        
+        db_interface.update(update_config, function(result){
+
+            callback(result);
+
+            if(user_id){
+                add_vote_to_user_record(event_id, user_id);
+            }
+        },
+        function(error_object){
+            callback(error_object);
         });
     }
 }

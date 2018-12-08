@@ -1,9 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Module: 
+// Module: contact_requests_controller
 // Author: Tom Connolly
-// Description: 
-// Testing script:
+// Description: Module to handle finding and storing data concerning contact attempts from either 
+// registered or unregistered users regarding more information, complaints or queries about the 
+// site
+// Testing script: test/unit_testing/controller_tests/contact_requests_controller.test.js
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

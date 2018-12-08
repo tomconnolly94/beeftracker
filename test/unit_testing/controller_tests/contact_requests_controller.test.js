@@ -8,10 +8,10 @@ var BSON = require("bson");
 
 //internal dependencies
 var db_ref = require("../../../server_files/config/db_config");
+var globals = require('../testing_globals.js');
 
 //objects
 var ContactRequest = require('../../../server_files/schemas/contact_request.schema').model;
-var globals = require('../globals.js');
 
 
 describe('Module: contact_requests_controller', function () {

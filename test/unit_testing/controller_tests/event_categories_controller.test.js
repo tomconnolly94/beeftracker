@@ -8,10 +8,10 @@ var BSON = require("bson");
 
 //internal dependencies
 var db_ref = require("../../../server_files/config/db_config");
+var globals = require('../testing_globals.js');
 
 //objects
 var EventCategory = require('../../../server_files/schemas/event_category.schema');
-var globals = require('../globals.js');
 
 describe('Module: event_categories_controller', function () {
 

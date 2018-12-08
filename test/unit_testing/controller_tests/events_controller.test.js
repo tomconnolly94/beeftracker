@@ -7,7 +7,7 @@ var expect = chai.expect;
 
 //internal dependencies
 var db_ref = require("../../../server_files/config/db_config");
-var globals = require('../globals.js');
+var globals = require('../testing_globals.js');
 
 describe('Module: event_controller', function () {
 

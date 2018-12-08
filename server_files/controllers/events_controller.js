@@ -1,11 +1,18 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Module: 
+// Module: events_controller
 // Author: Tom Connolly
-// Description: 
-// Testing script:
+// Description: Module to handle CRUD operations on event objects in the db, adding them to 
+// beef_chains wherer appropriate and storing all metadata accurately.
+// Testing script: test/unit_testing/controller_tests/events_controller.test.js
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//TODO: 08/02/2018
+//refactor delete function
+//write test for delete function
+//refactor update function (pseudo code the algorithm and clearly define expected input and expected behaviour, very unclear idea at the moment)
+//write test for update function
 
 //external dependencies
 var loop = require("async-looper");
@@ -45,16 +52,6 @@ var event_projection = {
     "votes": 1,
     "rating": { $ceil: { $multiply: [5, { $divide: ["$votes.upvotes", { $add: ["$votes.upvotes", "$votes.downvotes"] }] }] } }
 };
-
-var check_end_or_next = function (event, item, next) {
-    //if last item, exit loop, else carry on to next iteration
-    if (event.gallery_items[event.gallery_items.length - 1].link == item.link) {
-        next(null, loop.END_LOOP);
-    }
-    else {
-        next();
-    }
-}
 
 var increment_hit_counts = function (event_id) {
 

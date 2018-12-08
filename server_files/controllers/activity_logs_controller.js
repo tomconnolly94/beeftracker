@@ -3,7 +3,7 @@
 // Module: activity_logs_controller
 // Author: Tom Connolly
 // Description: Controller module to take care of accessing activity logs from the db
-// Testing script: /testing/unit_testing/controller_tests/activity_logs_controller.test.js
+// Testing script: test/unit_testing/controller_tests/activity_logs_controller.test.js
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

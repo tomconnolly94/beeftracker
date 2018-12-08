@@ -1,9 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Module: 
+// Module: scraped_data_controller
 // Author: Tom Connolly
-// Description: 
-// Testing script:
+// Description: Module to handle activity regarding scraping data from existing resources on the 
+// internet. Allows accessing and deletion of pre-scraped events alongside triggering the real-time
+// scraping of actor data from wikipedia
+// Testing script: test/unit_testing/controller_tests/scraped_data_controller.test.js
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

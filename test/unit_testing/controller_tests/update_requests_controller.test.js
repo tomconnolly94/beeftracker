@@ -3,10 +3,10 @@ var proxyquire = require("proxyquire");
 var chai = require('chai');
 var sinon = require("sinon");
 var assert = chai.assert;
-var globals = require("../globals.js");
 
 //internal dependencies
 var db_ref = require("../../../server_files/config/db_config.js");
+var globals = require("../testing_globals.js");
 
 describe('Module: update_requests_controller', function () {
 

@@ -1,9 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Module: 
+// Module: update_requests_controller
 // Author: Tom Connolly
-// Description: 
-// Testing script:
+// Description: Module to handle requests made by registered users to update the data on an currently 
+// active event or actor page.
+// Testing script: test/unit_testing/controller_tests/update_requests_controller.test.js
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

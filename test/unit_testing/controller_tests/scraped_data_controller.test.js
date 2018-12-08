@@ -5,10 +5,10 @@ var chai = require('chai');
 var sinon = require("sinon");
 var assert = chai.assert;
 var BSON = require("bson");
-var globals = require("../globals.js");
 
 //internal dependencies
 var db_ref = require("../../../server_files/config/db_config.js");
+var globals = require("../testing_globals.js");
 
 describe('Module: scraped_data_controller', function () {
 

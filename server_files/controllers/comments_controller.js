@@ -1,9 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Module: 
+// Module: comments_controller
 // Author: Tom Connolly
-// Description: 
-// Testing script:
+// Description: Module to handle operations in creating, deleting and finding various comments made 
+// on actors, beef events or chains, by users. 
+// Testing script: test/unit_testing/controller_tests/comments_controller.test.js
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

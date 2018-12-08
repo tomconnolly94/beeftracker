@@ -1,9 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Module: 
+// Module: users_controller
 // Author: Tom Connolly
-// Description: 
-// Testing script:
+// Description: Module to handle CRUD operations on user objects in the DB, also responsible for 
+// password reset requests for users and updating various data fields (like viewed_beef_events)
+// Testing script: test/unit_testing/controller_tests/users_controller.test.js
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -18,7 +19,6 @@ var storage_interface = require('../interfaces/storage_interface.js');
 var email_interface = require('../interfaces/email_interface.js');
 var hashing = require("../tools/hashing.js");
 var random_id = require("random-id");
-
 
 //check for duplicate username or email address before allowing user to register
 var check_details_against_user_table = function(user_details, insert_object, callback){
@@ -199,13 +199,12 @@ module.exports = {
         }
 
         //make sure username and email are both not taken
-        check_details_against_user_table(user_details, insert_object, function(error){
+        check_details_against_user_table(user_details, insert_object, function(result){
             
-            if(error){
-                callback(error);
+            if(result.failed){
+                callback(result);
             }
             else{
-                
                 if(user_details.admin){ //if admin, check pending registered admin users table, to ensure a user hasnt previously requested admin registration with similar details
 
                     var query_config = {

@@ -2,11 +2,14 @@
 //
 // Module: actors_controller
 // Author: Tom Connolly
-// Description: Controller to take responsibility for all CRUD operations on actor objects in the
-//              db
-// Testing script: /testing/unit_testing/controller_tests/actors_controller.test.js
+// Description: Controller to take responsibility for all CRUD operations on actor objects in the db
+// Testing script: test/unit_testing/controller_tests/actors_controller.test.js
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//TODO: 08/02/2018
+//write test for delete function to ensure refactoring was a success
+//write test for update function to ensure refactoring was a success
 
 //external dependencies
 var loop = require("async-looper");
