@@ -32,6 +32,7 @@ if (dotenv_result.error) {
 }
  
 console.log(dotenv_result.parsed)*/
+require("./server_files/tools/logging.js").init_logging("debug", console.log); //init logging module
 
 // ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({
@@ -150,7 +151,7 @@ app.get('/*', function(req, res, next) { res.render("pages/static/error.jade"); 
 
 var success_msg = "Node app is running on port: ";
 
-// ### Launch application ####
+// ### Launch server ####
 app.listen(app.get('port'), function(){
     console.log("> NODE_ENV: " + process.env.NODE_ENV); 
     console.log("> HTTP " + success_msg + app.get('port'))

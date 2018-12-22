@@ -21,7 +21,8 @@ describe('Module: logging', function () {
 
             }
         }
-        logger = proxyquire("../../../server_files/tools/logger");
+        logger = require("../../../server_files/tools/logging");
+        logger.init_logging("debug", function(){});
     });
     
     beforeEach(function () {
@@ -29,8 +30,7 @@ describe('Module: logging', function () {
     });
 
     it('submit_log - LOG_TYPE.ERROR', function () {
-        logging.submit_log(logger.LOG_TYPE.ERROR, "logging test", "error message");
-
-        //somehow assert that the console.log call has been invoked.
+        var log = logger.submit_log(logger.LOG_TYPE.ERROR, "logging test", "error message");
+        assert.equal("***** Internal Log ***** /home/tom/beeftracker/bf-dev/test/unit_testing/tools_tests/logging.test.js:anon:33 - Type: error Module: logging test - error message", log)
     });
 });
