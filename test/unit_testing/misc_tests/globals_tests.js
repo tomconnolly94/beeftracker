@@ -11,7 +11,7 @@ describe('Module: testing globals', function () {
     var globals, object_1, object_2;
 
     before(function(){
-        globals = require("../globals");
+        globals = require("../testing_globals");
     });
 
     beforeEach(function () {

@@ -9,9 +9,9 @@ var expect = chai.expect;
 var db_ref = require("../../../server_files/config/db_config");
 var globals = require('../testing_globals.js');
 
-describe('Module: event_controller', function () {
+describe('Module: users_controller', function () {
 
-    var events_controller, db_interface, event_example, callback_spy, beef_chain_ids, index_of_sort_query, index_of_match_query, index_of_limit_query;
+    var users_controller, db_interface, event_example, callback_spy, beef_chain_ids, index_of_sort_query, index_of_match_query, index_of_limit_query;
 
     before(function(){
         
@@ -19,7 +19,7 @@ describe('Module: event_controller', function () {
         this.timeout(7000);
         //db_interface stub
         db_interface = require("../module_mocking/db_interface.mock.js");
-        events_controller = proxyquire("../../../server_files/controllers/events_controller", { "../interfaces/db_interface.js": db_interface });
+        users_controller = proxyquire("../../../server_files/controllers/users_controller", { "../interfaces/db_interface.js": db_interface });
 
         event_example = globals.event_example;
 
@@ -64,18 +64,18 @@ describe('Module: event_controller', function () {
         var db_interface_callback_spy = sinon.spy();
         
         db_interface.get = function(query_config, success_callback){
-            db_get_callback_spy(); 
+            db_interface_callback_spy(); 
             assert.exists(query_config.table);
-            assert.equal(db_ref.get_current_event_table(), query_config.table);
+            assert.equal(db_ref.get_user_details_table(), query_config.table);
             assert.exists(query_config.aggregate_array);
             assert.exists(query_config.aggregate_array[0]["$match"]);
             assert.exists(query_config.aggregate_array[0]["$match"]["_id"]);
-            callback([ globals.event_example ]);
+            success_callback([ globals.event_example ]);
         };
 
-        users_controller.findUser(globals.dummy_object_id, true, function(results){
+        users_controller.findUser(globals.dummy_object_id, true, function(result){
             callback_spy();
-            assert.equal(1, results.length);
+            assert.isTrue(globals.compare_objects(globals.event_example, result));
         });
         
         assert(db_interface_callback_spy.called);
@@ -87,344 +87,18 @@ describe('Module: event_controller', function () {
         var db_interface_callback_spy = sinon.spy();
         
         db_interface.get = function(query_config, success_callback){
-            db_get_callback_spy(); 
+            db_interface_callback_spy(); 
             assert.exists(query_config.table);
-            assert.equal(db_ref.get_current_event_table(), query_config.table);
+            assert.equal(db_ref.get_user_details_table(), query_config.table);
             assert.exists(query_config.aggregate_array);
             assert.exists(query_config.aggregate_array[0]["$match"]);
             assert.exists(query_config.aggregate_array[0]["$match"]["_id"]);
-            callback([ globals.event_example ]);
+            success_callback([ globals.event_example ]);
         };
 
-        users_controller.findUser(globals.dummy_object_id, true, function(results){
+        users_controller.findUser(globals.dummy_object_id, true, function(result){
             callback_spy();
-            assert.equal(1, results.length);
-        });
-        
-        assert(db_interface_callback_spy.called);
-        assert(callback_spy.called);
-    });
-
-    it('findEvents - name order query', function () {
-        
-        db_interface.get = function(query_config, callback){
-            callback(query_config.aggregate_array); 
-        };
-
-        var req_query_dec = {
-            decreasing_order: "name"
-        }
-        
-        var expected_results_dec = {
-            name: -1
-        }
-        
-        events_controller.findEvents(req_query_dec, function(results){
-            callback_spy();
-            var result = results[index_of_sort_query]["$sort"];
-            assert.deepEqual(result, expected_results_dec);
-        });
-        
-        assert(callback_spy.called);
-        callback_spy = sinon.spy(); //reset spy
-        
-        var req_query_inc = {
-            increasing_order: "name"
-        }
-        
-        var expected_query_inc = {
-            name: 1
-        }
-        
-        events_controller.findEvents(req_query_inc, function(results){
-            callback_spy();
-            var result = results[index_of_sort_query]["$sort"];
-            assert.deepEqual(result, expected_query_inc);
-        });
-
-        assert(callback_spy.called);
-    });
-
-    it('findEvents - rating order query', function () {
-        
-        db_interface.get = function(query_config, callback){
-            callback(query_config.aggregate_array); 
-        };
-
-        var req_query_dec = {
-            decreasing_order: "rating"
-        }
-        
-        var expected_results_dec = {
-            rating: -1
-        }
-        
-        events_controller.findEvents(req_query_dec, function(results){
-            callback_spy();
-            var result = results[index_of_sort_query]["$sort"];
-            assert.deepEqual(result, expected_results_dec);
-        });
-        
-        assert(callback_spy.called);
-        callback_spy = sinon.spy(); //reset spy
-        
-        var req_query_inc = {
-            increasing_order: "rating"
-        }
-        
-        var expected_query_inc = {
-            rating: 1
-        }
-        
-        events_controller.findEvents(req_query_inc, function(results){
-            callback_spy();
-            var result = results[index_of_sort_query]["$sort"];
-            assert.deepEqual(result, expected_query_inc);
-        });
-
-        assert(callback_spy.called);
-    });
-
-    it('findEvents - popularity order query', function () {
-        
-        db_interface.get = function(query_config, callback){
-            callback(query_config.aggregate_array); 
-        };
-
-        var req_query_dec = {
-            decreasing_order: "popularity"
-        }
-        
-        var expected_results_dec = {
-            "hit_count.total": -1
-        }
-        
-        events_controller.findEvents(req_query_dec, function(results){
-            callback_spy();
-            var result = results[index_of_sort_query]["$sort"];
-            assert.deepEqual(result, expected_results_dec);
-        });
-        
-        assert(callback_spy.called);
-        callback_spy = sinon.spy(); //reset spy
-        
-        var req_query_inc = {
-            increasing_order: "popularity"
-        }
-        
-        var expected_query_inc = {
-            "hit_count.total": 1
-        }
-        
-        events_controller.findEvents(req_query_inc, function(results){
-            callback_spy();
-            var result = results[index_of_sort_query]["$sort"];
-            assert.deepEqual(result, expected_query_inc);
-        });
-
-        assert(callback_spy.called);
-    });
-
-    it('findEvents - currently_trending order query', function () {
-        
-        db_interface.get = function(query_config, callback){
-            callback(query_config.aggregate_array); 
-        };
-
-        var req_query_dec = {
-            decreasing_order: "currently_trending"
-        }
-        
-        var expected_results_dec = {
-            "hit_counts.today": -1
-        }
-        
-        events_controller.findEvents(req_query_dec, function(results){
-            callback_spy();
-            var result = results[index_of_sort_query]["$sort"];
-            assert.deepEqual(result, expected_results_dec);
-        });
-        
-        assert(callback_spy.called);
-        callback_spy = sinon.spy(); //reset spy
-        
-        var req_query_inc = {
-            increasing_order: "currently_trending"
-        }
-        
-        var expected_query_inc = {
-            "hit_counts.today": 1
-        }
-        
-        events_controller.findEvents(req_query_inc, function(results){
-            callback_spy();
-            var result = results[index_of_sort_query]["$sort"];
-            assert.deepEqual(result, expected_query_inc);
-        });
-
-        assert(callback_spy.called);
-    });
-
-    it('findEvents - date_added order query', function () {
-        
-        db_interface.get = function(query_config, callback){
-            callback(query_config.aggregate_array); 
-        };
-
-        var req_query_dec = {
-            decreasing_order: "date_added"
-        }
-        
-        var expected_results_dec = {
-            date_added: -1
-        }
-        
-        events_controller.findEvents(req_query_dec, function(results){
-            callback_spy();
-            var result = results[index_of_sort_query]["$sort"];
-            assert.deepEqual(result, expected_results_dec);
-        });
-        
-        assert(callback_spy.called);
-        callback_spy = sinon.spy(); //reset spy
-        
-        var req_query_inc = {
-            increasing_order: "date_added"
-        }
-        
-        var expected_query_inc = {
-            date_added: 1
-        }
-        
-        events_controller.findEvents(req_query_inc, function(results){
-            callback_spy();
-            var result = results[index_of_sort_query]["$sort"];
-            assert.deepEqual(result, expected_query_inc);
-        });
-
-        assert(callback_spy.called);
-    });
-    
-    it('findEvents: name match query', function () {
-        
-        db_interface.get = function(query_config, callback){
-            callback(query_config.aggregate_array); 
-        }
-        
-        var field = "name_example";
-        
-        var req_query = {
-            match_title: field
-        }
-        
-        var expected_results = {
-            title: {
-                "$options": "i",
-                "$regex": field
-            }
-        }
-        
-        events_controller.findEvents(req_query, function(results){
-            callback_spy();
-            var result = results[index_of_match_query]["$match"];
-            assert.deepEqual(result, expected_results);
-        });
-        
-        assert(callback_spy.called);
-    });
-
-    it('findEvents - limit query', function () {
-
-        var db_interface_callback_spy = sinon.spy();
-        var expected_results = 30;
-        
-        db_interface.get = function(query_config, success_callback){
-            db_interface_callback_spy();
-            assert.exists(query_config.aggregate_array);
-            success_callback(query_config.aggregate_array); 
-        };
-
-        events_controller.findEvents({}, function(results){
-            callback_spy();
-            var result = results[index_of_limit_query]["$limit"];
-            assert.deepEqual(result, expected_results);
-        });
-        
-        assert(db_interface_callback_spy.called);
-        assert(callback_spy.called);
-    });
-
-    it('findEvents - failure', function () {
-
-        var db_interface_callback_spy = sinon.spy();
-        var error_object = { 
-            failed: true,
-            module: "db_interface",
-            function: "insert", 
-            message: "Failed at db query"
-        };
-        
-        db_interface.get = function(query_config, success_callback, failure_callback){
-            db_interface_callback_spy();
-            assert.exists(query_config.aggregate_array);
-            var aggregate_array_fields = query_config.aggregate_array.map(obj => Object.keys(obj)).join().split(",");
-            expect(aggregate_array_fields).to.include("$match");
-            expect(aggregate_array_fields).to.include("$group");
-            expect(aggregate_array_fields).to.include("$project");
-            failure_callback(error_object); 
-        };
-
-        events_controller.findEvents({}, function(results){
-            callback_spy();
-            assert.isTrue(globals.compare_objects(error_object, results));
-        });
-        
-        assert(db_interface_callback_spy.called);
-        assert(callback_spy.called);
-    });
-
-    it('findEvent - success', function () {
-
-        var db_interface_callback_spy = sinon.spy();
-        
-        db_interface.get = function(query_config, success_callback){
-            db_interface_callback_spy();
-            assert.equal(db_ref.get_current_event_table(), query_config.table);
-
-
-            event_example.beef_chain_ids = beef_chain_ids;
-            success_callback([ event_example ]); 
-        };
-
-        events_controller.findEvent(globals.dummy_object_id, function(result){
-            callback_spy();
-            assert.exists(result);
-        });
-        
-        assert(db_interface_callback_spy.called);
-        assert(callback_spy.called);
-    });
-
-    it('findEvent - failure', function () {
-
-        var db_interface_callback_spy = sinon.spy();
-        var error_object = { 
-            failed: true,
-            module: "db_interface",
-            function: "insert", 
-            message: "Failed at db query"
-        };
-        
-        db_interface.get = function(query_config, success_callback, failure_callback){
-            db_interface_callback_spy();
-            assert.equal(db_ref.get_current_event_table(), query_config.table);
-            
-            failure_callback(error_object); 
-        };
-
-        events_controller.findEvent(globals.dummy_object_id, function(results){
-            callback_spy();
-            assert.isTrue(globals.compare_objects(error_object, results));
+            assert.isTrue(globals.compare_objects(globals.event_example, result));
         });
         
         assert(db_interface_callback_spy.called);

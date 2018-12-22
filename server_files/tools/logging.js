@@ -123,3 +123,5 @@ module.exports = {
         }
     }
 }
+
+module.exports.init_logging("debug", console.log); //init logging module

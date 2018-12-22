@@ -9,7 +9,7 @@ var expect = chai.expect;
 var db_ref = require("../../../server_files/config/db_config");
 var globals = require('../testing_globals.js');
 
-describe('Module: event_controller', function () {
+describe('Module: votes_controller', function () {
 
     var events_controller, db_interface, event_example, callback_spy, beef_chain_ids, index_of_sort_query, index_of_match_query, index_of_limit_query;
 
@@ -19,7 +19,7 @@ describe('Module: event_controller', function () {
         this.timeout(7000);
         //db_interface stub
         db_interface = require("../module_mocking/db_interface.mock.js");
-        events_controller = proxyquire("../../../server_files/controllers/events_controller", { "../interfaces/db_interface.js": db_interface });
+        votes_controller = proxyquire("../../../server_files/controllers/votes_controller", { "../interfaces/db_interface.js": db_interface });
 
         event_example = globals.event_example;
 

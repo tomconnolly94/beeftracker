@@ -32,7 +32,6 @@ if (dotenv_result.error) {
 }
  
 console.log(dotenv_result.parsed)*/
-require("./server_files/tools/logging.js").init_logging("debug", console.log); //init logging module
 
 // ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({

@@ -23,6 +23,7 @@ module.exports = {
         return true;
     },
 
+    //note; regressive function
     compare_objects: function(object_1, object_2, fields_to_skip = []){
 
         if(!this.compare_object_fields(object_1, object_2)){
@@ -33,7 +34,9 @@ module.exports = {
         var object_2_keys = Object.keys(object_2).sort();
 
         for(var key_index = 0; key_index < object_1_keys.length; key_index++){
-            if(typeof(object_1[object_1_keys[key_index]]) == 'object'){
+            var potential_object = object_1[object_1_keys[key_index]];
+
+            if(typeof(potential_object) == 'object' && potential_object != null){
                 if(!module.exports.compare_objects(object_1[object_1_keys[key_index]], object_2[object_2_keys[key_index]], fields_to_skip)){
                     return false;
                 }
