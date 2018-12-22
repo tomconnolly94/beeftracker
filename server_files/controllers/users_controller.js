@@ -12,11 +12,11 @@
 var BSON = require("bson");
 
 //internal dependencies
-var db_ref = require("../config/db_config.js");
-var db_interface = require("../interfaces/db_interface.js");
-var storage_ref = require("../config/storage_config.js");
-var storage_interface = require('../interfaces/storage_interface.js');
-var email_interface = require('../interfaces/email_interface.js');
+var db_ref = require("../config/db_config");
+var db_interface = require("../interfaces/db_interface");
+var storage_ref = require("../config/storage_config");
+var storage_interface = require("../interfaces/storage_interface");
+var email_interface = require("../interfaces/email_interface");
 var hashing = require("../tools/hashing.js");
 var random_id = require("random-id");
 
@@ -47,7 +47,7 @@ var check_details_against_user_table = function(user_details, insert_object, cal
             }
         }
         else{
-            callback();
+            callback({});
         }
     });
 }
@@ -61,9 +61,8 @@ var insert_new_user = function(insert_object, table, callback){
         options: {}
     }
 
-    db_interface.insert(insert_config, function(){
-        console.log(document);
-        callback({ user_id: document.ops[0]._id});
+    db_interface.insert(insert_config, function(record){
+        callback({ user_id: record.id});
     },
     function(error_object){
         callback(error_object);
@@ -267,7 +266,11 @@ module.exports = {
                         
                         var upload_config = {
                             record_type: storage_ref.get_user_images_folder(),
-                            items: [ insert_object ],
+                            item_data: [{
+                                media_type: "image",
+                                link: insert_object.img_title,
+                                file: files[0]
+                            }],
                             files: files
                         };
                         
