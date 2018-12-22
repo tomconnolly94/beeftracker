@@ -2,6 +2,7 @@
 var dummy_object_id = "5a69027a01e599f97e278f73";
 
 module.exports = {
+    
     dummy_object_id: dummy_object_id,
 
     compare_object_fields: function(object_1, object_2){

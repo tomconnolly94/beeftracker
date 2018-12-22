@@ -408,10 +408,10 @@ module.exports = {
         });
     },
     
-    deleteUser: function(request, response, callback){
+    deleteUser: function(user_id, callback){
         
         //extract data
-        var user_id_object = BSON.ObjectID.createFromHexString(request.params.user_id);
+        var user_id_object = BSON.ObjectID.createFromHexString(user_id);
 
         var query_config = {
             table: db_ref.get_user_details_table(),
@@ -419,11 +419,11 @@ module.exports = {
                 {  $match: { _id: user_id_object } }
             ]
         };
-        db_interface.get(query_config, function(result){
+        db_interface.get(query_config, function(results){
             
-            if(result && result[0]){
+            if(results.length > 0){
                 
-                var user = result[0];
+                var user = results[0];
                 
                 var remove_config = {
                     items: [ user ],
@@ -433,11 +433,13 @@ module.exports = {
                 storage_interface.remove(remove_config, function(img_title){
 
                     var delete_config = {
+                        table: db_ref.get_user_details_table(),
+                        delete_multiple_records: false,
                         match_query: { _id: user_id_object }
                     };
                     
-                    db_interface.delete(delete_config, function(){
-                        callback({ message: "User has been deleted." });
+                    db_interface.delete(delete_config, function(result){
+                        callback(result);
                     },
                     function(error_object){
                         callback(error_object);
@@ -461,10 +463,12 @@ module.exports = {
 
         db_interface.get(query_config, function(users){
 
-            if(auth_arr.length < 1){
+            if(users.length < 1){
                 callback({ failed: true, module: "users_controllers", function: "requestPasswordReset", message: "Email address not found."});
             }
             else{
+                //generate unique token
+                var id_token = random_id(40, "aA0");
                 var existing_user_details = users[0];
 
                 var insert_object = {                    
@@ -481,24 +485,21 @@ module.exports = {
 
                 //insert reset request token into the database to be accessed and checked later
                 db_interface.update(update_config, function(record){
-                    console.log("Password reset request document inserted.");
-                });
 
-                //generate unique token
-                var id_token = random_id(40);
-                var reset_url = "https://beeftracker.co.uk/reset-my-password/" + id_token;
+                    var reset_url = "https://beeftracker.co.uk/reset-my-password/" + id_token;
 
-                var send_email_config = {
-                    email_title: "Beeftracker password reset",
-                    email_html: "<b>Reset link</b> <a href=" + reset_url + ">Reset</a>",
-                    recipient_address: email_address
-                }
-                
-                email_interface.send(send_email_config, function(){
-                    callback({ message: "Email sent."});                    
-                },
-                function(error_object){
-                    callback(error_object);
+                    var send_email_config = {
+                        email_title: "Beeftracker password reset",
+                        email_html: "<b>Reset link</b> <a href=" + reset_url + ">Reset</a>",
+                        recipient_address: email_address
+                    }
+                    
+                    email_interface.send(send_email_config, function(){
+                        callback(record);                    
+                    },
+                    function(error_object){
+                        callback(error_object);
+                    });
                 });
             }
         });

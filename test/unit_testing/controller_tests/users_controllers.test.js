@@ -11,16 +11,17 @@ var globals = require('../testing_globals.js');
 
 describe('Module: users_controller', function () {
 
-    var users_controller, db_interface, storage_interface, user_input_details, callback_spy;
+    var users_controller, db_interface, storage_interface, email_interface, user_input_details, callback_spy;
 
     before(function(){
         
         //set timeout
-        this.timeout(7000);
+        this.timeout(10000);
         //db_interface stub
         db_interface = require("../module_mocking/db_interface.mock.js");
         storage_interface = require("../module_mocking/storage_interface.mock.js");
-        users_controller = proxyquire("../../../server_files/controllers/users_controller", { "../interfaces/db_interface.js": db_interface, "../interfaces/storage_interface": storage_interface });
+        email_interface = require("../module_mocking/storage_interface.mock.js");
+        users_controller = proxyquire("../../../server_files/controllers/users_controller", { "../interfaces/db_interface.js": db_interface, "../interfaces/storage_interface": storage_interface, "../interfaces/email_interface": email_interface });
 
         user_input_details = {
             username: "username example",
@@ -87,11 +88,12 @@ describe('Module: users_controller', function () {
 
     it('createUser - non admin', function () {
 
-        var db_interface_callback_spy = sinon.spy();
+        var db_interface_get_callback_spy = sinon.spy();
+        var db_interface_insert_callback_spy = sinon.spy();
         var storage_interface_callback_spy = sinon.spy();
         
         db_interface.get = function(query_config, success_callback){
-            db_interface_callback_spy(); 
+            db_interface_get_callback_spy(); 
             assert.exists(query_config.table);
             assert.equal(db_ref.get_user_details_table(), query_config.table);
             assert.exists(query_config.aggregate_array);
@@ -103,7 +105,7 @@ describe('Module: users_controller', function () {
         };
 
         db_interface.insert = function(insert_config, success_callback){
-            db_interface_callback_spy(); 
+            db_interface_insert_callback_spy(); 
             assert.exists(insert_config.record);
             assert.exists(insert_config.table);
             assert.exists(insert_config.options);
@@ -130,8 +132,106 @@ describe('Module: users_controller', function () {
             assert.equal(globals.dummy_object_id, result.user_id);
         });
         
-        assert(db_interface_callback_spy.called);
+        assert(db_interface_get_callback_spy.called);
+        assert(db_interface_insert_callback_spy.called);
         assert(storage_interface_callback_spy.called);
         assert(callback_spy.called);
     });
+
+    it('deleteUser', function () {
+
+        var db_interface_get_callback_spy = sinon.spy();
+        var db_interface_delete_callback_spy = sinon.spy();
+        var storage_interface_callback_spy = sinon.spy();
+        
+        db_interface.get = function(query_config, success_callback){
+            db_interface_get_callback_spy(); 
+            assert.exists(query_config.table);
+            assert.equal(db_ref.get_user_details_table(), query_config.table);
+            assert.exists(query_config.aggregate_array);
+            assert.exists(query_config.aggregate_array[0]["$match"]);
+            assert.exists(query_config.aggregate_array[0]["$match"]["_id"]);
+            success_callback([{ id: globals.dummy_object_id }]);
+        };
+
+        db_interface.delete = function(delete_config, success_callback){
+            db_interface_delete_callback_spy(); 
+            assert.exists(delete_config.table);
+            assert.equal(db_ref.get_user_details_table(), delete_config.table);
+            assert.exists(delete_config.delete_multiple_records);
+            assert.equal(delete_config.delete_multiple_records, false);
+            assert.exists(delete_config.match_query);
+            assert.exists(delete_config.match_query["_id"]);
+            success_callback({ id: globals.dummy_object_id });
+        };
+
+        storage_interface.remove = function(upload_config, callback){
+            assert.exists(upload_config.record_type);
+            assert.exists(upload_config.items);
+            storage_interface_callback_spy();
+            callback();
+        }
+
+        users_controller.deleteUser(globals.dummy_object_id, function(result){
+            callback_spy();
+            assert.exists(result.id);
+        });
+        
+        assert(db_interface_get_callback_spy.called);
+        assert(db_interface_delete_callback_spy.called);
+        assert(storage_interface_callback_spy.called);
+        assert(callback_spy.called);
+    });
+
+    it('requestPasswordReset', function () {
+
+        var db_interface_get_callback_spy = sinon.spy();
+        var db_interface_update_callback_spy = sinon.spy();
+        var email_interface_callback_spy = sinon.spy();
+        var dummy_email_address = "fake@person.com";
+        
+        db_interface.get = function(query_config, success_callback){
+            db_interface_get_callback_spy(); 
+            assert.exists(query_config.table);
+            assert.equal(db_ref.get_user_details_table(), query_config.table);
+            assert.exists(query_config.aggregate_array);
+            assert.exists(query_config.aggregate_array[0]["$match"]);
+            assert.exists(query_config.aggregate_array[0]["$match"]["email_address"]);
+            assert.equal(query_config.aggregate_array[0]["$match"]["email_address"], dummy_email_address);
+            success_callback([{ _id: globals.dummy_object_id }]);
+        };
+
+        db_interface.update = function(update_config, success_callback){
+            db_interface_update_callback_spy(); 
+            assert.exists(update_config.table);
+            assert.equal(db_ref.get_password_reset_request_table(), update_config.table);
+            assert.exists(update_config.existing_object_id);
+            assert.equal(globals.dummy_object_id, update_config.existing_object_id);
+            assert.exists(update_config.update_clause);
+            assert.exists(update_config.update_clause["$set"]);
+            assert.equal(update_config.update_clause["$set"].user_email, dummy_email_address);
+            assert.exists(update_config.options);
+            success_callback({ _id: globals.dummy_object_id });
+        };
+
+        email_interface.send = function(send_email_config, callback){
+            email_interface_callback_spy();
+            assert.exists(send_email_config.email_title);
+            assert.exists(send_email_config.email_html);
+            assert.exists(send_email_config.recipient_address);
+            callback();
+        };
+
+        users_controller.requestPasswordReset(dummy_email_address, function(result){
+            callback_spy();
+            assert.exists(result._id);
+            assert.equal(globals.dummy_object_id, result._id);
+        });
+        
+        assert(db_interface_get_callback_spy.called);
+        assert(db_interface_update_callback_spy.called);
+        assert(email_interface_callback_spy.called);
+        assert(callback_spy.called);
+    });
+
 });
