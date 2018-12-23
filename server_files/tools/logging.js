@@ -28,8 +28,7 @@ var get_relevant_stack_trace_tier = function(){
     var stack = err.stack;
     Error.prepareStackTrace = orig;
     return stack[1];
-
-}
+};
 
 module.exports = {
 
@@ -103,8 +102,8 @@ module.exports = {
         }
         else{
             var prefix = `${log_error_decoration} Logging error ${log_error_decoration}`;
-            console.log(`${prefix} - Log type: ${type} not recognised.`);
-            console.log(`${prefix} - Available log types: ${LOG_TYPE}`);            
+            write_log(`${prefix} - Log type: ${type} not recognised.`);
+            write_log(`${prefix} - Available log types: ${LOG_TYPE}`);            
         }
     }
 }
