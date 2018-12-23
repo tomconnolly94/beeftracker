@@ -17,35 +17,19 @@ var LOG_TYPE = {
     SUCCESS: "success",
 };
 
-//extras that allow tracing the caller function
-Object.defineProperty(global, '__stack', {
-    get: function() {
-        var orig = Error.prepareStackTrace;
-        Error.prepareStackTrace = function(_, stack) {
-            return stack;
-        };
-        var err = new Error;
-        Error.captureStackTrace(err, arguments.callee);
-        var stack = err.stack;
-        Error.prepareStackTrace = orig;
+var get_relevant_stack_trace_tier = function(){
+
+    var orig = Error.prepareStackTrace;
+    Error.prepareStackTrace = function(_, stack) {
         return stack;
-    }
-});
-Object.defineProperty(global, '__file_name', {
-    get: function() {
-        return __stack[2].getFileName();
-    }
-});
-Object.defineProperty(global, '__linenumber', {
-    get: function() {
-        return __stack[2].getLineNumber();
-    }
-});
-Object.defineProperty(global, '__function', {
-    get: function() {
-        return __stack[2].getFunctionName();
-    }
-});
+    };
+    var err = new Error;
+    Error.captureStackTrace(err, arguments.callee);
+    var stack = err.stack;
+    Error.prepareStackTrace = orig;
+    return stack[1];
+
+}
 
 module.exports = {
 
@@ -101,9 +85,11 @@ module.exports = {
 
     submit_log: function(type, module, message){
 
-        var calling_file_name = __file_name;
-        var calling_function = __function;
-        var calling_line_number = __linenumber;
+        relevant_stack_tier = get_relevant_stack_trace_tier();
+
+        var calling_file_name = relevant_stack_tier.getFileName();
+        var calling_function = relevant_stack_tier.getFunctionName();
+        var calling_line_number = relevant_stack_tier.getLineNumber();
 
         if(!calling_function){
             calling_function = "anon";
@@ -111,7 +97,6 @@ module.exports = {
         calling_file_name = calling_file_name.replace(path.dirname(require.main.filename) + "/", '');
 
         if(log_list.indexOf(type) != -1){
-
             var log = `${log_decoration} Internal Log ${log_decoration} ${calling_file_name}:${calling_function}:${calling_line_number} - Type: ${type}, Module: ${module} - ${message}`;
             write_log(log);
             return log;
