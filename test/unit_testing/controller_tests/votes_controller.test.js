@@ -27,24 +27,30 @@ describe('Module: votes_controller', function () {
         callback_spy = sinon.spy();
     });
 
-    it('addVoteToEvent', function () {
-        /*
+    it('addVoteToEvent - upvote', function () {
         var db_interface_callback_spy = sinon.spy();
         
-        db_interface.get = function(query_config, success_callback){
-            db_get_callback_spy(); 
-            assert.exists(query_config.table);
-            assert.equal(db_ref.get_current_event_table(), query_config.table);
-            assert.exists(query_config.aggregate_array);
-            assert.exists(query_config.aggregate_array[0]["$match"]);
-            assert.exists(query_config.aggregate_array[0]["$match"]["_id"]);
+        db_interface.update = function(update_config, success_callback){
+            db_interface_callback_spy();
+            //table
+            assert.exists(update_config.table);
+            assert.equal(db_ref.get_current_event_table(), update_config.table);
+            //existing_object_id
+            assert.exists(update_config.existing_object_id);
+            assert.equal(globals.dummy_object_id, update_config.existing_object_id);
+            //update_clause
+            assert.exists(update_config.update_clause);
+            assert.exists(update_config["$inc"]);
+            assert.exists(update_config["$inc"]["votes.upvotes"]);
+            assert.equal(update_config["$inc"]["votes.upvotes"], 1);
+            assert.exists(options);
             callback([ globals.event_example ]);
         };
 
-        votes_controller.findUser(globals.dummy_object_id, true, function(results){
+        votes_controller.findUser(globals.dummy_object_id, 1, globals.dummy_object_id, true, function(results){
             callback_spy();
             assert.equal(1, results.length);
-        });*/
+        });
         
         //assert(db_interface_callback_spy.called);
         //assert(callback_spy.called);
