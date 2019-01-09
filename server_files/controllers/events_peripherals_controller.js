@@ -1,9 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Module: 
+// Module: event_peripherals_controller
 // Author: Tom Connolly
-// Description: 
-// Testing script:
+// Description: Module to store extra operations that help encapsulate repeated operations that are
+// required for event objects but are not part of core 'event' functionality
+// Testing script: test/unit_testing/controller_tests/event_peripherals_controller.test.js
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -20,145 +21,121 @@ var event_projection = require("./events_controller.js").event_projection;
 
 module.exports = {
     
-    findEventsFromBeefChain: function(request, response, callback){
-        
-        //extract data
-        var beef_chain_id = request.params.beef_chain_id;
+    findEventsFromBeefChain: function(beef_chain_id, callback){
 
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-                
-                console.log(beef_chain_id)
-                var beef_chain_id_object = BSON.ObjectID.createFromHexString(beef_chain_id);
-                
-                console.log(beef_chain_id_object)
-                db.collection(db_ref.get_current_event_table()).aggregate([
-                    { $match: { beef_chain_ids: beef_chain_id_object } },
-                    { $unwind : "$aggressors"},
-                    { $lookup : {
-                        from: db_ref.get_current_actor_table(),
-                        localField: "aggressors",
-                        foreignField: "_id",
-                        as: "aggressors" 
-                    }},
-                    { $unwind : "$targets"},
-                    { $lookup : { 
-                        from: db_ref.get_current_actor_table(),
-                        localField: "targets",
-                        foreignField: "_id",
-                        as: "targets" 
-                    }},/*
-                    { $project: { event_projection } }*/
-                   ]).toArray(function(queryErr, docs) {
-                if(queryErr){ console.log(queryErr); }
-                else{
-                    if(docs && docs.length > 0){
-                        callback( docs );
-                    }
-                    else{
-                        callback({ failed: true, message: "Event not found." });
-                    }
-                }
-                });            
-            }
+        var query_config = {
+            table: db_ref.get_current_event_table(),
+            aggregate_array: [
+                { $match: { beef_chain_ids: BSON.ObjectID.createFromHexString(beef_chain_id) } },
+                { $unwind : "$aggressors"},
+                { $lookup : {
+                    from: db_ref.get_current_actor_table(),
+                    localField: "aggressors",
+                    foreignField: "_id",
+                    as: "aggressors" 
+                }},
+                { $unwind : "$targets"},
+                { $lookup : { 
+                    from: db_ref.get_current_actor_table(),
+                    localField: "targets",
+                    foreignField: "_id",
+                    as: "targets" 
+                }},/*
+                { $project: { event_projection } }*/
+            ]
+        };
+
+        db_interface.get(query_config, function(results){
+            callback(results);
+        },
+        function(error_object){
+            callback(error_object);
         });
     },
     
-    findEventsRelatedToEvent: function(request, response, callback){
+    findEventsRelatedToEvent: function(event_id, callback){
         
-        var event_id = request.params.event_id;
+        var query_config = {
+            table: db_ref.get_current_event_table(),
+            aggregate_array: [
+                { 
+                    $match: { _id: BSON.ObjectID.createFromHexString(event_id) } 
+                },
+                event_projection
+            ]
+        };
 
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-                        
-                var event_id_object = BSON.ObjectID.createFromHexString(event_id);
+        db_interface.get(query_config, function(results){
+            
+            var event = results[0];
+            var events = [];
+            var actor_query_promises = [];
 
-                db.collection(db_ref.get_current_event_table()).aggregate([
-                    { $match: { _id: event_id_object } },
-                    event_projection
-                ]).toArray(function(queryErr, docs) {
-                    if(queryErr){ console.log(queryErr); }
-                    else{
-                        if(docs && docs.length > 0){
+            var actor_limit = 3;
 
-                            var event = docs[0];
-                            var actors = event.aggressors.concat(event.targets);
-                            var event_limit_per_actor = 10 / actors.length;
-                            var events = [];
-                            var loop_count = 0
-                            
-                            //use an asynchronous loop to cycle through gallery items, if item is an image, save image to cloudinary and update gallery item link
-                            loop(actors, function(actor_id, next){
-                                var new_events = module.exports.findEventsRelatedToActor({ params: { actor_id: actor_id } });
-                                
-                                if(!events.message){
-                                    events.concat(new_events);
-                                }
-                                
-                                loop_count++;
-                                
-                                if(loop_count == actors.length){
-                                    next(null, loop.END_LOOP);
-                                }
-                                else{
-                                    next();
-                                }
-                                
-                            }, function(){
-                                callback( events );
-                            });
-                        }
-                        else{
-                            callback({ failed: true, message: "Event not found." });
-                        }
-                    }
-                });
+            var actors = event.aggressors.slice(0, actor_limit).concat(event.targets.slice(0, actor_limit));
+            var event_limit_per_actor = Math.ceil(10 / actors.length);
+
+            for(var actor_index = 0; actor_index < actors.length; actor_index++){
+                actor_query_promises.push(
+                    new Promise(function(resolve, reject){
+                        module.exports.findEventsRelatedToActor(actors[actor_index], function(results){
+                            if(results.failed){
+                                reject(results);
+                            }
+                            else{
+                                resolve(results);
+                            }
+                        });
+                    })
+                );
             }
+                
+            Promise.all(actor_query_promises).then(function(values) {
+                
+                for(var i = 0; i < values.length; i++){
+                    events = events.concat(values[i].slice(0, event_limit_per_actor));
+                }
+
+                callback(events);
+
+            }).catch(function(error){
+                console.log(error);
+                callback(error);
+            });
         });
     },
     
-    findEventsRelatedToActor: function(request, response, callback){
+    findEventsRelatedToActor: function(actor_id, callback){
         
-        //extract data
-        var actor_id = request.params.actor_id;
-        
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-                                
-                db.collection(db_ref.get_current_event_table()).aggregate([
-                    { $match: { $or: [{ aggressors: actor_id }, { targets: actor_id }] } },
-                    { $unwind : "$aggressors"},
-                    { $lookup : {
-                        from: db_ref.get_current_actor_table(),
-                        localField: "aggressors",
-                        foreignField: "_id",
-                        as: "aggressors" 
-                    }},
-                    { $unwind : "$targets"},
-                    { $lookup : { 
-                        from: db_ref.get_current_actor_table(),
-                        localField: "targets",
-                        foreignField: "_id",
-                        as: "targets" 
-                    }},
-                    { $limit: limit },
-                    event_projection
-                   ]).toArray(function(queryErr, docs) {
-                if(queryErr){ console.log(queryErr); }
-                else{
-                    if(docs && docs.length > 0){
-                         callback( docs );
-                    }
-                    else{
-                        callback({ failed: true, message: "No events found." });
-                    }
-                }
-                });            
-            }
+        var query_config = {
+            table: db_ref.get_current_event_table(),
+            aggregate_array: [
+                { $match: { $or: [{ aggressors: BSON.ObjectID.createFromHexString(actor_id) }, { targets: BSON.ObjectID.createFromHexString(actor_id) }] } },
+                { $unwind : "$aggressors"},
+                { $lookup : {
+                    from: db_ref.get_current_actor_table(),
+                    localField: "aggressors",
+                    foreignField: "_id",
+                    as: "aggressors" 
+                }},
+                { $unwind : "$targets"},
+                { $lookup : { 
+                    from: db_ref.get_current_actor_table(),
+                    localField: "targets",
+                    foreignField: "_id",
+                    as: "targets" 
+                }},
+                { $limit: 30 },
+                event_projection
+            ]
+        };
+
+        db_interface.get(query_config, function(results){
+            callback(results);
+        },
+        function(error_object){
+            callback(error_object);
         });
     }
-
 }

@@ -13,7 +13,6 @@ var nodemailer = require('nodemailer');
 //internal dependencies
 
 
-
 module.exports = {
     
     send: function(send_config, success_callback, failure_callback){
@@ -36,7 +35,7 @@ module.exports = {
             from: 'noreply@beeftracker.com',
             to: recipient_address,
             subject: email_title,
-            html: email_title
+            html: email_html
         };
 
         //send email notifying beeftracker account new submisson

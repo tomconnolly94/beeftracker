@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var ContributionSchema = require("./event_contribution_schema").schema;
+var ContributionSchema = require("./event_contribution.schema").schema;
 
 var event_schema = new Schema({
     _id: Schema.ObjectId,
@@ -16,7 +16,7 @@ var event_schema = new Schema({
         url : String
     }],
     categories: [ Number ],
-    hit_count: {
+    hit_counts: {
         total: Number, 
         last_day: Number,
         last_two_days: Number,
@@ -37,6 +37,7 @@ var event_schema = new Schema({
     contributions: [ ContributionSchema ],
     featured: Boolean,
     tags: [ String ],
+    record_origin: String,
     user: Schema.ObjectId
 });
 

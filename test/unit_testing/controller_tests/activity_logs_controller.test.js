@@ -6,6 +6,9 @@ var assert = chai.assert;
 var BSON = require("bson");
 var sinon = require("sinon");
 
+//internal dependencies
+var globals = require('../testing_globals.js');
+
 describe('Module: activity_logs_controllers', function () {
 
     var activity_logs_controller, expected_results, callback_spy;

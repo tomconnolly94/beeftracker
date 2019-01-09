@@ -5,14 +5,15 @@ var chai = require('chai');
 var assert = chai.assert;
 var BSON = require("bson");
 var sinon = require("sinon");
+//internal dependencies
+var globals = require('../testing_globals.js');
 
 //objects
-var Actor = require('../../../server_files/schemas/actor_schema');
-var globals = require('../globals.js');
+var Actor = require('../../../server_files/schemas/actor.schema');
 
 describe('Module: actors_controller', function () {
 
-    var actors_controller, db_interface, actor_example, callback_spy;
+    var actors_controller, db_interface, actor_example, callback_spy, index_of_sort_query, index_of_match_query, index_of_limit_query;
 
     before(function () {
         
@@ -55,6 +56,9 @@ describe('Module: actors_controller', function () {
         db_interface = require("../module_mocking/db_interface.mock.js");
         storage_interface = require("../module_mocking/storage_interface.mock.js");
         actors_controller = proxyquire("../../../server_files/controllers/actors_controller", {"../interfaces/db_interface.js": db_interface, "../interfaces/storage_interface.js": storage_interface});
+        index_of_sort_query = 2;
+        index_of_match_query = 0;
+        index_of_limit_query = 2;
     });
     
     before(function(){
@@ -71,6 +75,7 @@ describe('Module: actors_controller', function () {
                 
         var expected_results = new Actor(actor_example);
         var result = actors_controller.format_actor_data(actor_example);
+        var fields_to_skip = [ "date_added" ];
 
         var result_keys = Object.keys(result._doc).sort();
         var expected_results_keys = Object.keys(expected_results._doc).sort();
@@ -86,6 +91,7 @@ describe('Module: actors_controller', function () {
                 assert.deepEqual(result[key], expected_results[key]);
             }
         }
+        globals.compare_objects(result._doc, expected_results._doc, fields_to_skip);
     });
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -153,7 +159,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query_dec, function(results){
             callback_spy();
-            var result = results[3]["$sort"];
+            var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_results_dec);
         });
         
@@ -170,7 +176,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query_inc, function(results){
             callback_spy();
-            var result = results[3]["$sort"];
+            var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_query_inc);
         });
         
@@ -193,7 +199,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query_dec, function(results){
             callback_spy();
-            var result = results[3]["$sort"];
+            var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_results_dec);
         });
         
@@ -210,7 +216,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query_inc, function(results){
             callback_spy();
-            var result = results[3]["$sort"];
+            var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_query_inc);
         });
 
@@ -233,7 +239,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query_dec, function(results){
             callback_spy();
-            var result = results[3]["$sort"];
+            var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_results_dec);
         });
         
@@ -250,7 +256,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query_inc, function(results){
             callback_spy();
-            var result = results[3]["$sort"];
+            var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_query_inc);
         });
         
@@ -278,7 +284,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query, function(results){
             callback_spy();
-            var result = results[0]["$match"];
+            var result = results[index_of_match_query]["$match"];
             assert.deepEqual(result, expected_results);
         });
         
@@ -308,7 +314,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query, function(results){
             callback_spy();
-            var result = results[0]["$match"];
+            var result = results[index_of_match_query]["$match"];
             assert.deepEqual(result, expected_results);
         });
         
@@ -331,7 +337,7 @@ describe('Module: actors_controller', function () {
         
         actors_controller.findActors(req_query, function(results){
             callback_spy();
-            var result = results[1]["$limit"];
+            var result = results[index_of_limit_query]["$limit"];
             assert.deepEqual(result, expected_results);
         });
         
@@ -384,24 +390,12 @@ describe('Module: actors_controller', function () {
             
             var actor_example_copy = actor_example;
             actor_example_copy._id = result._id;
+            var fields_to_skip = [ "date_added" ];
             
             result = result["_doc"];
             result.rating = 0;
-            
-            var result_keys = Object.keys(result).sort();
-            var actor_example_keys = Object.keys(actor_example_copy).sort();
-            
-            assert.deepEqual(result_keys, actor_example_keys);
-            
-            for(var i = 0; i < result_keys.length; i++){
-                
-                var key = result_keys[i];
-                var fields_to_skip = [ "date_added" ];
-                
-                if(fields_to_skip.indexOf(result[key]) != -1){
-                    assert.deepEqual(result[key], actor_example_copy[key]);
-                }
-            }
+
+            globals.compare_objects(result, actor_example_copy, fields_to_skip);
         });
         
         assert(callback_spy.called);

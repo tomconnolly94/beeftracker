@@ -1,9 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Module: 
+// Module: users_controller
 // Author: Tom Connolly
-// Description: 
-// Testing script:
+// Description: Module to handle CRUD operations on user objects in the DB, also responsible for 
+// password reset requests for users and updating various data fields (like viewed_beef_events)
+// Testing script: test/unit_testing/controller_tests/users_controller.test.js
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -11,14 +12,13 @@
 var BSON = require("bson");
 
 //internal dependencies
-var db_ref = require("../config/db_config.js");
-var db_interface = require("../interfaces/db_interface.js");
-var storage_ref = require("../config/storage_config.js");
-var storage_interface = require('../interfaces/storage_interface.js');
-var email_interface = require('../interfaces/email_interface.js');
+var db_ref = require("../config/db_config");
+var db_interface = require("../interfaces/db_interface");
+var storage_ref = require("../config/storage_config");
+var storage_interface = require("../interfaces/storage_interface");
+var email_interface = require("../interfaces/email_interface");
 var hashing = require("../tools/hashing.js");
 var random_id = require("random-id");
-
 
 //check for duplicate username or email address before allowing user to register
 var check_details_against_user_table = function(user_details, insert_object, callback){
@@ -47,7 +47,7 @@ var check_details_against_user_table = function(user_details, insert_object, cal
             }
         }
         else{
-            callback();
+            callback({});
         }
     });
 }
@@ -61,9 +61,8 @@ var insert_new_user = function(insert_object, table, callback){
         options: {}
     }
 
-    db_interface.insert(insert_config, function(){
-        console.log(document);
-        callback({ user_id: document.ops[0]._id});
+    db_interface.insert(insert_config, function(record){
+        callback({ user_id: record.id});
     },
     function(error_object){
         callback(error_object);
@@ -199,13 +198,12 @@ module.exports = {
         }
 
         //make sure username and email are both not taken
-        check_details_against_user_table(user_details, insert_object, function(error){
+        check_details_against_user_table(user_details, insert_object, function(result){
             
-            if(error){
-                callback(error);
+            if(result.failed){
+                callback(result);
             }
             else{
-                
                 if(user_details.admin){ //if admin, check pending registered admin users table, to ensure a user hasnt previously requested admin registration with similar details
 
                     var query_config = {
@@ -233,7 +231,6 @@ module.exports = {
                             }
                         }
                         else{
-                            
                             var upload_config = {
                                 record_type: storage_ref.get_user_images_folder(),
                                 items: [ insert_object ],
@@ -268,7 +265,11 @@ module.exports = {
                         
                         var upload_config = {
                             record_type: storage_ref.get_user_images_folder(),
-                            items: [ insert_object ],
+                            item_data: [{
+                                media_type: "image",
+                                link: insert_object.img_title,
+                                file: files[0]
+                            }],
                             files: files
                         };
                         
@@ -406,10 +407,10 @@ module.exports = {
         });
     },
     
-    deleteUser: function(request, response, callback){
+    deleteUser: function(user_id, callback){
         
         //extract data
-        var user_id_object = BSON.ObjectID.createFromHexString(request.params.user_id);
+        var user_id_object = BSON.ObjectID.createFromHexString(user_id);
 
         var query_config = {
             table: db_ref.get_user_details_table(),
@@ -417,11 +418,11 @@ module.exports = {
                 {  $match: { _id: user_id_object } }
             ]
         };
-        db_interface.get(query_config, function(result){
+        db_interface.get(query_config, function(results){
             
-            if(result && result[0]){
+            if(results.length > 0){
                 
-                var user = result[0];
+                var user = results[0];
                 
                 var remove_config = {
                     items: [ user ],
@@ -431,11 +432,13 @@ module.exports = {
                 storage_interface.remove(remove_config, function(img_title){
 
                     var delete_config = {
+                        table: db_ref.get_user_details_table(),
+                        delete_multiple_records: false,
                         match_query: { _id: user_id_object }
                     };
                     
-                    db_interface.delete(delete_config, function(){
-                        callback({ message: "User has been deleted." });
+                    db_interface.delete(delete_config, function(result){
+                        callback(result);
                     },
                     function(error_object){
                         callback(error_object);
@@ -459,10 +462,12 @@ module.exports = {
 
         db_interface.get(query_config, function(users){
 
-            if(auth_arr.length < 1){
+            if(users.length < 1){
                 callback({ failed: true, module: "users_controllers", function: "requestPasswordReset", message: "Email address not found."});
             }
             else{
+                //generate unique token
+                var id_token = random_id(40, "aA0");
                 var existing_user_details = users[0];
 
                 var insert_object = {                    
@@ -479,24 +484,21 @@ module.exports = {
 
                 //insert reset request token into the database to be accessed and checked later
                 db_interface.update(update_config, function(record){
-                    console.log("Password reset request document inserted.");
-                });
 
-                //generate unique token
-                var id_token = random_id(40);
-                var reset_url = "https://beeftracker.co.uk/reset-my-password/" + id_token;
+                    var reset_url = "https://beeftracker.co.uk/reset-my-password/" + id_token;
 
-                var send_email_config = {
-                    email_title: "Beeftracker password reset",
-                    email_html: "<b>Reset link</b> <a href=" + reset_url + ">Reset</a>",
-                    recipient_address: email_address
-                }
-                
-                email_interface.send(send_email_config, function(){
-                    callback({ message: "Email sent."});                    
-                },
-                function(error_object){
-                    callback(error_object);
+                    var send_email_config = {
+                        email_title: "Beeftracker password reset",
+                        email_html: "<b>Reset link</b> <a href=" + reset_url + ">Reset</a>",
+                        recipient_address: email_address
+                    }
+                    
+                    email_interface.send(send_email_config, function(){
+                        callback(record);                    
+                    },
+                    function(error_object){
+                        callback(error_object);
+                    });
                 });
             }
         });
@@ -553,53 +555,53 @@ module.exports = {
         
     updateUserImage: function(user_id, new_gallery_item, new_file, callback){
 
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-            if(err){ console.log(err); }
-            else{
-                var user_id_object = BSON.ObjectID.createFromHexString(user_id);
-                
-                
-                console.log("#############");
-                console.log(new_gallery_item);
-                console.log(new_file);
-                
-                db.collection(db_ref.get_user_details_table()).find({ _id: user_id_object }).toArray(function(queryErr, docs) {
-                    if(queryErr){ console.log(queryErr); }
-                    else{
-                        
-                        console.log(docs);
-                        
-                        var existing_user = docs[0];
-                        var existing_user_img = docs[0].img_title;
-                        
-                        storage_interface.upload_image(false, storage_ref.get_user_images_folder(), new_gallery_item.link, new_file.buffer, false, function(img_title){
-                            db.collection(db_ref.get_user_details_table()).update({ _id: user_id_object }, { $set: { img_title: img_title } }, function(queryErr, docs) {
-                                if(queryErr){ console.log(queryErr); }
-                                else{
+        var query_config = {
+            table: db_ref.get_user_details_table(),
+            aggregate_array: [
+                {
+                    $match: { _id: user_id_object }
+                }
+            ]
+        };
 
-                                    console.log(docs);
-                                    console.log("UPDATED");
-                                    callback({});
-                                }
-                            });
-                        });
-                        
-                        if(existing_user_img != "default"){
-                            //delete old image
-                            storage_interface.delete_image(storage_ref.get_user_images_folder(), existing_user_img, function(){
-                                console.log("old user image deleted");
-                            })
-                        }
-                        /*if(docs[0]){
-                            callback( docs[0] );
-                        }
-                        else{
-                            callback({ failed: true, message: "Actor not found." });
-                        }*/
-                    }
-                });            
+        db_interface.get(query_config, function(results){
+
+            var existing_user = results[0];
+            var existing_user_img = results[0].img_title;
+
+            var upload_config = {
+                record_type: storage_ref.get_user_images_folder(),
+                item_data: [ new_gallery_item.link ],
+                files: [ new_file.buffer ]
+            };
+            
+            storage_interface.upload(upload_config, function(item_data){
+            //storage_interface.upload_image(false, storage_ref.get_user_images_folder(), new_gallery_item.link, new_file.buffer, false, function(img_title){
+
+                var update_config = {
+                    table: db_ref.get_user_details_table(),
+                    existing_object_id: user_id,
+                    update_clause: { $set: { img_title: item_data[0].img_title } },
+                    options: {}
+                };
+
+                db_interface.update(update_config, function(results){
+                    callback({});
+                },
+                function(error_object){
+                    callback(error_object);
+                });
+            });
+            
+            if(existing_user_img != "default"){
+                //delete old image
+                storage_interface.delete_image(storage_ref.get_user_images_folder(), existing_user_img, function(){
+                    console.log("old user image deleted");
+                })
             }
+        },
+        function(error_object){
+            callback(error_object);
         });
     },
-    
 }

@@ -1,9 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Module: 
+// Module: comments_controller
 // Author: Tom Connolly
-// Description: 
-// Testing script:
+// Description: Module to handle operations in creating, deleting and finding various comments made 
+// on actors, beef events or chains, by users. 
+// Testing script: test/unit_testing/controller_tests/comments_controller.test.js
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -16,7 +17,7 @@ var db_interface = require("../interfaces/db_interface.js");
 var logging = require("../tools/logging.js");
 
 //objects
-var Comment = require("../schemas/comment_schema");
+var Comment = require("../schemas/comment.schema");
 
 module.exports = {
     

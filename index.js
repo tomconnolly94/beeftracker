@@ -32,7 +32,8 @@ if (dotenv_result.error) {
 }
  
 console.log(dotenv_result.parsed)*/
-
+var logger = require("./server_files/tools/logging");
+logger.submit_log(logger.LOG_TYPE.ERROR, "logging test", "error message");
 // ## Sitemap generation ###
 sitemap = sitemap_generator.createSitemap ({
     hostname: 'http://www.beeftracker.co.uk',
@@ -150,7 +151,7 @@ app.get('/*', function(req, res, next) { res.render("pages/static/error.jade"); 
 
 var success_msg = "Node app is running on port: ";
 
-// ### Launch application ####
+// ### Launch server ####
 app.listen(app.get('port'), function(){
     console.log("> NODE_ENV: " + process.env.NODE_ENV); 
     console.log("> HTTP " + success_msg + app.get('port'))

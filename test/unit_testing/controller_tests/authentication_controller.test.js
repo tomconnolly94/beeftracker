@@ -7,6 +7,9 @@ var assert = chai.assert;
 var BSON = require("bson");
 var globals = require("../globals.js")
 
+//internal dependencies
+var globals = require("../testing_globals.js")
+
 describe('Module: authentication_controller', function () {
 
     var authentication_controller, db_interface, cookie_spy, response, callback_spy;
