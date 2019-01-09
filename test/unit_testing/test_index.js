@@ -1,3 +1,5 @@
+//script for batch running tests manually at cmd line
+
 //external dependencies
 
 

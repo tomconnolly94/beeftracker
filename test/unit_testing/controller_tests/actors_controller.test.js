@@ -5,7 +5,6 @@ var chai = require('chai');
 var assert = chai.assert;
 var BSON = require("bson");
 var sinon = require("sinon");
-
 //internal dependencies
 var globals = require('../testing_globals.js');
 
@@ -81,6 +80,17 @@ describe('Module: actors_controller', function () {
         var result_keys = Object.keys(result._doc).sort();
         var expected_results_keys = Object.keys(expected_results._doc).sort();
         
+        assert.deepEqual(result_keys, expected_results_keys);
+        
+        for(var i = 0; i < result_keys.length; i++){
+            
+            var key = result_keys[i];
+            var fields_to_skip = [ "date_added" ];
+            
+            if(fields_to_skip.indexOf(result[key]) != -1){
+                assert.deepEqual(result[key], expected_results[key]);
+            }
+        }
         globals.compare_objects(result._doc, expected_results._doc, fields_to_skip);
     });
     
@@ -375,7 +385,6 @@ describe('Module: actors_controller', function () {
         storage_interface.upload = function(upload_config, callback){            
             callback(upload_config.item_data);
         };
-
         actors_controller.createActor(actor_example, files, function(result){
             callback_spy();
             

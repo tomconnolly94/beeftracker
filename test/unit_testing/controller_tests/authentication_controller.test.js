@@ -5,6 +5,7 @@ var chai = require('chai');
 var sinon = require("sinon");
 var assert = chai.assert;
 var BSON = require("bson");
+var globals = require("../globals.js")
 
 //internal dependencies
 var globals = require("../testing_globals.js")
