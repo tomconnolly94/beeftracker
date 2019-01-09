@@ -509,7 +509,8 @@ module.exports = {
         
         var delete_config = {
             table: db_ref.get_password_reset_request_table(),
-            match_query: { id_token: id_token }
+            match_query: { id_token: id_token },
+            delete_multiple_records: false
         };
 
         db_interface.delete(delete_config, function(record){
@@ -520,17 +521,22 @@ module.exports = {
             else{
                 password_data = hashing.hash_password(new_password);
 
-                var insert_object = {
-                    hashed_password: password_data.hashed_password,
-                    salt: password_data.salt
+                var update_config = {
+                    table: db_ref.get_password_reset_request_table(),
+                    match_query: { user_email: record.email_address },
+                    update_clause: { 
+                        $set: {
+                            hashed_password: password_data.hashed_password,
+                            salt: password_data.salt
+                        } 
+                    },
+                    options: {}
                 };
 
-                //insert reset request token into the database to be accessed and checked later
-                db.collection(db_ref.get_password_reset_request_table()).update({ user_email: email_address }, { $set: insert_object } , function(err, document){
+                db_interface.update(update_config, function(record){
                     console.log("Password reset request document inserted.")
-                    callback({ message: "Email address found, endpoint not yet implemented."});
-                });
-
+                    callback(record);
+                })
             }
         });
     },
@@ -540,10 +546,17 @@ module.exports = {
         var event_id_object = BSON.ObjectID.createFromHexString(event_id);
 
         var update_config = {
-            update_clause: { $push: { viewed_beef_ids: { id: event_id_object, date: new Date() }}},
+            update_clause: { 
+                $push: { 
+                    viewed_beef_ids: { 
+                        id: event_id_object, 
+                        date: new Date() 
+                    }
+                }
+            },
             table: db_ref.get_user_details_table(),
             options: {},
-            existing_object_id: user_id
+            match_query: { _id: user_id }
         }
 
         db_interface.update(update_config, function(record){
@@ -581,7 +594,7 @@ module.exports = {
 
                 var update_config = {
                     table: db_ref.get_user_details_table(),
-                    existing_object_id: user_id,
+                    match_query: { _id: user_id },
                     update_clause: { $set: { img_title: item_data[0].img_title } },
                     options: {}
                 };

@@ -134,7 +134,7 @@ module.exports = {
     update: function(update_config, success_callback, failure_callback){
     
         var table = update_config.table;
-        var existing_object_id = update_config.existing_object_id;
+        var match_query = update_config.match_query;
         var update_clause = update_config.update_clause;
         var options = update_config.options;
         
@@ -147,7 +147,7 @@ module.exports = {
                 var object = BSON.ObjectID.createFromHexString(existing_object_id);
                                 
                 //standard query to insert into live events table
-                db.collection(table).findOneAndUpdate({_id: object}, update_clause, { $upsert: true }, function(err, document){
+                db.collection(table).findOneAndUpdate(match_query, update_clause, { $upsert: true }, function(err, document){
                     if(err){
                         console.log(err);
                         failure_callback({ failed: true, module: "db_interface", function: "update", message: "Failed at db query"});
