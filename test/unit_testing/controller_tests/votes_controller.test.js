@@ -34,27 +34,55 @@ describe('Module: votes_controller', function () {
             db_interface_callback_spy();
             //table
             assert.exists(update_config.table);
+            var table = db_ref.get_current_event_table();
+            assert.equal(table, update_config.table);
+            //existing_object_id
+            assert.exists(update_config.existing_object_id);
+            assert.equal(globals.dummy_object_id, update_config.existing_object_id);
+            //update_clause
+            assert.exists(update_config.update_clause);
+            assert.exists(update_config.update_clause["$inc"]);
+            assert.exists(update_config.update_clause["$inc"]["votes.upvotes"]);
+            assert.equal(update_config.update_clause["$inc"]["votes.upvotes"], 1);
+            assert.exists(update_config.options);
+            success_callback([ globals.event_example ]);
+        };
+
+        votes_controller.addVoteToEvent(globals.dummy_object_id, 1, globals.dummy_object_id, function(results){
+            callback_spy();
+            assert.equal(1, results.length);
+        });
+        
+        assert(db_interface_callback_spy.called);
+        assert(callback_spy.called);
+    });
+
+    it('addVoteToEvent - downvote', function () {
+        var db_interface_callback_spy = sinon.spy();
+        
+        db_interface.update = function(update_config, success_callback){
+            db_interface_callback_spy();
+            //table
+            assert.exists(update_config.table);
             assert.equal(db_ref.get_current_event_table(), update_config.table);
             //existing_object_id
             assert.exists(update_config.existing_object_id);
             assert.equal(globals.dummy_object_id, update_config.existing_object_id);
             //update_clause
             assert.exists(update_config.update_clause);
-            assert.exists(update_config["$inc"]);
-            assert.exists(update_config["$inc"]["votes.upvotes"]);
-            assert.equal(update_config["$inc"]["votes.upvotes"], 1);
-            assert.exists(options);
-            callback([ globals.event_example ]);
+            assert.exists(update_config.update_clause["$inc"]);
+            assert.exists(update_config.update_clause["$inc"]["votes.downvotes"]);
+            assert.equal(update_config.update_clause["$inc"]["votes.downvotes"], 1);
+            assert.exists(update_config.options);
+            success_callback([ globals.event_example ]);
         };
 
-        votes_controller.findUser(globals.dummy_object_id, 1, globals.dummy_object_id, true, function(results){
+        votes_controller.addVoteToEvent(globals.dummy_object_id, 1, globals.dummy_object_id, true, function(results){
             callback_spy();
             assert.equal(1, results.length);
         });
         
-        //assert(db_interface_callback_spy.called);
-        //assert(callback_spy.called);
-
-        console.log("Test unimplemented.")
+        assert(db_interface_callback_spy.called);
+        assert(callback_spy.called);
     });
 });

@@ -72,14 +72,14 @@ module.exports = {
 
         db_interface.update(update_config, function (result) {
 
-                callback(result);
+            callback(result);
 
-                if (user_id) {
-                    add_vote_to_user_record(event_id, user_id);
-                }
-            },
-            function (error_object) {
-                callback(error_object);
-            });
+            if (user_id) {
+                add_vote_to_user_record(event_id, user_id);
+            }
+        },
+        function (error_object) {
+            callback(error_object);
+        });
     }
 }
