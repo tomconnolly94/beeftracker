@@ -9,11 +9,11 @@ module.exports = {
         console.log("delete called");
     },
     
-    insert_record_into_db: function(insert_object, table, options, fn_callback){
-        console.log("insert_record_into_db called");
+    insert: function(insert_object, table, options, fn_callback){
+        console.log("insert called");
     },
     
-    update_record_in_db: function(insert_object, table, options, existing_object_id, fn_callback){
-        console.log("update_record_in_db called");
+    update: function(insert_object, table, options, existing_object_id, fn_callback){
+        console.log("update called");
     }    
 }

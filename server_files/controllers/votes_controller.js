@@ -16,7 +16,7 @@ var db_ref = require("../config/db_config.js");
 var db_interface = require("../interfaces/db_interface.js");
 var logger = require("../tools/logging");
 
-function add_vote_to_user_record(db, event_id, user_id) {
+function add_vote_to_user_record(event_id, user_id) {
 
     var update_config = {
         table: db_ref.get_user_details_table(),
@@ -29,7 +29,7 @@ function add_vote_to_user_record(db, event_id, user_id) {
         options: {}
     };
 
-    db_interface.update(update_config, function (result) {
+    db_interface.update(update_config, function () {
             logger.submit_log(logger.LOG_TYPE.SUCCESS, "votes_controller", "Updated field 'voted_on_beef_ids' for user: " + user_id + " event: " + event_id);
         },
         function (error_object) {
