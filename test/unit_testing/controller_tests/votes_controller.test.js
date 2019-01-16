@@ -3,7 +3,6 @@ var proxyquire = require("proxyquire");
 var chai = require('chai');
 var sinon = require("sinon");
 var assert = chai.assert;
-var expect = chai.expect;
 
 //internal dependencies
 var db_ref = require("../../../server_files/config/db_config");

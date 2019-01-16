@@ -3,7 +3,6 @@ var proxyquire = require("proxyquire");
 var chai = require('chai');
 var sinon = require("sinon");
 var assert = chai.assert;
-var expect = chai.expect;
 
 //internal dependencies
 var db_ref = require("../../../server_files/config/db_config");
@@ -254,7 +253,6 @@ describe('Module: users_controller', function () {
 
         var db_interface_delete_callback_spy = sinon.spy();
         var db_interface_update_callback_spy = sinon.spy();
-        var email_interface_callback_spy = sinon.spy();
         var dummy_email_address = "fake@person.com";
 
         db_interface.delete = function (delete_config, success_callback) {

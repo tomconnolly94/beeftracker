@@ -8,7 +8,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //external dependencies
-var cloudinary = require('cloudinary');
 var dl_request = require("request");
 var datauri = require("datauri");
 var path = require("path");
