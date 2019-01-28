@@ -99,12 +99,8 @@ append body
     
     - var aggressor_index;
     - var target_index;
-    
-    - console.log(event_data.beef_chain_ids);
-    - console.log(beef_chain_index);
-    
+        
     - aggressor_index = event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) != -1 ? event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) : event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[1]))
-
     - target_index = event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) != -1 ? event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) : event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[1]))
     
     div.bt-content-full-width.beef-background-banner(style="background-image: url('" + file_server_url_builder(file_server_url_prefix, "events", event_data.cover_image, "c_fill,g_face,h_150,w_150", "webp") + "')")
@@ -201,6 +197,7 @@ append body
             +section('DATA', 'SOURCES', 'fa fa-book')
                 ul
                     each data_source in event_data.data_sources
+                        - if(!data_source.startsWith("http")){ data_source = "http://" + data_source; }
                         li
                             a(href=data_source, target="_blank") #{data_source}
                

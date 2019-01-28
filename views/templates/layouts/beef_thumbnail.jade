@@ -7,7 +7,7 @@ mixin medium-beef-thumbnail(data, data_type, image_resize_params, beef_chain_ind
         - var formatted_date = format_date(data.event_date);
         - var letter_mapping = ["one", "two", "three", "four", "five" ];
         
-        a(href="/beef/" + data.beef_chain_ids[beef_chain_index]._id + "/" + data._id, class!=attributes.class, class!=attributes.beef_thumbnail_class)
+        a(href="/beef/" + data.beef_chain_ids[beef_chain_index] + "/" + data._id, class!=attributes.class, class!=attributes.beef_thumbnail_class)
             div.beef-thumbnail(class!=attributes.beef_thumbnail_class)
                 div.info-overlay
                     div.header-panel

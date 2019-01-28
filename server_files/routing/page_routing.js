@@ -75,7 +75,6 @@ function blanket_middleware(request, response, next){
     resolve_user_from_locals_token(request, response);
     
     view_parameters_global.browser = detect_browser(request, response);
-    console.log(request.browser)
     next();
 }
 
@@ -294,8 +293,6 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
     
         var disable_voting = false;
         var cookies = cookie_parser.parse_cookies(request);
-
-        console.log(cookies)
         
         var view_parameters = Object.assign({}, view_parameters_global);
         if(request.locals && request.locals.authenticated_user){ //if user is logged on, decide whether to disable voting panel based on user record voted_on_beef_ids field
@@ -315,7 +312,7 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
         var main_event_data_promise = new Promise(function(resolve, reject){
             event_controller.findEvent(event_id, function(data){
                 if(data.failed){
-                    response.render("pages/static/error.jade", view_parameters);
+                    reject();
                 }
                 else{
                     let data_object = { event_data: data };
@@ -328,30 +325,16 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
             });
         });
 
-        var comment_data_promise = new Promise(function(resolve, reject){
-           comment_controller.findCommentsFromBeefChain(beef_chain_id, function(data){
-                if(data.failed){
-                    response.render("pages/static/error.jade", view_parameters);
-                }
-                else{
-                    resolve(data);
-                }
-            });
-        });
-
-        Promise.all([ main_event_data_promise, comment_data_promise ]).then(function(values) {
+        Promise.all([ main_event_data_promise ]).then(function(values) {
             //- find the beef_chain index using the beef chain accessed from the db and the current_beef_chain_id accessed via the path of the page request
             beef_chain_index = values[0].event_data.beef_chain_ids.map(function(e){ return String(e._id) } ).indexOf(String(beef_chain_id));
-            
-            console.log(beef_chain_id);
-            console.log(beef_chain_index);
-            
+                        
             //if beef chain index is not larger than 0 then the selected event cannot be found in the requested beef_chain
             if(beef_chain_index >= 0){
                 view_parameters.current_beef_chain_id = beef_chain_id;
                 view_parameters.event_data = values[0].event_data;
                 //view_parameters.event_data.rating = calculate_event_rating(view_parameters.event_data.votes);
-                view_parameters.comment_data = values[1];
+                view_parameters.comment_data = values[0].event_data.comments;
                 view_parameters.related_events = values[0].related_events;
                 view_parameters.disable_voting = disable_voting;
                 view_parameters.page_url = page_url;

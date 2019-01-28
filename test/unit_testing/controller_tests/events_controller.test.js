@@ -9,9 +9,16 @@ var expect = chai.expect;
 var db_ref = require("../../../server_files/config/db_config");
 var globals = require('../testing_globals.js');
 
+var get_index_of_aggregate_stage = function(aggregate_array, stage_name){
+    for(var i = 0; i < aggregate_array.length; i++){
+        if(aggregate_array[i][stage_name]){ return i; }
+    }
+    return null;
+}
+
 describe('Module: event_controller', function () {
 
-    var events_controller, db_interface, event_example, callback_spy, beef_chain_ids, index_of_sort_query, index_of_match_query, index_of_limit_query;
+    var events_controller, db_interface, event_example, callback_spy, beef_chain_ids, index_of_limit_query;
 
     before(function(){
         
@@ -49,10 +56,6 @@ describe('Module: event_controller', function () {
                 ]
             },
         ];
-
-        index_of_sort_query = 10;
-        index_of_match_query = 0;
-        index_of_limit_query = 10;
     });
     
     beforeEach(function () {
@@ -121,9 +124,11 @@ describe('Module: event_controller', function () {
         var expected_results_dec = {
             name: -1
         }
+
         
         events_controller.findEvents(req_query_dec, function(results){
             callback_spy();
+            var index_of_sort_query = get_index_of_aggregate_stage(results, "$sort");
             var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_results_dec);
         });
@@ -141,6 +146,7 @@ describe('Module: event_controller', function () {
         
         events_controller.findEvents(req_query_inc, function(results){
             callback_spy();
+            var index_of_sort_query = get_index_of_aggregate_stage(results, "$sort");
             var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_query_inc);
         });
@@ -164,6 +170,7 @@ describe('Module: event_controller', function () {
         
         events_controller.findEvents(req_query_dec, function(results){
             callback_spy();
+            var index_of_sort_query = get_index_of_aggregate_stage(results, "$sort");
             var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_results_dec);
         });
@@ -181,6 +188,7 @@ describe('Module: event_controller', function () {
         
         events_controller.findEvents(req_query_inc, function(results){
             callback_spy();
+            var index_of_sort_query = get_index_of_aggregate_stage(results, "$sort");
             var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_query_inc);
         });
@@ -204,6 +212,7 @@ describe('Module: event_controller', function () {
         
         events_controller.findEvents(req_query_dec, function(results){
             callback_spy();
+            var index_of_sort_query = get_index_of_aggregate_stage(results, "$sort");
             var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_results_dec);
         });
@@ -221,6 +230,7 @@ describe('Module: event_controller', function () {
         
         events_controller.findEvents(req_query_inc, function(results){
             callback_spy();
+            var index_of_sort_query = get_index_of_aggregate_stage(results, "$sort");
             var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_query_inc);
         });
@@ -244,6 +254,7 @@ describe('Module: event_controller', function () {
         
         events_controller.findEvents(req_query_dec, function(results){
             callback_spy();
+            var index_of_sort_query = get_index_of_aggregate_stage(results, "$sort");
             var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_results_dec);
         });
@@ -261,6 +272,7 @@ describe('Module: event_controller', function () {
         
         events_controller.findEvents(req_query_inc, function(results){
             callback_spy();
+            var index_of_sort_query = get_index_of_aggregate_stage(results, "$sort");
             var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_query_inc);
         });
@@ -284,6 +296,7 @@ describe('Module: event_controller', function () {
         
         events_controller.findEvents(req_query_dec, function(results){
             callback_spy();
+            var index_of_sort_query = get_index_of_aggregate_stage(results, "$sort");
             var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_results_dec);
         });
@@ -301,6 +314,7 @@ describe('Module: event_controller', function () {
         
         events_controller.findEvents(req_query_inc, function(results){
             callback_spy();
+            var index_of_sort_query = get_index_of_aggregate_stage(results, "$sort");
             var result = results[index_of_sort_query]["$sort"];
             assert.deepEqual(result, expected_query_inc);
         });
@@ -329,6 +343,7 @@ describe('Module: event_controller', function () {
         
         events_controller.findEvents(req_query, function(results){
             callback_spy();
+            var index_of_match_query = get_index_of_aggregate_stage(results, "$match");
             var result = results[index_of_match_query]["$match"];
             assert.deepEqual(result, expected_results);
         });
@@ -349,6 +364,7 @@ describe('Module: event_controller', function () {
 
         events_controller.findEvents({}, function(results){
             callback_spy();
+            var index_of_limit_query = get_index_of_aggregate_stage(results, "$limit");
             var result = results[index_of_limit_query]["$limit"];
             assert.deepEqual(result, expected_results);
         });

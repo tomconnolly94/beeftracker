@@ -22,7 +22,7 @@ mixin timeline-section(data, beef_chain_index)
                 //-- data.beef_chain_ids[beef_chain_index].events.reverse(); //-put events in the correct order
                 each thumbnail_data, index in data.beef_chain_ids[beef_chain_index].events
                 
-                    - thumbnail_data.beef_chain_ids[beef_chain_index] = data.beef_chain_ids[beef_chain_index]
+                    - thumbnail_data.beef_chain_ids[beef_chain_index] = data.beef_chain_ids[beef_chain_index]._id;
                 
                     //-insert empty li if two consecutive events are from the same actor
                     - if(String(previous_aggressor_id) == String(thumbnail_data.aggressors[0])){

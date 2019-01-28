@@ -50,7 +50,7 @@ var event_projection = {
     "tags": 1,
     "featured": 1,
     "votes": 1,
-    "rating": { $ceil: { $multiply: [5, { $divide: ["$votes.upvotes", { $add: ["$votes.upvotes", "$votes.downvotes"] }] }] } }
+    "comments": 1
 };
 
 var increment_hit_counts = function (event_id) {
@@ -105,28 +105,6 @@ var get_aggregate_array = function (match_query_content, additional_aggregate_st
         },
         { $unwind: "$categories" },
         {
-            $lookup: {
-                from: "beef_chains",
-                localField: "beef_chain_ids",
-                foreignField: "_id",
-                as: "beef_chain_ids"
-            }
-        },/*
-        { $lookup: { 
-            from: "comments", 
-            localField: "_id", 
-            foreignField: "event_id", 
-            as: "comments"  
-        }},*/
-        /*{ $unwind: "$beef_chain_ids"}, 
-        { $lookup: { 
-            from: "event_data_v4", 
-            localField: "beef_chain_ids.events", 
-            foreignField: "_id", 
-            as: "beef_chain_ids.events"
-        }},*/
-        { $unwind: "$beef_chain_ids" },
-        {
             $group: {
                 _id: "$_id",
                 title: { $first: "$title" },
@@ -148,16 +126,18 @@ var get_aggregate_array = function (match_query_content, additional_aggregate_st
                 tags: { $first: "$tags" },
                 featured: { $first: "$featured" },
                 votes: { $first: "$votes" },
+                comments: { $first: "$comments" },
             }
         },
         { $project: event_projection }
     ];
 
-    var initial_index = aggregate_array.length - 4;
+    var initial_index = aggregate_array.length - 3;
 
     for (var i = initial_index; i - initial_index < additional_aggregate_stages.length; i++) {
         aggregate_array.splice(i, 0, additional_aggregate_stages[i - initial_index]);
     }
+
     return aggregate_array;
 }
 
@@ -224,7 +204,6 @@ module.exports = {
         var sort_query_content = {};
         var query_present = Object.keys(query_parameters).length === 0 && query_parameters.constructor === Object ? false : true; //check if request comes with query
         var limit_query_content = 30; //max amount of records to return
-        var query_table = db_ref.get_current_event_table();
 
         if (query_present) {
 
@@ -255,27 +234,30 @@ module.exports = {
             else if (query_parameters.match_event_ids) { match_query_content = { _id: { $in: query_parameters.match_event_ids } } }
 
             //deal with $limit query
-            if (query_parameters.limit) { limit_query_content = typeof query_parameters.limit == "string" ? parseInt(query_parameters.limit) : query_parameters.limit }
+            if (query_parameters.limit) { limit_query_content = typeof query_parameters.limit == "string" ? parseInt(query_parameters.limit) : query_parameters.limit + 1 }
         }
 
         var additional_aggregate_stages = [
-            /*{ 
-                $lookup: { 
-                    from: "comments", 
-                    localField: "_id", 
-                    foreignField: "event_id", 
-                    as: "comments"  
-                }
-            },
-            { $unwind: "$beef_chain_ids"}, 
-            { 
-                $lookup: { 
-                    from: "event_data_v4", 
-                    localField: "beef_chain_ids.events", 
-                    foreignField: "_id", 
-                    as: "beef_chain_ids.events"
-                }
-            }*/
+            // { "$lookup": { 
+            //     from: "comments", 
+            //     localField: "_id", 
+            //     foreignField: "event_id", 
+            //     as: "comments"  
+            // }},
+            // {"$lookup": { 
+            //     from: "beef_chains", 
+            //     localField: "beef_chain_ids", 
+            //     foreignField: "_id", 
+            //     as: "beef_chain_ids"  
+            // }}, 
+            // { "$unwind": "$beef_chain_ids"},
+            // { '$lookup': 
+            //     { from: 'event_data_v4',
+            //         localField: 'beef_chain_ids.events',
+            //         foreignField: '_id',
+            //         as: 'beef_chain_ids.events' 
+            //     } 
+            // }
         ];
 
         if(Object.keys(sort_query_content).length > 0){
@@ -303,15 +285,37 @@ module.exports = {
 
     findEvent: function (event_id, callback) {
 
+        var additional_aggregate_stages = [
+            { "$lookup": { 
+                from: "comments", 
+                localField: "_id", 
+                foreignField: "event_id", 
+                as: "comments"  
+            }},
+            {"$lookup": { 
+                from: "beef_chains", 
+                localField: "beef_chain_ids", 
+                foreignField: "_id", 
+                as: "beef_chain_ids"  
+            }}, 
+            { "$unwind": "$beef_chain_ids"},
+            { '$lookup': 
+                { from: 'event_data_v4',
+                    localField: 'beef_chain_ids.events',
+                    foreignField: '_id',
+                    as: 'beef_chain_ids.events' 
+                } 
+            }
+        ];
+
         var query_config = {
             table: db_ref.get_current_event_table(),
-            record: get_aggregate_array({ _id: BSON.ObjectID.createFromHexString(event_id) }, [])
+            aggregate_array: get_aggregate_array({ _id: BSON.ObjectID.createFromHexString(event_id) }, additional_aggregate_stages)
         };
 
         db_interface.get(query_config, function (results) {
 
             var result = results[0];
-
             //sort beef chain events using event dates using above compare function
             for (var i = 0; i < result.beef_chain_ids.length; i++) {
                 result.beef_chain_ids[i].events.sort(compare_event_dates);
@@ -420,7 +424,6 @@ module.exports = {
                 }
             }
 
-            console.log(event_insert);
             callback({ failed: true, test_mode: true, message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_insert });
         }
         else {

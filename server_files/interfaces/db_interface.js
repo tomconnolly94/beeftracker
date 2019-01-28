@@ -1,18 +1,23 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Module: 
+// Module: db_interface
 // Author: Tom Connolly
-// Description: 
-// Testing script:
+// Description: Module to take care of all queries to the database, encapsulating connection, query
+// and error handling
+// Testing script: n/a
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//file to hold all functions involving the server's interfacing with the database
-var db_ref = require("../config/db_config.js");
-var email_interface = require("../interfaces/email_interface");
+//external dependencies
 var BSON = require('bson');
 
-const db_url = process.env.MONGODB_URI; //get db uri
+//internal dependencies
+var db_ref = require("../config/db_config.js");
+var email_interface = require("../interfaces/email_interface");
+var logger = require("../tools/logging.js")
+
+//get db uri
+const db_url = process.env.MONGODB_URI;
 
 var create_beef_chains = function (db, event, table) {
     event.aggressors.forEach(function (aggressor, index) {
@@ -102,6 +107,9 @@ module.exports = {
         var table = query_config.table;
         var aggregate_array = query_config.aggregate_array;
 
+        logger.submit_log(logger.LOG_TYPE.EXTRA_INFO, "DB aggregate_array:");
+        logger.submit_log(logger.LOG_TYPE.EXTRA_INFO, aggregate_array)
+
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function (err, db) {
             if (err) {
                 console.log(err);
@@ -116,7 +124,7 @@ module.exports = {
                 db.collection(table).aggregate(aggregate_array).toArray(function (err, results) {
                     //handle error
                     if (err) {
-                        console.log(err);
+                        logger.submit_log(logger.LOG_TYPE.ERROR, `DB error: ${error}`)
                         failure_callback({
                             failed: true,
                             module: "db_interface",
@@ -124,6 +132,8 @@ module.exports = {
                             message: "Failed at db query"
                         });
                     } else {
+                        logger.submit_log(logger.LOG_TYPE.INFO, `DB query returned ${results.length} results.`)
+                        logger.submit_log(logger.LOG_TYPE.INFO, `DB table: ${table}`)
                         if (results.length > 0) {
                             success_callback(results);
                         } else {
