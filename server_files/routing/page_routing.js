@@ -86,8 +86,8 @@ router.get("/", token_authentication.recognise_user_token, blanket_middleware, f
         });
     });
     
-    var grid_data_promise = new Promise(function(resolve, reject){
-       event_controller.findEvents({ limit: 6, featured: false }, function(data){
+    var new_beef_data_promise = new Promise(function(resolve, reject){
+       event_controller.findEvents({ limit: 6, featured: false, decreasing_order: "date_added" }, function(data){
            resolve(data);
         });
     });
@@ -98,26 +98,31 @@ router.get("/", token_authentication.recognise_user_token, blanket_middleware, f
         });
     });
     
-    var category_event_data_promise = new Promise(function(resolve, reject){
-       event_controller.findEvents({ match_category: "0", limit: 6 }, function(data){
-           resolve(data);
-        });
-    });
+    // var category_event_data_promise = new Promise(function(resolve, reject){
+    //    event_controller.findEvents({ match_category: "0", limit: 6 }, function(data){
+    //        resolve(data);
+    //     });
+    // });
     
-    var categories_promise = new Promise(function(resolve, reject){
-       category_controller.getEventCategories(function(data){
-           resolve(data);
-        });
-    });
+    // var categories_promise = new Promise(function(resolve, reject){
+    //    category_controller.getEventCategories(function(data){
+    //        resolve(data);
+    //     });
+    // });
     
-    Promise.all([ featured_data_promise, grid_data_promise, slider_data_promise, category_event_data_promise, categories_promise ]).then(function(values) {
+    var classic_beef_data_promise = new Promise(function(resolve, reject){
+        event_controller.findEvents({ limit: 6, featured: false, decreasing_order: "event_date" }, function(data){
+           resolve(data);
+       });
+    });
+
+    Promise.all([ featured_data_promise, new_beef_data_promise, slider_data_promise, classic_beef_data_promise  ]).then(function(values) {
         
         var view_parameters = Object.assign({}, view_parameters_global);
         view_parameters.featured_data = values[0];
-        view_parameters.grid_data = values[1];
+        view_parameters.new_beef_data = values[1];
         view_parameters.slider_data = values[2];
-        view_parameters.category_event_data = values[3];
-        view_parameters.categories = values[4];
+        view_parameters.classic_beef_data = values[3];
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
         
         response.render("pages/home.jade", view_parameters);

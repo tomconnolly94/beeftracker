@@ -15,16 +15,18 @@ append body
                         | Home of beef! Explore our broad collection of conflict/beef/argument stories below! Get informed about who you agree with and 
                         a(href="/register") join the community 
                         | to start contributing today!
-                        
+
     div.bt-content
-        +featured-beef-section(featured_data, "events", "c_fill,g_face,h_215,w_350")
-        +adsense-banner-ad()
+        - if(featured_data.length > 2){
+            +featured-beef-section(featured_data, "events", "c_fill,g_face,h_215,w_350")
+            +adsense-banner-ad()
+        - }
         +section('New', 'BEEF', 'fa-clock', 'Check out the latest contributions to our site!')
             div.row
-                +thumbnail-grid(grid_data, "events")
-        //+section('HOT', 'BEEFS')
-            //+horizontal-slider('featured_beefs_slider', grid_data, "events")
-append body
+                +thumbnail-grid(new_beef_data, "events")
+        //-section('HOT', 'BEEFS')
+            horizontal-slider('featured_beefs_slider', grid_data, "events")
+append body 
     div.bt-content
         +section('JOINTHE', 'COMMUNITY', 'fa fa-comments', 'Discover more ways to get involved with the project, vote and contribute now!')
             div.row
@@ -37,11 +39,17 @@ append body
                     a.btn.btn-lg.btn-primary.btn-float.add-beef-button(href="/add-beef") Add Beef
                     a.btn.btn-lg.btn-primary.btn-float(href="/register") Create an Account
 
+//-append body
+    div.bt-content
+        +adsense-banner-ad()
+        +category-browser-section(categories, category_event_data)
 
 append body
     div.bt-content
         +adsense-banner-ad()
-        +category-browser-section(grid_data)
+        +section('CLASSIC', 'BEEF', 'fa-clock', 'Find the old stanky beef!')
+            div.row
+                +thumbnail-grid(classic_beef_data, "events")
 
 append body
     div.bt-content
