@@ -140,16 +140,7 @@ module.exports = {
         }
 
         db_interface.get(query_config, function (results) {
-                if (results.length < 1) {
-                    callback({
-                        failed: true,
-                        module: "users_controller",
-                        function: "findUser",
-                        message: "Could not find user."
-                    });
-                } else {
-                    callback(results[0]);
-                }
+                callback(results[0]);
             },
             function (error_object) {
                 callback(error_object)
@@ -621,47 +612,47 @@ module.exports = {
 
         db_interface.get(query_config, function (results) {
 
-            var existing_user_img = results[0].img_title;
+                var existing_user_img = results[0].img_title;
 
-            var upload_config = {
-                record_type: storage_ref.get_user_images_folder(),
-                item_data: [new_gallery_item.link],
-                files: [new_file.buffer]
-            };
-
-            storage_interface.upload(upload_config, function (item_data) {
-                //storage_interface.upload_image(false, storage_ref.get_user_images_folder(), new_gallery_item.link, new_file.buffer, false, function(img_title){
-
-                var update_config = {
-                    table: db_ref.get_user_details_table(),
-                    match_query: {
-                        _id: user_id
-                    },
-                    update_clause: {
-                        $set: {
-                            img_title: item_data[0].img_title
-                        }
-                    },
-                    options: {}
+                var upload_config = {
+                    record_type: storage_ref.get_user_images_folder(),
+                    item_data: [new_gallery_item.link],
+                    files: [new_file.buffer]
                 };
 
-                db_interface.update(update_config, function (results) {
-                        callback({});
-                    },
-                    function (error_object) {
-                        callback(error_object);
-                    });
-            });
+                storage_interface.upload(upload_config, function (item_data) {
+                    //storage_interface.upload_image(false, storage_ref.get_user_images_folder(), new_gallery_item.link, new_file.buffer, false, function(img_title){
 
-            if (existing_user_img != "default") {
-                //delete old image
-                storage_interface.delete_image(storage_ref.get_user_images_folder(), existing_user_img, function () {
-                    console.log("old user image deleted");
-                })
-            }
-        },
-        function (error_object) {
-            callback(error_object);
-        });
+                    var update_config = {
+                        table: db_ref.get_user_details_table(),
+                        match_query: {
+                            _id: user_id
+                        },
+                        update_clause: {
+                            $set: {
+                                img_title: item_data[0].img_title
+                            }
+                        },
+                        options: {}
+                    };
+
+                    db_interface.update(update_config, function (results) {
+                            callback({});
+                        },
+                        function (error_object) {
+                            callback(error_object);
+                        });
+                });
+
+                if (existing_user_img != "default") {
+                    //delete old image
+                    storage_interface.delete_image(storage_ref.get_user_images_folder(), existing_user_img, function () {
+                        console.log("old user image deleted");
+                    })
+                }
+            },
+            function (error_object) {
+                callback(error_object);
+            });
     }
 }

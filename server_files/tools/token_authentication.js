@@ -1,17 +1,16 @@
-//get database reference object
-var db_ref = require("../config/db_config.js");
-var db_interface = require("../interfaces/db_interface.js");
-//var BSON = require('bson');
-var bodyParser = require("body-parser");
+//external dependencies
+var BSON = require('bson');
 var jwt = require("jsonwebtoken");
-//var os = require("os");
 var cookie_parser = require('../tools/cookie_parsing.js');
 
+//internal dependencies
+var db_ref = require("../config/db_config.js");
+var db_interface = require("../interfaces/db_interface.js");
+
 var auth_disabled = false;
-var auto_refresh_auth_token = false;
 
 //confirm authentication, refresh cookie, and let page route continue executing
-var confirm_auth = function(request, response, token, next){
+var confirm_auth = function(request, response, token, auto_refresh_auth_token, next){
     if(auto_refresh_auth_token){
         //cookie config
         var cookies_http_only = true;
@@ -34,13 +33,13 @@ var confirm_auth = function(request, response, token, next){
         id: token._id,
         is_admin: token.admin
     }
+
     next();
 }
 
 var authentication_procedure = function(request, response, deny_access_on_fail, next){
     
     //extract data for use later
-    var db_url = process.env.MONGODB_URI; //get db uri
     var auto_refresh_auth_token = false;
     var cookies = cookie_parser.parse_cookies(request);
         
@@ -60,14 +59,14 @@ var authentication_procedure = function(request, response, deny_access_on_fail, 
                     if(auth_token.ip_loc){ //if ip location field is provided, also verify the requests ip address
                         //check if this request's ip address matches the ip address that the user logged in with, ignore if tokens ip_loc is null
                         if(!auth_token.ip_loc || request.headers['x-forwarded-for'] == auth_token.ip_loc ){                    
-                            confirm_auth(request, response, auth_token, next);
+                            confirm_auth(request, response, auth_token, auto_refresh_auth_token, next);
                         }
                         else{
                             module.exports.reset_auth(response, deny_access_on_fail, { stage: "token_authentication", message: "Token Authentication failed please login" }, next);
                         }
                     }
                     else{
-                        confirm_auth(request, response, auth_token, next);
+                        confirm_auth(request, response, auth_token, auto_refresh_auth_token, next);
                     }
                 }
                 else{
@@ -108,6 +107,7 @@ module.exports = {
             authentication_procedure(request, response, true, next);
         }
     },
+
     authenticate_endpoint_with_admin_user_token : function(request, response, next) {
         if(auth_disabled){
             next();
@@ -117,6 +117,7 @@ module.exports = {
             authentication_procedure(request, response, true, next);
         }
     },
+
     recognise_user_token : function(request, response, next) {
         if(auth_disabled){
             next();
@@ -125,6 +126,7 @@ module.exports = {
             authentication_procedure(request, response, false, next);
         }
     },
+
     recognise_admin_token : function(request, response, next) {
         if(auth_disabled){
             next();

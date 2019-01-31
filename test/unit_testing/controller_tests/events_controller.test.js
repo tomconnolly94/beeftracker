@@ -345,7 +345,8 @@ describe('Module: event_controller', function () {
             callback_spy();
             var index_of_match_query = get_index_of_aggregate_stage(results, "$match");
             var result = results[index_of_match_query]["$match"];
-            assert.deepEqual(result, expected_results);
+            delete result.categories;
+            assert.isTrue(globals.compare_objects(result, expected_results, [ "categories" ]));
         });
         
         assert(callback_spy.called);

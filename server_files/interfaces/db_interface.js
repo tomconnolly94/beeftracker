@@ -205,12 +205,8 @@ module.exports = {
                     message: "Failed at db connection"
                 });
             } else {
-                var object = BSON.ObjectID.createFromHexString(existing_object_id);
-
                 //standard query to insert into live events table
-                db.collection(table).findOneAndUpdate(match_query, update_clause, {
-                    $upsert: true
-                }, function (err, document) {
+                db.collection(table).findOneAndUpdate(match_query, update_clause, { $upsert: true }, function (err, document) {
                     if (err) {
                         console.log(err);
                         failure_callback({
@@ -221,8 +217,8 @@ module.exports = {
                         });
                     } else {
                         options.operation = "update";
-                        post_insert_procedure(db, document, record, table, options);
-                        success_callback(record);
+                        post_insert_procedure(db, document, update_clause, table, options);
+                        success_callback(update_clause);
                     }
                 });
             }

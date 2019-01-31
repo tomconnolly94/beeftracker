@@ -40,42 +40,38 @@ function calculate_event_rating(votes){
     return rating;
 }
 
-function resolve_user_from_locals_token(request, response){
+function resolve_user_from_locals_token(request, callback){
     if(request.locals && request.locals.authenticated_user){
         user_controller.findUser(request.locals.authenticated_user.id, request.locals.authenticated_user.is_admin, function(data){
-            if(data.failed){
-                response.render("pages/static/error.jade", view_parameters_global);
-            }
-            else{
-                request.locals.authenticated_user = data;
-                //next();
-                return;
-            }
+            callback(data);
         });
     }
     else{
-        //next();
-        return;
+        callback({ failed: true });
     }
 }
 
-function detect_browser(request, response){
+function detect_browser(request, callback){
     if(request.headers["user-agent"].indexOf("Firefox") !== -1){
-        return "firefox";
+        callback("firefox");
     }
     else{
-        return "chrome/safari";
+        callback("chrome/safari");
     }
 }
 
 
 //function to include code that should be run as middleware directly before the final functiion on all page endpoints
 function blanket_middleware(request, response, next){
+    resolve_user_from_locals_token(request, function(data){
     
-    resolve_user_from_locals_token(request, response);
-    
-    view_parameters_global.browser = detect_browser(request, response);
-    next();
+        if(!data.failed){ request.locals.authenticated_user = data; }
+        
+        detect_browser(request, function(browser){
+            view_parameters_global.browser = browser;
+            next();
+        });
+    });
 }
 
 router.get("/", token_authentication.recognise_user_token, blanket_middleware, function(request, response){
@@ -298,6 +294,7 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
     
         var disable_voting = false;
         var cookies = cookie_parser.parse_cookies(request);
+        console.log(cookies);
         
         var view_parameters = Object.assign({}, view_parameters_global);
         if(request.locals && request.locals.authenticated_user){ //if user is logged on, decide whether to disable voting panel based on user record voted_on_beef_ids field

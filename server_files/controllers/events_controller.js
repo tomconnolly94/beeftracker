@@ -15,7 +15,6 @@
 //write test for update function
 
 //external dependencies
-var loop = require("async-looper");
 var BSON = require('bson');
 
 //internal dependencies
@@ -395,7 +394,13 @@ module.exports = {
                     add_to_scraped_confirmed_table: record_origin == "scraped" ? true : false
                 };
 
-                db_interface.insert(event_insert, db_ref.get_current_event_table(), db_options, function (id) {
+                var insert_config = {
+                    table: db_ref.get_current_event_table(),
+                    record: event_insert,
+                    options: db_options
+                }
+
+                db_interface.insert(insert_config, function (id) {
                     callback(id);
                 },
                 function(error_object){

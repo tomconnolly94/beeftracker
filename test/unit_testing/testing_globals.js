@@ -5,7 +5,7 @@ module.exports = {
     
     dummy_object_id: dummy_object_id,
 
-    compare_object_fields: function(object_1, object_2){
+    compare_object_fields: function(object_1, object_2, fields_to_skip = []){
         var object_1_keys = Object.keys(object_1);
         var object_2_keys = Object.keys(object_2);
         
@@ -17,8 +17,10 @@ module.exports = {
         object_2_keys.sort();
 
         for(var key_index = 0; key_index < object_1_keys.length; key_index++){
-            if(object_1_keys[key_index] != object_2_keys[key_index]){
-                return false;
+            if(!fields_to_skip.includes(object_1_keys[key_index])){
+                if(object_1_keys[key_index] != object_2_keys[key_index]){
+                    return false;
+                }
             }
         }
         return true;
@@ -27,7 +29,7 @@ module.exports = {
     //note; regressive function
     compare_objects: function(object_1, object_2, fields_to_skip = []){
 
-        if(!this.compare_object_fields(object_1, object_2)){
+        if(!this.compare_object_fields(object_1, object_2, fields_to_skip)){
             return false;
         }
 
