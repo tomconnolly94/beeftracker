@@ -48,19 +48,34 @@ append body_scripts
             //alert("new_url_path " + new_url_path);
             window.location = new_url_path;
         });
-        
-        $.ajax({
-            url: document.getElementById("youtube_iframe").src,
-            type: 'GET',
-            success: function(ytresponse, more, more2){
-                //link loaded correctly
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                console.log("ERROR: ", XMLHttpRequest);
+
+        var youtube_element = document.getElementById("youtube_iframe");
+
+        if(youtube_element){
+            var youtube_video_id = youtube_element.src.split("embed/")[1].split("?")[0];
+            var youtube_video_check_url = "https://i1.ytimg.com/vi/" + youtube_video_id + "/hqdefault.jpg"
+
+            $.ajax({
+                url: youtube_video_check_url,
+                type: 'GET',
+                beforeSend: function(request) {
+                    request.setRequestHeader("Access-Control-Allow-Origin", true);
+                },
+                success: function(ytresponse, more, more2){
+                    console.log(ytresponse);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    console.log("ERROR: ", XMLHttpRequest);
+                    report_broken_link(youtube_video_check_url)
+                }
+            });
+
+            function report_broken_link(link){
                 $.ajax({
                     url: "/api/report-broken-link",
                     type: 'GET',
                     success: function(ytresponse, more, more2){
+                        console.log(ytresponse)
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown) {
                         console.log("ERROR: ", XMLHttpRequest);
@@ -69,8 +84,8 @@ append body_scripts
                     }
                 });
             }
-        });
-    
+        }
+
 block head_tags
     title #{event_data.title}
     //facebook meta tags
@@ -125,12 +140,12 @@ append body
                             iframe(height="300", scrolling="no", frameborder="no", allow="autoplay", src=main_graphic.link)
                     - else if(main_graphic.media_type == "youtube_embed")
                         div.beef-body-content-youtube-video
-                            //iframe(id="youtube_iframe", height="315", scrolling="no", frameborder="no", src=main_graphic.link, allow="autoplay; encrypted-media")
-                            iframe(id="youtube_iframe", height="315", scrolling="no", frameborder="no", onerror="handle_youtube_error()" src="https://www.youtube.com/embed/VmwOMtkDxtk", allow="autoplay; encrypted-media")
+                            iframe(id="youtube_iframe", height="315", scrolling="no", frameborder="no", src=main_graphic.link, allow="autoplay; encrypted-media")
+                            //iframe(id="youtube_iframe", height="315", scrolling="no", frameborder="no", onerror="handle_youtube_error", src="https://www.youtube.com/embed/VmwOMtkDxtk", allow="autoplay; encrypted-media")
                     - else if(main_graphic.media_type == "image")
                         div.row.col-md-6(style="margin: 0 auto;")
                             div.beef-body-content-image.col-md-12
-                                img(src=file_server_url_builder(file_server_url_prefix, "events", main_graphic.link, "c_fill,g_face,h_150,w_150", "webp")).float-left.col-sm-12
+                                img(src=file_server_url_builder(file_server_url_prefix, "events", main_graphic.link, "", "webp")).float-left.col-sm-12
                     - else if(main_graphic.media_type == "video_embed")
                         div.beef-body-content-video
                             iframe(scrolling="no" src=main_graphic.link frameborder="0" allowtransparency="true")
