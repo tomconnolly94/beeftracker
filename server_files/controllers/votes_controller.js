@@ -65,10 +65,12 @@ module.exports = {
 
         var update_config = {
             table: db_ref.get_current_event_table(),
-            existing_object_id: event_id,
+            match_query: { _id: BSON.ObjectID.createFromHexString(event_id) },
             update_clause: update_clause,
             options: {}
         };
+
+        console.log(update_config);
 
         db_interface.update(update_config, function (result) {
 
