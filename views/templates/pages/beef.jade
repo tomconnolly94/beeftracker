@@ -51,7 +51,7 @@ append body_scripts
 
         var youtube_element = document.getElementById("youtube_iframe");
 
-        if(youtube_element){
+        if(youtube_element && false){
             var youtube_video_id = youtube_element.src.split("embed/")[1].split("?")[0];
             var youtube_video_check_url = "https://i1.ytimg.com/vi/" + youtube_video_id + "/hqdefault.jpg"
 
