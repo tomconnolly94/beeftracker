@@ -99,12 +99,12 @@ module.exports = {
             var calling_file_name = calling_file_path_split[calling_file_path_split.length - 1].split(".")[0]
             var log;
             if(abbreviated_log_style){
-                log = `${abbreviated_log_decoration} ${type}: ${calling_file_path}:${calling_function}:${calling_line_number} - ${message}`;
+                log = `${abbreviated_log_decoration} ${type}: ${calling_file_path}:${calling_function}:${calling_line_number}`;
             }
             else{
-                log = `${log_decoration} Internal Log ${log_decoration} ${calling_file_path}:${calling_function}:${calling_line_number} - Type: ${type}, Module: ${calling_file_name} - ${message}`;
+                log = `${log_decoration} Internal Log ${log_decoration} ${calling_file_path}:${calling_function}:${calling_line_number} - Type: ${type}, Module: ${calling_file_name}`;
             }
-            write_log(log);
+            write_log(log, message);
             return log;
         }
         else if(Object.keys(LOG_TYPE).indexOf(type) != -1){

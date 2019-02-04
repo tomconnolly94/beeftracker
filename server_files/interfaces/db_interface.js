@@ -206,7 +206,7 @@ module.exports = {
                 });
             } else {
                 //standard query to insert into live events table
-                db.collection(table).findOneAndUpdate(match_query, update_clause, { $upsert: true }, function (err, document) {
+                db.collection(table).findOneAndUpdate(match_query, update_clause, { $upsert: true }, function (err, result) {
                     if (err) {
                         console.log(err);
                         failure_callback({
@@ -217,8 +217,8 @@ module.exports = {
                         });
                     } else {
                         options.operation = "update";
-                        post_insert_procedure(db, document, update_clause, table, options);
-                        success_callback(update_clause);
+                        post_insert_procedure(db, result.value, update_clause, table, options);
+                        success_callback(result.value);
                     }
                 });
             }
@@ -260,7 +260,7 @@ module.exports = {
                     });
                 } else {
                     //standard query to match an event and resolve aggressor and targets references
-                    db.collection(table).findOneAndDelete(match_query).toArray(function (err, results) {
+                    db.collection(table).findOneAndDelete(match_query, function (err, result) {
                         //handle error
                         if (err) {
                             console.log(err);
@@ -271,7 +271,7 @@ module.exports = {
                                 message: "Failed at db query"
                             });
                         } else {
-                            success_callback(results[0]);
+                            success_callback(result.value);
                         }
                     });
                 }

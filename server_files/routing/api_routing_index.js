@@ -58,7 +58,7 @@ router.route("/deauthenticate").get(function(request, response){
 
 //broken link reporting
 router.route("/report-broken-link").get(function(request, response){
-   console.log("link reported broken.") 
+   console.log("link reported broken.") //unimplemented
 });
 
 //handle errors

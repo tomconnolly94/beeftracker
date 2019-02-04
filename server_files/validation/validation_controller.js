@@ -56,9 +56,7 @@ var master_functions_object = {
             
             var gallery_item = gallery_items[i];
             var gallery_item_found_in_files = false;
-            
-            console.log(gallery_item);
-            
+                        
             if(gallery_item.media_type == "image"){
                 //loop through files to make sure the gallery item link is included
                 for(var j = 0; j < files.length; j++){
@@ -91,22 +89,21 @@ var master_functions_object = {
         if(mimetype == "application/octet-stream"){
             return true;
         }
-        else{
-            return false;
-        }
+
+        var mimetype_split = mimetype.split("/");
         
-        /*switch (mimetype) {
-            case '.jpg':
-                return '.jpg';
-            case '.jpeg':
-                return '.jpeg';
-            case  '.png':
-                return '.png';
+        switch (mimetype_split[mimetype_split.length - 1]) {
+            case 'jpg':
+                return true;
+            case 'jpeg':
+                return true;
+            case  'png':
+                return true;
             case  'blob':
-                return 'blob';
+                return true;
             default:
                 return false;
-        }*/
+        }
     },
     test_array_of_urls: function(urls) {
 

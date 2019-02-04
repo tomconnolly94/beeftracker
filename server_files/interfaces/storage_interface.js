@@ -206,6 +206,8 @@ module.exports = {
         //use an asynchronous loop to cycle through gallery items, if item is an image, save image to cloudinary and update gallery item link
         loop(items, function(item, next){
 
+            console.log(item);
+
             if(item.media_type == "image"){
                 
                 delete_single_image(file_server_folder, item.link, function(){

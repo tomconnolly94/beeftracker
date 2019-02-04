@@ -530,43 +530,62 @@ module.exports = {
         }
     },
 
-    deleteEvent: function (request, response, callback) {
+    deleteEvent: function (event_id, callback) {
 
-        //extract data
-        var event_id = request.params.event_id;
+        var event_delete_config = {
+            table: db_ref.get_current_event_table(),
+            delete_multiple_records: false,
+            match_query: { _id: BSON.ObjectID.createFromHexString(event_id) }
+        };
 
-        db_ref.get_db_object().connect(process.env.MONGODB_URI, function (err, db) {
-            if (err) { console.log(err); }
-            else {
-                var event_id_object = BSON.ObjectID.createFromHexString(event_id);
+        //access the event to be deleted
+        db_interface.delete(event_delete_config, function(event){
 
-                db.collection(db_ref.get_current_event_table()).findOne({ _id: event_id_object }, function (queryErr, event_obj) {
-                    if (queryErr) { console.log(queryErr); }
-                    else {
-                        if (event_obj) {
-                            var beef_chain_ids = event_obj.beef_chain_ids;
+            var remove_config = {
+                items: event.gallery_items.filter(gallery_item => gallery_item.media_type == "image"),
+                file_server_folder: "events"
+            };
 
-                            //add thumbnail image to list
-                            event_obj.gallery_items.push({ link: event_obj.img_title_thumbnail, media_type: "image" });
+            //remove all image based gallery items from the file server
+            storage_interface.remove(remove_config, function(){
+                //continue
+            });
 
-                            storage_interface.async_loop_remove_items(event_obj.gallery_items, "events", function () {
-                                db.collection(db_ref.get_current_event_table()).deleteOne({ _id: event_id_object }, function (queryErr, docs) {
-                                    if (queryErr) { console.log(queryErr); }
-                                    else {
-                                        db.collection(db_ref.get_beef_chain_table()).remove({ "_id": { $in: beef_chain_ids }, events: { $size: 1 }, "events.0": event_id_object }, function (queryErr, beef_chain_docs) {
-                                            callback(docs[0]);
-                                        });
-                                    }
-                                });
-                            });
-                        }
-                        else {
-                            callback({ failed: true, message: "Event cannot be found, and so was not deleted." });
-                        }
-                    }
-                });
-            }
+            var beef_chain_update_config = {
+                table: db_ref.get_beef_chain_table(),
+                match_query: {
+                     _id: { $in: event.beef_chain_ids }
+                },
+                update_clause: { 
+                    $pull: { events: BSON.ObjectID.createFromHexString(event_id) }
+                },
+                options: {}
+            };
+
+            //remove the event._id entry from the relevant beef_chain documents
+            db_interface.update(beef_chain_update_config, function(result){
+
+                //remove the event from the beef_chain table only if events array is empty after above removal
+                if(result.events.length == 0){
+
+                    var beef_chain_delete_config = {
+                        table: db_ref.get_beef_chain_table(),
+                        delete_multiple_records: true, //because we dont need a return value
+                        match_query: { _id: BSON.ObjectID.createFromHexString(result._id) }
+                    };
+
+                    db_interface.delete(beef_chain_delete_config, function(){
+                        callback({});
+                    }, function(){
+                        callback(error_object);
+                    });
+                }
+                else{
+                    callback({});
+                }
+            }, function(error_object){
+                callback(error_object);
+            });
         });
-    },
-
+    }
 }

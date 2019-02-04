@@ -1,11 +1,9 @@
 //external dependencies
-var BSON = require('bson');
 var jwt = require("jsonwebtoken");
 var cookie_parser = require('../tools/cookie_parsing.js');
 
 //internal dependencies
-var db_ref = require("../config/db_config.js");
-var db_interface = require("../interfaces/db_interface.js");
+var logging = require("./logging");
 
 var auth_disabled = false;
 
@@ -42,6 +40,8 @@ var authentication_procedure = function(request, response, deny_access_on_fail, 
     //extract data for use later
     var auto_refresh_auth_token = false;
     var cookies = cookie_parser.parse_cookies(request);
+
+    logging.submit_log(logging.LOG_TYPE.INFO, cookies);
         
     if(cookies.bftkr_auth){
         //verify token to ensure its still valid

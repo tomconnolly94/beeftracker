@@ -86,10 +86,10 @@ module.exports = {
             request.checkBody("tags", xss_warning).detect_xss_in_string_array();
             request.checkBody("tags", "Tags are not formatted correctly.").test_array_of_strings();
         }
+
         //validate image files
         for(var i = 0; i < request.files.length; i++){
-            //var filename = typeof request.files[i] !== "undefined" ? request.files[i].originalname : '';
-            request.checkBody('file', 'Please upload an image Jpeg, Png, blob or Gif').test_image(request.files[i].mimetype);
+            request.checkBody("file", 'Please upload an image Jpeg, Png, blob or Gif').test_image(request.files[i].mimetype);
         }
         
         request.getValidationResult().then(function(validationResult){

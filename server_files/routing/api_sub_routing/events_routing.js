@@ -72,7 +72,10 @@ router.route('/:event_id').put(token_authentication.authenticate_endpoint_with_a
     });
 });//built, written, tested, needs admin auth
 router.route('/:event_id').delete(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
-    event_controller.deleteEvent(request, response, function(data){
+    
+    var event_id = request.params.event_id;
+    
+    event_controller.deleteEvent(event_id, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
