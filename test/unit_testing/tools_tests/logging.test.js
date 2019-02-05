@@ -10,7 +10,7 @@ var globals = require('../testing_globals.js');
 
 describe('Module: logging', function () {
 
-    var logger
+    var logger, error_message;
 
     before(function(){
         
@@ -22,6 +22,7 @@ describe('Module: logging', function () {
             }
         }
         logger = require("../../../server_files/tools/logging");
+        error_message = "error message";
     });
     
     beforeEach(function () {
@@ -29,12 +30,12 @@ describe('Module: logging', function () {
     });
 
     it('submit_log - LOG_TYPE.ERROR', function () {
-        var log = logger.submit_log(logger.LOG_TYPE.ERROR, "error message");
-        assert.equal(">> ERROR: /home/tom/beeftracker/bf-dev/test/unit_testing/tools_tests/logging.test.js:anon:32 - error message", log)
+        var log_object = logger.submit_log(logger.LOG_TYPE.ERROR, error_message);
+        assert.isTrue(globals.compare_objects({ log: ">> ERROR: /home/tom/beeftracker/bf-dev/test/unit_testing/tools_tests/logging.test.js:anon:33", message: error_message}, log_object))
     });
 
     it('submit_log - LOG_TYPE.FATAL_FAILURE', function () {
-        var log = logger.submit_log(logger.LOG_TYPE.FATAL_FAILURE, "error message");
-        assert.equal(">> FATAL_FAILURE: /home/tom/beeftracker/bf-dev/test/unit_testing/tools_tests/logging.test.js:anon:37 - error message", log)
+        var log_object = logger.submit_log(logger.LOG_TYPE.FATAL_FAILURE, error_message);
+        assert.isTrue(globals.compare_objects({ log: ">> FATAL_FAILURE: /home/tom/beeftracker/bf-dev/test/unit_testing/tools_tests/logging.test.js:anon:38", message: error_message}, log_object))
     });
 });

@@ -3,6 +3,7 @@ var proxyquire = require("proxyquire");
 var chai = require('chai');
 var sinon = require("sinon");
 var assert = chai.assert;
+var BSON = require('bson');
 
 //internal dependencies
 var db_ref = require("../../../server_files/config/db_config");
@@ -35,7 +36,7 @@ describe('Module: votes_controller', function () {
 
             //shared test checks
             assert.exists(update_config.table);
-            assert.exists(update_config.existing_object_id);
+            assert.exists(update_config.match_query);
             assert.exists(update_config.update_clause);
             assert.exists(update_config.options);
 
@@ -43,8 +44,8 @@ describe('Module: votes_controller', function () {
             if(db_update_call_count == 0){
                 //table
                 assert.equal(db_ref.get_current_event_table(), update_config.table);
-                //existing_object_id
-                assert.equal(globals.dummy_object_id, update_config.existing_object_id);
+                //match_query
+                assert.isTrue(globals.compare_objects({ _id: BSON.ObjectID.createFromHexString(globals.dummy_object_id) }, update_config.match_query));
                 //update_clause
                 assert.exists(update_config.update_clause["$inc"]);
                 assert.exists(update_config.update_clause["$inc"]["votes.upvotes"]);
@@ -53,8 +54,8 @@ describe('Module: votes_controller', function () {
             else{
                 //table
                 assert.equal(db_ref.get_user_details_table(), update_config.table);
-                //existing_object_id
-                assert.equal(globals.dummy_object_id, update_config.existing_object_id);
+                //match_query
+                assert.isTrue(globals.compare_objects({ _id: BSON.ObjectID.createFromHexString(globals.dummy_object_id) }, update_config.match_query));
                 //update_clause
                 assert.exists(update_config.update_clause["$push"]);
                 assert.exists(update_config.update_clause["$push"]["voted_on_beef_ids"]);
@@ -83,7 +84,7 @@ describe('Module: votes_controller', function () {
 
             //shared test checks
             assert.exists(update_config.table);
-            assert.exists(update_config.existing_object_id);
+            assert.exists(update_config.match_query);
             assert.exists(update_config.update_clause);
             assert.exists(update_config.options);
 
@@ -91,8 +92,8 @@ describe('Module: votes_controller', function () {
             if(db_update_call_count == 0){
                 //table
                 assert.equal(db_ref.get_current_event_table(), update_config.table);
-                //existing_object_id
-                assert.equal(globals.dummy_object_id, update_config.existing_object_id);
+                //match_query
+                assert.isTrue(globals.compare_objects({ _id: BSON.ObjectID.createFromHexString(globals.dummy_object_id) }, update_config.match_query));
                 //update_clause
                 assert.exists(update_config.update_clause["$inc"]);
                 assert.exists(update_config.update_clause["$inc"]["votes.downvotes"]);
@@ -101,8 +102,8 @@ describe('Module: votes_controller', function () {
             else{
                 //table
                 assert.equal(db_ref.get_user_details_table(), update_config.table);
-                //existing_object_id
-                assert.equal(globals.dummy_object_id, update_config.existing_object_id);
+                //match_query
+                assert.isTrue(globals.compare_objects({ _id: BSON.ObjectID.createFromHexString(globals.dummy_object_id) }, update_config.match_query));
                 //update_clause
                 assert.exists(update_config.update_clause["$push"]);
                 assert.exists(update_config.update_clause["$push"]["voted_on_beef_ids"]);

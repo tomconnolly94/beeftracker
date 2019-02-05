@@ -367,7 +367,7 @@ module.exports = {
                     }
                 }
 
-                var db_options = {
+                var options = {
                     send_email_notification: true,
                     email_notification_text: "Beef",
                     add_to_scraped_confirmed_table: record_origin == "scraped" ? true : false
@@ -376,7 +376,7 @@ module.exports = {
                 var insert_config = {
                     table: db_ref.get_current_actor_table(),
                     record: actor_insert,
-                    db_options: db_options
+                    options: options
                 };
 
                 db_interface.insert(insert_config, function(id){
@@ -429,7 +429,7 @@ module.exports = {
                     }
                 }
                                 
-                var db_options = {
+                var options = {
                     send_email_notification: true,
                     email_notification_text: "Beef",
                     add_to_scraped_confirmed_table: request.body.data.record_origin == "scraped" ? true : false
@@ -453,7 +453,7 @@ module.exports = {
                         var update_config = {
                             record: actor_insert,
                             table: db_ref.get_current_actor_table(),
-                            options: db_options,
+                            options: options,
                             existing_object_id: existing_object_id
                         }
                         

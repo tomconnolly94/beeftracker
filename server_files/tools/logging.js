@@ -105,7 +105,7 @@ module.exports = {
                 log = `${log_decoration} Internal Log ${log_decoration} ${calling_file_path}:${calling_function}:${calling_line_number} - Type: ${type}, Module: ${calling_file_name}`;
             }
             write_log(log, message);
-            return log;
+            return { log: log, message: message };
         }
         else if(Object.keys(LOG_TYPE).indexOf(type) != -1){
             //do nothing, log is not switched on

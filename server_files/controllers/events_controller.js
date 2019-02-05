@@ -250,7 +250,7 @@ module.exports = {
             //     foreignField: "_id", 
             //     as: "beef_chain_ids"  
             // }}, 
-            // { "$unwind": "$beef_chain_ids"},
+            { "$unwind": "$beef_chain_ids"},
             // { '$lookup': 
             //     { from: 'event_data_v4',
             //         localField: 'beef_chain_ids.events',
@@ -339,6 +339,7 @@ module.exports = {
 
         //format event record for insertion
         var event_insert = module.exports.format_event_data(event_data);
+        if(event_data._id){ event_insert._id = event_data._id; };
 
         if (test_mode) {
             console.log("test mode is on.");
@@ -388,7 +389,7 @@ module.exports = {
                     }
                 }
 
-                var db_options = {
+                var options = {
                     send_email_notification: false,
                     email_notification_text: "Beef",
                     add_to_scraped_confirmed_table: record_origin == "scraped" ? true : false
@@ -397,11 +398,11 @@ module.exports = {
                 var insert_config = {
                     table: db_ref.get_current_event_table(),
                     record: event_insert,
-                    options: db_options
+                    options: options
                 }
 
-                db_interface.insert(insert_config, function (id) {
-                    callback(id);
+                db_interface.insert(insert_config, function (result) {
+                    callback(result);
                 },
                 function(error_object){
                     callback(error_object);
@@ -410,15 +411,12 @@ module.exports = {
         }
     },
 
-    updateEvent: function (event_data, event_files, existing_object_id, callback) {
+    updateEvent: function (event_data, files, existing_object_id, callback) {
 
         var files = event_files;
 
         //extract data for use later
-        var existing_event_id_object = BSON.ObjectID.createFromHexString(existing_object_id);
-
-        //format event record for insertion
-        var new_event = module.exports.format_event_data(event_data);
+        event_data._id = BSON.ObjectID.createFromHexString(existing_object_id);
 
         if (test_mode) {
             console.log("test mode is on.");
@@ -433,99 +431,16 @@ module.exports = {
             callback({ failed: true, test_mode: true, message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_insert });
         }
         else {
-            var db_options = {
-                send_email_notification: true,
-                email_notification_text: "Beef",
-                add_to_scraped_confirmed_table: request.body.data.record_origin == "scraped" ? true : false
-            };
-
-            var query_config = {
-                table: db_ref.get_current_event_table(),
-                aggregate_array: [
-                    {
-                        $match: { _id: existing_event_id_object }
-                    }
-                ]
-            };
-
-            db_interface.get(query_config, function (results) {
-
-                var original_event = results[0];
-
-                var check_original_event_gallery_items_links = function (gallery_item) {
-                    return original_event.gallery_items.map(gallery_item => gallery_item.link).indexOf(gallery_item.link) != -1;
-                }
-
-                //compare gallery_items to ascertain if any new media requires adding to the file server
-                var new_gallery_items = new_event.gallery_items.filter(check_original_event_gallery_items_links);
-
-                //
-            });
-
-            db_ref.get_db_object().connect(process.env.MONGODB_URI, function (err, db) {
-                if (err) { console.log(err); }
-                else {
-
-                    //get the pre-update event object to sort gallery items
-                    db.collection(db_ref.get_current_event_table()).find({ _id: existing_event_id_object }).toArray(function (queryErr, original_event) {
-                        if (err) { console.log(err); }
-                        else {
-                            original_event = original_event[0];
-
-                            //find gallery items that need their embedding links generated
-                            event_insert.gallery_items = format_embeddable_items(event_insert.gallery_items, files);
-
-                            storage_interface.async_loop_upload_items(event_insert.gallery_items, "events", files, function (items) {
-
-                                event_insert.gallery_items = items;
-
-                                //remove file objects to avoid adding file buffer to the db
-                                for (var i = 0; i < event_insert.gallery_items.length; i++) {
-                                    if (event_insert.gallery_items[i].file) {
-                                        event_insert.gallery_items[i].file = null;
-                                    }
-
-                                    if (event_insert.gallery_items[i].cover_image) {
-                                        event_insert.cover_image = event_insert.gallery_items[i].link; //save fullsize main graphic ref
-                                    }
-                                }
-
-
-                                //call to update the db record
-                                db_interface.update_record_in_db(event_insert, db_ref.get_current_event_table(), db_options, existing_object_id, function (document) {
-
-                                    var gallery_items_to_remove = [];
-
-                                    //if new thumbnail doesnt match the existing one the new image will have been uploaded so remove the old file
-                                    if (event_insert.img_title_thumbnail != original_event.img_title_thumbnail) {
-                                        gallery_items_to_remove.push({ link: original_event.img_title_thumbnail, media_type: "image" });
-                                    }
-
-                                    //if new gallery_item doesnt match the existing one the new image will have been uploaded so remove the old file
-                                    for (var i = 0; i < original_event.gallery_items.length; i++) {
-                                        var gallery_item_found = false;
-                                        for (var j = 0; j < event_insert.gallery_items.length; j++) {
-                                            if (original_event.gallery_items[i].link == event_insert.gallery_items[j].link) {
-                                                gallery_item_found = true;
-                                            }
-                                        }
-                                        if (!gallery_item_found) {
-                                            gallery_items_to_remove.push(original_event.gallery_items[i]);
-                                        }
-                                    }
-
-                                    if (gallery_items_to_remove.length > 0) {
-                                        //remove all old gallery_items
-                                        storage_interface.async_loop_remove_items(gallery_items_to_remove, "events", function (items) {
-                                            console.log("finish")
-                                        });
-                                    }
-                                    callback(existing_object_id);
-                                });
-                            });
+            //delete existing event with files
+            module.exports.deleteEvent(existing_object_id, function(result){
+                if(!result.failed){
+                    //insert new event with files
+                    module.exports.createEvent(event_data, files, function(result){
+                        if(!result.failed){
+                            callback(result);
                         }
                     });
-                }
+                };
             });
         }
     },

@@ -20,7 +20,7 @@ function add_vote_to_user_record(event_id, user_id) {
 
     var update_config = {
         table: db_ref.get_user_details_table(),
-        existing_object_id: user_id,
+        match_query: { _id: BSON.ObjectID.createFromHexString(user_id) },
         update_clause: {
             $push: {
                 voted_on_beef_ids: event_id

@@ -88,7 +88,10 @@ router.route('/:event_id').delete(token_authentication.authenticate_endpoint_wit
 
 //Peripheral events endpoints
 router.route('/from-beef-chain/:beef_chain_id').get(function(request, response){
-    event_peripherals_controller.findEventsFromBeefChain(request, response, function(data){
+
+    var beef_chain_id = request.params.beef_chain_id;
+
+    event_peripherals_controller.findEventsFromBeefChain(beef_chain_id, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
@@ -98,7 +101,10 @@ router.route('/from-beef-chain/:beef_chain_id').get(function(request, response){
     });
 });//built, written, tested
 router.route('/related-to-event/:event_id').get(function(request, response){
-    event_peripherals_controller.findEventsRelatedToEvent(request, response, function(data){
+
+    var event_id = request.params.event_id;
+
+    event_peripherals_controller.findEventsRelatedToEvent(event_id, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
@@ -108,7 +114,10 @@ router.route('/related-to-event/:event_id').get(function(request, response){
     });
 });//built, written, needs manual testing with valid data
 router.route('/related-to-actor/:actor_id').get(function(request, response){
-    event_peripherals_controller.findEventsRelatedToActor(request, response, function(data){
+
+    var actor_id = request.params.actor_id;
+
+    event_peripherals_controller.findEventsRelatedToActor(actor_id, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
