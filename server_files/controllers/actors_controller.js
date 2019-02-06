@@ -90,8 +90,8 @@ var get_aggregate_array = function (match_query_content, additional_aggregate_st
             $group: {
                 _id: "$_id", 
                 name: { $first: "$name"},
-                date_of_origin: { $addToSet: "$date_of_origin" },
-                place_of_origin: { $addToSet: "$place_of_origin"},
+                date_of_origin: { $first: "$date_of_origin" },
+                place_of_origin: { $first: "$place_of_origin"},
                 description: { $first: "$description"},
                 data_sources: { $first: "$data_sources"},
                 also_known_as: { $first: "$also_known_as"},
@@ -230,72 +230,30 @@ module.exports = {
     
     findActor: function(actor_id, callback){
         
-        var actor_id_object = BSON.ObjectID.createFromHexString(actor_id);
+        var additional_aggregate_stages = [
+            { 
+                $unwind: {
+                    "path": "$related_events",
+                    "preserveNullAndEmptyArrays": true
+                } 
+            },
+            { 
+                $unwind: {
+                    "path": "$related_events.aggressors",
+                    "preserveNullAndEmptyArrays": true
+                } 
+            },
+            { 
+                $unwind: {
+                    "path": "$related_events.targets" ,
+                    "preserveNullAndEmptyArrays": true
+                } 
+            }
+        ];
 
         var query_config = {
             table: db_ref.get_current_actor_table(),
-            aggregate_array: [
-                { 
-                    $match: { _id: actor_id_object }
-                },
-                { $lookup : { 
-                    from: db_ref.get_current_event_table(),
-                    localField: "_id",
-                    foreignField: "aggressors",
-                    as: "related_events" }},
-                { 
-                    $unwind: {
-                        "path": "$related_events",
-                        "preserveNullAndEmptyArrays": true
-                    } 
-                },
-                { 
-                    $unwind: {
-                        "path": "$related_events.aggressors",
-                        "preserveNullAndEmptyArrays": true
-                    } 
-                },
-                { 
-                    $unwind: {
-                        "path": "$related_events.targets" ,
-                        "preserveNullAndEmptyArrays": true
-                    } 
-                },
-                {
-                    $group: {
-                        _id: "$_id", 
-                        name: { $first: "$name"},
-                        date_of_origin: { $addToSet: "$date_of_origin" },
-                        place_of_origin: { $addToSet: "$place_of_origin"},
-                        description: { $first: "$description"},
-                        data_sources: { $first: "$data_sources"},
-                        also_known_as: { $first: "$also_known_as"},
-                        classification: { $first: "$classification"},
-                        variable_field_values: { $first: "$variable_field_values"},
-                        links: { $first: "$links"},
-                        gallery_items: { $first: "$gallery_items"},
-                        img_title_thumbnail: { $first: "$img_title_thumbnail"},
-                        img_title_fullsize: { $first: "$img_title_fullsize"},
-                        rating: { $first: "$rating"},
-                        date_added: { $addToSet: "$date_added"},
-                        name_lower: { $first: "$name_lower"},
-                        also_known_as_lower: { $first: "$also_known_as_lower"},
-                        related_actors_aggressors: { $addToSet: "$related_events.aggressors" },
-                        related_actors_targets: { $addToSet: "$related_events.targets" },
-                        related_events: { $first: "$img_title_thumbnail"}
-                    }
-                },
-                actor_intermediate_projection,
-                { 
-                    $lookup: {
-                        from: db_ref.get_current_actor_table(),
-                        localField: "related_actors",
-                        foreignField: "_id",
-                        as: "related_actors"
-                    }
-                },
-                actor_projection
-            ]
+            aggregate_array: get_aggregate_array({ _id: BSON.ObjectID.createFromHexString(actor_id) }, additional_aggregate_stages)
         }
 
         db_interface.get(query_config, function(results){
@@ -379,9 +337,8 @@ module.exports = {
                     options: options
                 };
 
-                db_interface.insert(insert_config, function(id){
-                    actor_insert._id = id;
-                    callback(actor_insert);
+                db_interface.insert(insert_config, function(result){
+                    callback(result);
                 },
                 function(error_object){
                     callback(error_object)
@@ -390,112 +347,34 @@ module.exports = {
         }
     },
     
-    updateActor: function(event_data, event_files, callback){
-             
-        var submission_data = event_data; //get form data
-        var files = event_files;
-        var existing_object_id = request.params.actor_id;
-        var existing_actor_id_object = BSON.ObjectID.createFromHexString(existing_object_id);        
-        var actor_insert = module.exports.format_actor_data(submission_data);
+    updateActor: function(actor_data, files,existing_object_id, callback){
 
-        if(test_mode){
+        //extract data for use later
+        actor_data._id = BSON.ObjectID.createFromHexString(existing_object_id);
+
+        if (test_mode) {
             console.log("test mode is on.");
-            console.log(actor_insert);
-        }
-        else{            
-            //find gallery items that need their embedding links generated
-            actor_insert.gallery_items = format_embeddable_items(actor_insert.gallery_items, files);
-            
-            var upload_config = {
-                record_type: storage_ref.get_actor_images_folder(),
-                item_data: actor_insert.gallery_items,
-                files: files
+
+            //remove file objects to avoid clogging up the console
+            for (var i = 0; i < actor_data.gallery_items.length; i++) {
+                if (actor_data.gallery_items[i].file) {
+                    actor_data.gallery_items[i].file = null;
+                }
             }
-            
-            storage_interface.upload(upload_config, function(items){
-                
-                actor_insert.gallery_items = items;
-                
-                //remove file objects to avoid adding file buffer to the db
-                for(var i = 0; i < actor_insert.gallery_items.length; i++){
-                    if(actor_insert.gallery_items[i].file){
-                        actor_insert.gallery_items[i].file = null;
-                    }
-                    
-                    if(actor_insert.gallery_items[i].main_graphic){
-                        actor_insert.img_title_fullsize = actor_insert.gallery_items[i].link; //save fullsize main graphic ref
-                        actor_insert.img_title_thumbnail = actor_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
-                        
-                    }
-                }
-                                
-                var options = {
-                    send_email_notification: true,
-                    email_notification_text: "Beef",
-                    add_to_scraped_confirmed_table: request.body.data.record_origin == "scraped" ? true : false
+
+            callback({ failed: true, test_mode: true, message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: actor_data });
+        }
+        else {
+            //delete existing event with files
+            module.exports.deleteActor(existing_object_id, function(result){
+                if(!result.failed){
+                    //insert new event with files
+                    module.exports.createActor(actor_data, files, function(result){
+                        if(!result.failed){
+                            callback(result);
+                        }
+                    });
                 };
-                
-                var query_config = {
-                    table: db_ref.get_current_actor_table(),
-                    aggregate_array: [
-                        { 
-                            $match: {
-                                _id: existing_actor_id_object
-                            }
-                        }
-                    ]
-                }
-
-                db_interface.get(query_config, function(results){
-                    if(results && results[0]){
-                        original_actor = results[0];
-
-                        var update_config = {
-                            record: actor_insert,
-                            table: db_ref.get_current_actor_table(),
-                            options: options,
-                            existing_object_id: existing_object_id
-                        }
-                        
-                        //call to update the db record
-                        db_interface.update(update_config, function(document){
-
-                            var gallery_items_to_remove = [];
-
-                            //if new thumbnail doesnt match the existing one the new image will have been uploaded so remove the old file
-                            if(document.img_title_thumbnail != original_actor.img_title_thumbnail){
-                                gallery_items_to_remove.push({link: original_actor.img_title_thumbnail, media_type: "image"});
-                            }
-
-                            //if new gallery_item doesnt match the existing one the new image will have been uploaded so remove the old file
-                            for(var i = 0; i < original_actor.gallery_items.length; i++){
-                                var gallery_item_found = false;
-                                for(var j = 0; j < document.gallery_items.length; j++){
-                                    if(original_actor.gallery_items[i].link == document.gallery_items[j].link){
-                                        gallery_item_found = true;
-                                    }
-                                }
-                                if(!gallery_item_found){
-                                    gallery_items_to_remove.push(original_actor.gallery_items[i]);
-                                }
-                            }
-
-                            if(gallery_items_to_remove.length > 0){
-                                //remove all old gallery_items
-                                storage_interface.remove(gallery_items_to_remove, storage_ref.get_actor_images_folder(), function(items){
-                                    console.log("finish")
-                                });
-                            }
-                            callback(existing_object_id);
-                        });
-                    }
-                    else{
-                        callback({ failed: true, message: "Actor not found." });
-                    }
-                },
-                function(error_object){
-                    callback(error_object)
-                });                
             });
         }
     },
@@ -525,7 +404,12 @@ module.exports = {
                 //add thumbnail image to list
                 actor_obj.gallery_items.push({link: actor_obj.img_title_thumbnail, media_type: "image"});
 
-                storage_interface.remove(actor_obj.gallery_items, storage_ref.get_actor_images_folder(), function(){
+                var remove_config = {
+                    items: actor_obj.gallery_items,
+                    record_type: storage_ref.get_actor_images_folder()
+                }
+
+                storage_interface.remove(remove_config, function(){
 
                     var delete_config = {
                         table: db_ref.get_current_actor_table(),

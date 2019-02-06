@@ -4,9 +4,7 @@ include ../template_helper_functions/date_formatter.jade
 mixin vertical-list-actor-item(item, image_resize_params)
 
     - var formatted_date = format_date(item.date_of_origin);
-    
-    - console.log(item)
-    
+
     //div.vertical-list-item.beef-category-music(class=item == data[2] ? "hidden_on_lg" : "")
     div.vertical-list-item.beef-category-default
         a(href="/actor/" + item._id).row

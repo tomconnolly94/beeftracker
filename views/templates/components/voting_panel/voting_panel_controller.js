@@ -10,7 +10,6 @@ $(function(){
             type: "PUT",
             data: { vote_direction: vote_direction, event_id: event_id },
             success: function(result) {
-                console.log("upvote complete");
                 fade_new_content_to_div("#voting_panel", success_html);
                 append_or_create_cookie("voted_on_beef_ids", event_id);
             }
@@ -19,13 +18,11 @@ $(function(){
     
     $("#thumbs_up_vote").click(function(event){
         event.preventDefault();
-        console.log("thumbs up");
         execute_endpoint_call(1);
     });
     
     $("#thumbs_down_vote").click(function(event){
         event.preventDefault();        
-        console.log("thumbs down");
         execute_endpoint_call(0);
     });
     

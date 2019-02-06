@@ -23,8 +23,6 @@ $(function(){
     
     $(".add_list").unbind().on("click", ".remove-list-item", function(event){
         event.preventDefault();
-        
-        console.log($(this.parentElement.parentElement).val());
         $(this.parentElement.parentElement).remove();
     });
 });

@@ -157,10 +157,7 @@ $(function(){
                                 //insert error handling
                             }
                             else{//if server can find data for this actor
-
                                 var data = JSON.parse(data);
-                                console.log(data);
-                                console.log(JSON.parse(data.actor_object));
 
                                 //take actor data
                                 load_data_into_add_actor_modal(JSON.parse(data.actor_object), data.field_data_dump)
@@ -257,8 +254,6 @@ $(function(){
             
             form_data.append("data", event_submission);
         
-            console.log(event_submission);
-            
             $.ajax({
                 url: "/api/events",
                 data: form_data,

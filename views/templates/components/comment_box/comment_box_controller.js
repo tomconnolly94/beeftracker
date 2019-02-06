@@ -38,9 +38,6 @@ $(function(){
                 var template_name = "comment_box_display";
                 
                 $.get("/api/comments/beef_chains/" + beef_chain_id, {}, function(comments){
-                    
-                    console.log(comments);
-                    
                     load_template_render_function(template_dir + "/" + template_name, function(status){
                         fade_new_content_to_div("#comment_box_display", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, browser: browser, comments: comments }));
                         $("#comment_text_area").val("");

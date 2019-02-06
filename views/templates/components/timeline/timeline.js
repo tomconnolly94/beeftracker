@@ -54,7 +54,6 @@ $(function() {
         }
 
         $(".timeline a").on("click", function(e) {
-          //console.log(dragging);
           if (dragging) {
           e.preventDefault();
         }
@@ -80,7 +79,6 @@ $(function() {
 
           if (clicking) {
             if (dragging) {
-              //console.log(dragging);
               //e.preventDefault();
             }
             clicking = false;

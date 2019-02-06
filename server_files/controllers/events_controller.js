@@ -413,8 +413,6 @@ module.exports = {
 
     updateEvent: function (event_data, files, existing_object_id, callback) {
 
-        var files = event_files;
-
         //extract data for use later
         event_data._id = BSON.ObjectID.createFromHexString(existing_object_id);
 
@@ -422,13 +420,13 @@ module.exports = {
             console.log("test mode is on.");
 
             //remove file objects to avoid clogging up the console
-            for (var i = 0; i < event_insert.gallery_items.length; i++) {
-                if (event_insert.gallery_items[i].file) {
-                    event_insert.gallery_items[i].file = null;
+            for (var i = 0; i < event_data.gallery_items.length; i++) {
+                if (event_data.gallery_items[i].file) {
+                    event_data.gallery_items[i].file = null;
                 }
             }
 
-            callback({ failed: true, test_mode: true, message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_insert });
+            callback({ failed: true, test_mode: true, message: "Test mode is on, the db was not updated, nothing was added to the file server.", event: event_data });
         }
         else {
             //delete existing event with files

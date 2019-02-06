@@ -41,7 +41,7 @@ router.route('/:actor_id').get(function(request, response){
         }
     });
 });//built, written, tested
-router.route('/').post(memoryUpload, actor_data_validator.validate, function(request, response){
+router.route('/').post(token_authentication.authenticate_endpoint_with_user_token, memoryUpload, actor_data_validator.validate, function(request, response){
     
     var data = request.locals.validated_data;
     var files = request.files;

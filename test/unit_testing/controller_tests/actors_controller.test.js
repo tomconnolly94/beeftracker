@@ -377,7 +377,7 @@ describe('Module: actors_controller', function () {
     it('createActor', function () {
         
         db_interface.insert = function(insert_config, callback){
-            callback(globals.dummy_object_id); 
+            callback({ id: globals.dummy_object_id }); 
         };
         
         var files = actor_example.gallery_items;
@@ -388,14 +388,7 @@ describe('Module: actors_controller', function () {
         actors_controller.createActor(actor_example, files, function(result){
             callback_spy();
             
-            var actor_example_copy = actor_example;
-            actor_example_copy._id = result._id;
-            var fields_to_skip = [ "date_added" ];
-            
-            result = result["_doc"];
-            result.rating = 0;
-
-            globals.compare_objects(result, actor_example_copy, fields_to_skip);
+            assert.equal(globals.dummy_object_id, result.id);
         });
         
         assert(callback_spy.called);
