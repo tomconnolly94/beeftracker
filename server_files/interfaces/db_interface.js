@@ -121,9 +121,9 @@ module.exports = {
                 });
             } else {
                 //standard query to match an event and resolve aggressor and targets references
-                db.collection(table).aggregate(aggregate_array).toArray(function (err, results) {
+                db.collection(table).aggregate(aggregate_array).toArray(function (error, results) {
                     //handle error
-                    if (err) {
+                    if (error) {
                         logger.submit_log(logger.LOG_TYPE.ERROR, `DB error: ${error}`)
                         failure_callback({
                             failed: true,
@@ -180,7 +180,8 @@ module.exports = {
                         options.operation = "insert";
                         post_insert_procedure(db, document, record, table, options);
                         success_callback({
-                            id: record._id
+                            id: record._id,
+                            beef_chain_ids: record.beef_chain_ids
                         });
                     }
                 });
@@ -206,7 +207,7 @@ module.exports = {
                 });
             } else {
                 //standard query to insert into live events table
-                db.collection(table).findOneAndUpdate(match_query, update_clause, { $upsert: true }, function (err, result) {
+                db.collection(table).update(match_query, update_clause, { $upsert: true }, function (err, result) {
                     if (err) {
                         console.log(err);
                         failure_callback({
@@ -218,6 +219,45 @@ module.exports = {
                     } else {
                         options.operation = "update";
                         post_insert_procedure(db, result.value, update_clause, table, options);
+                        success_callback(result.value);
+                    }
+                });
+            }
+        });
+    },
+
+    //"updateSingle" is limited to updating one object, but it can return that updated object in the success callback, which "update" cannot do
+    updateSingle: function (update_config, success_callback, failure_callback) {
+
+        var table = update_config.table;
+        var match_id_object = update_config.match_id_object;
+        var update_clause = update_config.update_clause;
+        var options = update_config.options;
+
+        db_ref.get_db_object().connect(db_url, function (err, db) {
+            if (err) {
+                console.log(err);
+                failure_callback({
+                    failed: true,
+                    module: "db_interface",
+                    function: "update",
+                    message: "Failed at db connection"
+                });
+            } else {
+                //standard query to insert into live events table
+                db.collection(table).findOneAndUpdate({ _id: match_id_object }, update_clause, { $upsert: true }, function (err, result) {
+                    if (err) {
+                        console.log(err);
+                        failure_callback({
+                            failed: true,
+                            module: "db_interface",
+                            function: "update",
+                            message: "Failed at db query"
+                        });
+                    } else {
+                        options.operation = "update";
+                        post_insert_procedure(db, result.value, update_clause, table, options);
+                        console.log("updateSingle", result);
                         success_callback(result.value);
                     }
                 });

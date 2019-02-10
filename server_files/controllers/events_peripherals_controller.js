@@ -17,7 +17,7 @@ var db_ref = require("../config/db_config.js");
 var db_interface = require("../interfaces/db_interface.js");
 
 //objects
-var event_projection = require("./events_controller.js").event_projection;
+var get_aggregate_array = require("./events_controller.js").get_aggregate_array;
 
 module.exports = {
     
@@ -25,24 +25,7 @@ module.exports = {
 
         var query_config = {
             table: db_ref.get_current_event_table(),
-            aggregate_array: [
-                { $match: { beef_chain_ids: BSON.ObjectID.createFromHexString(beef_chain_id) } },
-                { $unwind : "$aggressors"},
-                { $lookup : {
-                    from: db_ref.get_current_actor_table(),
-                    localField: "aggressors",
-                    foreignField: "_id",
-                    as: "aggressors" 
-                }},
-                { $unwind : "$targets"},
-                { $lookup : { 
-                    from: db_ref.get_current_actor_table(),
-                    localField: "targets",
-                    foreignField: "_id",
-                    as: "targets" 
-                }},/*
-                { $project: { event_projection } }*/
-            ]
+            aggregate_array: get_aggregate_array({ beef_chain_ids: BSON.ObjectID.createFromHexString(beef_chain_id) }, [])
         };
 
         db_interface.get(query_config, function(results){

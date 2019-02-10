@@ -45,6 +45,7 @@ var event_projection = {
     "cover_image": 1,
     "data_sources": 1,
     "beef_chain_ids": 1,
+    "beef_chains": 1,
     "contributions": 1,
     "tags": 1,
     "featured": 1,
@@ -70,77 +71,78 @@ var compare_event_dates = function (a, b) {
     return b.event_date.valueOf() - a.event_date.valueOf();
 }
 
-var get_aggregate_array = function (match_query_content, additional_aggregate_stages) {
-    var aggregate_array = [
-        { $match: match_query_content },
-        { $unwind: "$aggressors" },
-        {
-            $lookup: {
-                from: db_ref.get_current_actor_table(),
-                localField: "aggressors",
-                foreignField: "_id",
-                as: "aggressors"
-            }
-        },
-        { $unwind: "$aggressors" },
-        { $unwind: "$targets" },
-        {
-            $lookup: {
-                from: db_ref.get_current_actor_table(),
-                localField: "targets",
-                foreignField: "_id",
-                as: "targets"
-            }
-        },
-        { $unwind: "$targets" },
-        { $unwind: "$categories" },
-        {
-            $lookup: {
-                from: db_ref.get_event_categories_table(),
-                localField: "categories",
-                foreignField: "cat_id",
-                as: "categories"
-            }
-        },
-        { $unwind: "$categories" },
-        {
-            $group: {
-                _id: "$_id",
-                title: { $first: "$title" },
-                aggressors: { $addToSet: "$aggressors" },
-                targets: { $addToSet: "$targets" },
-                event_date: { $first: "$event_date" },
-                date_added: { $first: "$date_added" },
-                description: { $first: "$description" },
-                links: { $first: "$links" },
-                categories: { $addToSet: "$categories" },
-                hit_counts: { $first: "$hit_counts" },
-                gallery_items: { $first: "$gallery_items" },
-                img_title_thumbnail: { $first: "$img_title_thumbnail" },
-                cover_image: { $first: "$cover_image" },
-                rating: { $first: "$rating" },
-                data_sources: { $first: "$data_sources" },
-                beef_chain_ids: { $addToSet: "$beef_chain_ids" },
-                contributions: { $first: "$contributions" },
-                tags: { $first: "$tags" },
-                featured: { $first: "$featured" },
-                votes: { $first: "$votes" },
-                comments: { $first: "$comments" },
-            }
-        },
-        { $project: event_projection }
-    ];
-
-    var initial_index = aggregate_array.length - 3;
-
-    for (var i = initial_index; i - initial_index < additional_aggregate_stages.length; i++) {
-        aggregate_array.splice(i, 0, additional_aggregate_stages[i - initial_index]);
-    }
-
-    return aggregate_array;
-}
-
 module.exports = {
+    get_aggregate_array: function (match_query_content, additional_aggregate_stages) {
+        var aggregate_array = [
+            { $match: match_query_content },
+            { $unwind: "$aggressors" },
+            {
+                $lookup: {
+                    from: db_ref.get_current_actor_table(),
+                    localField: "aggressors",
+                    foreignField: "_id",
+                    as: "aggressors"
+                }
+            },
+            { $unwind: "$aggressors" },
+            { $unwind: "$targets" },
+            {
+                $lookup: {
+                    from: db_ref.get_current_actor_table(),
+                    localField: "targets",
+                    foreignField: "_id",
+                    as: "targets"
+                }
+            },
+            { $unwind: "$targets" },
+            { $unwind: "$categories" },
+            {
+                $lookup: {
+                    from: db_ref.get_event_categories_table(),
+                    localField: "categories",
+                    foreignField: "cat_id",
+                    as: "categories"
+                }
+            },
+            { $unwind: "$categories" },
+            { $unwind: "$beef_chain_ids"},
+            {
+                $group: {
+                    _id: "$_id",
+                    title: { $first: "$title" },
+                    aggressors: { $addToSet: "$aggressors" },
+                    targets: { $addToSet: "$targets" },
+                    event_date: { $first: "$event_date" },
+                    date_added: { $first: "$date_added" },
+                    description: { $first: "$description" },
+                    links: { $first: "$links" },
+                    categories: { $addToSet: "$categories" },
+                    hit_counts: { $first: "$hit_counts" },
+                    gallery_items: { $first: "$gallery_items" },
+                    img_title_thumbnail: { $first: "$img_title_thumbnail" },
+                    cover_image: { $first: "$cover_image" },
+                    rating: { $first: "$rating" },
+                    data_sources: { $first: "$data_sources" },
+                    beef_chain_ids: { $addToSet: "$beef_chain_ids" },
+                    beef_chains: { $addToSet: "$beef_chains" },
+                    contributions: { $first: "$contributions" },
+                    tags: { $first: "$tags" },
+                    featured: { $first: "$featured" },
+                    votes: { $first: "$votes" },
+                    comments: { $first: "$comments" },
+                }
+            },
+            { $project: event_projection }
+        ];
+    
+        var initial_index = aggregate_array.length - 3;
+    
+        for (var i = initial_index; i - initial_index < additional_aggregate_stages.length; i++) {
+            aggregate_array.splice(i, 0, additional_aggregate_stages[i - initial_index]);
+        }
+    
+        return aggregate_array;
+    },
 
     format_event_data: function (submission_data) {
 
@@ -215,6 +217,7 @@ module.exports = {
             else if (query_parameters.increasing_order == "popularity" || query_parameters.decreasing_order == "popularity") { sort_field_name = "hit_count.total"; }
             else if (query_parameters.increasing_order == "currently_trending" || query_parameters.decreasing_order == "currently_trending") { sort_field_name = "hit_counts.today"; }
             else if (query_parameters.increasing_order == "date_added" || query_parameters.decreasing_order == "date_added") { sort_field_name = "date_added"; }
+            else if (query_parameters.increasing_order == "event_date" || query_parameters.decreasing_order == "event_date") { sort_field_name = "event_date"; }
             else { query_present = false; }// if no valid queries provided, disallow a sort query
 
             if (query_parameters.increasing_order) {
@@ -234,7 +237,7 @@ module.exports = {
             if (query_parameters.match_event_ids) { match_query_content["_id"] = { $in: query_parameters.match_event_ids }}
 
             //deal with $limit query
-            if (query_parameters.limit) { limit_query_content = typeof query_parameters.limit == "string" ? parseInt(query_parameters.limit) : query_parameters.limit + 1 }
+            if (query_parameters.limit) { limit_query_content = typeof query_parameters.limit == "string" ? parseInt(query_parameters.limit) : query_parameters.limit }
         }
 
         var additional_aggregate_stages = [
@@ -249,8 +252,7 @@ module.exports = {
             //     localField: "beef_chain_ids", 
             //     foreignField: "_id", 
             //     as: "beef_chain_ids"  
-            // }}, 
-            { "$unwind": "$beef_chain_ids"},
+            // }},
             // { '$lookup': 
             //     { from: 'event_data_v4',
             //         localField: 'beef_chain_ids.events',
@@ -268,7 +270,7 @@ module.exports = {
             additional_aggregate_stages.push({ $limit: limit_query_content });
         }
 
-        var aggregate_array = get_aggregate_array(match_query_content, additional_aggregate_stages);
+        var aggregate_array = module.exports.get_aggregate_array(match_query_content, additional_aggregate_stages);
         
         var query_config = {
             table: db_ref.get_current_event_table(),
@@ -296,29 +298,31 @@ module.exports = {
                 from: "beef_chains", 
                 localField: "beef_chain_ids", 
                 foreignField: "_id", 
-                as: "beef_chain_ids"  
+                as: "beef_chains"  
             }}, 
-            { "$unwind": "$beef_chain_ids"},
+            { "$unwind": "$beef_chains"},
             { '$lookup': 
                 { from: 'event_data_v4',
-                    localField: 'beef_chain_ids.events',
+                    localField: 'beef_chains.events',
                     foreignField: '_id',
-                    as: 'beef_chain_ids.events' 
+                    as: 'beef_chains.events' 
                 } 
-            }
+            },
+            { "$unwind": "$beef_chains"}
         ];
 
         var query_config = {
             table: db_ref.get_current_event_table(),
-            aggregate_array: get_aggregate_array({ _id: BSON.ObjectID.createFromHexString(event_id) }, additional_aggregate_stages)
+            aggregate_array: module.exports.get_aggregate_array({ _id: BSON.ObjectID.createFromHexString(event_id) }, additional_aggregate_stages)
         };
 
         db_interface.get(query_config, function (results) {
+            console.log(results)
 
             var result = results[0];
             //sort beef chain events using event dates using above compare function
-            for (var i = 0; i < result.beef_chain_ids.length; i++) {
-                result.beef_chain_ids[i].events.sort(compare_event_dates);
+            for (var i = 0; i < result.beef_chains.length; i++) {
+                result.beef_chains[i].events.sort(compare_event_dates);
             }
 
             callback(result);
@@ -464,41 +468,48 @@ module.exports = {
                 //continue
             });
 
-            var beef_chain_update_config = {
-                table: db_ref.get_beef_chain_table(),
-                match_query: {
-                     _id: { $in: event.beef_chain_ids }
-                },
-                update_clause: { 
-                    $pull: { events: BSON.ObjectID.createFromHexString(event_id) }
-                },
-                options: {}
-            };
 
-            //remove the event._id entry from the relevant beef_chain documents
-            db_interface.update(beef_chain_update_config, function(result){
+            console.log(event);
+            for(var i = 0; i < event.beef_chain_ids.length; i++){
 
-                //remove the event from the beef_chain table only if events array is empty after above removal
-                if(result.events.length == 0){
+                console.log(event.beef_chain_ids[i]);
 
-                    var beef_chain_delete_config = {
-                        table: db_ref.get_beef_chain_table(),
-                        delete_multiple_records: true, //because we dont need a return value
-                        match_query: { _id: BSON.ObjectID.createFromHexString(result._id) }
-                    };
+                var beef_chain_update_config = {
+                    table: db_ref.get_beef_chain_table(),
+                    match_id_object: event.beef_chain_ids[i],
+                    update_clause: { 
+                        $pull: { events: BSON.ObjectID.createFromHexString(event_id) }
+                    },
+                    options: {}
+                };
 
-                    db_interface.delete(beef_chain_delete_config, function(){
-                        callback({});
-                    }, function(){
-                        callback(error_object);
-                    });
-                }
-                else{
-                    callback({});
-                }
-            }, function(error_object){
-                callback(error_object);
-            });
+                //remove the event._id entry from the relevant beef_chain documents
+                db_interface.updateSingle(beef_chain_update_config, function(result){
+
+                    //remove the event from the beef_chain table only if events array is empty after above removal
+                    if(result.events.length == 0){
+
+                        var beef_chain_delete_config = {
+                            table: db_ref.get_beef_chain_table(),
+                            delete_multiple_records: true, //because we dont need a return value
+                            match_query: { _id: BSON.ObjectID.createFromHexString(result._id) }
+                        };
+
+                        db_interface.delete(beef_chain_delete_config, function(){
+                            //success, finished, for this loop
+                        }, function(error_object){
+                            callback(error_object);
+                        });
+                    }
+                }, function(error_object){
+                    callback(error_object);
+                });
+            }
+
+            console.log("made it to last callback");
+            callback({}); //only callback with success if callback has not been previously invoked with error_object
+        }, function(error_object){
+            callback(error_object);
         });
     }
 }

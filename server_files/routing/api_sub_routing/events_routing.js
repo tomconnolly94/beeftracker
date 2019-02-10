@@ -34,7 +34,9 @@ router.route('/:event_id').get(function(request, response){
     
     event_controller.findEvent(existing_event_id, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            var code = 400;
+            if(data.message == "No results found"){ code = 404; }
+            send_unsuccessful_response(response, code, data.message);
         }
         else{
             send_successful_response(response, 200, data);
