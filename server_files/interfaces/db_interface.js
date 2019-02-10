@@ -37,8 +37,8 @@ var create_beef_chains = function (db, event, table) {
                         var beef_chain = beef_chains[0];
 
                         //check if this event is in the beef_chain table already
-                        if (beef_chain.events.indexOf(event._id) == -1) {
-                            var new_beef_chain_events = beef_chain.events;
+                        if (beef_chain.event_ids.indexOf(event._id) == -1) {
+                            var new_beef_chain_events = beef_chain.event_ids;
 
                             new_beef_chain_events.push(event._id);
 
@@ -46,7 +46,7 @@ var create_beef_chains = function (db, event, table) {
                                 _id: beef_chain._id
                             }, {
                                 $set: {
-                                    events: new_beef_chain_events
+                                    event_ids: new_beef_chain_events
                                 }
                             }); //update beef_chain events with new event included
                             db.collection(db_ref.get_current_event_table()).update({
@@ -61,7 +61,7 @@ var create_beef_chains = function (db, event, table) {
 
                     } else { //beef chain doesnt exist, create one
                         db.collection(db_ref.get_beef_chain_table()).insert({
-                            events: [event._id],
+                            event_ids: [event._id],
                             actors: [aggressor, target]
                         }, function (err, inserted_doc) { //insert new beef_chain with one event
                             db.collection(db_ref.get_current_event_table()).update({

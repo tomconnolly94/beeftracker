@@ -24,12 +24,35 @@ module.exports = {
     findEventsFromBeefChain: function(beef_chain_id, callback){
 
         var query_config = {
-            table: db_ref.get_current_event_table(),
-            aggregate_array: get_aggregate_array({ beef_chain_ids: BSON.ObjectID.createFromHexString(beef_chain_id) }, [])
+            table: db_ref.get_beef_chain_table(),
+            aggregate_array: [
+                { 
+                    $match: {
+                        _id: BSON.ObjectID.createFromHexString(beef_chain_id)
+                    }
+                },
+                { $unwind: "$event_ids" },
+                {
+                    $lookup: {
+                        from: db_ref.get_current_event_table(),
+                        localField: "event_ids",
+                        foreignField: "_id",
+                        as: "events"
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$_id",
+                        actors: { $addToSet: "$actors" },
+                        events: { $addToSet: "$events" },
+                        event_ids: { $addToSet: "$event_ids" },
+                    }
+                }
+            ]
         };
 
         db_interface.get(query_config, function(results){
-            callback(results);
+            callback(results[0]);
         },
         function(error_object){
             callback(error_object);

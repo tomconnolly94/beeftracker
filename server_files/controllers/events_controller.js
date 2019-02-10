@@ -478,7 +478,7 @@ module.exports = {
                     table: db_ref.get_beef_chain_table(),
                     match_id_object: event.beef_chain_ids[i],
                     update_clause: { 
-                        $pull: { events: BSON.ObjectID.createFromHexString(event_id) }
+                        $pull: { event_ids: BSON.ObjectID.createFromHexString(event_id) }
                     },
                     options: {}
                 };
@@ -487,7 +487,7 @@ module.exports = {
                 db_interface.updateSingle(beef_chain_update_config, function(result){
 
                     //remove the event from the beef_chain table only if events array is empty after above removal
-                    if(result.events.length == 0){
+                    if(result.event_ids.length == 0){
 
                         var beef_chain_delete_config = {
                             table: db_ref.get_beef_chain_table(),
