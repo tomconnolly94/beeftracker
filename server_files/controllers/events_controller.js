@@ -23,6 +23,7 @@ var storage_ref = require("../config/storage_config.js");
 var storage_interface = require('../interfaces/storage_interface.js');
 var db_interface = require('../interfaces/db_interface.js');
 var format_embeddable_items = require('../tools/formatting.js').format_embeddable_items;
+var loop = require("async-looper");
 
 //objects
 var Event = require("../schemas/event.schema");
@@ -468,15 +469,18 @@ module.exports = {
                 //continue
             });
 
+            console.log(event.beef_chain_ids.length)
+            console.log(event)
 
-            console.log(event);
-            for(var i = 0; i < event.beef_chain_ids.length; i++){
+            var loop_count = 0;
 
-                console.log(event.beef_chain_ids[i]);
+            loop(event.beef_chain_ids, function(beef_chain_id, next){
 
+                loop_count++;
+            
                 var beef_chain_update_config = {
                     table: db_ref.get_beef_chain_table(),
-                    match_id_object: event.beef_chain_ids[i],
+                    match_id_object: beef_chain_id,
                     update_clause: { 
                         $pull: { event_ids: BSON.ObjectID.createFromHexString(event_id) }
                     },
@@ -498,16 +502,21 @@ module.exports = {
                         db_interface.delete(beef_chain_delete_config, function(){
                             //success, finished, for this loop
                         }, function(error_object){
-                            callback(error_object);
                         });
+                    }
+
+                    if(loop_count == event.beef_chain_ids.length){
+                        next(null, loop.END_LOOP);
+                    }
+                    else{
+                        next();
                     }
                 }, function(error_object){
                     callback(error_object);
                 });
-            }
-
-            console.log("made it to last callback");
-            callback({}); //only callback with success if callback has not been previously invoked with error_object
+            }, function(){
+                callback({});
+            });
         }, function(error_object){
             callback(error_object);
         });

@@ -94,7 +94,6 @@ var upload_single_image = function(image_requires_download, destination_folder, 
             });
         }
         else if(storage_ref.get_upload_method() == "cloudinary"){
-            console.log(img_url);
 
             upload_to_cloudinary(img_url, function(dl_img_title){
                 callback(dl_img_title);
@@ -205,8 +204,6 @@ module.exports = {
                 
         //use an asynchronous loop to cycle through gallery items, if item is an image, save image to cloudinary and update gallery item link
         loop(items, function(item, next){
-
-            console.log(item);
 
             if(item.media_type == "image"){
                 

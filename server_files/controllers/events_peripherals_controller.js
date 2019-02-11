@@ -31,7 +31,6 @@ module.exports = {
                         _id: BSON.ObjectID.createFromHexString(beef_chain_id)
                     }
                 },
-                { $unwind: "$event_ids" },
                 {
                     $lookup: {
                         from: db_ref.get_current_event_table(),
@@ -39,20 +38,23 @@ module.exports = {
                         foreignField: "_id",
                         as: "events"
                     }
-                },
-                {
-                    $group: {
-                        _id: "$_id",
-                        actors: { $addToSet: "$actors" },
-                        events: { $addToSet: "$events" },
-                        event_ids: { $addToSet: "$event_ids" },
-                    }
                 }
             ]
         };
 
         db_interface.get(query_config, function(results){
-            callback(results[0]);
+
+            var beef_chain = results[0];
+            var events = beef_chain.events;
+            var events_map = events.map(function(event){ return String(event._id); })
+
+            for(var i = 0; i < beef_chain.event_ids.length; i++){
+                if(events_map.indexOf(String(beef_chain.event_ids[i])) == -1){
+                    events.push({ _id: beef_chain.event_ids[i] });
+                }
+            }
+
+            callback(events);
         },
         function(error_object){
             callback(error_object);
