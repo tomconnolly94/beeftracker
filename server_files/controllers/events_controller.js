@@ -16,6 +16,7 @@
 
 //external dependencies
 var BSON = require('bson');
+var loop = require("async-looper");
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
@@ -23,11 +24,12 @@ var storage_ref = require("../config/storage_config.js");
 var storage_interface = require('../interfaces/storage_interface.js');
 var db_interface = require('../interfaces/db_interface.js');
 var format_embeddable_items = require('../tools/formatting.js').format_embeddable_items;
-var loop = require("async-looper");
+var logger = require("../tools/logging.js");
 
-//objects
+//schemas
 var Event = require("../schemas/event.schema");
 var EventContribution = require("../schemas/event_contribution.schema").model;
+var BeefChain = require("../schemas/beef_chain.schema");
 
 var test_mode = false;
 var event_projection = {
@@ -71,6 +73,115 @@ var increment_hit_counts = function (event_id) {
 var compare_event_dates = function (a, b) {
     return b.event_date.valueOf() - a.event_date.valueOf();
 }
+
+var create_beef_chains = function(event, callback){
+
+    var aggregate_array = [{
+        $match: { $or: [] }
+    }];
+
+    event.aggressors.forEach(function (aggressor) {
+        event.targets.forEach(function (target) {
+            aggregate_array[0]["$match"]["$or"].push({
+                actors: {
+                    $all: [
+                        aggressor,
+                        target
+                    ]
+                }
+            });
+        });
+    });
+    
+    var query_config = {
+        table: db_ref.get_beef_chain_table(),
+        aggregate_array: aggregate_array
+    }
+
+    db_interface.get(query_config, function(existing_beef_chains){
+
+        var db_query_promises = []; //will hold config objects for database insert/updates
+
+        var build_promise = function(beef_chain){
+
+            var beef_chain_update_config = {
+                table: db_ref.get_beef_chain_table(),
+                match_id_object: beef_chain._id ? beef_chain._id : "000",
+                update_clause: beef_chain,
+                options: { upsert: true }
+            }
+
+            delete beef_chain_update_config.update_clause._id; //if _id is in the update clause, remove it
+
+            return new Promise(function(resolve, reject){
+
+                db_interface.updateSingle(beef_chain_update_config, function(data){
+                    if(data.failed){
+                        reject(data);
+                    }
+                    else{
+                        resolve(data);
+                    }
+                });
+            });
+        };
+
+        /*  loop through existing_beef_chains, where aggressor and target are both found in existing_beef_chain.actors,
+         *  push the new event_id to the beef_chain.event_ids and build a promise to execute the db query later.
+         *  if there is no beef_chain for this aggressor/target then build a promise based on the current aggressor and 
+         *  target
+        */
+        for(var aggressor_id = 0; aggressor_id < event.aggressors.length; aggressor_id++){
+            var aggressor = event.aggressors[aggressor_id];
+            targets_loop:
+            for(var target_id = 0; target_id < event.targets.length; target_id++){
+                var target = event.targets[target_id];
+                for(var i = 0; i < existing_beef_chains.length; i++){
+                    var existing_beef_chain = existing_beef_chains[i];
+                    var actors = existing_beef_chain.actors.map(function(actor){ return actor.str; })
+                    if(actors.indexOf(aggressor.str) != -1 && actors.indexOf(target.str) != -1){
+                        //beef_chain found for aggressor and target
+                        existing_beef_chain.event_ids.push(event._id);
+                        db_query_promises.push(build_promise(existing_beef_chain));                    
+                        break targets_loop; //ensures that id an existing beef_chain is found, the code below will not be run
+                    }
+                }
+
+                db_query_promises.push(build_promise(
+                    BeefChain({
+                        actors: [ aggressor, target ],
+                        events: [ event._id ]
+                    })
+                )); 
+            };
+        };
+
+        Promise.all(db_query_promises).then(function(values){
+
+            var beef_chain_ids_to_be_pushed_to_event = []; //will hold all the beef_chain_ids that need to be pushed to the event
+
+            for(var i = 0; i < values.length; i++){
+                beef_chain_ids_to_be_pushed_to_event.push(values[i]._id);
+            }
+
+            var event_update_config = {
+                table: db_ref.get_current_event_table(),
+                match_id_object: event._id,
+                update_clause: { $push: { beef_chain_ids: { $each: beef_chain_ids_to_be_pushed_to_event } } },
+                options: {}
+            };
+
+            db_interface.updateSingle(event_update_config, function(data){
+                callback(data);
+            }, function(error_object){
+                callback(error_object);
+            });
+        }).catch(function(error){
+            logger.submit_log(logger.LOG_TYPE.ERROR, error);
+            callback(error);
+        });
+    });
+};
 
 module.exports = {
     get_aggregate_array: function (match_query_content, additional_aggregate_stages) {
@@ -407,7 +518,12 @@ module.exports = {
                 }
 
                 db_interface.insert(insert_config, function (result) {
-                    callback(result);
+                    create_beef_chains(result, function(full_event){
+                        callback({
+                            _id: full_event._id,
+                            beef_chain_ids: full_event.beef_chain_ids
+                        });
+                    });
                 },
                 function(error_object){
                     callback(error_object);

@@ -166,8 +166,8 @@ router.get("/actor/:actor_id", token_authentication.recognise_user_token, blanke
         //access data from db
         var actor_data_promise = new Promise(function(resolve, reject){
            actor_controller.findActor(actor_id, function(data){
-               if(data.failed){
-                    response.render("pages/static/error.jade", view_parameters);
+                if(data.failed){
+                    reject(data);
                 }
                 else{
                     resolve(data);
@@ -175,7 +175,7 @@ router.get("/actor/:actor_id", token_authentication.recognise_user_token, blanke
             });
         });
 
-        Promise.all([ actor_data_promise ]).then(function(values) {
+        Promise.all([ actor_data_promise ]).then(function(values){
 
             var view_parameters = Object.assign({}, view_parameters_global);
             view_parameters.actor_data = values[0];
@@ -184,6 +184,7 @@ router.get("/actor/:actor_id", token_authentication.recognise_user_token, blanke
             response.render("pages/actor.jade", view_parameters);
         }).catch(function(error){
             console.log(error);
+            response.render("pages/static/error.jade", view_parameters);
         });
     }
     else {

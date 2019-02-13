@@ -14,82 +14,16 @@ var BSON = require('bson');
 //internal dependencies
 var db_ref = require("../config/db_config.js");
 var email_interface = require("../interfaces/email_interface");
-var logger = require("../tools/logging.js")
+var logger = require("../tools/logging.js");
 
 //get db uri
 const db_url = process.env.MONGODB_URI;
-
-var create_beef_chains = function (db, event, table) {
-    event.aggressors.forEach(function (aggressor, index) {
-        event.targets.forEach(function (target, index) {
-            //loop through events, check if event has beef chain id, 
-            db.collection(db_ref.get_beef_chain_table()).find({
-                actors: {
-                    $all: [aggressor, target]
-                }
-            }).toArray(function (err, beef_chains) { //TODO this query is not matching beef chains correctly
-                if (err) {
-                    console.log(err);
-                } else {
-                    //if no beef chain id, get aggressor and each target and insert 
-                    if (beef_chains.length > 0) { //beef chain does exist 
-
-                        var beef_chain = beef_chains[0];
-
-                        //check if this event is in the beef_chain table already
-                        if (beef_chain.event_ids.indexOf(event._id) == -1) {
-                            var new_beef_chain_events = beef_chain.event_ids;
-
-                            new_beef_chain_events.push(event._id);
-
-                            db.collection(db_ref.get_beef_chain_table()).update({
-                                _id: beef_chain._id
-                            }, {
-                                $set: {
-                                    event_ids: new_beef_chain_events
-                                }
-                            }); //update beef_chain events with new event included
-                            db.collection(db_ref.get_current_event_table()).update({
-                                _id: event._id
-                            }, {
-                                $push: {
-                                    beef_chain_ids: beef_chain._id
-                                }
-                            }); //update event with beef_chain_id
-                            //console.log("beef chain: " + beef_chain._id + " updated.");
-                        }
-
-                    } else { //beef chain doesnt exist, create one
-                        db.collection(db_ref.get_beef_chain_table()).insert({
-                            event_ids: [event._id],
-                            actors: [aggressor, target]
-                        }, function (err, inserted_doc) { //insert new beef_chain with one event
-                            db.collection(db_ref.get_current_event_table()).update({
-                                _id: event._id
-                            }, {
-                                $push: {
-                                    beef_chain_ids: inserted_doc.ops[0]._id
-                                }
-                            }); //update event with beef_chain_id
-                            //console.log("beef chain: " + inserted_doc.ops[0]._id + " created.");
-                        });
-                    }
-                }
-            });
-        });
-    });
-}
 
 var post_insert_procedure = function (db, document, insert_object, table, options) {
 
     if (document != null && document.ops != null) {
 
         var event = document.ops[0];
-
-        //find possible beef chains and provided they dont exist and if they do, the event is not already in the beef_chain, add the event to them
-        if (table == db_ref.get_current_event_table() && options.operation == "insert") {
-            create_beef_chains(db, event, table);
-        }
 
         //add _id field so object can be found later
         insert_object._id = document.ops[0]._id;
@@ -179,10 +113,7 @@ module.exports = {
                     } else {
                         options.operation = "insert";
                         post_insert_procedure(db, document, record, table, options);
-                        success_callback({
-                            id: record._id,
-                            beef_chain_ids: record.beef_chain_ids
-                        });
+                        success_callback(document.ops[0]);
                     }
                 });
             }
@@ -245,8 +176,8 @@ module.exports = {
                 });
             } else {
                 //standard query to insert into live events table
-                db.collection(table).findOneAndUpdate({ _id: match_id_object }, update_clause, { $upsert: true }, function (err, result) {
-                    if (err) {
+                db.collection(table).findOneAndUpdate({ _id: match_id_object }, update_clause, { $upsert: options.upsert ? true : false, returnOriginal: false }, function (err, result) {
+                    if (err || result.value == null) {
                         console.log(err);
                         failure_callback({
                             failed: true,
@@ -257,7 +188,6 @@ module.exports = {
                     } else {
                         options.operation = "update";
                         post_insert_procedure(db, result.value, update_clause, table, options);
-                        console.log("updateSingle", result);
                         success_callback(result.value);
                     }
                 });
