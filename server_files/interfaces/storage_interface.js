@@ -196,16 +196,20 @@ module.exports = {
     
     //format gallery items for db storage, also store them in the provided folder on the file server
     remove: function(remove_config, callback){
-        
+
         var items = remove_config.items;
         var file_server_folder = remove_config.record_type;
-        
+                
         var loop_count = 0;
                 
         //use an asynchronous loop to cycle through gallery items, if item is an image, save image to cloudinary and update gallery item link
         loop(items, function(item, next){
 
             if(item.media_type == "image"){
+
+                console.log(item);
+                console.log(file_server_folder);
+                console.log(item.link);
                 
                 delete_single_image(file_server_folder, item.link, function(){
                     loop_count++;

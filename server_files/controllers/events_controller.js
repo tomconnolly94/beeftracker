@@ -286,7 +286,6 @@ module.exports = {
             event_date: new Date(submission_data.date),
             date_added: new Date(),
             description: submission_data.description,
-            links: submission_data.links,
             hit_counts: {
                 total: 0,
                 last_day: 0,
@@ -429,7 +428,6 @@ module.exports = {
         };
 
         db_interface.get(query_config, function (results) {
-            console.log(results)
 
             var result = results[0];
             //sort beef chain events using event dates using above compare function
@@ -521,7 +519,8 @@ module.exports = {
                     create_beef_chains(result, function(full_event){
                         callback({
                             _id: full_event._id,
-                            beef_chain_ids: full_event.beef_chain_ids
+                            beef_chain_ids: full_event.beef_chain_ids,
+                            gallery_items: full_event.gallery_items
                         });
                     });
                 },
@@ -577,16 +576,13 @@ module.exports = {
 
             var remove_config = {
                 items: event.gallery_items.filter(gallery_item => gallery_item.media_type == "image"),
-                file_server_folder: "events"
+                record_type: "events"
             };
 
             //remove all image based gallery items from the file server
             storage_interface.remove(remove_config, function(){
                 //continue
             });
-
-            console.log(event.beef_chain_ids.length)
-            console.log(event)
 
             var loop_count = 0;
 

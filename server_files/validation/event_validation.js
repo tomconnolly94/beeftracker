@@ -43,14 +43,6 @@ module.exports = {
         request.checkBody("description", "Field is null.").not_null();
         request.checkBody("description", xss_warning).detect_xss();
         
-        /* unneeded,links arent solicited on the add-beef form
-        //validate data_soruces
-        request.checkBody("links", "Field is empty").notEmpty();
-        request.checkBody("links", "Field is null.").not_null();
-        request.checkBody("links", xss_warning).detect_xss_in_array_of_objects_keys_and_fields();
-        request.checkBody("links", "Not an array of links.").test_array_of_links();
-        */
-        
         //validate gallery_items
         request.checkBody("gallery_items", "Field is empty").notEmpty();
         request.checkBody("gallery_items", "Field is null.").not_null();
@@ -67,21 +59,12 @@ module.exports = {
         request.checkBody("data_sources", xss_warning).detect_xss_in_string_array();
         request.checkBody("data_sources", "Data sources are improperly formatted.").test_array_of_urls();
         
-        /* unnecessary as user is validated elsewhere
-        //validate user id
-        request.checkBody("user_id", "Field is empty").notEmpty();
-        request.checkBody("user_id", "Field is null.").not_null();
-        request.checkBody("user_id", "Field is not mongodb id.").test_mongodb_object_id();
-        */
         //validate record_origin
         request.checkBody("record_origin", "Field is empty").notEmpty();
         request.checkBody("record_origin", "Field is null.").not_null();
         request.checkBody("record_origin", xss_warning).detect_xss();
         request.checkBody("record_origin", "Record origin is invalid.").test_record_origin();
         
-        //validate tags
-        /*request.checkBody("tags", "Field is empty").notEmpty();
-        request.checkBody("tags", "Field is null.").not_null();*/
         if(request.body.tags.length > 0){
             request.checkBody("tags", xss_warning).detect_xss_in_string_array();
             request.checkBody("tags", "Tags are not formatted correctly.").test_array_of_strings();
