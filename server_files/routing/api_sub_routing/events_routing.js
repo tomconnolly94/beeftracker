@@ -69,7 +69,7 @@ router.route('/:event_id').put(token_authentication.authenticate_endpoint_with_a
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, 204, data);
+            send_successful_response(response, 200, data);
         }
     });
 });//built, written, tested, needs admin auth

@@ -206,10 +206,6 @@ module.exports = {
         loop(items, function(item, next){
 
             if(item.media_type == "image"){
-
-                console.log(item);
-                console.log(file_server_folder);
-                console.log(item.link);
                 
                 delete_single_image(file_server_folder, item.link, function(){
                     loop_count++;

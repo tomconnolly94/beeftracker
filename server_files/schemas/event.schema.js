@@ -10,11 +10,6 @@ var event_schema = new Schema({
     event_date: Date,
     date_added: Date,
     description: String,
-    links : [{
-        _id : { id: false },
-        title : String,
-        url : String
-    }],
     categories: [ Number ],
     hit_counts: {
         total: Number, 

@@ -304,9 +304,6 @@ module.exports = {
             tags: submission_data.tags
         });
 
-        //add _id field if it exists
-        if (submission_data._id) { event_insert._id = submission._id; }
-
         return event_insert;
     },
 
@@ -557,8 +554,14 @@ module.exports = {
                         if(!result.failed){
                             callback(result);
                         }
+                        else{
+                            callback(result);
+                        }
                     });
-                };
+                }
+                else{
+                    callback(result);
+                }
             });
         }
     },

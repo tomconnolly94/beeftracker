@@ -232,7 +232,7 @@ module.exports = {
                     //standard query to match an event and resolve aggressor and targets references
                     db.collection(table).findOneAndDelete(match_query, function (err, result) {
                         //handle error
-                        if (err) {
+                        if (err || result.value == null) {
                             console.log(err);
                             failure_callback({
                                 failed: true,
