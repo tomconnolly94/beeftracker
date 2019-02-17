@@ -94,14 +94,14 @@ module.exports = {
         }
         calling_file_path = calling_file_path.replace(path.dirname(require.main.filename) + "/", '');
         
-        if(Object.keys(LOG_TYPE).indexOf(type) != -1){
-            var calling_file_path_split = calling_file_path.split("/");
-            var calling_file_name = calling_file_path_split[calling_file_path_split.length - 1].split(".")[0]
+        if(log_list.indexOf(type) != -1){
             var log;
             if(abbreviated_log_style){
                 log = `${abbreviated_log_decoration} ${type}: ${calling_file_path}:${calling_function}:${calling_line_number}`;
             }
             else{
+                var calling_file_path_split = calling_file_path.split("/");
+                var calling_file_name = calling_file_path_split[calling_file_path_split.length - 1].split(".")[0]
                 log = `${log_decoration} Internal Log ${log_decoration} ${calling_file_path}:${calling_function}:${calling_line_number} - Type: ${type}, Module: ${calling_file_name}`;
             }
             write_log(log, message);
@@ -112,7 +112,7 @@ module.exports = {
         }
         else{
             var prefix = `${log_error_decoration} Logging error ${log_error_decoration}`;
-            write_log(`${prefix} - Log type: ${type} not recognised.`);
+            write_log(`${prefix} - Log type: '${type}' not recognised. Used at: ${calling_file_path}:${calling_function}:${calling_line_number}`);
             write_log(`${prefix} - Available log types: ${Object.keys(LOG_TYPE)}`);            
         }
     }

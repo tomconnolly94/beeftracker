@@ -81,7 +81,7 @@ router.route('/:comment_id').get(function(request, response){
             send_unsuccessful_response(response, code, data.message);
         }
         else{
-            send_successful_response(response, 200);
+            send_successful_response(response, 200, data);
         }
     });
 });//built, written, tested, needs specific user or admin auth

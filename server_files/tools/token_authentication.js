@@ -41,7 +41,7 @@ var authentication_procedure = function(request, response, deny_access_on_fail, 
     var auto_refresh_auth_token = false;
     var cookies = cookie_parser.parse_cookies(request);
 
-    logging.submit_log(logging.LOG_TYPE.INFO, cookies);
+    logging.submit_log(logging.LOG_TYPE.EXTRA_INFO, cookies);
         
     if(cookies.bftkr_auth){
         //verify token to ensure its still valid

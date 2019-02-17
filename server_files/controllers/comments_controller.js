@@ -14,7 +14,7 @@ var BSON = require("bson");
 //internal dependencies
 var db_ref = require("../config/db_config.js");
 var db_interface = require("../interfaces/db_interface.js");
-var logging = require("../tools/logging.js");
+var logger = require("../tools/logging.js");
 
 //objects
 var Comment = require("../schemas/comment.schema");
@@ -33,7 +33,7 @@ module.exports = {
             likes: 0
         });
         
-        logging.submit_log("alert", "comments_controller", "New comment record" + comment_record);
+        logger.submit_log(logger.LOG_TYPE.EXTRA_INFO, "New comment record" + comment_record);
 
         var insert_config = {
             record: comment_record,
