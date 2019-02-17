@@ -14,9 +14,10 @@ var send_successful_response = responses_object.send_successful_response;
 var send_unsuccessful_response = responses_object.send_unsuccessful_response;
 
 //Comments endpoints
-router.route('/').post(comment_data_validator.validate, function(request, response){
+router.route('/').post(token_authentication.authenticate_endpoint_with_user_token, comment_data_validator.validate, function(request, response){
     
-    var comment_data = request.locals.validated_data;    
+    var comment_data = request.locals.validated_data;
+    comment_data.user = request.locals.authenticated_user;
     
     comments_controller.createComment(comment_data, function(data){
         if(data.failed){
@@ -33,7 +34,9 @@ router.route('/events/:event_id').get(function(request, response){
     
     comments_controller.findCommentsFromEvent(event_id, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            var code = 400;
+            if(data.no_results_found){ code = 404; }
+            send_unsuccessful_response(response, code, data.message);
         }
         else{
             send_successful_response(response, 200, data);
@@ -43,7 +46,9 @@ router.route('/events/:event_id').get(function(request, response){
 router.route('/actors/:actor_id').get(function(request, response){
     comments_controller.findCommentsFromActor(request, response, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            var code = 400;
+            if(data.no_results_found){ code = 404; }
+            send_unsuccessful_response(response, code, data.message);
         }
         else{
             send_successful_response(response, 200, data);
@@ -56,17 +61,39 @@ router.route('/beef_chains/:beef_chain_id').get(function(request, response){
         
     comments_controller.findCommentsFromBeefChain(beef_chain_id, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            var code = 400;
+            if(data.no_results_found){ code = 404; }
+            send_unsuccessful_response(response, code, data.message);
         }
         else{
             send_successful_response(response, 200, data);
         }
     });
 });//built, written, tested
-router.route('/:comment_id').delete(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
-    comments_controller.deleteComment(request, response, function(data){
+router.route('/:comment_id').get(function(request, response){
+
+    var comment_id = request.params.comment_id;
+
+    comments_controller.findComment(comment_id, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            var code = 400;
+            if(data.no_results_found){ code = 404; }
+            send_unsuccessful_response(response, code, data.message);
+        }
+        else{
+            send_successful_response(response, 200);
+        }
+    });
+});//built, written, tested, needs specific user or admin auth
+router.route('/:comment_id').delete(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
+
+    var comment_id = request.params.comment_id;
+
+    comments_controller.deleteComment(comment_id, function(data){
+        if(data.failed){
+            var code = 400;
+            if(data.no_results_found){ code = 404; }
+            send_unsuccessful_response(response, code, data.message);
         }
         else{
             send_successful_response(response, 200);

@@ -14,50 +14,37 @@ var BSON = require("bson");
 var db_ref = require("../config/db_config.js");
 var db_interface = require('../interfaces/db_interface.js');
 
+var get_aggregate_array = function(match_query){
+    return [
+        { 
+            $match: match_query
+        },
+        {
+            $lookup : { 
+                from: db_ref.get_user_details_table(),
+                localField: "user_id",
+                foreignField: "_id",
+                as: "user_object" 
+            }
+        },
+        { 
+            $project: {
+                "action": 1,
+                "date": 1,
+                "likes": 1,
+                "user_object": 1
+            }
+        }
+    ]
+}
+
 module.exports = {
         
-    findActivityLogsFromEvent: function(request, callback){
+    findActivityLogsFromEvent: function(event_id, callback){
         
-        var event_id_object = BSON.ObjectID.createFromHexString(request.params.event_id);
-
         var query_config = {
             table: db_ref.get_activity_logs_table(),
-            aggregate_array: [
-                { 
-                    $match: {
-                        event_id: event_id_object 
-                    }
-                },
-                {
-                    $lookup : { 
-                        from: db_ref.get_user_details_table(),
-                        localField: "user_id",
-                        foreignField: "_id",
-                        as: "user_object" 
-                    }
-                },
-                { 
-                    $project: {
-                        "action": 1,
-                        "date": 1,
-                        "likes": 1,
-                        "user_object": {
-                            $let: {
-                                vars: {
-                                    first_user: {
-                                        "$arrayElemAt": [ "$user_object", 0 ]
-                                    }
-                                },
-                                in: {
-                                    first_name: "$$first_user.first_name",
-                                    last_name: "$$first_user.last_name",
-                                    img_title: "$$first_user.img_title"
-                                }
-                            }
-                        }
-                    }
-                }
-            ]
+            aggregate_array: get_aggregate_array({ event_id: BSON.ObjectID.createFromHexString(event_id) })
         }
         
         db_interface.get(query_config, function(results){
@@ -68,48 +55,11 @@ module.exports = {
         });
     },
     
-    findActivityLogsFromActor: function(request, callback){
-        
-        var actor_id_object = BSON.ObjectID.createFromHexString(request.params.actor_id);
-        
+    findActivityLogsFromActor: function(actor_id, callback){
+                
         var query_config = {
             table: db_ref.get_activity_logs_table(),
-            aggregate_array: [
-                { 
-                    $match: { 
-                        actor_id: actor_id_object 
-                    }
-                },
-                {
-                    $lookup : { 
-                        from: db_ref.get_user_details_table(),
-                        localField: "user_id",
-                        foreignField: "_id",
-                        as: "user_object" 
-                    }
-                },
-                { 
-                    $project: {
-                        "action": 1,
-                        "date": 1,
-                        "likes": 1,
-                        "user_object": {
-                            $let: {
-                                vars: {
-                                    first_user: {
-                                        "$arrayElemAt": [ "$user_object", 0 ]
-                                    }
-                                },
-                                in: {
-                                    first_name: "$$first_user.first_name",
-                                    last_name: "$$first_user.first_name",
-                                    img_title: "$$first_user.first_name"
-                                }
-                            }
-                        }
-                    }
-                }
-            ]
+            aggregate_array: get_aggregate_array({ actor_id: BSON.ObjectID.createFromHexString(actor_id) })
         }
         
         db_interface.get(query_config, function(results){

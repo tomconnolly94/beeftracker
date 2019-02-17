@@ -94,7 +94,7 @@ module.exports = {
         }
         calling_file_path = calling_file_path.replace(path.dirname(require.main.filename) + "/", '');
         
-        if(log_list.indexOf(type) != -1){
+        if(Object.keys(LOG_TYPE).indexOf(type) != -1){
             var calling_file_path_split = calling_file_path.split("/");
             var calling_file_name = calling_file_path_split[calling_file_path_split.length - 1].split(".")[0]
             var log;

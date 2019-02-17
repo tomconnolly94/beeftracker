@@ -430,6 +430,5 @@ module.exports = {
         function(error_object){
             callback(error_object)
         });
-    },
-    
+    }
 }

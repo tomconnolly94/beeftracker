@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var comment_schema = new Schema({
 	text : String,
-	user : Schema.ObjectId,
+	user_id : Schema.ObjectId,
 	event_id : Schema.ObjectId,
 	actor_id : Schema.ObjectId, //either actor_id or event_id  should be null
 	beef_chain_id : Schema.ObjectId, //either actor_id or event_id  should be null

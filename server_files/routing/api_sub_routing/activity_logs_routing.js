@@ -16,7 +16,9 @@ var send_unsuccessful_response = responses_object.send_unsuccessful_response;
 //Activity logs endpoints
 router.route('/events/:event_id').get(function(request, response){
 
-    activity_logs_controller.findActivityLogsFromEvent(request, response, function(activity_logs){
+    var event_id = request.params.event_id;
+
+    activity_logs_controller.findActivityLogsFromEvent(event_id, function(activity_logs){
         if(activity_logs.length > 0){
             send_successful_response(response, 200, activity_logs);
         }
@@ -26,9 +28,11 @@ router.route('/events/:event_id').get(function(request, response){
     });
     
 });//built, written, tested
-router.route('/actors/:actor_id').get(function(){
+router.route('/actors/:actor_id').get(function(request, response){
 
-    activity_logs_controller.findActivityLogsFromActor(request, response, function(activity_logs){ 
+    var actor_id = request.params.actor_id;
+
+    activity_logs_controller.findActivityLogsFromActor(actor_id, function(activity_logs){ 
         if(activity_logs.length > 0){
             send_successful_response(response, 200, activity_logs);
         }

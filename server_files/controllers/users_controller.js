@@ -100,7 +100,9 @@ module.exports = {
             registration_method: user_details.registration_method ? user_details.registration_method : "beeftracker",
             registration_is_pending: false
         });
-            
+
+        if(user_details._id){ new_user._id = user_details._id; }
+        
         var query_config = {
             table: db_ref.get_user_details_table(),
             aggregate_array: [{
@@ -165,7 +167,7 @@ module.exports = {
                     };
 
                     storage_interface.upload(upload_config, function (image_items) {
-                        insert_config.record.img_title = image_items[0].link;
+                        insert_config.record.img_title = return_object.img_title = image_items[0].link;
                         insert_user(insert_config, function (result) {
                             return_object._id = result._id ? result._id : null;
                             callback(return_object);
@@ -199,7 +201,7 @@ module.exports = {
             module.exports.deleteUser(existing_object_id, function(result){
                 if(!result.failed){
                     //insert new event with files
-                    module.exports.createUser(user_data, files, function(result){
+                    module.exports.createUser(user_data, files, headers, function(result){
                         callback(result);
                     });
                 }

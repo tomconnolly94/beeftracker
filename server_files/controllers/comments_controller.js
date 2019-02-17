@@ -25,7 +25,7 @@ module.exports = {
 
         var comment_record = new Comment({
             text: comment_data.text,
-            user: BSON.ObjectID.createFromHexString(comment_data.user),
+            user_id: BSON.ObjectID.createFromHexString(comment_data.user.id),
             event_id: comment_data.event_id ? BSON.ObjectID.createFromHexString(comment_data.event_id) : null,
             actor_id: comment_data.actor_id ? BSON.ObjectID.createFromHexString(comment_data.actor_id) : null,
             beef_chain_id: comment_data.beef_chain_id ? BSON.ObjectID.createFromHexString(comment_data.beef_chain_id) : null,
@@ -59,7 +59,7 @@ module.exports = {
                 { $match: { event_id: event_id_object } },
                 { $lookup : {
                     from: db_ref.get_user_details_table(),
-                    localField: "user",
+                    localField: "user_id",
                     foreignField: "_id",
                     as: "user" 
                 }},
@@ -105,7 +105,7 @@ module.exports = {
                 { $match: { beef_chain_id: beef_chain_id_object } },
                 { $lookup : {
                     from: db_ref.get_user_details_table(),
-                    localField: "user",
+                    localField: "user_id",
                     foreignField: "_id",
                     as: "user" 
                 }},
@@ -153,7 +153,7 @@ module.exports = {
                 { $match: { actor_id: actor_id_object } },
                 { $lookup : {
                     from: db_ref.get_user_details_table(),
-                    localField: "user",
+                    localField: "user_id",
                     foreignField: "_id",
                     as: "user" 
                 }},
@@ -188,14 +188,56 @@ module.exports = {
             callback(error_object);
         });
     },
+
+    findComment: function(comment_id, callback){
+
+        var query_config = {
+            table: db_ref.get_comments_table(),
+            aggregate_array: [
+                { $match: { _id: BSON.ObjectID.createFromHexString(comment_id) } },
+                { $lookup : {
+                    from: db_ref.get_user_details_table(),
+                    localField: "user_id",
+                    foreignField: "_id",
+                    as: "user" 
+                }},
+                { $project: {
+                    "text": 1,
+                    "date_added": 1,
+                    "likes": 1,
+                    "event_id": 1,
+                    "actor_id": 1,
+                    "user": {
+                        $let: {
+                            vars: {
+                                first_user: {
+                                    "$arrayElemAt": [ "$user", 0 ]
+                                }
+                            },
+                            in: {
+                                first_name: "$$first_user.first_name",
+                                last_name: "$$first_user.last_name",
+                                img_title: "$$first_user.img_title"
+                            }
+                        }
+                    }
+                }}
+            ]
+        }
+
+        db_interface.get(query_config, function(results){
+            callback(results[0]);
+        },
+        function(error_object){
+            callback(error_object);
+        });
+    },
     
     deleteComment: function(comment_id, callback){
-
-        var comment_id_object = BSON.ObjectID.createFromHexString(comment_id);
         
         var delete_config = {
             table: db_ref.get_comments_table(),
-            match_query: { _id: comment_id_object }
+            match_query: { _id: BSON.ObjectID.createFromHexString(comment_id) }
         }
 
         db_interface.delete(delete_config, function(result){
