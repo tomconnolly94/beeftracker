@@ -12,7 +12,7 @@
 //write test for update function to ensure refactoring was a success
 
 //external dependencies
-var loop = require("async-looper");
+var moment = require("moment");
 var BSON = require('bson');
 
 //internal dependencies
@@ -135,7 +135,8 @@ module.exports = {
     format_actor_data: function(submission_data){
     
         //format data for db insertion
-        var date_of_origin = submission_data.date_of_origin.split('/');
+        var date_of_origin;
+
         var also_known_as_lower = [];
 
         for(var i = 0; i < submission_data.also_known_as.length; i++){
@@ -145,7 +146,7 @@ module.exports = {
         //format object for insertion into pending db
         var actor_insert = new Actor({
             name: submission_data.name,
-            date_of_origin: new Date(submission_data.date_of_origin),
+            date_of_origin: submission_data.date_of_origin,
             place_of_origin: submission_data.place_of_origin,
             description: submission_data.description,
             associated_actors: [],
@@ -163,6 +164,8 @@ module.exports = {
             also_known_as_lower: also_known_as_lower,
             record_origin: submission_data.record_origin
         });
+
+        if(submission_data._id){ actor_insert._id = submission_data._id; }
 
         return actor_insert;
     },
@@ -338,7 +341,10 @@ module.exports = {
                 };
 
                 db_interface.insert(insert_config, function(result){
-                    callback(result);
+                    callback({
+                        _id: result._id,
+                        gallery_items: result.gallery_items
+                    });
                 },
                 function(error_object){
                     callback(error_object)
@@ -347,9 +353,9 @@ module.exports = {
         }
     },
     
-    updateActor: function(actor_data, files,existing_object_id, callback){
+    updateActor: function(actor_data, files, existing_object_id, callback){
 
-        //extract data for use later
+        //ensures that _id is persistent past the update
         actor_data._id = BSON.ObjectID.createFromHexString(existing_object_id);
 
         if (test_mode) {
@@ -370,63 +376,40 @@ module.exports = {
                 if(!result.failed){
                     //insert new event with files
                     module.exports.createActor(actor_data, files, function(result){
-                        if(!result.failed){
-                            callback(result);
-                        }
+                        callback(result);
                     });
-                };
+                }
+                else{
+                    callback(result);
+                }
             });
         }
     },
     
-    deleteActor: function(request, response, callback){
-        //extract data
-        var actor_id = request.params.actor_id;
+    deleteActor: function(actor_id, callback){
 
-        var actor_id_object = BSON.ObjectID.createFromHexString(actor_id);
-
-        var query_config = {
+        var delete_config = {
             table: db_ref.get_current_actor_table(),
-            aggregate_array: [
-                {
-                    $match: { 
-                        _id: actor_id_object 
-                    }
-                }
-            ]
+            delete_multiple_records: false,
+            match_query: { _id: BSON.ObjectID.createFromHexString(actor_id) }
         }
 
-        db_interface.get(query_config, function(results){
-            if(results && results[0]){
+        db_interface.delete(delete_config, function(actor){
 
-                var actor_obj = results[0];
-
-                //add thumbnail image to list
-                actor_obj.gallery_items.push({link: actor_obj.img_title_thumbnail, media_type: "image"});
-
-                var remove_config = {
-                    items: actor_obj.gallery_items,
-                    record_type: storage_ref.get_actor_images_folder()
-                }
-
-                storage_interface.remove(remove_config, function(){
-
-                    var delete_config = {
-                        table: db_ref.get_current_actor_table(),
-                        match_query: { _id: actor_id_object }
-                    }
-
-                    db_interface.delete(delete_config, function(){
-                        callback({});
-                    });
-                });
+            var remove_config = {
+                items: actor.gallery_items.filter(gallery_item => gallery_item.media_type == "image"),
+                record_type: storage_ref.get_actor_images_folder()
             }
-            else{
-                callback({ failed: true, message: "Actor not in database."});
-            }
+
+            storage_interface.remove(remove_config, function(){
+                callback({});
+            },
+            function(error_object){
+                callback(error_object);
+            });
         },
         function(error_object){
-            callback(error_object)
+            callback(error_object);
         });
     },
     

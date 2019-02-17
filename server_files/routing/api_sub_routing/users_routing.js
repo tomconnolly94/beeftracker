@@ -17,14 +17,24 @@ var send_unsuccessful_response = responses_object.send_unsuccessful_response;
 
 //Users endpoints
 router.route('/:user_id').get(token_authentication.authenticate_endpoint_with_user_token, function(request, response){
-    users_controller.getUser(request, response, function(data){
-        if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
-        }
-        else{
-            send_successful_response(response, 200, data);
-        }
-    });
+    
+    var user_id = request.params.user_id;
+    if(request.locals.authenticated_user.id == user_id || request.locals.authenticated_user.is_admin){
+
+        users_controller.findUser(user_id, request.locals.authenticated_user.is_admin, function(data){
+            if(data.failed){
+                var code = 400;
+                if(data.no_results_found){ code = 404; }
+                send_unsuccessful_response(response, code, data.message);
+            }
+            else{
+                send_successful_response(response, 200, data);
+            }
+        });
+    }
+    else{
+        send_unsuccessful_response(response, 403, "Unauthorised route.");
+    }
 });//built, written, manually tested, needs specific user or admin auth
 router.route('/').post(memoryUpload, user_data_validator.validate, function(request, response){
     
@@ -37,7 +47,7 @@ router.route('/').post(memoryUpload, user_data_validator.validate, function(requ
             send_unsuccessful_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, 200, data);
+            send_successful_response(response, 201, data);
         }
     });
 });//built, written, manually tested
@@ -58,7 +68,7 @@ router.route('/:user_id').put(memoryUpload, token_authentication.authenticate_en
     });
 });//built, not written, not tested, needs specific user or admin auth
 router.route('/:user_id/image').put(token_authentication.authenticate_endpoint_with_user_token, memoryUpload,/* actor_data_validator.validate,*/ function(request, response){
-        var data = JSON.parse(request.body.data);//request.locals.validated_data;
+    var data = JSON.parse(request.body.data);//request.locals.validated_data;
     var file = request.files[0];
     
     users_controller.updateUserImage(request.locals.authenticated_user.id, data, file, function(data){

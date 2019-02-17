@@ -13,7 +13,6 @@ module.exports = {
     
     validate: function(request, response, next){
         console.log("validator started.");
-        console.log(request.body);
                 
         //access form data and reassign it to the request body
         if (typeof request.body.data === 'string' || request.body.data instanceof String){
@@ -56,11 +55,6 @@ module.exports = {
         request.checkBody("d_o_b", "Field is null.").not_null();
         request.checkBody("d_o_b", "d_o_b is formatted incorrectly.").test_valid_date();
         
-        //validate gallery_items
-        /*request.checkBody("gallery_items", "Field is empty").notEmpty();
-        request.checkBody("gallery_items", "Field is null.").not_null();
-        request.checkBody("gallery_items", "Gallery items are not formatted correctly.").test_gallery_items_structure(request.files);
-        */
         /*
         request.checkBody("img_title", "Field is empty").notEmpty();
         request.checkBody("img_title", "Field is null.").not_null();
@@ -72,12 +66,10 @@ module.exports = {
         request.checkBody("country", "Field is not a string.").is_string();
         request.checkBody("country", "Potential HTML code found, please remove this.").detect_xss();
         */
-        if(request.files){
-            //validate image files
-            for(var i = 0; i < request.files.length; i++){
-                var filename = typeof request.files[i] !== "undefined" ? request.files[i].originalname : '';
-                request.checkBody('file', 'Please upload an image Jpeg, Png or Gif').test_image(filename);
-            }
+
+        //validate image files
+        for(var i = 0; i < request.files.length; i++){
+            request.checkBody('file', 'Please upload an image Jpeg, Png, blob or Gif').test_image(request.files[i].mimetype);
         }
         
         request.getValidationResult().then(function(validationResult){
@@ -94,11 +86,11 @@ module.exports = {
                     username: request.body.username,
                     first_name: request.body.first_name,
                     last_name: request.body.last_name,
-                    password: request.body.password,
                     email_address: request.body.email_address,
+                    password: request.body.password,
                     d_o_b: request.body.d_o_b,
-                    img_title: request.body.img_title,
-                    country: request.body.country
+                    img_title: request.body.img_title ? request.body.img_title : null,
+                    country: request.body.country ? request.body.country : null
                 };
                 next();
             }

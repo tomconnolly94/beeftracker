@@ -70,13 +70,15 @@ module.exports = {
                         logger.submit_log(logger.LOG_TYPE.INFO, `DB table: ${table}`)
                         if (results.length > 0) {
                             success_callback(results);
-                        } else {
+                        } 
+                        else {
                             failure_callback({
                                 failed: true,
                                 module: "db_interface",
                                 function: "get",
-                                message: "No results found"
-                            })
+                                message: "No results found",
+                                no_results_found: true
+                            });
                         }
                     }
                 });

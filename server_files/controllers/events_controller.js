@@ -16,7 +16,6 @@
 
 //external dependencies
 var BSON = require('bson');
-var loop = require("async-looper");
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
@@ -271,19 +270,28 @@ module.exports = {
             target_ids.push(BSON.ObjectID.createFromHexString(submission_data.targets[i]));
         }
 
-        var initial_event_contribution = EventContribution({
-            user: BSON.ObjectID.createFromHexString(submission_data.user_id),
-            date_of_submission: new Date(),
-            date_of_approval: null,
-            contribution_details: []
-        });
+        var event_contributions = []
+
+        if(submission_data.event_contributions){
+            event_contributions = submission_data.event_contributions;
+        }
+        else{
+            event_contributions.push(
+                EventContribution({
+                    user: BSON.ObjectID.createFromHexString(submission_data.user_id),
+                    date_of_submission: new Date(),
+                    date_of_approval: null,
+                    contribution_details: []
+                })
+            );
+        }
 
         //format beef event record for insertion
         var event_insert = new Event({
             title: submission_data.title,
             aggressors: aggressor_ids,
             targets: target_ids,
-            event_date: new Date(submission_data.date),
+            event_date: submission_data.date,
             date_added: new Date(),
             description: submission_data.description,
             hit_counts: {
@@ -294,15 +302,16 @@ module.exports = {
             },
             gallery_items: submission_data.gallery_items,
             categories: submission_data.categories,
-            //img_title_thumbnail: "",
             cover_image: "",
             rating: 0,
             data_sources: submission_data.data_sources,
-            contributions: [initial_event_contribution],
+            contributions: event_contributions,
             record_origin: submission_data.record_origin,
             featured: false,
             tags: submission_data.tags
         });
+
+        if(submission_data._id){ event_insert._id = submission_data._id; }
 
         return event_insert;
     },
@@ -530,7 +539,7 @@ module.exports = {
 
     updateEvent: function (event_data, files, existing_object_id, callback) {
 
-        //extract data for use later
+        //ensures that _id is persistent past the update
         event_data._id = BSON.ObjectID.createFromHexString(existing_object_id);
 
         if (test_mode) {
@@ -582,54 +591,64 @@ module.exports = {
                 record_type: "events"
             };
 
-            //remove all image based gallery items from the file server
-            storage_interface.remove(remove_config, function(){
-                //continue
-            });
+            var delete_promises = [];
+            delete_promises.push(
+                new Promise(function(resolve, reject){
+                    //remove all image based gallery items from the file server
+                    storage_interface.remove(remove_config, function(){
+                        //continue
+                        resolve();
+                    }, function(error_object){
+                        reject(error_object);
+                    });
+                })
+            )
 
-            var loop_count = 0;
+            for(var i = 0; i < event.beef_chain_ids.length; i++){
 
-            loop(event.beef_chain_ids, function(beef_chain_id, next){
+                var beef_chain_id = event.beef_chain_ids[i];
 
-                loop_count++;
-            
-                var beef_chain_update_config = {
-                    table: db_ref.get_beef_chain_table(),
-                    match_id_object: beef_chain_id,
-                    update_clause: { 
-                        $pull: { event_ids: BSON.ObjectID.createFromHexString(event_id) }
-                    },
-                    options: {}
-                };
+                delete_promises.push(
+                    new Promise(function(resolve, reject){
 
-                //remove the event._id entry from the relevant beef_chain documents
-                db_interface.updateSingle(beef_chain_update_config, function(result){
-
-                    //remove the event from the beef_chain table only if events array is empty after above removal
-                    if(result.event_ids.length == 0){
-
-                        var beef_chain_delete_config = {
+                        var beef_chain_update_config = {
                             table: db_ref.get_beef_chain_table(),
-                            delete_multiple_records: true, //because we dont need a return value
-                            match_query: { _id: BSON.ObjectID.createFromHexString(result._id) }
+                            match_id_object: beef_chain_id,
+                            update_clause: { 
+                                $pull: { event_ids: BSON.ObjectID.createFromHexString(event_id) }
+                            },
+                            options: {}
                         };
 
-                        db_interface.delete(beef_chain_delete_config, function(){
-                            //success, finished, for this loop
-                        }, function(error_object){
-                        });
-                    }
+                        //remove the event._id entry from the relevant beef_chain documents
+                        db_interface.updateSingle(beef_chain_update_config, function(result){
 
-                    if(loop_count == event.beef_chain_ids.length){
-                        next(null, loop.END_LOOP);
-                    }
-                    else{
-                        next();
-                    }
-                }, function(error_object){
-                    callback(error_object);
-                });
-            }, function(){
+                            //remove the event from the beef_chain table only if events array is empty after above removal
+                            if(result.event_ids.length == 0){
+
+                                var beef_chain_delete_config = {
+                                    table: db_ref.get_beef_chain_table(),
+                                    delete_multiple_records: true, //because we dont need a return value
+                                    match_query: { _id: BSON.ObjectID.createFromHexString(result._id) }
+                                };
+
+                                db_interface.delete(beef_chain_delete_config, function(){
+                                    resolve();
+                                }, function(error_object){
+                                    reject(error_object);
+                                });
+                            }
+                            else{
+                                resolve();
+                            }
+                        }, function(error_object){
+                            reject(error_object);
+                        });
+                    })
+                )
+            }
+
+            Promise.all(delete_promises).then(function(values){
                 callback({});
             });
         }, function(error_object){

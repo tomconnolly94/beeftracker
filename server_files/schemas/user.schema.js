@@ -14,13 +14,14 @@ var user_schema   = new Schema({
 	"date_created" : Date,
 	"last_seen" : Date,
 	"admin" : Boolean,
-	"img_title_fullsize" : String,
-	"img_title_thumbnail" : String,
 	"viewed_beef_ids" : [ Schema.ObjectId ],
+	"voted_on_beef_ids" : [ Schema.ObjectId ],
 	"submitted_beef_ids" : [ Schema.ObjectId ],
 	"submitted_actor_ids" : [ Schema.ObjectId ],
 	"country" : String,
-	"contribution_score" : Number
+	"contribution_score" : Number,
+	"registration_method": String,
+	"registration_is_pending": Boolean
 });
 
 module.exports = mongoose.model('User', user_schema);

@@ -1,6 +1,5 @@
 //external dependencies
 var sanitizer = require('sanitizer');
-var path = require("path");
 var valid_url = require('valid-url');
 
 //internal dependencies
@@ -32,14 +31,13 @@ var master_functions_object = {
     },
     test_valid_date: function(date){
 
-        var parsed_date = Date.parse(date);
-        
-        if(isNaN(parsed_date)){
-            return false;
-        }
-        else{ 
+        var iso_string = new Date(date).toISOString();
+        var iso_date_pattern = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/
+
+        if(iso_string.match(iso_date_pattern)){
             return true;
         }
+        return false;
     },
     test_record_origin: function(input){
 

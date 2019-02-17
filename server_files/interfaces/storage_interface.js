@@ -126,11 +126,10 @@ var delete_single_image = function(folder, img_title, callback){
 module.exports = {
 
     //format gallery items for db storage, also store them in the provided folder on the file server
-    upload: function(upload_config, callback){
+    upload: function(upload_config, success_callback, failure_callback){
         
         var file_server_folder = upload_config.record_type;
         var item_data = upload_config.item_data;
-        var files = upload_config.files;
         var loop_count = 0;
                 
         //use an asynchronous loop to cycle through gallery item_data, if item is an image, save image to cloudinary and update gallery item link
@@ -190,12 +189,12 @@ module.exports = {
             }
         }, 
         function(){
-            callback(item_data);
+            success_callback(item_data);
         });
     },
     
     //format gallery items for db storage, also store them in the provided folder on the file server
-    remove: function(remove_config, callback){
+    remove: function(remove_config, success_callback, failure_callback){
 
         var items = remove_config.items;
         var file_server_folder = remove_config.record_type;
@@ -219,9 +218,7 @@ module.exports = {
                 });
             }
         }, function(){
-            callback(items);
+            success_callback(items);
         });
     }
 }
-
-"bftkr_auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDk0ODI1OTU0NTksInVzZXJuYW1lIjoidG9tIiwiX2lkIjoiNWE4MzVhN2FkOTdmMWQxYmYyNTgwNGU3IiwiYWRtaW4iOnRydWUsImlwX2xvYyI6bnVsbCwidHlwZSI6ImF1dGgiLCJpYXQiOjE1NDk0Nzg5OTV9.eeDIg5UxJMZ992eM5BNarcTqG0MfTy7Pvh1sgXa8R6Y; bftkr_logged_in=true; bftkr_auth_refresh=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTAwODM3OTU0NjAsInVzZXJuYW1lIjoidG9tIiwiX2lkIjoiNWE4MzVhN2FkOTdmMWQxYmYyNTgwNGU3IiwiYWRtaW4iOnRydWUsImlwX2xvYyI6bnVsbCwidHlwZSI6InJlZnJlc2giLCJpYXQiOjE1NDk0Nzg5OTV9.6NL7ooA2cMXdGPeiIampNYLQ6GsF8m481UoRYJojPEk;"

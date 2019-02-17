@@ -1,6 +1,7 @@
 //external dependencies
 
 //internal dependencies
+var logger = require("../tools/logging.js");
 
 module.exports = {
     
@@ -12,7 +13,7 @@ module.exports = {
     
     validate: function(request, response, next){
         
-        console.log("validation started.")
+        logger.submit_log(logger.LOG_TYPE.INFO, "validation started.");
         
         //access form data and reassign it to the request body
         if (typeof request.body.data === 'string' || request.body.data instanceof String){
@@ -92,12 +93,12 @@ module.exports = {
         request.getValidationResult().then(function(validationResult){
             
             if(validationResult.array().length > 0 ){
-                console.log("validation failed.");
-                console.log(validationResult.array());
+                logger.submit_log(logger.LOG_TYPE.ERROR, "validation failed.");
+                logger.submit_log(logger.LOG_TYPE.ERROR, validationResult.array());
                 response.status(400).send({ failed: true, stage: "server_validation", message: "Validation faled, please format input data properly.", details: validationResult.array()});
             }
             else{
-                console.log("validation succeeded.");
+                logger.submit_log(logger.LOG_TYPE.INFO, "validation succeeded.");
                 if(!request.locals){ request.locals = {}; }
                 request.locals.validated_data = {
                     name: request.body.name,

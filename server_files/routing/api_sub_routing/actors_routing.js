@@ -34,7 +34,9 @@ router.route('/:actor_id').get(function(request, response){
     
     actor_controller.findActor(actor_id, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, "Actor not found.");
+            var code = 400;
+            if(data.no_results_found){ code = 404; }
+            send_unsuccessful_response(response, code, "Actor not found.");
         }
         else{
             send_successful_response(response, 200, data);
@@ -60,8 +62,9 @@ router.route('/:actor_id').put(token_authentication.authenticate_endpoint_with_a
     
     var data = request.locals.validated_data;
     var files = request.files;
-    
-    actor_controller.updateActor(data, files, function(data){
+    var actor_id = request.params.actor_id;
+        
+    actor_controller.updateActor(data, files, actor_id, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
@@ -71,7 +74,10 @@ router.route('/:actor_id').put(token_authentication.authenticate_endpoint_with_a
     });
 });//built, written, tested, needs admin auth
 router.route('/:actor_id').delete(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
-    actor_controller.deleteActor(request, response, function(data){
+    
+    var actor_id = request.params.actor_id;
+
+    actor_controller.deleteActor(actor_id, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }
