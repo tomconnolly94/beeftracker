@@ -13,9 +13,11 @@ var send_unsuccessful_response = responses_object.send_unsuccessful_response;
 
 // Event categories endpoints
 router.route('/').get(function(request, response){
-    event_categories_controller.getEventCategories(request, response, function(data){
+    event_categories_controller.getEventCategories(function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            var code = 400;
+            if(data.no_results_found){ code = 404; }
+            send_unsuccessful_response(response, code, data.message);
         }
         else{
             send_successful_response(response, 200, data);
@@ -28,7 +30,9 @@ router.route('/').post(event_categories_data_validator.validate, function(reques
     
     event_categories_controller.createEventCategory(event_category_data, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            var code = 400;
+            if(data.no_results_found){ code = 404; }
+            send_unsuccessful_response(response, code, data.message);
         }
         else{
             send_successful_response(response, 201, data);
