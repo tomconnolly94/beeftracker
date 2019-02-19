@@ -24,7 +24,7 @@ describe('Module: comments_controller', function () {
 
         comment_input = {
             text: "comment text",
-            user: globals.dummy_object_id,
+            user: { id: globals.dummy_object_id },
             event_id: globals.dummy_object_id
         };
 

@@ -10,7 +10,6 @@
 
 //external dependencies
 var BSON = require('bson');
-var loop = require("async-looper");
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
@@ -68,8 +67,7 @@ module.exports = {
             aggregate_array: [
                 { 
                     $match: { _id: BSON.ObjectID.createFromHexString(event_id) } 
-                },
-                event_projection
+                }
             ]
         };
 

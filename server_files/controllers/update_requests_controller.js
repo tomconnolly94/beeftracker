@@ -130,5 +130,64 @@ module.exports = {
         else{
             insert(insert_object, update_request);
         }
+    },
+
+    findUpdateRequest: function(update_request_id, callback){
+
+        var query_config = {
+            table: db_ref.get_comments_table(),
+            aggregate_array: [
+                { $match: { _id: BSON.ObjectID.createFromHexString(comment_id) } },
+                { $lookup : {
+                    from: db_ref.get_user_details_table(),
+                    localField: "user_id",
+                    foreignField: "_id",
+                    as: "user" 
+                }},
+                { $project: {
+                    "text": 1,
+                    "date_added": 1,
+                    "likes": 1,
+                    "event_id": 1,
+                    "actor_id": 1,
+                    "user": {
+                        $let: {
+                            vars: {
+                                first_user: {
+                                    "$arrayElemAt": [ "$user", 0 ]
+                                }
+                            },
+                            in: {
+                                first_name: "$$first_user.first_name",
+                                last_name: "$$first_user.last_name",
+                                img_title: "$$first_user.img_title"
+                            }
+                        }
+                    }
+                }}
+            ]
+        }
+
+        db_interface.get(query_config, function(results){
+            callback(results[0]);
+        },
+        function(error_object){
+            callback(error_object);
+        });
+    },
+    
+    deleteUpdateRequest: function(update_request_id, callback){
+
+        var query_config = {
+            table: db_ref.get_event_update_requests_table(),
+            match_query: { _id: BSON.ObjectID.createFromHexString(comment_id) }
+        }
+
+        db_interface.get(query_config, function(results){
+            callback(results[0]);
+        },
+        function(error_object){
+            callback(error_object);
+        });
     }
 }

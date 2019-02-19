@@ -45,24 +45,38 @@ describe('Module: events_peripherals_controller', function () {
         ];
 
         db_multi_response_object = [
-            { event_id: globals.dummy_object_id },
-            { event_id: globals.dummy_object_id },
-            { event_id: globals.dummy_object_id },
-            { event_id: globals.dummy_object_id },
-            { event_id: globals.dummy_object_id },
-            { event_id: globals.dummy_object_id },
-            { event_id: globals.dummy_object_id }
-        ]
+            { _id: globals.dummy_object_id },
+            { _id: globals.dummy_object_id },
+            { _id: globals.dummy_object_id },
+            { _id: globals.dummy_object_id },
+            { _id: globals.dummy_object_id },
+            { _id: globals.dummy_object_id },
+            { _id: globals.dummy_object_id }
+        ];
+        
+        db_multi_response_object_ids = [
+            globals.dummy_object_id,
+            globals.dummy_object_id,
+            globals.dummy_object_id,
+            globals.dummy_object_id,
+            globals.dummy_object_id,
+            globals.dummy_object_id,
+            globals.dummy_object_id,
+        ];
 
         db_interface.get = function(query_config, callback){
 
-            db_get_callback_spy(); 
-            if(query_config.aggregate_array[0]["$match"].hasOwnProperty("$or")){
+            db_get_callback_spy();
+            callback([{ 
+                events: db_multi_response_object,
+                event_ids: db_multi_response_object_ids 
+            }]);
+            /*if(query_config.aggregate_array[0]["$match"].hasOwnProperty("$or")){
                 callback(db_multi_response_object);
             }
             else{
                 callback(db_single_response_object);
-            }
+            }*/
         };
     });
     

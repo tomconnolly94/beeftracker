@@ -34,15 +34,8 @@ describe('Module: activity_logs_controllers', function () {
         callback_spy = sinon.spy();
     });
 
-    it('events', function () {
-        
-        var request = {
-            params: {
-                event_id: "5a69027a01e599f97e278f73"
-            }
-        }
-        
-        activity_logs_controller.findActivityLogsFromEvent(request, function(results){
+    it('events', function () {        
+        activity_logs_controller.findActivityLogsFromEvent(globals.dummy_object_id, function(results){
             callback_spy();
             assert.equal(results, expected_results);
         });
@@ -51,13 +44,7 @@ describe('Module: activity_logs_controllers', function () {
     });
     
     it('actors', function () {
-        var request = {
-            params: {
-                actor_id: "5a69027a01e599f97e278f73"
-            }
-        }
-        
-        activity_logs_controller.findActivityLogsFromActor(request, function(results){
+        activity_logs_controller.findActivityLogsFromActor(globals.dummy_object_id, function(results){
             callback_spy();
             assert.equal(results, expected_results);
         });

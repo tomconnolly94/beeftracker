@@ -377,7 +377,10 @@ describe('Module: actors_controller', function () {
     it('createActor', function () {
         
         db_interface.insert = function(insert_config, callback){
-            callback({ id: globals.dummy_object_id }); 
+            callback({ 
+                _id: globals.dummy_object_id,
+                gallery_items: globals.dummy_object_id 
+            }); 
         };
         
         var files = actor_example.gallery_items;
@@ -388,7 +391,8 @@ describe('Module: actors_controller', function () {
         actors_controller.createActor(actor_example, files, function(result){
             callback_spy();
             
-            assert.equal(globals.dummy_object_id, result.id);
+            assert.equal(globals.dummy_object_id, result._id);
+            assert.equal(globals.dummy_object_id, result.gallery_items); //simply testing that what is returned by the db_interface.insert function is returned by the controller function
         });
         
         assert(callback_spy.called);

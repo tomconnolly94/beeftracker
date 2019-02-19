@@ -6,7 +6,6 @@ var router = express.Router();
 var comments_controller = require('../../controllers/comments_controller');
 var comment_data_validator = require("../../validation/comment_validation");
 var token_authentication = require("../../tools/token_authentication.js"); //get token authentication object
-var memoryUpload = require("../../config/multer_config.js").get_multer_object(); //get multer config
 var responses_object = require("./endpoint_response.js");
 
 //init response functions

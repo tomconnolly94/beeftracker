@@ -74,8 +74,6 @@ describe('Module: event_controller', function () {
         assert.exists(formatted_event.event_date);
         assert.exists(formatted_event.date_added);
         assert.equal(event_example.description, formatted_event.description);
-        assert.exists(formatted_event.links);
-        assert.exists(2, formatted_event.links.length);
         assert.exists(formatted_event.hit_counts);
         assert.equal(4, Object.keys(formatted_event.hit_counts).length);
         assert.equal(event_example.gallery_items.length, formatted_event.gallery_items.length);
@@ -412,7 +410,7 @@ describe('Module: event_controller', function () {
             assert.equal(db_ref.get_current_event_table(), query_config.table);
 
 
-            event_example.beef_chain_ids = beef_chain_ids;
+            event_example.beef_chains = beef_chain_ids;
             success_callback([ event_example ]); 
         };
 
