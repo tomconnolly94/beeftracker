@@ -115,8 +115,8 @@ append body
     - var aggressor_index;
     - var target_index;
         
-    - aggressor_index = event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) != -1 ? event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) : event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[1]))
-    - target_index = event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) != -1 ? event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[0])) : event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chain_ids[beef_chain_index].actors[1]))
+    - aggressor_index = event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[beef_chain_index].actors[0])) != -1 ? event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[beef_chain_index].actors[0])) : event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[beef_chain_index].actors[1]))
+    - target_index = event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[beef_chain_index].actors[0])) != -1 ? event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[beef_chain_index].actors[0])) : event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[beef_chain_index].actors[1]))
     
     div.bt-content-full-width.beef-background-banner(style="background-image: url('" + file_server_url_builder(file_server_url_prefix, "events", event_data.cover_image, "c_fill,g_face,h_150,w_150", "webp") + "')")
 
@@ -191,8 +191,8 @@ append body
                                 
                                 - for(var i = 0; i < event_data.beef_chain_ids.length; i++){
                                                                 
-                                    - if(event_data.beef_chain_ids[i].actors.map(function(e){ return String(e) }).indexOf(String(aggressor._id)) != -1 && event_data.beef_chain_ids[i].actors.map(function(e){ return String(e) }).indexOf(String(target._id)) != -1){
-                                        - beef_chain_id = event_data.beef_chain_ids[i]._id;
+                                    - if(event_data.beef_chains[i].actors.map(function(e){ return String(e) }).indexOf(String(aggressor._id)) != -1 && event_data.beef_chains[i].actors.map(function(e){ return String(e) }).indexOf(String(target._id)) != -1){
+                                        - beef_chain_id = event_data.beef_chain_ids[i];
                                         - break;
                                     - }
                                 - }

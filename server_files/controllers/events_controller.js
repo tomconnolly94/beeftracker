@@ -55,17 +55,19 @@ var event_projection = {
     "comments": 1
 };
 
-var increment_hit_counts = function (event_id) {
+var increment_hit_counts = function (event_id_object) {
 
-    db_ref.get_db_object().connect(process.env.MONGODB_URI, function (err, db) {
-        if (err) { console.log(err); }
-        else {
-            //var event_id_object = BSON.ObjectID.createFromHexString(event_id);
+    var update_config = {
+        table: db_ref.get_current_event_table(),
+        match_query: { _id: event_id_object },
+        update_clause: { $inc: { "hit_counts.total": 1, "hit_counts.today": 1, "hit_counts.this_month": 1 } },
+        options: { upsert: false }
+    };
 
-            db.collection(db_ref.get_current_event_table()).update({ _id: event_id }, { $inc: { "hit_counts.total": 1, "hit_counts.today": 1, "hit_counts.this_month": 1 } }, function (err, result) {
-                //callback();
-            })
-        }
+    db_interface.update(update_config, function(result){
+        logger.submit_log(logger.LOG_TYPE.EXTRA_INFO, "updated hot count for: " + event_id_object.toString());
+    }, function(error_object){
+        logger.submit_log(logger.LOG_TYPE.ERROR, error_object);
     });
 }
 
@@ -420,7 +422,7 @@ module.exports = {
             { "$unwind": "$beef_chains"},
             { '$lookup': 
                 { from: 'event_data_v4',
-                    localField: 'beef_chains.events',
+                    localField: 'beef_chains.event_ids',
                     foreignField: '_id',
                     as: 'beef_chains.events' 
                 } 
@@ -436,6 +438,8 @@ module.exports = {
         db_interface.get(query_config, function (results) {
 
             var result = results[0];
+            console.log("result 1")
+            console.log(result)
             //sort beef chain events using event dates using above compare function
             for (var i = 0; i < result.beef_chains.length; i++) {
                 result.beef_chains[i].events.sort(compare_event_dates);

@@ -3,6 +3,7 @@ include ../../layouts/actor_thumbnail.jade
 
 mixin thumbnail-grid(grid_thumbnail_data, data_type)
     - if(grid_thumbnail_data != "none" && data_type != "none"){
+        - grid_thumbnail_data = grid_thumbnail_data.slice(0, grid_thumbnail_data.length - grid_thumbnail_data.length % 3) //if num of events is not divisible by 3, slice it down to the nearest multiple
         each thumbnail_data in grid_thumbnail_data
             div.col-lg-4.col-md-6.col-xs-4
                 - if(data_type == "events"){

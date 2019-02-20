@@ -5795,7 +5795,7 @@ $categories: (
 li.actor-attribute span.list:after {
   content: ", "; }
 
-li.actor-attribute span.list :last-child:after {
+li.actor-attribute span.list:last-child:after {
   content: ""; }
 
 form label {

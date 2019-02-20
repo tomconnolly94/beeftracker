@@ -9,6 +9,7 @@ var token_authentication = require("../tools/token_authentication.js"); //get to
 var globals = require("../config/globals.js")
 var cookie_parser = require("../tools/cookie_parsing.js");
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
+var logger = require("../tools/logging");
 
 //endpoint controllers
 var actor_controller = require("../controllers/actors_controller.js");
@@ -330,8 +331,11 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
 
         Promise.all([ main_event_data_promise ]).then(function(values) {
             //- find the beef_chain index using the beef chain accessed from the db and the current_beef_chain_id accessed via the path of the page request
-            beef_chain_index = values[0].event_data.beef_chain_ids.map(function(e){ return String(e._id) } ).indexOf(String(beef_chain_id));
-                        
+            beef_chain_index = values[0].event_data.beef_chain_ids.map(function(_id){ return String(_id) } ).indexOf(String(beef_chain_id));
+            console.log(beef_chain_index);
+            console.log(values[0].event_data.beef_chain_ids);
+            console.log(values[0].event_data.beef_chains);
+
             //if beef chain index is not larger than 0 then the selected event cannot be found in the requested beef_chain
             if(beef_chain_index >= 0){
                 view_parameters.current_beef_chain_id = beef_chain_id;
@@ -350,7 +354,7 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
                 }
             }
             else{
-                console.log("ERROR: event for the provided event_id is not in the beef chain for the provided beef_chain_id")
+                logger.submit_log(logger.LOG_TYPE.ERROR, "event for the provided event_id is not in the beef chain for the provided beef_chain_id");
                 response.render("pages/static/error.jade", view_parameters);
             }
         }).catch(function(error){
@@ -487,6 +491,7 @@ router.get("/offline", token_authentication.recognise_user_token, blanket_middle
 });
 
 //admin only pages
+/* deactivated, dependent on card: https://trello.com/c/EWjGYvyc
 router.get("/scraping_dump", token_authentication.recognise_user_token, blanket_middleware, function(request, response) {
     
     if(request.locals && request.locals.authenticated_user){    
@@ -529,7 +534,7 @@ router.get("/scraping_dump", token_authentication.recognise_user_token, blanket_
     else{
         response.redirect("/login?redirected_from=/scraping_dump");
     }
-}); // about_us page
+});*/ // about_us page
 
 /*
 router.get("/subscribe/", function(request, response) { response.render("pages/form_pages/subscribe_to_news.ejs"); }); // submit actordata page
@@ -538,30 +543,30 @@ router.get("/raw_actor_scraping_html/", token_authentication.authenticate_admin_
 router.get("/broken_fields_stats/", token_authentication.authenticate_admin_user_token, function(request, response) { response.render("pages/admin_pages/scraping_control/broken_fields_stats.ejs"); }); // raw actor scraping page route
 router.get("/admin_login/", function(request, response) { response.render("pages/authentication/admin_login.ejs"); }); // raw actor scraping page route*/
 
+/* deactivated, dependent on card: https://trello.com/c/5qHwVgqZ
 router.get("/reset-my-password/:id_token", blanket_middleware, function(request, response) { 
     
     var id_token = request.params.id_token;
-    
-    db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
-        if(err){ console.log(err); }
-        else{
-            db.collection(db_ref.get_password_reset_request_table()).find({ id_token: id_token}).toArray(function(err, auth_arr){
-                if(err){ console.log(err); }
-                else{
-                    
-                    if(auth_arr.length == 1){
-                        console.log("valid");
-                        //response.render("pages/"); //serve page that allows user to set a new password
-                    }
-                    else{
-                        console.log("invalid");
-                        //response.render("pages/"); //serve "token is invalid" page
-                    }
-                }
-            });
-        }
-    });
 
-}); // raw actor scraping page route
+    var query_config = {
+        table: db_ref.get_password_reset_request_table(),
+        aggregate_array: [
+            { $match: { id_token: BSON.ObjectID.createFromHexString(id_token) }}
+        ]
+    };
+
+    db_interface.get(query_config, function(results){
+        if(auth_arr.length == 1){
+            console.log("valid");
+            //response.render("pages/"); //serve page that allows user to set a new password
+        }
+        else{
+            console.log("invalid");
+            //response.render("pages/"); //serve "token is invalid" page
+        }
+    }, function(error_object){
+        callback(error_object);
+    });
+});*/ // raw actor scraping page route
 
 module.exports = router;

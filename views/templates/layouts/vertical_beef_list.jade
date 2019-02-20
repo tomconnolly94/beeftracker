@@ -11,7 +11,7 @@ mixin vertical-beefs(data, data_type, image_resize_params)
                     div.vertical-list-item-thumbnail
                         //div.header-panel
                             span.category-name Music
-                        a(href="/beef/#{item.beef_chain_ids[0]._id}/#{item._id}")
+                        a(href="/beef/#{item.beef_chain_ids[0]}/#{item._id}")
                             img(src=file_server_url_builder(file_server_url_prefix, data_type, item.cover_image, image_resize_params))
                     div.vertical-list-item-details
                         h3

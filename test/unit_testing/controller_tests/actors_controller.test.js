@@ -1,10 +1,11 @@
 //external dependencies
 var proxyquire = require("proxyquire").noCallThru();
-var mocha = require('mocha');
 var chai = require('chai');
 var assert = chai.assert;
+var expect = chai.expect;
 var BSON = require("bson");
 var sinon = require("sinon");
+
 //internal dependencies
 var globals = require('../testing_globals.js');
 
@@ -393,6 +394,55 @@ describe('Module: actors_controller', function () {
             
             assert.equal(globals.dummy_object_id, result._id);
             assert.equal(globals.dummy_object_id, result.gallery_items); //simply testing that what is returned by the db_interface.insert function is returned by the controller function
+        });
+        
+        assert(callback_spy.called);
+    });
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // 'deleteActor' tests
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    it('deleteActor', function () {
+
+        var gallery_item_1 = {
+            media_type: "image",
+            link: globals.dummy_object_id
+        }
+
+        var gallery_item_2 = {
+            media_type: "not_image",
+            link: globals.dummy_object_id
+        }
+        
+        db_interface.delete = function(insert_config, callback){
+            assert.exists(insert_config.table);
+            assert.exists(insert_config.delete_multiple_records);
+            assert.equal(false, insert_config.delete_multiple_records);
+            assert.exists(insert_config.match_query);
+            assert.exists(insert_config.match_query["_id"]);
+            callback({ 
+                _id: globals.dummy_object_id,
+                gallery_items: [
+                    gallery_item_1,
+                    gallery_item_2
+                ]
+            }); 
+        };
+        
+        var files = actor_example.gallery_items;
+        
+        storage_interface.remove = function(upload_config, callback){
+            assert.equal(1, upload_config.items.length)
+            assert.isTrue(globals.compare_objects(gallery_item_1, upload_config.items[0]));
+            callback();
+        };
+
+        actors_controller.deleteActor(globals.dummy_object_id, function(result){
+            callback_spy();
+            expect(typeof result.failed).to.eq('undefined');
         });
         
         assert(callback_spy.called);

@@ -127,7 +127,7 @@ module.exports = {
         var table = update_config.table;
         var match_query = update_config.match_query;
         var update_clause = update_config.update_clause;
-        var options = update_config.options;
+        var options = update_config.options; //possible fields : upsert (bool), email_config (obj)
 
         db_ref.get_db_object().connect(db_url, function (err, db) {
             if (err) {
@@ -140,7 +140,7 @@ module.exports = {
                 });
             } else {
                 //standard query to insert into live events table
-                db.collection(table).update(match_query, update_clause, { $upsert: true }, function (err, result) {
+                db.collection(table).update(match_query, update_clause, { $upsert: options.upsert ? true : false }, function (err, result) {
                     if (err) {
                         console.log(err);
                         failure_callback({
@@ -165,7 +165,7 @@ module.exports = {
         var table = update_config.table;
         var match_id_object = update_config.match_id_object;
         var update_clause = update_config.update_clause;
-        var options = update_config.options;
+        var options = update_config.options; //possible fields : upsert (bool), email_config (obj)
 
         db_ref.get_db_object().connect(db_url, function (err, db) {
             if (err) {

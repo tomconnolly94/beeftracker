@@ -19,11 +19,8 @@ mixin timeline-section(data, beef_chain_index)
                     img.actor-avatar.sml(src=file_server_url_builder(file_server_url_prefix, "actors", event_data.aggressors[aggressor_index].img_title_fullsize, "c_fill,g_face,h_75,w_75") )
         div.timeline
             ol
-                //-- data.beef_chain_ids[beef_chain_index].events.reverse(); //-put events in the correct order
-                each thumbnail_data, index in data.beef_chain_ids[beef_chain_index].events
-                
-                    - thumbnail_data.beef_chain_ids[beef_chain_index] = data.beef_chain_ids[beef_chain_index]._id;
-                
+                each thumbnail_data, index in data.beef_chains[beef_chain_index].events
+                                
                     //-insert empty li if two consecutive events are from the same actor
                     - if(String(previous_aggressor_id) == String(thumbnail_data.aggressors[0])){
                         li.empty
@@ -62,5 +59,4 @@ mixin timeline-section(data, beef_chain_index)
         div.col-md-2.offset-5(style="margin-bottom:20px;")
             //-h4(style="text-align: center;") #{event_data.targets[target_index].name}
             a(href="/actor/" + event_data.targets[target_index]._id)
-                //-img.actor-avatar(src="https://res.cloudinary.com/hghz4zts3/image/upload/c_fill,g_face,h_150,w_150/v1514066941/actors/220px-Official_portrait_of_Jeremy_Corbyn_crop_2" )
                 img.actor-avatar.sml(src=file_server_url_builder(file_server_url_prefix, "actors", event_data.targets[target_index].img_title_fullsize, "c_fill,g_face,h_75,w_75") )
