@@ -132,8 +132,7 @@ module.exports = {
                     foreignField: "_id",
                     as: "targets" 
                 }},
-                { $limit: 30 },
-                event_projection
+                { $limit: 30 }
             ]
         };
 

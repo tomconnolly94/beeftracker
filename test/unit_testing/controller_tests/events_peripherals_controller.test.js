@@ -24,34 +24,34 @@ describe('Module: events_peripherals_controller', function () {
         hashing = require("../module_mocking/hashing.mock.js");
         events_peripherals_controller = proxyquire("../../../server_files/controllers/events_peripherals_controller", { "../interfaces/db_interface.js": db_interface, "../tools/hashing.js": hashing });
 
-        db_single_response_object = [
-            {
-                event_id: globals.dummy_object_id,
-                aggressors: [
-                    globals.dummy_object_id,
-                    globals.dummy_object_id,
-                    globals.dummy_object_id,
-                    globals.dummy_object_id,
-                    globals.dummy_object_id,
-                ],
-                targets: [
-                    globals.dummy_object_id,
-                    globals.dummy_object_id,
-                    globals.dummy_object_id,
-                    globals.dummy_object_id,
-                    globals.dummy_object_id
-                ]
-            }
-        ];
+        var event = {
+            event_id: globals.dummy_object_id,
+            aggressors: [
+                globals.dummy_object_id,
+                globals.dummy_object_id,
+                globals.dummy_object_id,
+                globals.dummy_object_id,
+                globals.dummy_object_id,
+            ],
+            targets: [
+                globals.dummy_object_id,
+                globals.dummy_object_id,
+                globals.dummy_object_id,
+                globals.dummy_object_id,
+                globals.dummy_object_id
+            ]
+        }
+        
+        db_single_response_object = [ event ];
 
         db_multi_response_object = [
-            { _id: globals.dummy_object_id },
-            { _id: globals.dummy_object_id },
-            { _id: globals.dummy_object_id },
-            { _id: globals.dummy_object_id },
-            { _id: globals.dummy_object_id },
-            { _id: globals.dummy_object_id },
-            { _id: globals.dummy_object_id }
+            event,
+            event,
+            event,
+            event,
+            event,
+            event,
+            event
         ];
         
         db_multi_response_object_ids = [
@@ -63,6 +63,15 @@ describe('Module: events_peripherals_controller', function () {
             globals.dummy_object_id,
             globals.dummy_object_id,
         ];
+
+    });
+    
+    beforeEach(function () {
+        callback_spy = sinon.spy();
+        db_get_callback_spy = sinon.spy();
+    });
+
+    it('findEventsFromBeefChain', function () {
 
         db_interface.get = function(query_config, callback){
 
@@ -78,15 +87,6 @@ describe('Module: events_peripherals_controller', function () {
                 callback(db_single_response_object);
             }*/
         };
-    });
-    
-    beforeEach(function () {
-        callback_spy = sinon.spy();
-        db_get_callback_spy = sinon.spy();
-    });
-
-    it('findEventsFromBeefChain', function () {
-
         events_peripherals_controller.findEventsFromBeefChain(globals.dummy_object_id, function(result){
             assert(db_multi_response_object, result);
             callback_spy();
@@ -98,6 +98,17 @@ describe('Module: events_peripherals_controller', function () {
 
     it('findEventsRelatedToEvent', function () {
         
+        db_interface.get = function(query_config, callback){
+
+            db_get_callback_spy();
+            if(query_config.aggregate_array[0]["$match"].hasOwnProperty("$or")){
+                callback(db_multi_response_object);
+            }
+            else{
+                callback(db_single_response_object);
+            }
+        };
+
         events_peripherals_controller.findEventsRelatedToEvent(globals.dummy_object_id, function(results){
             assert.equal(db_multi_response_object[0], results[0]);
             assert.equal(12, results.length);
@@ -107,6 +118,12 @@ describe('Module: events_peripherals_controller', function () {
     });
 
     it('findEventsRelatedToActor', function () {
+
+        db_interface.get = function(query_config, callback){
+            db_get_callback_spy();
+            callback(db_multi_response_object);
+
+        };
 
         events_peripherals_controller.findEventsRelatedToActor(globals.dummy_object_id, function(result){
             assert(db_multi_response_object, result);
