@@ -536,11 +536,11 @@ router.get("/scraping_dump", token_authentication.recognise_user_token, blanket_
 });*/ // about_us page
 
 /*
-router.get("/subscribe/", function(request, response) { response.render("pages/form_pages/subscribe_to_news.ejs"); }); // submit actordata page
-router.get("/recently_added/", token_authentication.authenticate_admin_user_token, function(request, response) { response.render("pages/admin_pages/site_config/recently_confirmed.ejs"); }); // about_us page
-router.get("/raw_actor_scraping_html/", token_authentication.authenticate_admin_user_token, function(request, response) { response.render("partials/scraping_dump/raw_actor_scraping.ejs"); }); // raw actor scraping page route
-router.get("/broken_fields_stats/", token_authentication.authenticate_admin_user_token, function(request, response) { response.render("pages/admin_pages/scraping_control/broken_fields_stats.ejs"); }); // raw actor scraping page route
-router.get("/admin_login/", function(request, response) { response.render("pages/authentication/admin_login.ejs"); }); // raw actor scraping page route*/
+router.get("/subscribe", function(request, response) { response.render("pages/form_pages/subscribe_to_news.ejs"); }); // submit actordata page
+router.get("/recently_added", token_authentication.authenticate_admin_user_token, function(request, response) { response.render("pages/admin_pages/site_config/recently_confirmed.ejs"); }); // about_us page
+router.get("/raw_actor_scraping_html", token_authentication.authenticate_admin_user_token, function(request, response) { response.render("partials/scraping_dump/raw_actor_scraping.ejs"); }); // raw actor scraping page route
+router.get("/broken_fields_stats", token_authentication.authenticate_admin_user_token, function(request, response) { response.render("pages/admin_pages/scraping_control/broken_fields_stats.ejs"); }); // raw actor scraping page route
+router.get("/admin_login", function(request, response) { response.render("pages/authentication/admin_login.ejs"); }); // raw actor scraping page route*/
 
 /* deactivated, dependent on card: https://trello.com/c/5qHwVgqZ
 router.get("/reset-my-password/:id_token", blanket_middleware, function(request, response) { 
