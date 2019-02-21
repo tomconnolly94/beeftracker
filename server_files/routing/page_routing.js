@@ -14,9 +14,8 @@ var logger = require("../tools/logging");
 //endpoint controllers
 var actor_controller = require("../controllers/actors_controller.js");
 var event_controller = require("../controllers/events_controller.js");
-var comment_controller = require("../controllers/comments_controller.js");
-var category_controller = require("../controllers/event_categories_controller.js");
-var scraped_data_controller = require("../controllers/scraped_data_controller.js");
+var event_categories_controller = require("../controllers/event_categories_controller.js");
+//var scraped_data_controller = require("../controllers/scraped_data_controller.js");
 var user_controller = require("../controllers/users_controller.js");
 
 if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if deployed on a heroku server
@@ -102,7 +101,7 @@ router.get("/", token_authentication.recognise_user_token, blanket_middleware, f
     // });
     
     // var categories_promise = new Promise(function(resolve, reject){
-    //    category_controller.getEventCategories(function(data){
+    //    event_categories_controller.getEventCategories(function(data){
     //        resolve(data);
     //     });
     // });
@@ -201,7 +200,7 @@ router.get("/add-beef", token_authentication.recognise_user_token, blanket_middl
     });
     
     var categories_promise = new Promise(function(resolve, reject){
-       category_controller.getEventCategories(function(data){
+       event_categories_controller.getEventCategories(function(data){
            resolve(data);
         });
     });
@@ -238,7 +237,7 @@ router.get("/beef", token_authentication.recognise_user_token, blanket_middlewar
             resolve(data);
         });
     });
-    
+    /*
     var category_event_data_promise = new Promise(function(resolve, reject){
        event_controller.findEvents({ match_category: "0", limit: 6 }, function(data){
            resolve(data);
@@ -246,24 +245,24 @@ router.get("/beef", token_authentication.recognise_user_token, blanket_middlewar
     });
     
     var categories_promise = new Promise(function(resolve, reject){
-       category_controller.getEventCategories(function(data){
+       event_categories_controller.getEventCategories(function(data){
            resolve(data);
         });
     });
-    
+    */
     var slider_data_promise = new Promise(function(resolve, reject){
          event_controller.findEvents({ limit: 12, featured: false, increasing_order: "date_added" }, function(data){
             resolve(data);
         });
     });
     
-    Promise.all([ events_data_promise, category_event_data_promise, categories_promise, slider_data_promise ]).then(function(values){
+    Promise.all([ events_data_promise, /*category_event_data_promise, categories_promise,*/ slider_data_promise ]).then(function(values){
         
         var view_parameters = Object.assign({}, view_parameters_global);
         view_parameters.grid_data = values[0];
-        view_parameters.category_event_data = values[1];
-        view_parameters.categories = values[2];
-        view_parameters.slider_data = values[3];
+        //view_parameters.category_event_data = values[1];
+        //view_parameters.categories = values[2];
+        view_parameters.slider_data = values[1];
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
         
         /*
@@ -507,7 +506,7 @@ router.get("/scraping_dump", token_authentication.recognise_user_token, blanket_
             });
             
             var categories_promise = new Promise(function(resolve, reject){
-               category_controller.getEventCategories(function(data){
+               event_categories_controller.getEventCategories(function(data){
                    resolve(data);
                 });
             });

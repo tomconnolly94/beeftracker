@@ -6,16 +6,10 @@ include ../components/section_control_toolbar/section_control_toolbar.jade
 include ../components/thumbnail_grid/thumbnail_grid.jade
 include ../components/google_adsense/adsense_banner_ad.jade
 
-append body
+//-append body
     div.bt-content
         +category-browser-section()
         
-append body
-    +adsense-banner-ad()
-    div.bt-content-full-width.dark
-      div.container
-          +section('HOT', 'BEEF', 'fa fa-ellipsis-h')
-               +horizontal-slider('featured_beefs_slider_full', slider_data, "events", "c_fill,g_face,h_219,w_340")
 
 append body
     +adsense-banner-ad()
@@ -28,6 +22,15 @@ append body
             //div.row
                 div.col-md-12
                     +pagination()
+
+
+append body
+    +adsense-banner-ad()
+    div.bt-content-full-width.dark
+      div.container
+          +section('HOT', 'BEEF', 'fa fa-ellipsis-h')
+               +horizontal-slider('featured_beefs_slider_full', slider_data, "events", "c_fill,g_face,h_219,w_340")
+
         
 append scripts
     +horizontal-slider-js('featured_beefs_slider')
