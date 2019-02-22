@@ -3,6 +3,7 @@ var proxyquire = require("proxyquire");
 var chai = require('chai');
 var sinon = require("sinon");
 var assert = chai.assert;
+var expect = chai.expect;
 var BSON = require('bson');
 
 //internal dependencies
@@ -65,9 +66,9 @@ describe('Module: votes_controller', function () {
             success_callback([ globals.event_example ]);
         };
 
-        votes_controller.addVoteToEvent(globals.dummy_object_id, 1, globals.dummy_object_id, function(results){
+        votes_controller.addVoteToEvent(globals.dummy_object_id, 1, globals.dummy_object_id, function(result){
             callback_spy();
-            assert.equal(1, results.length);
+            expect(typeof result.failed).to.eq('undefined');
         });
         
         assert(db_interface_callback_spy.called);
@@ -113,9 +114,9 @@ describe('Module: votes_controller', function () {
             success_callback([ globals.event_example ]);
         };
 
-        votes_controller.addVoteToEvent(globals.dummy_object_id, 0, globals.dummy_object_id, function(results){
+        votes_controller.addVoteToEvent(globals.dummy_object_id, 0, globals.dummy_object_id, function(result){
             callback_spy();
-            assert.equal(1, results.length);
+            expect(typeof result.failed).to.eq('undefined');
         });
         
         assert(db_interface_callback_spy.called);

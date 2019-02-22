@@ -8,9 +8,15 @@ include ../components/google_adsense/adsense_banner_ad.jade
 
 append body
     div.bt-content
+        //-create cover_image field expected by beef-thumbnail jade component
+        - actor_data = actor_data.map(function(actor){
+        -    actor.cover_image = actor.img_title_fullsize;
+        -    return actor;
+        - });
         +section('ALL', 'ACTORS', 'fa fa-users')
             div.section-toolbar#section_toolbar_control_actor_grid
                 +section-control-toolbar(["All", "New"], "actors")
+            //- console.log(actor_data)
             div.row#section_toolbar_display_actor_grid
                 +thumbnail-grid(actor_data, "actors")
             //div.row

@@ -72,9 +72,9 @@ module.exports = {
 
         console.log(update_config);
 
-        db_interface.update(update_config, function (result) {
+        db_interface.update(update_config, function () {
 
-            callback(result);
+            callback({});
 
             if (user_id) {
                 add_vote_to_user_record(event_id, user_id);
