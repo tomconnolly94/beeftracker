@@ -69,6 +69,7 @@ describe('Module: votes_controller', function () {
         votes_controller.addVoteToEvent(globals.dummy_object_id, 1, globals.dummy_object_id, function(result){
             callback_spy();
             expect(typeof result.failed).to.eq('undefined');
+            assert(globals.compare_objects({}, result));
         });
         
         assert(db_interface_callback_spy.called);
@@ -117,6 +118,7 @@ describe('Module: votes_controller', function () {
         votes_controller.addVoteToEvent(globals.dummy_object_id, 0, globals.dummy_object_id, function(result){
             callback_spy();
             expect(typeof result.failed).to.eq('undefined');
+            assert(globals.compare_objects({}, result));
         });
         
         assert(db_interface_callback_spy.called);

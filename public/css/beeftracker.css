@@ -5037,7 +5037,7 @@ nav {
   nav.navbar {
     padding: 0 0.3rem; }
   nav .nav-item:not(:last-child) .nav-link {
-    border-right: 1px solid white; }
+    border-right: 3px solid white; }
   nav .navbar-toggler-icon {
     font-size: 20px !important; }
   @media (max-width: 767.98px) {

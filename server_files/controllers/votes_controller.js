@@ -45,18 +45,12 @@ module.exports = {
         var update_clause = {};
 
         if (vote_direction == 1) {
-            update_clause = {
-                $inc: {
-                    "votes.upvotes": 1
-                }
-            }
-        } else if (vote_direction == 0) {
-            update_clause = {
-                $inc: {
-                    "votes.downvotes": 1
-                }
-            }
-        } else {
+            update_clause = { $inc: { "votes.upvotes": 1 } }
+        } 
+        else if (vote_direction == 0) { 
+            update_clause = { $inc: { "votes.downvotes": 1 } }
+        } 
+        else {
             callback({
                 failed: true,
                 message: "vote_direction is invalid."
