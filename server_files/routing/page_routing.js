@@ -1,10 +1,7 @@
 //external dependencies
 var router = require("express").Router();
-var async = require("async");
 
 //internal dependencies
-var db_ref = require("../config/db_config.js"); //get database reference object
-var db_interface = require("../interfaces/db_interface.js"); //get database reference object
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
 var globals = require("../config/globals.js")
 var cookie_parser = require("../tools/cookie_parsing.js");
@@ -295,7 +292,6 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
     
         var disable_voting = false;
         var cookies = cookie_parser.parse_cookies(request);
-        console.log(cookies);
         
         var view_parameters = Object.assign({}, view_parameters_global);
         if(request.locals && request.locals.authenticated_user){ //if user is logged on, decide whether to disable voting panel based on user record voted_on_beef_ids field
@@ -330,10 +326,7 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
 
         Promise.all([ main_event_data_promise ]).then(function(values) {
             //- find the beef_chain index using the beef chain accessed from the db and the current_beef_chain_id accessed via the path of the page request
-            beef_chain_index = values[0].event_data.beef_chain_ids.map(function(_id){ return String(_id) } ).indexOf(String(beef_chain_id));
-            console.log(beef_chain_index);
-            console.log(values[0].event_data.beef_chain_ids);
-            console.log(values[0].event_data.beef_chains);
+            var beef_chain_index = values[0].event_data.beef_chain_ids.map(function(_id){ return String(_id) } ).indexOf(String(beef_chain_id));
 
             //if beef chain index is not larger than 0 then the selected event cannot be found in the requested beef_chain
             if(beef_chain_index >= 0){
@@ -344,7 +337,8 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
                 view_parameters.related_events = values[0].related_events;
                 view_parameters.disable_voting = disable_voting;
                 view_parameters.page_url = page_url;
-
+                view_parameters.main_event_beef_chain_index = beef_chain_index;
+                console.log(view_parameters);
 
                 response.render("pages/beef.jade", view_parameters);
 

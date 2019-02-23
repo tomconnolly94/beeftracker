@@ -438,8 +438,7 @@ module.exports = {
         db_interface.get(query_config, function (results) {
 
             var result = results[0];
-            console.log("result 1")
-            console.log(result)
+            
             //sort beef chain events using event dates using above compare function
             for (var i = 0; i < result.beef_chains.length; i++) {
                 result.beef_chains[i].events.sort(compare_event_dates);

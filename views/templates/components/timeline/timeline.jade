@@ -1,7 +1,7 @@
 mixin timeline-section-js()
     script(src="/component_controllers/timeline/timeline.js" async)
     
-mixin timeline-section(data, beef_chain_index)
+mixin timeline-section(data, main_event_beef_chain_index)
 
     - var previous_aggressor_id = 0;
 
@@ -19,8 +19,10 @@ mixin timeline-section(data, beef_chain_index)
                     img.actor-avatar.sml(src=file_server_url_builder(file_server_url_prefix, "actors", event_data.aggressors[aggressor_index].img_title_fullsize, "c_fill,g_face,h_75,w_75") )
         div.timeline
             ol
-                each thumbnail_data, index in data.beef_chains[beef_chain_index].events
-                                
+                each thumbnail_data, index in data.beef_chains[main_event_beef_chain_index].events
+
+                    - var beef_chain_index = thumbnail_data.beef_chain_ids.map(function(_id){ return String(_id) }).indexOf(String(current_beef_chain_id));
+
                     //-insert empty li if two consecutive events are from the same actor
                     - if(String(previous_aggressor_id) == String(thumbnail_data.aggressors[0])){
                         li.empty
