@@ -177,7 +177,7 @@ router.get("/actors", token_authentication.recognise_user_token, blanket_middlew
         console.log(error);
     });
 }); // about_us page
-router.get("/actor/:actor_id", url_param_validator.validate, token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
+router.get("/actor/:actor_id", /*url_param_validator.validate,*/ token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
 
     //extract data
     var actor_id = request.params.actor_id;
@@ -305,7 +305,7 @@ router.get("/beef", token_authentication.recognise_user_token, blanket_middlewar
         response.render("pages/beefs.jade", view_parameters); 
     });
 }); //beef page
-router.get("/beef/:beef_chain_id/:event_id", url_param_validator.validate, token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
+router.get("/beef/:beef_chain_id/:event_id", /*url_param_validator.validate,*/ token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
 
     //extract data
     var event_id = request.params.event_id;    
@@ -343,7 +343,7 @@ router.get("/beef/:beef_chain_id/:event_id", url_param_validator.validate, token
                     let data_object = { event_data: data };
                     
                     event_controller.findEvents({ match_actor: data_object.event_data.aggressors[0]._id, limit: 6, decreasing_order: "date_added" }, function(data){
-                        data_object.related_events = data;
+                        data_object.related_events = data.failed ? [] : data;
                         resolve(data_object);
                     });
                 }

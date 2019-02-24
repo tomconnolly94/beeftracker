@@ -159,8 +159,9 @@ append body
 
                     p.
                         #{event_data.description}
-
-                    +related-beefs(related_events, "events", "c_fill,g_face,h_120,w_120", event_data._id)
+                    - if(related_events.length > 0){
+                        +related-beefs(related_events, "events", "c_fill,g_face,h_120,w_120", event_data._id)
+                    - }
                     
         +adsense-banner-ad()
         
