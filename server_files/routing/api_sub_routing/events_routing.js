@@ -9,6 +9,7 @@ var event_data_validator = require("../../validation/event_validation");
 var token_authentication = require("../../tools/token_authentication.js"); //get token authentication object
 var memoryUpload = require("../../config/multer_config.js").get_multer_object(); //get multer config
 var responses_object = require("./endpoint_response.js");
+var url_param_validator = require("../validation/url_param_validation");
 
 //init response functions
 var send_successful_response = responses_object.send_successful_response;
@@ -28,7 +29,7 @@ router.route('/').get(function(request, response){
         }
     });
 });//built, written, tested
-router.route('/:event_id').get(function(request, response){
+router.route('/:event_id').get(url_param_validator.validate, function(request, response){
     
     var existing_event_id = request.params.event_id;
     
@@ -58,7 +59,7 @@ router.route('/').post(token_authentication.authenticate_endpoint_with_user_toke
         }
     });
 });//built, written, tested, needs specific user auth
-router.route('/:event_id').put(token_authentication.authenticate_endpoint_with_admin_user_token, memoryUpload, event_data_validator.validate, function(request, response){
+router.route('/:event_id').put(url_param_validator.validate, token_authentication.authenticate_endpoint_with_admin_user_token, memoryUpload, event_data_validator.validate, function(request, response){
     
     var data = request.locals.validated_data;
     var files = request.files;
@@ -73,7 +74,7 @@ router.route('/:event_id').put(token_authentication.authenticate_endpoint_with_a
         }
     });
 });//built, written, tested, needs admin auth
-router.route('/:event_id').delete(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
+router.route('/:event_id').delete(url_param_validator.validate, token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     
     var event_id = request.params.event_id;
     

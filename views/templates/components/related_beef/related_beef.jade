@@ -6,9 +6,6 @@ mixin related-beefs(related_events, data_type, image_resize_params, main_event_i
         h4 Related Beef
         ul
             each related_event in related_events
-
-                - console.log(related_events)
-            
                 - if(String(related_event._id) != String(main_event_id)){
                     li
                         a(href="/beef/#{related_event.beef_chain_ids[0]}/#{related_event._id}")

@@ -8,6 +8,7 @@ var update_request_validator = require("../../validation/update_request_validati
 var token_authentication = require("../../tools/token_authentication.js"); //get token authentication object
 var memoryUpload = require("../../config/multer_config.js").get_multer_object(); //get multer config
 var responses_object = require("./endpoint_response.js");
+var url_param_validator = require("../validation/url_param_validation");
 
 //init response functions
 var send_successful_response = responses_object.send_successful_response;
@@ -28,7 +29,7 @@ router.route('/').post(memoryUpload, update_request_validator.validate, function
         }
     });
 });//built, not written, not tested
-router.route('/:update_request_id').get(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
+router.route('/:update_request_id').get(url_param_validator.validate, token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     
     var update_request_id = request.params.update_request_id;
 
@@ -41,7 +42,7 @@ router.route('/:update_request_id').get(token_authentication.authenticate_endpoi
         }
     });
 });//built, not written, not tested
-router.route('/:update_request_id').delete(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
+router.route('/:update_request_id').delete(url_param_validator.validate, token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     
     var update_request_id = request.params.update_request_id;
 

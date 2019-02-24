@@ -64,8 +64,6 @@ module.exports = {
             options: {}
         };
 
-        console.log(update_config);
-
         db_interface.update(update_config, function () {
 
             callback({});

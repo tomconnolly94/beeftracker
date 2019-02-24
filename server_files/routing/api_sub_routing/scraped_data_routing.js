@@ -23,10 +23,7 @@ router.route('/events').get(token_authentication.authenticate_endpoint_with_admi
         }
     });
 });//built, written, tested
-router.route('/events').delete(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
-    
-    console.log(request.body);
-    
+router.route('/events').delete(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){    
     scraped_data_controller.deleteScrapedEventData(request.body, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);

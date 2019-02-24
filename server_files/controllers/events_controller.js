@@ -65,7 +65,7 @@ var increment_hit_counts = function (event_id_object) {
     };
 
     db_interface.update(update_config, function(result){
-        logger.submit_log(logger.LOG_TYPE.EXTRA_INFO, "updated hot count for: " + event_id_object.toString());
+        logger.submit_log(logger.LOG_TYPE.EXTRA_INFO, "updated hit count for: " + event_id_object.toString());
     }, function(error_object){
         logger.submit_log(logger.LOG_TYPE.ERROR, error_object);
     });

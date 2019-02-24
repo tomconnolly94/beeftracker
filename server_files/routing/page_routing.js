@@ -157,7 +157,7 @@ router.get("/about", token_authentication.recognise_user_token, blanket_middlewa
     
     response.render("pages/static/about.jade", view_parameters);
 }); // about_us page
-router.get("/actors", token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
+router.get("/actor", token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
     
     //access data from db
     var actors_promise = new Promise(function(resolve, reject){
@@ -177,7 +177,7 @@ router.get("/actors", token_authentication.recognise_user_token, blanket_middlew
         console.log(error);
     });
 }); // about_us page
-router.get("/actor/:actor_id", /*url_param_validator.validate,*/ token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
+router.get("/actor/:actor_id", url_param_validator.validate, token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
 
     //extract data
     var actor_id = request.params.actor_id;
@@ -305,7 +305,7 @@ router.get("/beef", token_authentication.recognise_user_token, blanket_middlewar
         response.render("pages/beefs.jade", view_parameters); 
     });
 }); //beef page
-router.get("/beef/:beef_chain_id/:event_id", /*url_param_validator.validate,*/ token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
+router.get("/beef/:beef_chain_id/:event_id", url_param_validator.validate, token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
 
     //extract data
     var event_id = request.params.event_id;    

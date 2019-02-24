@@ -371,11 +371,11 @@ module.exports = {
         }
 
         db_interface.update(update_config, function (record) {
-                callback(record);
-            },
-            function (error_object) {
-                callback(error_object);
-            });
+            callback(record);
+        },
+        function (error_object) {
+            callback(error_object);
+        });
     },
 
     updateUserImage: function (user_id, new_gallery_item, new_file, callback) {
