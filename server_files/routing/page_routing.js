@@ -7,6 +7,7 @@ var globals = require("../config/globals.js")
 var cookie_parser = require("../tools/cookie_parsing.js");
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
 var logger = require("../tools/logging");
+var url_param_validator = require("../validation/url_param_validation");
 
 //endpoint controllers
 var actor_controller = require("../controllers/actors_controller.js");
@@ -37,15 +38,11 @@ function calculate_event_rating(votes){
     return rating;
 }
 
+//find full user record from validated user token
 function resolve_user_from_locals_token(request, callback){
-    if(request.locals && request.locals.authenticated_user){
-        user_controller.findUser(request.locals.authenticated_user.id, request.locals.authenticated_user.is_admin, function(data){
-            callback(data);
-        });
-    }
-    else{
-        callback({ failed: true });
-    }
+    user_controller.findUser(request.locals.authenticated_user.id, request.locals.authenticated_user.is_admin, function(data){
+        callback(data);
+    });
 }
 
 function detect_browser(request, callback){
@@ -60,14 +57,43 @@ function detect_browser(request, callback){
 
 //function to include code that should be run as middleware directly before the final functiion on all page endpoints
 function blanket_middleware(request, response, next){
-    resolve_user_from_locals_token(request, function(data){
-    
-        if(!data.failed){ request.locals.authenticated_user = data; }
-        
-        detect_browser(request, function(browser){
-            view_parameters_global.browser = browser;
-            next();
-        });
+
+    var blanket_promises = [];
+    if(request.locals){ request.locals = {}; }
+
+    blanket_promises.push(
+        new Promise(function(resolve, reject){
+            detect_browser(request, function(browser){
+                view_parameters_global.browser = browser;
+                resolve();
+            });
+        })
+    );
+
+    blanket_promises.push(
+        new Promise(function(resolve, reject){
+            if(request.locals && request.locals.authenticated_user){
+                resolve_user_from_locals_token(request, function(data){
+                    if(data.failed){ 
+                        reject(data);
+                    }
+                    else{
+                        request.locals.authenticated_user = data;
+                        resolve();
+                    }
+                })
+            }
+            else{
+                resolve({});
+            }
+        })
+    );
+
+    Promise.all(blanket_promises).then(function(values) {
+        next();
+    }).catch(function(error){
+        console.log(error);
+        response.render("pages/static/error.jade", view_parameters_global);
     });
 }
 
@@ -151,7 +177,7 @@ router.get("/actors", token_authentication.recognise_user_token, blanket_middlew
         console.log(error);
     });
 }); // about_us page
-router.get("/actor/:actor_id", token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
+router.get("/actor/:actor_id", url_param_validator.validate, token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
 
     //extract data
     var actor_id = request.params.actor_id;
@@ -279,7 +305,7 @@ router.get("/beef", token_authentication.recognise_user_token, blanket_middlewar
         response.render("pages/beefs.jade", view_parameters); 
     });
 }); //beef page
-router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
+router.get("/beef/:beef_chain_id/:event_id", url_param_validator.validate, token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
 
     //extract data
     var event_id = request.params.event_id;    
@@ -338,7 +364,6 @@ router.get("/beef/:beef_chain_id/:event_id", token_authentication.recognise_user
                 view_parameters.disable_voting = disable_voting;
                 view_parameters.page_url = page_url;
                 view_parameters.main_event_beef_chain_index = beef_chain_index;
-                console.log(view_parameters);
 
                 response.render("pages/beef.jade", view_parameters);
 
