@@ -9,7 +9,7 @@ var event_data_validator = require("../../validation/event_validation");
 var token_authentication = require("../../tools/token_authentication.js"); //get token authentication object
 var memoryUpload = require("../../config/multer_config.js").get_multer_object(); //get multer config
 var responses_object = require("./endpoint_response.js");
-var url_param_validator = require("../validation/url_param_validation");
+var url_param_validator = require("../../validation/url_param_validation");
 
 //init response functions
 var send_successful_response = responses_object.send_successful_response;
