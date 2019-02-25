@@ -33,9 +33,9 @@ router.route('/events').delete(token_authentication.authenticate_endpoint_with_a
         }
     });
 });//built, written, tested
-router.route('/actor/:name').get(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
+router.route('/actor/:name').get(url_param_validator.validate, token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     
-    var actor_name = request.params.name;
+    var actor_name = request.locals.validated_params.name;
     
     scraped_data_controller.scrapeActor(actor_name, function(data){
         if(data.failed){
@@ -47,9 +47,9 @@ router.route('/actor/:name').get(token_authentication.authenticate_endpoint_with
     });
 });//built, written, tested
 
-router.route('/actor/:name').get(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
+router.route('/actor/:name').get(url_param_validator.validate, token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     
-    var actor_name = request.params.name;
+    var actor_name = request.locals.validated_params.name;
     
     scraped_data_controller.scrapeActor(actor_name, function(data){
         if(data.failed){

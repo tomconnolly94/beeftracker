@@ -31,7 +31,7 @@ router.route('/').get(function(request, response){
 });//built, written, tested
 router.route('/:event_id').get(url_param_validator.validate, function(request, response){
     
-    var existing_event_id = request.params.event_id;
+    var existing_event_id = request.locals.validated_params.event_id;
     
     event_controller.findEvent(existing_event_id, function(data){
         if(data.failed){
@@ -63,7 +63,7 @@ router.route('/:event_id').put(url_param_validator.validate, token_authenticatio
     
     var data = request.locals.validated_data;
     var files = request.files;
-    var existing_event_id = request.params.event_id;
+    var existing_event_id = request.locals.validated_params.event_id;
     
     event_controller.updateEvent(data, files, existing_event_id, function(data){
         if(data.failed){
@@ -76,7 +76,7 @@ router.route('/:event_id').put(url_param_validator.validate, token_authenticatio
 });//built, written, tested, needs admin auth
 router.route('/:event_id').delete(url_param_validator.validate, token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     
-    var event_id = request.params.event_id;
+    var event_id = request.locals.validated_params.event_id;
     
     event_controller.deleteEvent(event_id, function(data){
         if(data.failed){
@@ -90,9 +90,9 @@ router.route('/:event_id').delete(url_param_validator.validate, token_authentica
 
 
 //Peripheral events endpoints
-router.route('/from-beef-chain/:beef_chain_id').get(function(request, response){
+router.route('/from-beef-chain/:beef_chain_id').get(url_param_validator.validate, function(request, response){
 
-    var beef_chain_id = request.params.beef_chain_id;
+    var beef_chain_id = request.locals.validated_params.beef_chain_id;
 
     event_peripherals_controller.findEventsFromBeefChain(beef_chain_id, function(data){
         if(data.failed){
@@ -103,9 +103,9 @@ router.route('/from-beef-chain/:beef_chain_id').get(function(request, response){
         }
     });
 });//built, written, tested
-router.route('/related-to-event/:event_id').get(function(request, response){
+router.route('/related-to-event/:event_id').get(url_param_validator.validate, function(request, response){
 
-    var event_id = request.params.event_id;
+    var event_id = request.locals.validated_params.event_id;
 
     event_peripherals_controller.findEventsRelatedToEvent(event_id, function(data){
         if(data.failed){
@@ -116,9 +116,9 @@ router.route('/related-to-event/:event_id').get(function(request, response){
         }
     });
 });//built, written, needs manual testing with valid data
-router.route('/related-to-actor/:actor_id').get(function(request, response){
+router.route('/related-to-actor/:actor_id').get(url_param_validator.validate, function(request, response){
 
-    var actor_id = request.params.actor_id;
+    var actor_id = request.locals.validated_params.actor_id;
 
     event_peripherals_controller.findEventsRelatedToActor(actor_id, function(data){
         if(data.failed){

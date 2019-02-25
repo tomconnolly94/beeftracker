@@ -5,7 +5,7 @@ module.exports = {
     validate: function(request, response, next){
 
         var params = [];
-        var possible_params = ["event_id", "beef_chain_id", "actor_id", "update_request_id", "user_id"];
+        var possible_params = ["event_id", "beef_chain_id", "actor_id", "update_request_id", "user_id", "comment_id", "name"];
         var validation_successful = true;
 
         //TODO: write  tests taht fail if the original request.params.x are used. all routing should use the validated values at request.locals.params
@@ -13,9 +13,6 @@ module.exports = {
         for(var i = 0; i < possible_params.length; i++){
             if(request.params[possible_params[i]]){ params.push(request.params[possible_params[i]]); }
         }
-
-        console.log(request.params);
-        console.log(params);
 
         for(var i = 0; i < params.length; i++){
             var param = params[i];
@@ -29,6 +26,10 @@ module.exports = {
         if(validation_successful){
             if(!request.locals){ request.locals = {}; }
             request.locals.validated_params = request.params;
+            request.params = null;
+            console.log("validation succeeded.")
+            console.log(request.params)
+            console.log(request.locals.validated_params)
             //callback({})
             next();
         }

@@ -17,9 +17,9 @@ var send_successful_response = responses_object.send_successful_response;
 var send_unsuccessful_response = responses_object.send_unsuccessful_response;
 
 //Users endpoints
-router.route('/:user_id').get(token_authentication.authenticate_endpoint_with_user_token, function(request, response){
+router.route('/:user_id').get(url_param_validator.validate, token_authentication.authenticate_endpoint_with_user_token, function(request, response){
     
-    var user_id = request.params.user_id;
+    var user_id = request.locals.validated_params.user_id;
     if(request.locals.authenticated_user.id == user_id || request.locals.authenticated_user.is_admin){
 
         users_controller.findUser(user_id, request.locals.authenticated_user.is_admin, function(data){
@@ -52,10 +52,10 @@ router.route('/').post(memoryUpload, user_data_validator.validate, function(requ
         }
     });
 });//built, written, manually tested
-router.route('/:user_id').put(memoryUpload, token_authentication.authenticate_endpoint_with_admin_user_token, user_data_validator.validate, function(request, response){
+router.route('/:user_id').put(url_param_validator.validate, memoryUpload, token_authentication.authenticate_endpoint_with_admin_user_token, user_data_validator.validate, function(request, response){
     
     var user_details = request.locals.validated_data;
-    var user_id = request.params.user_id;
+    var user_id = request.locals.validated_params.user_id;
     var files = request.files;
     var headers = request.headers;
     
@@ -68,7 +68,7 @@ router.route('/:user_id').put(memoryUpload, token_authentication.authenticate_en
         }
     });
 });//built, not written, not tested, needs specific user or admin auth
-router.route('/:user_id/image').put(token_authentication.authenticate_endpoint_with_user_token, memoryUpload,/* actor_data_validator.validate,*/ function(request, response){
+router.route('/:user_id/image').put(url_param_validator.validate, token_authentication.authenticate_endpoint_with_user_token, memoryUpload,/* actor_data_validator.validate,*/ function(request, response){
     var data = JSON.parse(request.body.data);//request.locals.validated_data;
     var file = request.files[0];
     
@@ -81,8 +81,8 @@ router.route('/:user_id/image').put(token_authentication.authenticate_endpoint_w
         }
     });
 });//built, written, tested, needs admin auth
-router.route('/:user_id').delete(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
-    users_controller.deleteUser(request.params.user_id, function(data){
+router.route('/:user_id').delete(url_param_validator.validate, token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
+    users_controller.deleteUser(request.locals.validated_params.user_id, function(data){
         if(data.failed){
             send_unsuccessful_response(response, 400, data.message);
         }

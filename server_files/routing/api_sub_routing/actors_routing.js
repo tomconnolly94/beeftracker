@@ -8,6 +8,7 @@ var actor_data_validator = require("../../validation/actor_validation");
 var token_authentication = require("../../tools/token_authentication.js"); //get token authentication object
 var memoryUpload = require("../../config/multer_config.js").get_multer_object(); //get multer config
 var responses_object = require("./endpoint_response.js");
+var url_param_validator = require("../../validation/url_param_validation");
 
 //init response functions
 var send_successful_response = responses_object.send_successful_response;
@@ -28,9 +29,9 @@ router.route('/').get(function(request, response){
     });
     
 });//built, written, tested, needs query handling
-router.route('/:actor_id').get(function(request, response){
+router.route('/:actor_id').get(url_param_validator.validate, function(request, response){
     
-    var actor_id = request.params.actor_id;
+    var actor_id = request.locals.validated_params.actor_id;
     
     actor_controller.findActor(actor_id, function(data){
         if(data.failed){
@@ -58,11 +59,11 @@ router.route('/').post(token_authentication.authenticate_endpoint_with_user_toke
     });
     
 });//built, written, tested
-router.route('/:actor_id').put(token_authentication.authenticate_endpoint_with_admin_user_token, memoryUpload, actor_data_validator.validate, function(request, response){
+router.route('/:actor_id').put(url_param_validator.validate, token_authentication.authenticate_endpoint_with_admin_user_token, memoryUpload, actor_data_validator.validate, function(request, response){
     
     var data = request.locals.validated_data;
     var files = request.files;
-    var actor_id = request.params.actor_id;
+    var actor_id = request.locals.validated_params.actor_id;
         
     actor_controller.updateActor(data, files, actor_id, function(data){
         if(data.failed){
@@ -73,9 +74,9 @@ router.route('/:actor_id').put(token_authentication.authenticate_endpoint_with_a
         }
     });
 });//built, written, tested, needs admin auth
-router.route('/:actor_id').delete(token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
+router.route('/:actor_id').delete(url_param_validator.validate, token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     
-    var actor_id = request.params.actor_id;
+    var actor_id = request.locals.validated_params.actor_id;
 
     actor_controller.deleteActor(actor_id, function(data){
         if(data.failed){

@@ -54,12 +54,11 @@ function detect_browser(request, callback){
     }
 }
 
-
 //function to include code that should be run as middleware directly before the final functiion on all page endpoints
 function blanket_middleware(request, response, next){
 
     var blanket_promises = [];
-    if(request.locals){ request.locals = {}; }
+    if(!request.locals){ request.locals = {}; }
 
     blanket_promises.push(
         new Promise(function(resolve, reject){
@@ -179,8 +178,12 @@ router.get("/actor", token_authentication.recognise_user_token, blanket_middlewa
 }); // about_us page
 router.get("/actor/:actor_id", url_param_validator.validate, token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
 
+    console.log("actor/:actor_id")
+    console.log(request.params)
+    console.log(request.locals.validated_params)
+
     //extract data
-    var actor_id = request.params.actor_id;
+    var actor_id = request.locals.validated_params.actor_id;
     
     var regex = /[0-9A-Fa-f]{6}/g;
 
@@ -308,8 +311,8 @@ router.get("/beef", token_authentication.recognise_user_token, blanket_middlewar
 router.get("/beef/:beef_chain_id/:event_id", url_param_validator.validate, token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
 
     //extract data
-    var event_id = request.params.event_id;    
-    var beef_chain_id = request.params.beef_chain_id;
+    var event_id = request.locals.validated_params.event_id;    
+    var beef_chain_id = request.locals.validated_params.beef_chain_id;
     var page_url = "https://" + request.headers.host + request.url;
     
     var regex = /[0-9A-Fa-f]{6}/g;
@@ -564,7 +567,7 @@ router.get("/admin_login", function(request, response) { response.render("pages/
 /* deactivated, dependent on card: https://trello.com/c/5qHwVgqZ
 router.get("/reset-my-password/:id_token", blanket_middleware, function(request, response) { 
     
-    var id_token = request.params.id_token;
+    var id_token = request.locals.validated_params.id_token;
 
     var query_config = {
         table: db_ref.get_password_reset_request_table(),

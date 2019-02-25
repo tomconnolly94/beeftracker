@@ -31,7 +31,7 @@ router.route('/').post(memoryUpload, update_request_validator.validate, function
 });//built, not written, not tested
 router.route('/:update_request_id').get(url_param_validator.validate, token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     
-    var update_request_id = request.params.update_request_id;
+    var update_request_id = request.locals.validated_params.update_request_id;
 
     update_request_controller.findUpdateRequest(update_request_id, function(data){
         if(data.failed){
@@ -44,7 +44,7 @@ router.route('/:update_request_id').get(url_param_validator.validate, token_auth
 });//built, not written, not tested
 router.route('/:update_request_id').delete(url_param_validator.validate, token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
     
-    var update_request_id = request.params.update_request_id;
+    var update_request_id = request.locals.validated_params.update_request_id;
 
     update_request_controller.deleteUpdateRequest(update_request_id, function(data){
         if(data.failed){
