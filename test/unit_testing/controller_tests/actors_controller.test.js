@@ -389,6 +389,7 @@ describe('Module: actors_controller', function () {
         storage_interface.upload = function(upload_config, callback){            
             callback(upload_config.item_data);
         };
+        
         actors_controller.createActor(actor_example, files, function(result){
             callback_spy();
             

@@ -345,7 +345,6 @@ module.exports = {
                 };
 
                 db_interface.update(update_config, function (record) {
-                    console.log("Password reset request document inserted.")
                     callback(record);
                 })
             }
@@ -425,9 +424,7 @@ module.exports = {
 
                 if (existing_user_img != default_img_title) {
                     //delete old image
-                    storage_interface.delete_image(storage_ref.get_user_images_folder(), existing_user_img, function () {
-                        console.log("old user image deleted");
-                    })
+                    storage_interface.delete_image(storage_ref.get_user_images_folder(), existing_user_img, function () {})
                 }
             },
             function (error_object) {

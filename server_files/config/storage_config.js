@@ -2,6 +2,7 @@
 
 //config remote file storage
 var cloudinary = require('cloudinary');
+var upload_method = null;
 
 if(process.env.CLOUDINARY_URL){
     //extract config data from ENV URL
@@ -18,32 +19,33 @@ if(process.env.CLOUDINARY_URL){
     });
 
     //var upload_method = "local";
-    var upload_method = "cloudinary";
+    upload_method = "cloudinary";
 
-    module.exports = {
+}
 
-        get_upload_method: function(){
-            return upload_method;
-        },
+module.exports = {
 
-        get_upload_object: function(){    
-            return cloudinary;
-        },
+    get_upload_method: function(){
+        return upload_method;
+    },
 
-        get_event_images_folder: function(){
-            return "events";
-        },
+    get_upload_object: function(){    
+        return cloudinary;
+    },
 
-        get_actor_images_folder: function(){
-            return "actors";
-        },
+    get_event_images_folder: function(){
+        return "events";
+    },
 
-        get_user_images_folder: function(){
-            return "user_profiles";
-        },
+    get_actor_images_folder: function(){
+        return "actors";
+    },
 
-        get_update_requests_folder: function(){
-            return "update_requests";
-        }
+    get_user_images_folder: function(){
+        return "user_profiles";
+    },
+
+    get_update_requests_folder: function(){
+        return "update_requests";
     }
 }

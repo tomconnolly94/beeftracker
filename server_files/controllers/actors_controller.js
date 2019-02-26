@@ -232,7 +232,7 @@ module.exports = {
     },
     
     findActor: function(actor_id, callback){
-        
+
         var additional_aggregate_stages = [
             { 
                 $unwind: {

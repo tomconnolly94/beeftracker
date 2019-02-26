@@ -14,6 +14,7 @@ describe('Module: authentication_controller', function () {
 
     before(function(){
         //db_interface stub
+        process.env.JWT_SECRET = "fakesecret";
         db_interface = require("../module_mocking/db_interface.mock.js");
         hashing = require("../module_mocking/hashing.mock.js");
         authentication_controller = proxyquire("../../../server_files/controllers/authentication_controller", { "../interfaces/db_interface.js": db_interface, "../tools/hashing.js": hashing });
