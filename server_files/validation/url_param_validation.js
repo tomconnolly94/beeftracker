@@ -28,8 +28,6 @@ module.exports = {
             request.locals.validated_params = request.params;
             request.params = null;
             console.log("validation succeeded.")
-            console.log(request.params)
-            console.log(request.locals.validated_params)
             //callback({})
             next();
         }

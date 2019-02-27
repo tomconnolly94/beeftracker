@@ -13,7 +13,6 @@ module.exports = {
     
     validate: function(request, response, next){
         console.log("validator started.");
-        console.log(request.body);
                         
         //validate title
         request.checkBody("cat_id", "No cat_id provided.").notEmpty();

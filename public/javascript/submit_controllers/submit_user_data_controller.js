@@ -3,7 +3,6 @@ $(function(){
     $("#change_user_image").unbind().change(function(event){
         event.preventDefault()
         
-        console.log($(this));
         var gallery_items = [];
         var form_data = new FormData();
 

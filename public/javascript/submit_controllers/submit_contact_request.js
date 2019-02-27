@@ -1,7 +1,4 @@
 $(function(){
-    
-    console.log("submit_contact_request_controller loaded")
-   
     $("#contact_request_form").unbind().submit(function(event){
         event.preventDefault();
         

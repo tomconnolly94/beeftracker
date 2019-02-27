@@ -178,10 +178,6 @@ router.get("/actor", token_authentication.recognise_user_token, blanket_middlewa
 }); // about_us page
 router.get("/actor/:actor_id", url_param_validator.validate, token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
 
-    console.log("actor/:actor_id")
-    console.log(request.params)
-    console.log(request.locals.validated_params)
-
     //extract data
     var actor_id = request.locals.validated_params.actor_id;
     

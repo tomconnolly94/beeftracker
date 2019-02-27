@@ -16,3 +16,5 @@ require("./controller_tests/scraped_data_controller.test");
 require("./controller_tests/update_requests_controller.test");
 require("./controller_tests/users_controller.test");
 require("./controller_tests/votes_controller.test");
+require("./misc_tests/globals.test");
+require("./tools_tests/logging.test");

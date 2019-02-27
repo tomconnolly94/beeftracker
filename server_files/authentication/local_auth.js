@@ -137,8 +137,7 @@ router.route('/deauthenticate').post(function(request, response){
 router.route('/refresh_auth_token').post(function(request, response){
     
     var cookies = cookie_parser.parse_cookies(request);
-    console.log(cookies);
-        
+    
     if(cookies.bftkr_auth_refresh){
         var refresh_token = cookies["bftkr_auth_refresh"]
         var db_url = process.env.MONGODB_URI; //get db uri

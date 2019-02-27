@@ -137,7 +137,7 @@ describe('Module: users_controller', function () {
         },
         function (result) {
             callback_spy();
-            console.log(result);
+            
             assert.exists(result);
             assert.exists(result._id);
             assert.equal(globals.dummy_object_id, result._id);

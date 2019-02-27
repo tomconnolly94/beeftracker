@@ -16,9 +16,7 @@ module.exports = {
         if (typeof request.body.data === 'string' || request.body.data instanceof String){
             request.body = JSON.parse(request.body.data); //get form data
         }
-        
-        console.log(request.body);
-        
+                
         //validate title
         request.checkBody("name", "Field is empty").notEmpty();
         request.checkBody("name", "Field is null.").not_null();

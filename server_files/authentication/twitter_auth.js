@@ -34,7 +34,6 @@ passport.use(new TwitterStrategy({
     },
   function(request, accessToken, refreshToken, profile, done) {
     
-        console.log(profile);
         var user_emails = profile.emails;
     
         db_ref.get_db_object().connect(process.env.MONGODB_URI, function(err, db) {
@@ -79,8 +78,6 @@ passport.use(new TwitterStrategy({
                             });
                         }
                         else{
-                            console.log("user found.");
-                            console.log(users);
                             
                             //assign user_details to request
                             request.locals = {};
@@ -98,9 +95,7 @@ passport.use(new TwitterStrategy({
 router.route('/').get(passport.authenticate('twitter', { session: "false" }));
 
 router.route('/callback').get(passport.authenticate('twitter'), function(request, response){
-    
-    console.log(request.locals);
-    
+
     authentication_controller.create_auth_cookies(request.locals.user_details, response, request.headers, function(){
         
         response.cookie("bftkr_auth", "0", { expires: new Date(0), httpOnly: true });

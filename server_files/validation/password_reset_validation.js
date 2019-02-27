@@ -13,7 +13,6 @@ module.exports = {
     
     validate: function(request, response, next){
         console.log("validator started.");
-        console.log(request.body);
         
         //validate email_address
         request.checkBody("id_token", "Field is empty").notEmpty();

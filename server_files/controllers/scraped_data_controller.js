@@ -57,7 +57,6 @@ module.exports = {
         
         var id_object_array = [];
         for(var i = 0; i < id_array.length; i++){
-            console.log(id_array[i]);
             id_object_array.push(BSON.ObjectID.createFromHexString(id_array[i]))
         }
 

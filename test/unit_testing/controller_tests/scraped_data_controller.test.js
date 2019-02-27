@@ -95,7 +95,7 @@ describe('Module: scraped_data_controller', function () {
 
         python_shell.run = function(actor_name, options, callback){
             db_get_callback_spy();
-            callback({}, [ "404 error\r"]);
+            callback(null, [ "404 error\r"]);
         };
 
         scraped_data_controller.scrapeActor(actor_name, function(result){
@@ -111,7 +111,7 @@ describe('Module: scraped_data_controller', function () {
 
         python_shell.run = function(actor_name, options, callback){
             db_get_callback_spy();
-            callback({}, [ successful_return ]);
+            callback(null, [ successful_return ]);
         };
 
         scraped_data_controller.scrapeActor(actor_name, function(result){

@@ -1,6 +1,9 @@
 #!/bin/bash
 
-#require file structure
+
+
+### REQUIRED FILE STRUCTURE ###
+
 #beeftracker
 #|-- beeftracker_integration_testing
 #|-- bf-dev
@@ -8,24 +11,25 @@
 
 
 
-usage() { echo "Usage: $0 [-d debug mode is active]" 1>&2; exit 1; }
+### USAGE ###
+
+usage() {
+    echo "Usage: "
+    echo "      $0 [options]"
+    echo ""
+    echo "      -d: [DEBUG_MODE] Activate debug mode, $0 will print all test output to the console." 1>&2
+    echo ""
+    exit 1; 
+}
 DEBUG_MODE=false
-LOG=/dev/null
-TMP_LOG_FILE=../check_deploy_node_server_log.log
-PERSIST_LOGS=false
 
-
+### INTERPRET CMD LINE FLAGS ###
 
 while getopts "dp" o; do
     case "${o}" in
         d)
             echo "DEBUG_MODE active"
             DEBUG_MODE=true
-            LOG=$TMP_LOG_FILE
-            ;;
-        p)
-            echo "Persistent logs active"
-            PERSIST_LOGS=true
             ;;
         *)
             usage
@@ -35,100 +39,119 @@ done
 
 
 
+### Functions ###
+
 unsuccessful_exit(){
-    echo "Unsuccessful deploy."
+    echo "!!! Unsuccessful deploy. !!!"
     echo "Exit code: $1"
     exit $1
 }
 
+process_output(){
+	if $DEBUG_MODE ; then
+		echo $1 > /dev/null
+	else
+		echo $1
+	fi
+}
+
+kill_server(){
+    echo ""
+    echo "Killing server..."
+    kill -9 $server_pid
+    echo "Server Killed."
+}
 
 
-#move up before starting tests
+
+#move to beeftracker dir before starting tests
 cd ../
 
 
+### BUILD SERVER FILES ###
 
 echo ""
-#build server files
 cd bf-dev
 echo "Building server files..."
-gulp build > $LOG 2>&1 || unsuccessful_exit 2
-if [ $? -eq 0 ] ; then
-    echo "Build successful."
+
+exit_code=2
+if $DEBUG_MODE ; then
+    gulp build || unsuccessful_exit exit_code
 else
-    echo "Build failed. Please check the $0 log"
-    unsuccessful_exit 3
+    gulp build > /dev/null || unsuccessful_exit exit_code
 fi
+
+echo "Build successful."
 cd - > /dev/null 2>&1
 
 
 
+### UNIT TESTS ###
+
 echo ""
-#run unit tests
 cd bf-dev/test
 echo "Running Unit Tests..."
-./run_tests.sh > $LOG 2>&1 || unsuccessful_exit 4
-if [ $? -eq 0 ] ; then
-    echo "Unit tests successful."
+exit_code=4
+if $DEBUG_MODE ; then
+    ./run_tests.sh || unsuccessful_exit exit_code
 else
-    echo "Unit tests failed. Please check the $0 log"
-    unsuccessful_exit 5
+    ./run_tests.sh > /dev/null || unsuccessful_exit exit_code
 fi
+
+echo "Unit tests successful."
 cd - > /dev/null 2>&1
 
 
 
+### RUN NODE SERVER ###
+
 echo ""
-#run server
-if $DEBUG_MODE ; then
-    touch $TMP_LOG_FILE
-fi
 cd bf-dev
 echo "Running Node server..."
-node index.js > $LOG 2>&1 &
-echo $!
+exit_code=5
+node index.js > /dev/null &
 server_pid=$(echo $! | tr ":" "\n")
 jobsvar=$(jobs)
 if [ -n "$jobsvar" ]; then
-    echo "Node server running."
-    echo "Node server PID: $server_pid"
+    echo "Node server running. PID: $server_pid"
+    
 else
-    echo "Server run was unsuccessful. Please check the $0 log"
-    unsuccessful_exit 6
+    echo "Server start was unsuccessful."
+    unsuccessful_exit exit_code
 fi
-cd - > /dev/null 2>&1
+
+cd - > /dev/null
 
 
+
+### INTEGRATION TESTS ###
 
 echo ""
-#run integration tests
 cd beeftracker_integration_testing
 echo "Running Integration Tests..."
-./run_tests.sh > $LOG 2>&1 || unsuccessful_exit 7
-echo "integration test result $?"
-if [ $? -eq 0 ] ; then
-    echo "Integration tests successful."
+exit_code=6
+if $DEBUG_MODE ; then
+    ./run_tests.sh
 else
-    echo "Integration tests failed. Please check the $0 log"
-    unsuccessful_exit 8
+    ./run_tests.sh > /dev/null 2>&1
 fi
+
+if [ $? -ne 0 ] ; then
+    kill_server
+    echo "Integration tests were unsuccessful."
+    unsuccessful_exit $exit_code
+fi
+
+echo "Integration tests successful."
 cd - > /dev/null 2>&1
+
+
+### KILL SERVER ###
+
+kill_server
 
 
 
 echo ""
-#kill server
-echo "Killing server..."
-kill -9 $server_pid
-echo "Server Killed."
-
-
-
-#delete tmp server log file
-if ! $PERSIST_LOGS ; then
-    rm $TMP_LOG_FILE
-fi
-
-
 echo "Successful deploy."
 exit 0

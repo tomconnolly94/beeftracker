@@ -15,7 +15,6 @@ module.exports = {
     
     validate: function(request, response, next){
         console.log("validator started.");
-        console.log(request.body);
         
         request.body = JSON.parse(request.body.data); //get form data
                         
@@ -23,9 +22,7 @@ module.exports = {
         request.checkBody("user_id", "Field is empty.").notEmpty();
         request.checkBody("user_id", "Field is null.").not_null();
         request.checkBody("user_id", "No event_id provided.").test_mongodb_object_id();
-        
-        console.log(request.body.type);
-        
+
         //validate type
         request.checkBody("type", "Field is empty").notEmpty();
         request.checkBody("type", "Field is null.").not_null();
