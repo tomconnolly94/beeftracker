@@ -91,7 +91,8 @@ module.exports = {
                 "link" : "image",
                 "main_graphic" : false,
                 "file" : null,
-                "file_name" : "image"
+                "file_name" : "image",
+                "originalname": "image"
             }
         ],
         categories: [

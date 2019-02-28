@@ -18,7 +18,7 @@ var get_index_of_aggregate_stage = function(aggregate_array, stage_name){
 
 describe('Module: event_controller', function () {
 
-    var events_controller, db_interface, event_example, callback_spy, beef_chain_ids, index_of_limit_query;
+    var events_controller, db_interface, storage_interface, event_example, callback_spy, beef_chain_ids, index_of_limit_query;
 
     before(function(){
         
@@ -26,7 +26,8 @@ describe('Module: event_controller', function () {
         this.timeout(7000);
         //db_interface stub
         db_interface = require("../module_mocking/db_interface.mock.js");
-        events_controller = proxyquire("../../../server_files/controllers/events_controller", { "../interfaces/db_interface.js": db_interface });
+        storage_interface = require("../module_mocking/storage_interface.mock.js");
+        events_controller = proxyquire("../../../server_files/controllers/events_controller", { "../interfaces/db_interface.js": db_interface, "../interfaces/storage_interface.js": storage_interface });
 
         event_example = globals.event_example;
 
@@ -62,6 +63,13 @@ describe('Module: event_controller', function () {
         callback_spy = sinon.spy();
     });
 
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // 'format_event_data' tests
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+
     it('format_event_data', function () {
 
         var formatted_event = events_controller.format_event_data(event_example);
@@ -85,6 +93,12 @@ describe('Module: event_controller', function () {
         assert.equal(false, formatted_event.featured);
         assert.equal(event_example.tags.length, formatted_event.tags.length);
     });
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // 'findEvents' tests
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     it('findEvents - success', function () {
 
@@ -446,6 +460,162 @@ describe('Module: event_controller', function () {
         });
         
         assert(db_interface_callback_spy.called);
+        assert(callback_spy.called);
+    });
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // 'createEvent' tests
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    it('createEvent', function () {
+
+        var gallery_items = globals.dummy_object_id + "g";
+        var db_insert_spy = sinon.spy();
+        var db_get_spy = sinon.spy();
+        var db_update_single_spy = sinon.spy();
+        var si_upload_spy = sinon.spy();
+        
+        db_interface.insert = function(insert_config, callback){
+            db_insert_spy();
+            callback({ 
+                _id: globals.dummy_object_id,
+                gallery_items: gallery_items,
+                beef_chain_ids: beef_chain_ids,
+                aggressors: event_example.aggressors,
+                targets: event_example.targets,
+            }); 
+        };
+
+        db_interface.get = function(insert_config, callback){
+            db_get_spy();
+            callback({ 
+                _id: globals.dummy_object_id,
+                gallery_items: gallery_items,
+                beef_chain_ids: beef_chain_ids 
+            }); 
+        };
+
+        db_interface.updateSingle = function(insert_config, callback){
+            db_update_single_spy();
+            callback(beef_chain_ids); 
+        };
+        
+        var files = event_example.gallery_items;
+        
+        storage_interface.upload = function(upload_config, callback){
+            si_upload_spy();
+            callback(upload_config.item_data);
+        };
+        
+        var promise = new Promise(function(resolve, reject) {
+            events_controller.createEvent(event_example, files, function(result){
+                callback_spy();
+                resolve(result);
+            });
+        });
+        
+        promise.then(function(result) {
+
+            assert.equal(globals.dummy_object_id, result._id);
+            //simply testing that what is returned by the db_interface.insert function is returned by the controller function
+            assert.equal(gallery_items, result.gallery_items);
+            assert.isTrue(globals.compare_objects(beef_chain_ids, result.beef_chain_ids));
+
+            assert(db_insert_spy.called);
+            assert(db_get_spy.called);
+            assert(db_update_single_spy.called);
+            assert(si_upload_spy.called);
+            assert(callback_spy.called);
+        }).catch(function(error){
+            throw error;
+            console.log(error);
+        });
+    });
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // 'deleteEvent' tests
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    it('deleteEvent', function () {
+
+        var gallery_item_1 = {
+            media_type: "image",
+            link: globals.dummy_object_id
+        }
+
+        var gallery_item_2 = {
+            media_type: "not_image",
+            link: globals.dummy_object_id
+        }
+        
+        db_interface.delete = function(insert_config, callback){
+            assert.exists(insert_config.table);
+            assert.exists(insert_config.delete_multiple_records);
+            assert.equal(false, insert_config.delete_multiple_records);
+            assert.exists(insert_config.match_query);
+            assert.exists(insert_config.match_query["_id"]);
+            callback({ 
+                _id: globals.dummy_object_id,
+                gallery_items: [
+                    gallery_item_1,
+                    gallery_item_2
+                ]
+            }); 
+        };
+        
+        var files = actor_example.gallery_items;
+        
+        storage_interface.remove = function(upload_config, callback){
+            assert.equal(1, upload_config.items.length)
+            assert.isTrue(globals.compare_objects(gallery_item_1, upload_config.items[0]));
+            callback();
+        };
+
+        actors_controller.deleteEvent(globals.dummy_object_id, function(result){
+            callback_spy();
+            expect(typeof result.failed).to.eq('undefined');
+        });
+        
+        assert(callback_spy.called);
+    });
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // 'updateEvent' tests
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    it('updateEvent', function () {
+
+        var fake_files = [{ link: "image_1_link", media_type: "image"}];
+        var delete_actor_spy = sinon.spy();
+        var create_actor_spy = sinon.spy();
+
+        actors_controller.deleteEvent = function(existing_object_id, callback){
+            delete_actor_spy();
+            assert.equal(globals.dummy_object_id, existing_object_id);
+            callback({});
+        }
+
+        actors_controller.createEvent = function(actor_data, passed_fake_files, callback){
+            create_actor_spy();
+            assert.isTrue(globals.compare_objects(actor_example, actor_data));
+            assert.isTrue(globals.compare_objects(fake_files[0], passed_fake_files[0]));
+            callback({});
+        }
+
+        actors_controller.updateEvent(actor_example, fake_files, globals.dummy_object_id, function(result){
+            callback_spy();
+            assert.isTrue(globals.compare_objects({}, result));
+            expect(typeof result.failed).to.eq('undefined');
+        });
+        
+        assert(delete_actor_spy.called);
+        assert(create_actor_spy.called);
         assert(callback_spy.called);
     });
 });

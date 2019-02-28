@@ -20,6 +20,14 @@ describe('Module: actors_controller', function () {
         
         //set timeout
         this.timeout(7000);
+
+        //db_interface stub
+        db_interface = require("../module_mocking/db_interface.mock.js");
+        storage_interface = require("../module_mocking/storage_interface.mock.js");
+        actors_controller = proxyquire("../../../server_files/controllers/actors_controller", {"../interfaces/db_interface.js": db_interface, "../interfaces/storage_interface.js": storage_interface});
+        index_of_sort_query = 2;
+        index_of_match_query = 0;
+        index_of_limit_query = 2;
         
         actor_example = {
             name: "Name",
@@ -52,14 +60,6 @@ describe('Module: actors_controller', function () {
             also_known_as_lower: ["also_known_as"],
             record_origin: "record_origin"
         };
-            
-        //db_interface stub
-        db_interface = require("../module_mocking/db_interface.mock.js");
-        storage_interface = require("../module_mocking/storage_interface.mock.js");
-        actors_controller = proxyquire("../../../server_files/controllers/actors_controller", {"../interfaces/db_interface.js": db_interface, "../interfaces/storage_interface.js": storage_interface});
-        index_of_sort_query = 2;
-        index_of_match_query = 0;
-        index_of_limit_query = 2;
     });
     
     before(function(){
@@ -446,6 +446,42 @@ describe('Module: actors_controller', function () {
             expect(typeof result.failed).to.eq('undefined');
         });
         
+        assert(callback_spy.called);
+    });
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // 'updateActor' tests
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    it('updateActor', function () {
+
+        var fake_files = [{ link: "image_1_link", media_type: "image"}];
+        var delete_actor_spy = sinon.spy();
+        var create_actor_spy = sinon.spy();
+
+        actors_controller.deleteActor = function(existing_object_id, callback){
+            delete_actor_spy();
+            assert.equal(globals.dummy_object_id, existing_object_id);
+            callback({});
+        }
+
+        actors_controller.createActor = function(actor_data, passed_fake_files, callback){
+            create_actor_spy();
+            assert.isTrue(globals.compare_objects(actor_example, actor_data));
+            assert.isTrue(globals.compare_objects(fake_files[0], passed_fake_files[0]));
+            callback({});
+        }
+
+        actors_controller.updateActor(actor_example, fake_files, globals.dummy_object_id, function(result){
+            callback_spy();
+            assert.isTrue(globals.compare_objects({}, result));
+            expect(typeof result.failed).to.eq('undefined');
+        });
+        
+        assert(delete_actor_spy.called);
+        assert(create_actor_spy.called);
         assert(callback_spy.called);
     });
 });
