@@ -469,7 +469,7 @@ describe('Module: event_controller', function () {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    it('createEvent', function () {
+    it('createEvent', function (done) {
 
         var gallery_items = globals.dummy_object_id + "g";
         var db_insert_spy = sinon.spy();
@@ -528,6 +528,7 @@ describe('Module: event_controller', function () {
             assert(db_update_single_spy.called);
             assert(si_upload_spy.called);
             assert(callback_spy.called);
+            done()
         }).catch(function(error){
             throw error;
             console.log(error);
