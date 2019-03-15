@@ -20,10 +20,11 @@ describe('Module: event_controller', function () {
 
     var events_controller, db_interface, storage_interface, event_example, callback_spy, beef_chain_ids, index_of_limit_query;
 
+    //set timeout
+    this.timeout(globals.default_timeout);
+
     before(function(){
         
-        //set timeout
-        this.timeout(7000);
         //db_interface stub
         db_interface = require("../module_mocking/db_interface.mock.js");
         storage_interface = require("../module_mocking/storage_interface.mock.js");
@@ -471,6 +472,7 @@ describe('Module: event_controller', function () {
     
     it('createEvent', function (done) {
 
+        //this.timeout(8000); // A very long environment setup.
         var gallery_items = globals.dummy_object_id + "g";
         var db_insert_spy = sinon.spy();
         var db_get_spy = sinon.spy();
@@ -499,7 +501,11 @@ describe('Module: event_controller', function () {
 
         db_interface.updateSingle = function(insert_config, callback){
             db_update_single_spy();
-            callback(beef_chain_ids); 
+            callback({
+                _id: globals.dummy_object_id,
+                beef_chain_ids: beef_chain_ids,
+                gallery_items: gallery_items
+            }); 
         };
         
         var files = event_example.gallery_items;
@@ -528,7 +534,7 @@ describe('Module: event_controller', function () {
             assert(db_update_single_spy.called);
             assert(si_upload_spy.called);
             assert(callback_spy.called);
-            done()
+            done();
         }).catch(function(error){
             throw error;
             console.log(error);
