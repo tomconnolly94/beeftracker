@@ -76,9 +76,9 @@ echo "Building server files..."
 
 exit_code=2
 if $DEBUG_MODE ; then
-    gulp build || unsuccessful_exit exit_code
+    gulp build || unsuccessful_exit $exit_code
 else
-    gulp build > /dev/null || unsuccessful_exit exit_code
+    gulp build > /dev/null || unsuccessful_exit $exit_code
 fi
 
 echo "Build successful."
@@ -93,9 +93,9 @@ cd bf-dev/test
 echo "Running Unit Tests..."
 exit_code=4
 if $DEBUG_MODE ; then
-    ./run_tests.sh || unsuccessful_exit exit_code
+    ./run_tests.sh || unsuccessful_exit $exit_code
 else
-    ./run_tests.sh > /dev/null || unsuccessful_exit exit_code
+    ./run_tests.sh > /dev/null || unsuccessful_exit $exit_code
 fi
 
 echo "Unit tests successful."
@@ -117,7 +117,7 @@ if [ -n "$jobsvar" ]; then
     
 else
     echo "Server start was unsuccessful."
-    unsuccessful_exit exit_code
+    unsuccessful_exit $exit_code
 fi
 
 cd - > /dev/null
