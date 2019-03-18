@@ -559,7 +559,10 @@ describe('Module: event_controller', function () {
             link: globals.dummy_object_id
         }
         
-        db_interface.delete = function(insert_config, callback){
+        db_interface.delete = function(delete_config, callback){
+            if(delete_config == db_ref.get_current_event_table()){
+
+            }
             assert.exists(insert_config.table);
             assert.exists(insert_config.delete_multiple_records);
             assert.equal(false, insert_config.delete_multiple_records);
@@ -567,14 +570,11 @@ describe('Module: event_controller', function () {
             assert.exists(insert_config.match_query["_id"]);
             callback({ 
                 _id: globals.dummy_object_id,
-                gallery_items: [
-                    gallery_item_1,
-                    gallery_item_2
-                ]
+                beef_chain_ids: beef_chain_ids
             }); 
         };
         
-        var files = actor_example.gallery_items;
+        var files = event_example.gallery_items;
         
         storage_interface.remove = function(upload_config, callback){
             assert.equal(1, upload_config.items.length)
@@ -582,7 +582,7 @@ describe('Module: event_controller', function () {
             callback();
         };
 
-        actors_controller.deleteEvent(globals.dummy_object_id, function(result){
+        events_controller.deleteEvent(globals.dummy_object_id, function(result){
             callback_spy();
             expect(typeof result.failed).to.eq('undefined');
         });
@@ -599,30 +599,30 @@ describe('Module: event_controller', function () {
     it('updateEvent', function () {
 
         var fake_files = [{ link: "image_1_link", media_type: "image"}];
-        var delete_actor_spy = sinon.spy();
-        var create_actor_spy = sinon.spy();
+        var delete_event_spy = sinon.spy();
+        var create_event_spy = sinon.spy();
 
-        actors_controller.deleteEvent = function(existing_object_id, callback){
-            delete_actor_spy();
+        events_controller.deleteEvent = function(existing_object_id, callback){
+            delete_event_spy();
             assert.equal(globals.dummy_object_id, existing_object_id);
             callback({});
         }
 
-        actors_controller.createEvent = function(actor_data, passed_fake_files, callback){
-            create_actor_spy();
-            assert.isTrue(globals.compare_objects(actor_example, actor_data));
+        events_controller.createEvent = function(actor_data, passed_fake_files, callback){
+            create_event_spy();
+            assert.isTrue(globals.compare_objects(event_example, actor_data));
             assert.isTrue(globals.compare_objects(fake_files[0], passed_fake_files[0]));
             callback({});
         }
 
-        actors_controller.updateEvent(actor_example, fake_files, globals.dummy_object_id, function(result){
+        events_controller.updateEvent(event_example, fake_files, globals.dummy_object_id, function(result){
             callback_spy();
             assert.isTrue(globals.compare_objects({}, result));
             expect(typeof result.failed).to.eq('undefined');
         });
         
-        assert(delete_actor_spy.called);
-        assert(create_actor_spy.called);
+        assert(delete_event_spy.called);
+        assert(create_event_spy.called);
         assert(callback_spy.called);
     });
 });
