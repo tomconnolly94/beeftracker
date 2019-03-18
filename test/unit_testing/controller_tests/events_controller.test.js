@@ -7,6 +7,7 @@ var expect = chai.expect;
 
 //internal dependencies
 var db_ref = require("../../../server_files/config/db_config");
+var storage_config = require("../../../server_files/config/storage_config");
 var globals = require('../testing_globals.js');
 
 var get_index_of_aggregate_stage = function(aggregate_array, stage_name){
@@ -18,7 +19,7 @@ var get_index_of_aggregate_stage = function(aggregate_array, stage_name){
 
 describe('Module: event_controller', function () {
 
-    var events_controller, db_interface, storage_interface, event_example, callback_spy, beef_chain_ids, index_of_limit_query;
+    var events_controller, db_interface, storage_interface, event_example, callback_spy, beef_chain_ids, gallery_items;
 
     //set timeout
     this.timeout(globals.default_timeout);
@@ -549,36 +550,65 @@ describe('Module: event_controller', function () {
     
     it('deleteEvent', function () {
 
-        var gallery_item_1 = {
-            media_type: "image",
-            link: globals.dummy_object_id
-        }
+        var db_delete_event_spy = sinon.spy();
+        var db_delete_beef_chains_spy = sinon.spy();
+        var db_update_single_spy = sinon.spy();
+        var storage_remove_spy = sinon.spy();
 
-        var gallery_item_2 = {
-            media_type: "not_image",
-            link: globals.dummy_object_id
-        }
-        
         db_interface.delete = function(delete_config, callback){
-            if(delete_config == db_ref.get_current_event_table()){
+            if(delete_config.table == db_ref.get_current_event_table()){
+                db_delete_event_spy();
 
+                assert.exists(delete_config.table);
+                assert.exists(delete_config.delete_multiple_records);
+                assert.equal(false, delete_config.delete_multiple_records);
+                assert.exists(delete_config.match_query);
+                assert.exists(delete_config.match_query["_id"]);
             }
-            assert.exists(insert_config.table);
-            assert.exists(insert_config.delete_multiple_records);
-            assert.equal(false, insert_config.delete_multiple_records);
-            assert.exists(insert_config.match_query);
-            assert.exists(insert_config.match_query["_id"]);
+            else if(delete_config.table == db_ref.get_beef_chain_table()){
+                db_delete_beef_chains_spy();
+
+                assert.exists(delete_config.table);
+                assert.exists(delete_config.delete_multiple_records);
+                assert.equal(true, delete_config.delete_multiple_records);
+                assert.exists(delete_config.match_query);
+                assert.exists(delete_config.match_query["_id"]);
+            }
+            else{
+                throw "delete_config.table is not recognised.";
+            }
+
             callback({ 
                 _id: globals.dummy_object_id,
+                gallery_items: globals.event_example.gallery_items,
                 beef_chain_ids: beef_chain_ids
             }); 
         };
+
+        db_interface.updateSingle = function(update_config, callback){
+            db_update_single_spy();
+
+            assert.exists(update_config.table);
+            assert.equal(db_ref.get_beef_chain_table(), update_config.table);
+            assert.exists(update_config.match_id_object);
+            assert.exists(update_config.match_id_object._id);
+            assert.equal(globals.dummy_object_id, update_config.match_id_object._id);
+            assert.exists(update_config.update_clause);
+            assert.exists(update_config.update_clause["$pull"]);
+            assert.exists(update_config.update_clause["$pull"]["event_ids"]);
+            callback({
+                _id: globals.dummy_object_id,
+                event_ids: []
+            });
+        };
         
-        var files = event_example.gallery_items;
-        
-        storage_interface.remove = function(upload_config, callback){
-            assert.equal(1, upload_config.items.length)
-            assert.isTrue(globals.compare_objects(gallery_item_1, upload_config.items[0]));
+        storage_interface.remove = function(remove_config, callback){
+            storage_remove_spy();
+            assert.exists(remove_config.items);
+            assert.equal(1, remove_config.items.length);
+            assert.isTrue(globals.compare_objects(globals.event_example.gallery_items[1], remove_config.items[0]));
+            assert.exists(remove_config.record_type);
+            assert.equal(storage_config.get_event_images_folder(), remove_config.record_type);
             callback();
         };
 
@@ -587,6 +617,11 @@ describe('Module: event_controller', function () {
             expect(typeof result.failed).to.eq('undefined');
         });
         
+        assert(db_delete_event_spy.called);
+        assert(db_delete_beef_chains_spy.called);
+        assert(db_update_single_spy.called);
+        assert(storage_remove_spy.called);
+        assert(storage_remove_spy.called);
         assert(callback_spy.called);
     });
     

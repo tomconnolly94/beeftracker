@@ -19,7 +19,7 @@ var BSON = require('bson');
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
-var storage_ref = require("../config/storage_config.js");
+var storage_config = require("../config/storage_config.js");
 var storage_interface = require('../interfaces/storage_interface.js');
 var db_interface = require('../interfaces/db_interface.js');
 var format_embeddable_items = require('../tools/formatting.js').format_embeddable_items;
@@ -591,7 +591,7 @@ module.exports = {
 
             var remove_config = {
                 items: event.gallery_items.filter(gallery_item => gallery_item.media_type == "image"),
-                record_type: "events"
+                record_type: storage_config.get_event_images_folder()
             };
 
             var delete_promises = [];
