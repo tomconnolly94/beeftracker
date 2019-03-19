@@ -475,7 +475,7 @@ module.exports = {
             event_insert.gallery_items = format_embeddable_items(event_insert.gallery_items, files);
 
             var upload_config = {
-                record_type: storage_ref.get_event_images_folder(),
+                record_type: storage_config.get_event_images_folder(),
                 item_data: event_insert.gallery_items,
                 files: files
             };

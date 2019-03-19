@@ -617,12 +617,27 @@ describe('Module: event_controller', function () {
             expect(typeof result.failed).to.eq('undefined');
         });
         
-        assert(db_delete_event_spy.called);
-        assert(db_delete_beef_chains_spy.called);
-        assert(db_update_single_spy.called);
-        assert(storage_remove_spy.called);
-        assert(storage_remove_spy.called);
-        assert(callback_spy.called);
+        var promise = new Promise(function(resolve, reject) {
+            events_controller.deleteEvent(globals.dummy_object_id, function(result){
+                callback_spy();
+                resolve(result)
+            });
+        });
+        
+        promise.then(function(result) {
+
+            expect(typeof result.failed).to.eq('undefined');
+
+            assert(db_delete_event_spy.called);
+            assert(db_delete_beef_chains_spy.called);
+            assert(db_update_single_spy.called);
+            assert(storage_remove_spy.called);
+            assert(storage_remove_spy.called);
+            assert(callback_spy.called);
+            done();
+        }).catch(function(error){
+            throw error;
+        });
     });
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////
