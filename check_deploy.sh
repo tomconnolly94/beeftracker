@@ -78,7 +78,7 @@ exit_code=2
 if $DEBUG_MODE ; then
     gulp build || unsuccessful_exit $exit_code
 else
-    gulp build > /dev/null || unsuccessful_exit $exit_code
+    gulp build > /dev/null 2>&1 || unsuccessful_exit $exit_code
 fi
 
 echo "Build successful."

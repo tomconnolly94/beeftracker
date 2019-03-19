@@ -548,7 +548,7 @@ describe('Module: event_controller', function () {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    it('deleteEvent', function () {
+    it('deleteEvent', function (done) {
 
         var db_delete_event_spy = sinon.spy();
         var db_delete_beef_chains_spy = sinon.spy();
