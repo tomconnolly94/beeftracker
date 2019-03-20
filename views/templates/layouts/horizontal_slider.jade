@@ -28,6 +28,13 @@ mixin horizontal-slider-js(slider_id)
                     }
                 }
             });
+
+            //triggers image lazy loading of newly visible images on slideChange
+            swiper.on('slideChange', function () {
+                var instance = $('.lazy').data("plugin_lazy");
+                // loads all elements in current viewport threshold
+                instance.update();
+            });
         });
 
 mixin horizontal-slider(id, data, data_type, image_resize_params)
