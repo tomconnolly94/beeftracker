@@ -156,7 +156,7 @@ router.get("/about", token_authentication.recognise_user_token, blanket_middlewa
     
     response.render("pages/static/about.jade", view_parameters);
 }); // about_us page
-router.get("/actor", token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
+router.get("/actors", token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
     
     //access data from db
     var actors_promise = new Promise(function(resolve, reject){

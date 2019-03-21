@@ -109,7 +109,7 @@ echo ""
 cd bf-dev
 echo "Running Node server..."
 exit_code=5
-node index.js > /dev/null &
+node index.js "load_envs_manually" > /dev/null &
 server_pid=$(echo $! | tr ":" "\n")
 jobsvar=$(jobs)
 if [ -n "$jobsvar" ]; then

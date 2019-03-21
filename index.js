@@ -21,7 +21,7 @@ const compression = require('compression');
 const validation_controller = require("./server_files/validation/validation_controller");
 const validator = require('express-validator');
 const fs = require('fs');
-if(process.env.NODE_ENV == "local_dev"){
+if(process.argv[2] == "load_envs_manually"){
     const dotenv_result = require("dotenv").config();
     if (dotenv_result.error){ throw dotenv_result.error };
 }
