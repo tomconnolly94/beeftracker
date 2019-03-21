@@ -75,7 +75,7 @@ var compare_event_dates = function (a, b) {
     return b.event_date.valueOf() - a.event_date.valueOf();
 }
 
-var create_beef_chains = function(event, callback){
+var create_beef_chains = function(event, callback, failure_callback){
 
     var aggregate_array = [{
         $match: { $or: [] }
@@ -181,6 +181,9 @@ var create_beef_chains = function(event, callback){
             logger.submit_log(logger.LOG_TYPE.ERROR, error);
             callback(error);
         });
+    },
+    function(error_object){
+        callback(error_object);
     });
 };
 
@@ -531,6 +534,9 @@ module.exports = {
                             beef_chain_ids: full_event.beef_chain_ids,
                             gallery_items: full_event.gallery_items
                         });
+                    },
+                    function(error_object){
+                        callback(error_object);
                     });
                 },
                 function(error_object){
