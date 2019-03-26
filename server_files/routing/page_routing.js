@@ -30,7 +30,8 @@ if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if 
 
 var view_parameters_global = { 
     file_server_url_prefix: globals.file_server_url_prefix,
-    server_rendered: true
+    server_rendered: true,
+    dev_env: process.env.NODE_ENV == "local_dev" ? true : false
 }
 
 function calculate_event_rating(votes){
@@ -98,11 +99,11 @@ function blanket_middleware(request, response, next){
 
 router.get("/", token_authentication.recognise_user_token, blanket_middleware, function(request, response){
     
-    var featured_data_promise = new Promise(function(resolve, reject){
-        event_controller.findEvents({ limit: 3, featured: true, decreasing_order: "date_added" }, function(data){
-            resolve(data);
-        });
-    });
+    // var featured_data_promise = new Promise(function(resolve, reject){
+    //     event_controller.findEvents({ limit: 3, featured: true, decreasing_order: "date_added" }, function(data){
+    //         resolve(data);
+    //     });
+    // });
     
     var new_beef_data_promise = new Promise(function(resolve, reject){
        event_controller.findEvents({ limit: 6, featured: false, decreasing_order: "date_added" }, function(data){
@@ -134,13 +135,13 @@ router.get("/", token_authentication.recognise_user_token, blanket_middleware, f
        });
     });
 
-    Promise.all([ featured_data_promise, new_beef_data_promise, slider_data_promise, classic_beef_data_promise  ]).then(function(values) {
+    Promise.all([ /*featured_data_promise,*/ new_beef_data_promise, slider_data_promise, classic_beef_data_promise  ]).then(function(values) {
         
         var view_parameters = Object.assign({}, view_parameters_global);
-        view_parameters.featured_data = values[0];
-        view_parameters.new_beef_data = values[1];
-        view_parameters.slider_data = values[2];
-        view_parameters.classic_beef_data = values[3];
+        //view_parameters.featured_data = values[0];
+        view_parameters.new_beef_data = values[0];
+        view_parameters.slider_data = values[1];
+        view_parameters.classic_beef_data = values[2];
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
         
         response.render("pages/home.jade", view_parameters);

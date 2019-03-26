@@ -17,7 +17,7 @@ append body
                         | to start contributing today!
 
     div.bt-content
-        - if(featured_data.length > 2){
+        - if(featured_data && featured_data.length == 3){
             +featured-beef-section(featured_data, "events", "c_fill,g_face,h_215,w_350")
             +adsense-banner-ad()
         - }

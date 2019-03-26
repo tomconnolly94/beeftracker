@@ -162,8 +162,8 @@ append body
                         +voting-panel()
                     - }
 
-                    p.beef-description
-                        #{event_data.description}
+                    p.beef-description #{event_data.description}
+                    
                     - if(related_events.length > 0){
                         +related-beefs(related_events, "events", "c_fill,g_face,h_120,w_120", event_data._id)
                     - }
