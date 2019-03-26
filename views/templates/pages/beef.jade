@@ -135,6 +135,11 @@ append body
             
             div.beef-content-container
                 div.col-md-12.beef-summary
+
+                    form(action="/api/report-broken-link",method="POST")
+                        div.main-graphic-undertext
+                            input(type="submit",value="Is the media below broken? Report it here with a single click!")
+
                     - if(main_graphic.media_type == "soundcloud_embed")
                         div.beef-body-content-soundcloud
                             iframe(height="300", scrolling="no", frameborder="no", allow="autoplay", src=main_graphic.link)
@@ -157,7 +162,7 @@ append body
                         +voting-panel()
                     - }
 
-                    p.
+                    p.beef-description
                         #{event_data.description}
                     - if(related_events.length > 0){
                         +related-beefs(related_events, "events", "c_fill,g_face,h_120,w_120", event_data._id)

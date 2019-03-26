@@ -143,6 +143,28 @@
                 }
             }
         }
+
+        div.main-graphic-undertext{
+            text-align: center;
+            font-size: 13px;
+            padding: 5px 20px;
+
+            input{
+                background:none!important;
+                color:inherit;
+                border:none; 
+                padding:0!important;
+                font: inherit;
+                /*border is optional*/
+                border-bottom:1px solid #444; 
+                cursor: pointer;
+            }
+        }
+
+        p.beef-description{
+            text-align: justify;
+            text-justify: inter-word;
+        }
     }
 
     @include media-breakpoint-down(sm) {

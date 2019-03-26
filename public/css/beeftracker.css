@@ -6538,6 +6538,22 @@ figure.masonry-item.soundcloud-item .play-button {
       @media (max-width: 667px) {
         .beef-content-container .beef-summary .beef-thumb img {
           padding-right: 10px; } }
+  .beef-content-container .beef-summary div.main-graphic-undertext {
+    text-align: center;
+    font-size: 13px;
+    padding: 5px 20px; }
+    .beef-content-container .beef-summary div.main-graphic-undertext input {
+      background: none !important;
+      color: inherit;
+      border: none;
+      padding: 0 !important;
+      font: inherit;
+      /*border is optional*/
+      border-bottom: 1px solid #444;
+      cursor: pointer; }
+  .beef-content-container .beef-summary p.beef-description {
+    text-align: justify;
+    text-justify: inter-word; }
   @media (max-width: 767.98px) {
     .beef-content-container .beef-content-left-side .beef-content-thumb {
       text-align: center; }
