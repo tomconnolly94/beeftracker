@@ -136,9 +136,10 @@ append body
             div.beef-content-container
                 div.col-md-12.beef-summary
 
-                    form(action="/api/report-broken-link",method="POST")
-                        div.main-graphic-undertext
-                            input(type="submit",value="Is the media below broken? Report it here with a single click!")
+                    - if(main_graphic.media_type != "image")
+                        form(action="/api/report-broken-link",method="POST")
+                            div.main-graphic-undertext
+                                input(type="submit",value="Is the media below broken? Report it here with a single click!")
 
                     - if(main_graphic.media_type == "soundcloud_embed")
                         div.beef-body-content-soundcloud
