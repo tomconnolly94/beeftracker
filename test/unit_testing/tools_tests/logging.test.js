@@ -1,9 +1,7 @@
 //external dependencies
-var proxyquire = require("proxyquire");
 var chai = require('chai');
 var sinon = require("sinon");
 var assert = chai.assert;
-var expect = chai.expect;
 
 //internal dependencies
 var globals = require('../testing_globals.js');

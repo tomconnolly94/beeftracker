@@ -144,6 +144,7 @@ append body
                     - if(main_graphic.media_type == "soundcloud_embed")
                         div.beef-body-content-soundcloud
                             iframe(height="300", scrolling="no", frameborder="no", allow="autoplay", src=main_graphic.link)
+                            - console.log(main_graphic.link)
                     - else if(main_graphic.media_type == "youtube_embed")
                         div.beef-body-content-youtube-video
                             iframe(id="youtube_iframe", height="315", scrolling="no", frameborder="no", src=main_graphic.link, allow="autoplay; encrypted-media")
