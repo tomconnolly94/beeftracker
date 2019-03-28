@@ -112,12 +112,18 @@ append body
     
     - var letter_mapping = ["one", "two", "three", "four", "five" ]
     
-    - var aggressor_index;
-    - var target_index;
-        
-    - aggressor_index = event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) != -1 ? event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) : event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[1]))
-    - target_index = event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) != -1 ? event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) : event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[1]))
+    - var aggressor_index = event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) != -1 ? event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) : event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[1]))
+    - var target_index = event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) != -1 ? event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) : event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[1]))
     
+    - var aggressor_ids_to_string = JSON.stringify(event_data.aggressors.map(function(aggressor){ return aggressor._id; }));
+    - var targets_to_string = JSON.stringify(event_data.targets.map(function(target){ return target._id; }));
+    - var gallery_items_to_string = JSON.stringify(event_data.gallery_items);
+    - var data_sources_to_string = JSON.stringify(event_data.data_sources);
+    - var tags_to_string = JSON.stringify(event_data.tags);
+    - var category_id_to_string = event_data.categories[0].cat_id;
+
+    - var edit_beef_params = `_id=${event_data._id}&title=${event_data.title}&date=${event_data.event_date.toISOString()}&description=${event_data.description}&category=${category_id_to_string}&aggressors=${aggressor_ids_to_string}&targets=${targets_to_string}&gallery_items=${gallery_items_to_string}&data_sources=${data_sources_to_string}&tags=${tags_to_string}`;
+
     div.bt-content-full-width.beef-background-banner(style="background-image: url('" + file_server_url_builder(file_server_url_prefix, "events", event_data.cover_image, "c_fill,g_face,h_150,w_150", "webp") + "')")
 
     div.bt-content.bt-content-shift-up
@@ -132,6 +138,8 @@ append body
                     span.category-name #{event_data.categories[0].name}
                 div.beef-content-contribute
                     a.btn.btn-primary.add-beef-button(href="/add-beef") Contribute
+                div.beef-content-contribute
+                    a.btn.btn-primary.add-beef-button(href="/add-beef?" + edit_beef_params) Edit
             
             div.beef-content-container
                 div.col-md-12.beef-summary

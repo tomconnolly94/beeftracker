@@ -6589,7 +6589,8 @@ figure.masonry-item.soundcloud-item .play-button {
     padding-bottom: 56.25%;
     padding-top: 35px;
     height: 0;
-    overflow: hidden; }
+    overflow: hidden;
+    margin-bottom: 50px; }
     .beef-content-container .beef-body-content-video iframe {
       border: 5px solid #DF3E3E;
       border-radius: 5px;
@@ -6707,7 +6708,8 @@ a.btn {
 
 .btn {
   text-transform: uppercase;
-  margin: 2px; }
+  margin: 2px;
+  font-size: 0.8rem; }
   .btn span.fas:first-child {
     padding-right: 5px; }
   .btn.btn-lg {

@@ -39,6 +39,18 @@ append scripts
                     ['height', []]
                 ]
             });*/
+            var urlParams = new URLSearchParams(window.location.search);
+            console.log(urlParams);
+            console.log(urlParams.get("_id"));
+            document.getElementById("beef_title").value = urlParams.get("title");
+            document.getElementById("beef_category").value = JSON.parse(urlParams.get("category"));
+            document.getElementById("beef_description").value = urlParams.get("description");
+            document.getElementById("beef_tags").value = JSON.parse(urlParams.get("tags"));
+            document.getElementById("beef_tags").value = JSON.parse(urlParams.get("tags"));
+            console.log(urlParams.get("date"));
+            console.log(urlParams.get("description"));
+            console.log(urlParams.get("category"));
+            console.log(JSON.parse(urlParams.get("aggressors")));
         });
     +upload-gallery-item-modal-js()
     +select-actor-modal-js()
