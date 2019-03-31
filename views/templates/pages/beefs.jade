@@ -32,8 +32,11 @@ append body
                +horizontal-slider('featured_beefs_slider_full', slider_data, "events", "c_fill,g_face,h_219,w_340")
 
         
-append scripts
+append js_scripts
     +horizontal-slider-js('featured_beefs_slider')
     +horizontal-slider-js('featured_beefs_slider_full')
     +horizontal-slider-js('featured_beefs_slider_dark')
     script(src="/bower_components/swiper/dist/js/swiper.js")
+    script(src="/component_controllers/category_browser/category_browser_controller.js" async)
+    script(src="/component_controllers/pagination/pagination_controller.js" async)
+    script(src="/component_controllers/section_control_toolbar/section_control_toolbar_controller.js" async)

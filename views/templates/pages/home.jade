@@ -63,8 +63,12 @@ append body
                +horizontal-slider('featured_beefs_slider_full', slider_data, "events", "c_fill,g_face,h_219,w_340")
 
 
-append scripts
+append js_scripts
+    //- home.jade controller js
     //-+horizontal-slider-js('featured_beefs_slider')
     //-+horizontal-slider-js('featured_beefs_slider_full')
     +horizontal-slider-js('featured_beefs_slider_full')
     script(src="/bower_components/swiper/dist/js/swiper.js")
+    //- mixin client controller js
+    script(src="/component_controllers/login/login_form_controller.js" async)
+    script(src="/component_controllers/category_browser/category_browser_controller.js" async)

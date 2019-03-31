@@ -6715,6 +6715,8 @@ a.btn {
   .btn.btn-lg {
     font-size: 14px;
     padding: 0.6rem 1rem; }
+  .btn.btn-banner {
+    margin: 10px 0px; }
   .btn.btn-float {
     float: right; }
   .btn.btn-sm, .btn.btn-md {

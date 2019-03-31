@@ -12,8 +12,6 @@ mixin upload-gallery-item-modal-js()
         });
 
 mixin upload-gallery-item-modal()
-    append scripts
-        script(src="/component_controllers/upload_gallery_item_modal/upload_gallery_item_modal_controller.js" async)
         
     +modal('Upload', '#', false)(id="upload_gallery_item_modal", large_modal=true)
         div.row

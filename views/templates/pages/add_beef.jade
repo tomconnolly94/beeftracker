@@ -10,57 +10,6 @@ include ../components/error_panel/error_panel.jade
 include ../components/versus_panel/versus_panel.jade
 include ../components/google_adsense/adsense_banner_ad.jade
 
-append scripts
-    script.
-        $(function() {
-            $('#beef_category').select2({
-                placeholder: 'Select a Beef Category',
-                theme: 'classic',
-                width: "100%"
-            });
-
-            $('#beef_tags').select2({
-                //placeholder: 'Type in beef tags',
-                theme: 'classic',
-                tags: true,
-                tokenSeparators: [',', ' '],
-                width: "100%"
-            });
-
-            /*$('#beef_content_summernote').summernote({
-                tabsize: 2,
-                height: 300,
-                toolbar: [
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough', 'superscript', 'subscript']],
-                    ['fontsize', []],
-                    ['color', []],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['height', []]
-                ]
-            });*/
-            var urlParams = new URLSearchParams(window.location.search);
-            console.log(urlParams);
-            console.log(urlParams.get("_id"));
-            document.getElementById("beef_title").value = urlParams.get("title");
-            document.getElementById("beef_category").value = JSON.parse(urlParams.get("category"));
-            document.getElementById("beef_description").value = urlParams.get("description");
-            document.getElementById("beef_tags").value = JSON.parse(urlParams.get("tags"));
-            document.getElementById("beef_tags").value = JSON.parse(urlParams.get("tags"));
-            console.log(urlParams.get("date"));
-            console.log(urlParams.get("description"));
-            console.log(urlParams.get("category"));
-            console.log(JSON.parse(urlParams.get("aggressors")));
-        });
-    +upload-gallery-item-modal-js()
-    +select-actor-modal-js()
-    //-+add-actor-modal-js()
-
-    script(src="/bower_components/select2/dist/js/select2.full.js")
-    //-script(src="/modules/summernote/dist/summernote-lite.js" async)
-    script(src="/bower_components/smartwizard/dist/js/jquery.smartWizard.js")
-    script(src="/js/submit_controllers/submit_event_controller.js" async)
-
 append body
     div.bt-content
         +add-actor-modal(actor_variable_fields)
@@ -129,3 +78,51 @@ append body
                             div.button-group.float-right
                                 //-a(href="#").btn.btn-secondary Cancel
                                 button(type="submit").btn.btn-primary.submit_new_event_button Submit
+
+append js_scripts
+    script.
+        $(function() {
+            $('#beef_category').select2({
+                placeholder: 'Select a Beef Category',
+                theme: 'classic',
+                width: "100%"
+            });
+
+            $('#beef_tags').select2({
+                //placeholder: 'Type in beef tags',
+                theme: 'classic',
+                tags: true,
+                tokenSeparators: [',', ' '],
+                width: "100%"
+            });
+
+            /*$('#beef_content_summernote').summernote({
+                tabsize: 2,
+                height: 300,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontsize', []],
+                    ['color', []],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', []]
+                ]
+            });*/
+        });
+    +upload-gallery-item-modal-js()
+    +select-actor-modal-js()
+
+    //- libs
+    script(src="/bower_components/select2/dist/js/select2.full.js")
+    //-script(src="/modules/summernote/dist/summernote-lite.js" async)
+    script(src="/bower_components/smartwizard/dist/js/jquery.smartWizard.js")
+
+    //- mixin client controller js
+    script(src="/component_controllers/add_list/add_list_controller.js")
+    script(src="/js/load_url_params_to_page.js")
+    script(src="/component_controllers/add_actor_modal/add_actor_modal.js" async)
+    script(src="/component_controllers/add_actor_modal/add_actor_modal_controller.js" async)
+    script(src="/js/submit_controllers/submit_actor_controller.js" async)
+    script(src="/js/submit_controllers/submit_event_controller.js" async)
+    script(src="/component_controllers/select_actor_modal/select_actor_modal_controller.js" async)
+    script(src="/component_controllers/upload_gallery_item_modal/upload_gallery_item_modal_controller.js" async)

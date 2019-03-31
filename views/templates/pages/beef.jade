@@ -9,11 +9,6 @@ include ../layouts/masonry_gallery.jade
 include ../components/google_adsense/adsense_banner_ad.jade
 include ../template_helper_functions/file_server_url_builder.jade
 
-append scripts
-    script(src="/bower_components/shufflejs/dist/shuffle.js")
-    script(src="/bower_components/fancybox/dist/jquery.fancybox.js" async)
-    script(src="/bower_components/select2/dist/js/select2.full.js")
-
 append body_scripts
     +masonry-gallery-script()
     +timeline-section-js()
@@ -238,4 +233,14 @@ append body
             +adsense-banner-ad()
             +comment-box-section(comment_data, "event")
 
+append js_scripts
+    //- libs
+    script(src="/bower_components/shufflejs/dist/shuffle.js")
+    script(src="/bower_components/fancybox/dist/jquery.fancybox.js" async)
+    script(src="/bower_components/select2/dist/js/select2.full.js")
 
+    //- page client controller js
+    script(src="/component_controllers/comment_box/comment_box_controller.js", async)
+
+    //- mixin client controller js
+    script(src="/component_controllers/voting_panel/voting_panel_controller.js")

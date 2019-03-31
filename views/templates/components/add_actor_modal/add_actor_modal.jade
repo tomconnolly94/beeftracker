@@ -84,7 +84,7 @@ mixin add-actor-modal(actor_variable_fields, optional_scraped_actor_data)
                                                 input(type="date").form-control#actor_dob
                                     div.col-md-12
                                         div.row#variable_fields_panel
-                                            +add_actor_variable_field_panel([])
+                                            +add-actor-variable-field-panel([])
                                     div.col-md-12
                                         div.row
                                             div.form-group.col-md-12
@@ -139,8 +139,3 @@ mixin add-actor-modal(actor_variable_fields, optional_scraped_actor_data)
                                                     select.form-control.associated-actors-select
                                                         option(image_src="http://cdn.edgecast.steamstatic.com/steamcommunity/public/images/avatars/64/64e8917b85a0f5e20565651119c60f3d8d363898_full.jpg") Obama
                                                         option(image_src="https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_400x400.jpg") Trump
-
-    append scripts
-        script(src="/component_controllers/add_actor_modal/add_actor_modal.js" async)
-        script(src="/component_controllers/add_actor_modal/add_actor_modal_controller.js" async)
-        script(src="/js/submit_controllers/submit_actor_controller.js" async)

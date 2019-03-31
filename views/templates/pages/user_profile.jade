@@ -8,9 +8,6 @@ include ../components/google_adsense/adsense_banner_ad.jade
 
 append body_scripts
     //-+masonry-gallery-script()
-    
-append scripts
-    script(src="/js/submit_controllers/submit_user_data_controller.js")
 
 append body
 
@@ -63,10 +60,13 @@ append body
                             li.actor-attribute
                                 span Beef score: #{user_data.contribution_score}
                                 
-                div.row(style="margin-top:50px;")
+                //-div.row(style="margin-top:50px;")
                     div.col-md-6
                         h2 Beef you have contributed to:
                         +vertical-beefs(events_added_by_user, "events", "c_fill,g_face,h_120,w_116")
                     div.col-md-6
                         h2 Recently viewed:
                         +vertical-beefs(recently_viewed_events, "events", "c_fill,g_face,h_120,w_116")
+
+append js_scripts
+    script(src="/js/submit_controllers/submit_user_data_controller.js")

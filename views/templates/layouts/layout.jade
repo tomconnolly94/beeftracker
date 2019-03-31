@@ -10,9 +10,7 @@ doctype html
 html(lang="en")
 
     head
-    
-        block head_tags
-        
+            
         title Beeftracker | Home of Conflict
         //meta tags
         meta(name="author" content="Tom Connolly")
@@ -43,6 +41,7 @@ html(lang="en")
                 google_ad_client: "ca-pub-2566324736007588",
                 enable_page_level_ads: true
             });
+
     
     body
         div.loader
@@ -154,8 +153,7 @@ html(lang="en")
         //+register-modal()
         block body_scripts
         
-        div#fb-root    
-        block scripts
+        div#fb-root
         
         script.
             $(function() { //code to exexcute lazy loading of images
@@ -248,3 +246,7 @@ html(lang="en")
             /*window.addEventListener("load", function(event) {
                 lazyload();
             });*/
+
+        block js_scripts
+            //- mixin client js controllers
+            script(src="/component_controllers/inline_beef_search/inline_beef_search_controller.js" async)

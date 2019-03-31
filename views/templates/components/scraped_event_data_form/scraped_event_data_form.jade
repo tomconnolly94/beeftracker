@@ -101,14 +101,3 @@ mixin scraped-data-event-form(scraped_record)
                     div.row
                         divcol-md-2.offset
                             input.submit_event(type="button", x-event-id=scraped_record._id value="Submit")
-    
-    append scripts
-        script(src="/component_controllers/scraped_event_data_form/scraped_event_data_form_controller.js")
-        script.
-            $('.beef-tags').select2({
-                //placeholder: 'Type in beef tags',
-                theme: 'classic',
-                tags: true,
-                tokenSeparators: [',', ' '],
-                width: "100%"
-            });

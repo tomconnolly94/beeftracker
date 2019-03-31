@@ -45,7 +45,7 @@ $(function(){
         $(this).addClass("active"); //add active class to seelcted option
         
         var template_dir = "add_actor_modal";
-        var template_name = "add_actor_variable_field_panel";
+        var template_name = "add-actor-variable-field-panel";
         var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
         var browser = $("#browser").attr("value"); //extract file server url prefix from hidden div
         
