@@ -6,9 +6,6 @@ include ../layouts/masonry_gallery.jade
 include ../layouts/vertical_beef_list.jade
 include ../components/google_adsense/adsense_banner_ad.jade
 
-append body_scripts
-    //-+masonry-gallery-script()
-
 append body
 
     - if(user_data.d_o_b instanceof Date){}
@@ -69,4 +66,4 @@ append body
                         +vertical-beefs(recently_viewed_events, "events", "c_fill,g_face,h_120,w_116")
 
 append js_scripts
-    script(src="/js/submit_controllers/submit_user_data_controller.js")
+    script(src="/js/user_profile.js")

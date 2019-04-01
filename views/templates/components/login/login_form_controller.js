@@ -1,6 +1,5 @@
 $(function(){
     
-        
     //take any validation error messgages and display them to the error panel
     function render_login_modal_error_messages(error_messages){
 

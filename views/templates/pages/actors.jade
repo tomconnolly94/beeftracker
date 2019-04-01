@@ -1,7 +1,7 @@
 extends ../layouts/layout.jade
 include ../components/trending_beef/trending_beef.jade
 include ../components/category_browser/category_browser.jade
-include ../components/pagination/pagination.jade
+//-include ../components/pagination/pagination.jade
 include ../components/section_control_toolbar/section_control_toolbar.jade
 include ../components/thumbnail_grid/thumbnail_grid.jade
 include ../components/google_adsense/adsense_banner_ad.jade
@@ -19,11 +19,11 @@ append body
                 +section-control-toolbar(["All", "New"], "actors")
             div.row#section_toolbar_display_actor_grid
                 +thumbnail-grid(actor_data, "actors")
-            //div.row
+            //-div.row
                 div.col-md-12
                     +pagination()
                     
-            //div.section-toolbar
+            //-div.section-toolbar
                 div.section-toolbar-menu
                     ul.list-sections
                         li.active
@@ -42,5 +42,4 @@ append body
         +add-beef-cta()
 
 append js_scripts
-    script(src="/component_controllers/pagination/pagination_controller.js" async)
-    script(src="/component_controllers/section_control_toolbar/section_control_toolbar_controller.js" async)
+    script(src="/js/actors.js" async)

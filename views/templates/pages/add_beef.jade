@@ -4,7 +4,6 @@ include ../components/upload_gallery_item_modal/upload_gallery_item_modal.jade
 include ../components/select_actor_modal/select_actor_modal.jade
 include ../components/add_actor_modal/add_actor_modal.jade
 include ../components/gallery_manager/gallery_manager.jade
-//include ../components/add_data_sources/add_data_sources.jade
 include ../components/add_list/add_list.jade
 include ../components/error_panel/error_panel.jade
 include ../components/versus_panel/versus_panel.jade
@@ -80,49 +79,4 @@ append body
                                 button(type="submit").btn.btn-primary.submit_new_event_button Submit
 
 append js_scripts
-    script.
-        $(function() {
-            $('#beef_category').select2({
-                placeholder: 'Select a Beef Category',
-                theme: 'classic',
-                width: "100%"
-            });
-
-            $('#beef_tags').select2({
-                //placeholder: 'Type in beef tags',
-                theme: 'classic',
-                tags: true,
-                tokenSeparators: [',', ' '],
-                width: "100%"
-            });
-
-            /*$('#beef_content_summernote').summernote({
-                tabsize: 2,
-                height: 300,
-                toolbar: [
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough', 'superscript', 'subscript']],
-                    ['fontsize', []],
-                    ['color', []],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['height', []]
-                ]
-            });*/
-        });
-    +upload-gallery-item-modal-js()
-    +select-actor-modal-js()
-
-    //- libs
-    script(src="/bower_components/select2/dist/js/select2.full.js")
-    //-script(src="/modules/summernote/dist/summernote-lite.js" async)
-    script(src="/bower_components/smartwizard/dist/js/jquery.smartWizard.js")
-
-    //- mixin client controller js
-    script(src="/component_controllers/add_list/add_list_controller.js")
-    script(src="/js/load_url_params_to_page.js")
-    script(src="/component_controllers/add_actor_modal/add_actor_modal.js" async)
-    script(src="/component_controllers/add_actor_modal/add_actor_modal_controller.js" async)
-    script(src="/js/submit_controllers/submit_actor_controller.js" async)
-    script(src="/js/submit_controllers/submit_event_controller.js" async)
-    script(src="/component_controllers/select_actor_modal/select_actor_modal_controller.js" async)
-    script(src="/component_controllers/upload_gallery_item_modal/upload_gallery_item_modal_controller.js" async)
+    script(src="/js/add_beef.js" async)

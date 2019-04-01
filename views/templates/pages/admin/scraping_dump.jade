@@ -2,15 +2,6 @@ extends ../../layouts/layout.jade
 include ../../components/scraped_event_data_form/scraped_event_data_form.jade
 include ../../components/add_actor_modal/add_actor_modal.jade
 
-append js_scripts 
-    //- mixin client controller js
-    script(src="/component_controllers/add_actor_modal/add_actor_modal.js" async)
-    script(src="/component_controllers/add_actor_modal/add_actor_modal_controller.js" async)
-    script(src="/js/submit_controllers/submit_actor_controller.js" async)
-    script(src="/bower_components/smartwizard/dist/js/jquery.smartWizard.js")
-    script(src="/bower_components/select2/dist/js/select2.full.js")
-    script(src="/component_controllers/add_list/add_list_controller.js" async)
-
 append body
     div.bt-content
     
@@ -25,13 +16,5 @@ append body
     div.bt-content
         +add-actor-modal(actor_variable_fields)
 
-append js_scripts
-    script(src="/component_controllers/scraped_event_data_form/scraped_event_data_form_controller.js")
-    script.
-        $('.beef-tags').select2({
-            //placeholder: 'Type in beef tags',
-            theme: 'classic',
-            tags: true,
-            tokenSeparators: [',', ' '],
-            width: "100%"
-        });
+append js_scripts 
+    script(src="/js/scraping_dump.js" async)

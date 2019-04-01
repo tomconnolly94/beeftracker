@@ -43,14 +43,16 @@ describe('Module: actors_controller', function () {
             gallery_items: [{
                 media_type: "image",
                 link: "link1",
-                file_name: "image1",
-                file: { name: "file1" }
+                file_name: "link1",
+                file: { name: "file1", originalname: "link1" },
+                main_graphic: true
             },
             {
                 media_type: "image",
                 link: "link2",
                 file_name: "image2",
-                file: { name: "file2" }
+                file: { name: "file2", originalname: "link2" },
+                main_graphic: false
             }],
             img_title_thumbnail: "",
             img_title_fullsize: "",
@@ -384,12 +386,12 @@ describe('Module: actors_controller', function () {
             }); 
         };
         
-        var files = actor_example.gallery_items;
+        var files = [ actor_example.gallery_items[0].file, actor_example.gallery_items[1].file];
         
         storage_interface.upload = function(upload_config, callback){            
             callback(upload_config.item_data);
         };
-        
+                
         actors_controller.createActor(actor_example, files, function(result){
             callback_spy();
             

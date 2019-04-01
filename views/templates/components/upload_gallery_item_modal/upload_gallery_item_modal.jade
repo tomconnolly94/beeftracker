@@ -1,16 +1,5 @@
 include ../../layouts/modal.jade
 
-mixin upload-gallery-item-modal-js()
-    script.
-        $(function() {
-            $('#upload_type').select2({
-                placeholder: 'Select an Upload Type',
-                theme: 'classic',
-                width: "100%",
-                minimumResultsForSearch: -1
-            });
-        });
-
 mixin upload-gallery-item-modal()
         
     +modal('Upload', '#', false)(id="upload_gallery_item_modal", large_modal=true)

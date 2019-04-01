@@ -76,9 +76,9 @@ app.use('/favicon.ico', function(request, response){
     response.end(img, 'binary');
 }); //route to reference logo favicon
 app.use('/images', express.static(__dirname + '/public/assets/images/other_graphics')); //route to reference logo images
-app.use('/stylesheets', express.static(__dirname + '/public/css/')); //route to reference css scripts
+app.use('/stylesheets', express.static(__dirname + '/public/dist/css/')); //route to reference css scripts
 app.use('/webfonts', express.static(__dirname + '/public/fonts/')); //route to reference css scripts
-app.use('/js', express.static(__dirname + '/public/javascript/')); //route to reference javascript files
+app.use('/js', express.static(__dirname + '/public/dist/javascript/')); //route to reference javascript files
 app.use('/modules', express.static(__dirname + '/node_modules/')); //route to reference npm library files
 app.use('/bower_components', express.static(__dirname + '/bower_components/')); //route to reference bower library files
 app.use('/component_controllers', express.static(__dirname + '/views/templates/components/')); //route to reference client side controller scripts

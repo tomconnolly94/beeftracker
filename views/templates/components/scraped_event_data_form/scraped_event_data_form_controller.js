@@ -1,4 +1,15 @@
 $(function(){
+
+
+    $('.beef-tags').select2({
+        //placeholder: 'Type in beef tags',
+        theme: 'classic',
+        tags: true,
+        tokenSeparators: [',', ' '],
+        width: "100%"
+    });
+
+
     //brief basic validation to avoid using the server for trivial mistakes
     function validate_event_submission(event_submission){
         

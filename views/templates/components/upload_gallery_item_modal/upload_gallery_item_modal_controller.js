@@ -1,5 +1,13 @@
 $(function(){
     
+    //init components
+    $('#upload_type').select2({
+        placeholder: 'Select an Upload Type',
+        theme: 'classic',
+        width: "100%",
+        minimumResultsForSearch: -1
+    });
+
     //array to hold all current gallery items, purely to keep a state outside of the media submit button handler
     let gallery_items = [];
     let set_as_main_graphic_used = false;

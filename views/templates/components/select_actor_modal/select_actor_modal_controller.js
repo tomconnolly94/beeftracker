@@ -1,5 +1,20 @@
 $(function(){
     
+    //init components
+    $('#select_actor').select2({
+        placeholder: 'Select actor ',
+        theme: 'classic',
+        width: "100%",
+        dropdownParent: $("#selector_actor_modal")
+    });
+
+    $('#selector_actor_modal #add_new_actor').click(function() {
+        $('#selector_actor_modal').modal('hide');
+        $('#add_actor_modal').modal({
+            show: true
+        });
+    });
+
     var aggressors = [];
     var targets = [];
     var template_dir = "versus_panel";
