@@ -45,7 +45,7 @@ append body
     - var tags_to_string = JSON.stringify(event_data.tags);
     - var category_id_to_string = event_data.categories[0].cat_id;
 
-    - var edit_beef_params = `_id=${event_data._id}&title=${event_data.title}&date=${event_data.event_date.toISOString()}&description=${event_data.description}&category=${category_id_to_string}&aggressors=${aggressor_ids_to_string}&targets=${targets_to_string}&gallery_items=${gallery_items_to_string}&data_sources=${data_sources_to_string}&tags=${tags_to_string}`;
+    - var edit_beef_params = `_id=${event_data._id}&title=${event_data.title}&date=${event_data.event_date.toISOString()}&description=${event_data.description}&cat_id=${category_id_to_string}&aggressors=${aggressor_ids_to_string}&targets=${targets_to_string}&gallery_items=${gallery_items_to_string}&data_sources=${data_sources_to_string}&tags=${tags_to_string}`;
 
     div.bt-content-full-width.beef-background-banner(style="background-image: url('" + file_server_url_builder(file_server_url_prefix, "events", event_data.cover_image, "c_fill,g_face,h_150,w_150", "webp") + "')")
 

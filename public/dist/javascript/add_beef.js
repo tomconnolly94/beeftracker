@@ -16918,29 +16918,21 @@ $(function(){
     console.log(urlParams);
     console.log(urlParams.get("_id"));
     document.getElementById("beef_title").value = urlParams.get("title");
-    document.getElementById("beef_category").value = JSON.parse(urlParams.get("category"));
     document.getElementById("beef_description").value = urlParams.get("description");
-    var beef_tags = JSON.parse(urlParams.get("tags"));
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+    $('#beef_category').val(JSON.parse(urlParams.get("category"))).trigger('change');
 
-    write_list_to_display("add_list_input_add_event_data_sources", JSON.parse(urlParams.get("tags")));
+    $("#beef_tags").val(JSON.parse(urlParams.get("tags"))).trigger('change');
 
-    //for(var i = 0; i < beef_tags.length; i++){
-        document.getElementById("add_list_input_add_event_data_sources").value = beef_tags[1];
-        document.getElementById("add_event_data_sources_add_button").click(); 
-        sleep(5000)
-        document.getElementById("add_list_input_add_event_data_sources").value = beef_tags[0];
-        document.getElementById("add_event_data_sources_add_button").click();
-    //}
-    document.getElementById("beef_tags").value = JSON.parse(urlParams.get("tags"));
-
+    write_list_to_display("add_event_data_sources", JSON.parse(urlParams.get("data_sources")));
     console.log(urlParams.get("date"));
+    var date_split = urlParams.get("date").split("T")
+    document.getElementById("beef_date").value = date_split[0];
+    document.getElementById("beef_time").value = date_split[1].slice(0,5);
+
     console.log(urlParams.get("description"));
     console.log(JSON.parse(urlParams.get("tags")));
     console.log(JSON.parse(urlParams.get("aggressors")));
-})
+});
 $(function(){
     
     //brief basic validation to avoid using the server for trivial mistakes
