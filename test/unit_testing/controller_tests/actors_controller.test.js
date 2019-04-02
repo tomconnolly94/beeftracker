@@ -377,7 +377,7 @@ describe('Module: actors_controller', function () {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    it('createActor', function () {
+    it('createActor', function (done) {
         
         db_interface.insert = function(insert_config, callback){
             callback({ 
@@ -397,9 +397,8 @@ describe('Module: actors_controller', function () {
             
             assert.equal(globals.dummy_object_id, result._id);
             assert.equal(globals.dummy_object_id, result.gallery_items); //simply testing that what is returned by the db_interface.insert function is returned by the controller function
+            done()
         });
-        
-        assert(callback_spy.called);
     });
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////
