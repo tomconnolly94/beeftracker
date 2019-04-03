@@ -1,4 +1,11 @@
 $(function(){
+    function get_template_dir(){
+        return "gallery_manager";
+    }
+
+    function get_template_name(){
+        return "gallery_manager";
+    }
     
     //init components
     $('#upload_type').select2({
@@ -9,7 +16,7 @@ $(function(){
     });
 
     //array to hold all current gallery items, purely to keep a state outside of the media submit button handler
-    let gallery_items = [];
+    let panel_gallery_items = [];
     let set_as_main_graphic_used = false;
     let set_as_cover_image_used = false;
     
@@ -46,6 +53,18 @@ $(function(){
         
         //$("#upload_gallery_item_modal").modal("hide"); //hide modal
     }
+
+    var render_voting_panel = function(gallery_items, callback){
+        
+        load_template_render_function(get_template_dir() + "/" + get_template_name(), function(status){
+            $("#gallery_manager").html(window["gallery_manager_tmpl_render_func"]({ gallery_items: panel_gallery_items }));
+            callback();
+        });
+    }
+
+    //assign to window so it is accessible to other controllers
+    window["upload_gallery_item_modal_controller__render_voting_panel"] = render_voting_panel;
+    
     
     function add_or_update_gallery_item(){
         
@@ -58,16 +77,11 @@ $(function(){
             set_as_cover_image_used = true;
             $("#set_as_cover_image").css("display", "none"); //hide set as cover checkbox input
         }
-        
-        load_template_render_function("gallery_manager/gallery_manager", function(status){
-            $("#gallery_manager").html(window["gallery_manager_tmpl_render_func"]({ gallery_items: gallery_items }));
-
-            //clear and close modal
-            //reset_modal();
+        render_voting_panel(panel_gallery_items, function(){
             $("#upload_gallery_item_modal").modal("hide"); //hide modal
         });
     }
-    
+
     //onchange event for when a media type is selected
     $("#upload_type").change(function(event){
         
@@ -116,6 +130,12 @@ $(function(){
         
         $("#media_submit_button").removeAttr("disabled"); //enable the "add" button        
     });
+
+    var get_youtube_embed_img_src = function(){
+        //TODO: implement this function
+    }
+    
+    window["upload_gallery_item_modal_controller__get_youtube_embed_img_src"] = get_youtube_embed_img_src;
     
     //handler to handle a youtube link being added to the file input tag
     $("#youtube_video_link").on('input', function(e) {
@@ -193,7 +213,7 @@ $(function(){
     $("#media_submit_button").click(function(event){
         event.preventDefault();
         
-        gallery_items.push({ src: $("#media_preview").attr("src"), media_type: $("#media_preview").attr("x-media-type"), file_name: $("#media_preview").attr("x-file-name"), link: $("#media_preview").attr("x-media-link") , main_graphic: $("#set_as_main_graphic_checkbox").prop("checked"), cover_image:  $("#set_as_cover_image_checkbox").prop("checked") });
+        panel_gallery_items.push({ src: $("#media_preview").attr("src"), media_type: $("#media_preview").attr("x-media-type"), file_name: $("#media_preview").attr("x-file-name"), link: $("#media_preview").attr("x-media-link") , main_graphic: $("#set_as_main_graphic_checkbox").prop("checked"), cover_image:  $("#set_as_cover_image_checkbox").prop("checked") });
         
         add_or_update_gallery_item();
     });
@@ -205,7 +225,7 @@ $(function(){
         //access the gallery item index of the item being edited
         var gallery_item_index = $(this).attr("x-gallery-item-index");
         
-        gallery_items[gallery_item_index] = { 
+        panel_gallery_items[gallery_item_index] = { 
             src: $("#media_preview").attr("src"), 
             media_type: $("#media_preview").attr("x-media-type"), 
             file_name: $("#media_preview").attr("x-file-name"), 
@@ -223,15 +243,15 @@ $(function(){
         event.stopPropagation(); //prevent click listener for element beneath the bin button from firing
         $(this.parentElement).remove();
         
-        for(var i = 0; i < gallery_items.length; i++){
-            if(this.parentElement.children[1].attributes[0].value == gallery_items[i].src){
-                if(gallery_items[i].main_graphic){
+        for(var i = 0; i < panel_gallery_items.length; i++){
+            if(this.parentElement.children[1].attributes[0].value == panel_gallery_items[i].src){
+                if(panel_gallery_items[i].main_graphic){
                     set_as_main_graphic_used = false;
                 }
-                if(gallery_items[i].cover_image){
+                if(panel_gallery_items[i].cover_image){
                     set_as_cover_image_used = false;
                 }
-                gallery_items.splice(i, 1);
+                panel_gallery_items.splice(i, 1);
                 i--;
             }
         }

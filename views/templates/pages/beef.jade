@@ -38,14 +38,14 @@ append body
     - var aggressor_index = event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) != -1 ? event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) : event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[1]))
     - var target_index = event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) != -1 ? event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) : event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[1]))
     
-    - var aggressor_ids_to_string = JSON.stringify(event_data.aggressors.map(function(aggressor){ return aggressor._id; }));
-    - var targets_to_string = JSON.stringify(event_data.targets.map(function(target){ return target._id; }));
+    - var aggressor_ids_to_string = JSON.stringify(event_data.aggressors.map(function(aggressor){ return { id: aggressor._id, name: aggressor.name, src: aggressor.img_title_fullsize } }));
+    - var targets_to_string = JSON.stringify(event_data.targets.map(function(target){ return { id: target._id, name: target.name, src: target.img_title_fullsize }; }));
     - var gallery_items_to_string = JSON.stringify(event_data.gallery_items);
     - var data_sources_to_string = JSON.stringify(event_data.data_sources);
     - var tags_to_string = JSON.stringify(event_data.tags);
     - var category_id_to_string = event_data.categories[0].cat_id;
 
-    - var edit_beef_params = `_id=${event_data._id}&title=${event_data.title}&date=${event_data.event_date.toISOString()}&description=${event_data.description}&cat_id=${category_id_to_string}&aggressors=${aggressor_ids_to_string}&targets=${targets_to_string}&gallery_items=${gallery_items_to_string}&data_sources=${data_sources_to_string}&tags=${tags_to_string}`;
+    - var edit_beef_params = `_id=${event_data._id}&title=${event_data.title}&date=${event_data.event_date.toISOString()}&description=${event_data.description}&cat_id=${category_id_to_string}&aggressors=${aggressor_ids_to_string}&targets=${targets_to_string}&gallery_items=${gallery_items_to_string}&data_sources=${data_sources_to_string}&tags=${tags_to_string}&cover_image=${event_data.cover_image}`;
 
     div.bt-content-full-width.beef-background-banner(style="background-image: url('" + file_server_url_builder(file_server_url_prefix, "events", event_data.cover_image, "c_fill,g_face,h_150,w_150", "webp") + "')")
 

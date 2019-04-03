@@ -16860,7 +16860,7 @@ return Swiper;
 })));
 
 function init_horizontal_slider(slider_id){
-    var swiper = new Swiper('##{slider_id}', {
+    var swiper = new Swiper("#" + slider_id, {
         slidesPerView: 3,
         spaceBetween: 30,
         slidesPerGroup: 3,

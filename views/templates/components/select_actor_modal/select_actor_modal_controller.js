@@ -1,5 +1,12 @@
 $(function(){
-    
+    function get_template_dir(){
+        return "versus_panel";
+    }
+
+    function get_template_name(){
+        return "versus_panel";
+    }
+
     //init components
     $('#select_actor').select2({
         placeholder: 'Select actor ',
@@ -15,13 +22,9 @@ $(function(){
         });
     });
 
-    var aggressors = [];
-    var targets = [];
-    var template_dir = "versus_panel";
-    var template_name = "versus_panel";
-    var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
-    var browser = $("#browser").attr("value"); //extract browser type from hidden div
-    
+    var panel_aggressors = [];
+    var panel_targets = [];
+            
     function assign_click_listeners(){
 
         $(".select_actor_beefer").click(function(event){
@@ -34,29 +37,25 @@ $(function(){
         
         $(".remove_actor").unbind().click(function(){
             
-            for(var i = 0; i < aggressors.length; i++){
-                if(aggressors[i].id == $(this).parent().children("h4").attr("x-actor-id")){
-                    aggressors.splice(i, 1);
+            for(var i = 0; i < panel_aggressors.length; i++){
+                if(panel_aggressors[i].id == $(this).parent().children("h4").attr("x-actor-id")){
+                    panel_aggressors.splice(i, 1);
                 }
             }
             
-            for(var i = 0; i < targets.length; i++){
-                if(targets[i].id == $(this).parent().children("h4").attr("x-actor-id")){
-                    targets.splice(i, 1);
+            for(var i = 0; i < panel_targets.length; i++){
+                if(panel_targets[i].id == $(this).parent().children("h4").attr("x-actor-id")){
+                    panel_targets.splice(i, 1);
                 }
             }
             
-            
-            load_template_render_function(template_dir + "/" + template_name, function(status){
-                fade_new_content_to_div("#versus_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, browser: browser, aggressors: aggressors, targets: targets }), function(){
-                    assign_click_listeners();
-                });
-
-            });
+            render_voting_panel(panel_aggressors, panel_targets)
         });
     }
     
     assign_click_listeners();
+    $('#select_actor').val("default").trigger("change");
+
     
     //function to take data from the select actor modal and assign it to the DOM
     $("#select_actor_modal_submit").click(function(){
@@ -80,21 +79,8 @@ $(function(){
             name: actor_name,
             id: actor_id
         };
-        
-        if(actor_type == "beefer"){
-            aggressors.push(new_actor_record);
-        }
-        else if(actor_type == "beefee"){
-            targets.push(new_actor_record);
-        }
-        
-        load_template_render_function(template_dir + "/" + template_name, function(status){
-                        
-            fade_new_content_to_div("#versus_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, browser: browser, aggressors: aggressors, targets: targets }), function(){
-                assign_click_listeners();
-            });
-            
-        });
+                
+        render_voting_panel(actor_type == "beefer" ? panel_aggressors.concat([ new_actor_record ]) : panel_aggressors, actor_type == "beefee" ? panel_targets.concat([ new_actor_record ]) : panel_targets)
         
         $('#select_actor').val("default").trigger("change"); //reset actor input select box
         $("#selector_actor_modal").modal("hide"); //hide modal
@@ -108,4 +94,26 @@ $(function(){
         $('#select_actor').val("default").trigger("change"); //reset actor input select box
         $("#selector_actor_modal").modal("hide"); //hide modal
     });
+
+
+    var render_voting_panel = function(aggressors, targets){
+
+        panel_aggressors = aggressors;
+        panel_targets = targets;
+        
+        var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
+        var browser = $("#browser").attr("value"); //extract browser type from hidden div
+
+        var template_dir = get_template_dir();
+        var template_name = get_template_name();
+
+        load_template_render_function(template_dir + "/" + template_name, function(status){
+            fade_new_content_to_div("#versus_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, browser: browser, aggressors: aggressors, targets: targets }), function(){
+                assign_click_listeners();
+            });
+        });
+    }
+
+    //assign to window so it is accessible to other controllers
+    window["select_actor_modal_controller__render_voting_panel"] = render_voting_panel;
 });
