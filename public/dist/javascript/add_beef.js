@@ -16511,11 +16511,11 @@ $(function(){
     });     
 });
 $(function(){
-    function get_versus_panel_template_dir(){
+    function get_template_dir(){
         return "versus_panel";
     }
 
-    function get_versus_panel_template_name(){
+    function get_template_name(){
         return "versus_panel";
     }
 
@@ -16616,8 +16616,8 @@ $(function(){
         var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
         var browser = $("#browser").attr("value"); //extract browser type from hidden div
 
-        var template_dir = get_versus_panel_template_dir();
-        var template_name = get_versus_panel_template_name();
+        var template_dir = get_template_dir();
+        var template_name = get_template_name();
 
         load_template_render_function(template_dir + "/" + template_name, function(status){
             fade_new_content_to_div("#versus_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, browser: browser, aggressors: aggressors, targets: targets }), function(){
@@ -16630,6 +16630,13 @@ $(function(){
     window["select_actor_modal_controller__render_voting_panel"] = render_voting_panel;
 });
 $(function(){
+    function get_template_dir(){
+        return "gallery_manager";
+    }
+
+    function get_template_name(){
+        return "gallery_manager";
+    }
     
     //init components
     $('#upload_type').select2({
@@ -16640,9 +16647,12 @@ $(function(){
     });
 
     //array to hold all current gallery items, purely to keep a state outside of the media submit button handler
-    let gallery_items = [];
-    let set_as_main_graphic_used = false;
-    let set_as_cover_image_used = false;
+    let panel_gallery_items = [];
+
+    gallery_item_used_properties = {
+        set_as_main_graphic_used: false,
+        set_as_cover_image_used: false
+    }
     
     //clear all data form modal and reset it to its original state
     function reset_modal(){
@@ -16677,28 +16687,51 @@ $(function(){
         
         //$("#upload_gallery_item_modal").modal("hide"); //hide modal
     }
+
+    function set_gallery_item_property_used(property_name){
+        gallery_item_used_properties["set_as_" + property_name + "_used"] = true;
+        $("#set_as_" + property_name).css("display", "none"); //hide set as cover checkbox input
+    }
+
+    var render_voting_panel = function(gallery_items, callback){
+
+        panel_gallery_items = panel_gallery_items.concat(gallery_items);
+
+        for(var i = 0; i < panel_gallery_items.length; i++){
+            var gallery_item = panel_gallery_items[i];
+
+            if(gallery_item.main_graphic){
+                set_gallery_item_property_used("main_graphic");
+            }
+            if(gallery_item.cover_image){
+                set_gallery_item_property_used("cover_image");
+            }
+        }
+        
+        load_template_render_function(get_template_dir() + "/" + get_template_name(), function(status){
+            $("#gallery_manager").html(window["gallery_manager_tmpl_render_func"]({ gallery_items: panel_gallery_items }));
+            callback();
+        });
+    }
+
+    //assign to window so it is accessible to other controllers
+    window["upload_gallery_item_modal_controller__render_voting_panel"] = render_voting_panel;
     
-    function add_or_update_gallery_item(){
+    
+    function add_or_update_gallery_item(new_gallery_items){
         
         if($("#set_as_main_graphic_checkbox").prop("checked")){
-            set_as_main_graphic_used = true;
-            $("#set_as_main_graphic").css("display", "none"); //hide set as cover checkbox input
+            set_gallery_item_property_used("main_graphic");
         }
         
         if($("#set_as_cover_image_checkbox").prop("checked")){
-            set_as_cover_image_used = true;
-            $("#set_as_cover_image").css("display", "none"); //hide set as cover checkbox input
+            set_gallery_item_property_used("cover_image");
         }
-        
-        load_template_render_function("gallery_manager/gallery_manager", function(status){
-            $("#gallery_manager").html(window["gallery_manager_tmpl_render_func"]({ gallery_items: gallery_items }));
-
-            //clear and close modal
-            //reset_modal();
+        render_voting_panel(new_gallery_items, function(){
             $("#upload_gallery_item_modal").modal("hide"); //hide modal
         });
     }
-    
+
     //onchange event for when a media type is selected
     $("#upload_type").change(function(event){
         
@@ -16714,10 +16747,10 @@ $(function(){
         
         $("#" + media_type + "_input_div").css("display", "block"); //show text input tag
         
-        if(set_as_main_graphic_used){
+        if(gallery_item_used_properties["set_as_main_graphic_used"]){
             $("#set_as_main_graphic *").attr("disabled", "disabled").off('click'); //show main graphic checkbox input
         }
-        if(set_as_cover_image_used && media_type == "image"){
+        if(gallery_item_used_properties["set_as_cover_image_used"] && media_type == "image"){
             $("#set_as_cover_image *").attr("disabled", "disabled").off('click'); //show set as cover checkbox input
         }
         
@@ -16747,11 +16780,8 @@ $(function(){
         
         $("#media_submit_button").removeAttr("disabled"); //enable the "add" button        
     });
-    
-    //handler to handle a youtube link being added to the file input tag
-    $("#youtube_video_link").on('input', function(e) {
-        
-        var input = this.value;
+
+    var get_youtube_embed_img_src = function(input){
         var params = {};
         
         if(input.includes("youtube")){
@@ -16780,7 +16810,15 @@ $(function(){
             params.v = "";
         }
 
-        let youtube_id = params.v;
+        return params.v;
+    }
+    
+    window["upload_gallery_item_modal_controller__get_youtube_embed_img_src"] = get_youtube_embed_img_src;
+    
+    //handler to handle a youtube link being added to the file input tag
+    $("#youtube_video_link").on('input', function(e) {
+        
+        window["upload_gallery_item_modal_controller__get_youtube_embed_img_src"](this.value);
         let youtube_src = "";
 
         if(youtube_id.length > 1){
@@ -16823,10 +16861,8 @@ $(function(){
     //handler to handle media being officially added to the gallery manager with the "add" button
     $("#media_submit_button").click(function(event){
         event.preventDefault();
-        
-        gallery_items.push({ src: $("#media_preview").attr("src"), media_type: $("#media_preview").attr("x-media-type"), file_name: $("#media_preview").attr("x-file-name"), link: $("#media_preview").attr("x-media-link") , main_graphic: $("#set_as_main_graphic_checkbox").prop("checked"), cover_image:  $("#set_as_cover_image_checkbox").prop("checked") });
-        
-        add_or_update_gallery_item();
+                
+        add_or_update_gallery_item([{ src: $("#media_preview").attr("src"), media_type: $("#media_preview").attr("x-media-type"), file_name: $("#media_preview").attr("x-file-name"), link: $("#media_preview").attr("x-media-link") , main_graphic: $("#set_as_main_graphic_checkbox").prop("checked"), cover_image:  $("#set_as_cover_image_checkbox").prop("checked") }]);
     });
     
     //handler to update a gallery_item based on the current contents of the modal
@@ -16836,7 +16872,7 @@ $(function(){
         //access the gallery item index of the item being edited
         var gallery_item_index = $(this).attr("x-gallery-item-index");
         
-        gallery_items[gallery_item_index] = { 
+        panel_gallery_items[gallery_item_index] = { 
             src: $("#media_preview").attr("src"), 
             media_type: $("#media_preview").attr("x-media-type"), 
             file_name: $("#media_preview").attr("x-file-name"), 
@@ -16845,24 +16881,34 @@ $(function(){
             cover_image:  $("#set_as_cover_image_checkbox").prop("checked") 
         };
         
-        add_or_update_gallery_item();        
+        add_or_update_gallery_item([]);        
     });
     
     //handler to remove item from gallery manager
     $("#gallery_manager").on("click", "#remove_gallery_item", function(event){
         event.preventDefault();
         event.stopPropagation(); //prevent click listener for element beneath the bin button from firing
+
+        var gallery_item_divs = this.parentElement.parentElement.children;
+
+        for(var i = 1; i < gallery_item_divs.length; i++){
+            gallery_item_divs[i].children[1].attributes["x-gallery-item-index"].value = parseInt(gallery_item_divs[i].children[1].attributes["x-gallery-item-index"].value) - 1;
+        }
+        
         $(this.parentElement).remove();
         
-        for(var i = 0; i < gallery_items.length; i++){
-            if(this.parentElement.children[1].attributes[0].value == gallery_items[i].src){
-                if(gallery_items[i].main_graphic){
-                    set_as_main_graphic_used = false;
+        for(var i = 0; i < panel_gallery_items.length; i++){
+
+            this.parentElement.children[1].attributes["x-gallery-item-index"].value = parseInt(this.parentElement.children[1].attributes["x-gallery-item-index"].value) - 1;
+
+            if(this.parentElement.children[1].attributes[0].value == panel_gallery_items[i].src){
+                if(panel_gallery_items[i].main_graphic){
+                    gallery_item_used_properties["set_as_main_graphic_used"] = false;
                 }
-                if(gallery_items[i].cover_image){
-                    set_as_cover_image_used = false;
+                if(panel_gallery_items[i].cover_image){
+                    gallery_item_used_properties["set_as_cover_image_used"] = false;
                 }
-                gallery_items.splice(i, 1);
+                panel_gallery_items.splice(i, 1);
                 i--;
             }
         }
@@ -16874,8 +16920,8 @@ $(function(){
         
         let media_type = $(this).children("img").attr("x-media-type");
         
-        /*set_as_main_graphic_used = false;
-        set_as_cover_image_used = false;*/
+        /*gallery_item_used_properties["set_as_main_graphic_used"] = false;
+        gallery_item_used_properties["set_as_cover_image_used"] = false;*/
         //set modal fields
         $("#upload_gallery_item_modal").modal("show"); //show modal
         $("#media_preview").attr("src", $(this).children("img").attr("src"));
@@ -16890,10 +16936,10 @@ $(function(){
         $("#set_as_cover_image_checkbox").prop("checked", $(this).children("img").attr("x-cover-image") == "x-cover-image" ? true : false);
         $("#set_as_cover_image").css("display", "block");// $(this).children("img").attr("x-cover-image") == "x-cover-image" ? "block" : "none");
         
-        if( $(this).children("img").attr("x-main-graphic") == "x-main-graphic" || !set_as_main_graphic_used){
+        if( $(this).children("img").attr("x-main-graphic") == "x-main-graphic" || !gallery_item_used_properties["set_as_main_graphic_used"]){
             $("#set_as_main_graphic *").attr("disabled", false).off('click'); //show main graphic checkbox input
         }
-        if($(this).children("img").attr("x-cover-image") == "x-cover-image" || !set_as_cover_image_used){
+        if($(this).children("img").attr("x-cover-image") == "x-cover-image" || !gallery_item_used_properties["set_as_cover_image_used"]){
             $("#set_as_cover_image *").attr("disabled", false).off('click'); //show set as cover checkbox input
         }
         
@@ -17441,28 +17487,86 @@ $('#beef_tags').select2({
 });*/
 $(function(){
 
-    var add_beef_url_field_mappings = {
-        "_id": "_id",
-        "beef_title": "title",
-        "beef_category": "category",
-        "beef_description": "description",
+    var url_params = new URLSearchParams(window.location.search);
+    console.log("Edit mode: " + url_params.get("_id") ? true : false);
+
+    var param_function_mapping = {
+        _id: function(param){
+            //TODO: do something with _Id to save it for the update request
+        },
+        title: function(param){
+            document.getElementById("beef_title").value = param;
+        },
+        date: function(param){
+            var date_split = url_params.get("date").split("T")
+            document.getElementById("beef_date").value = date_split[0];
+            document.getElementById("beef_time").value = date_split[1].slice(0,5);
+        },
+        description: function(param){
+            document.getElementById("beef_description").value = param;
+        },
+        cat_id: function(param){
+            $('#beef_category').val(JSON.parse(param)).trigger('change');
+        },
+        aggressors: function(param){
+            window["select_actor_modal_controller__render_voting_panel"](JSON.parse(param), JSON.parse(url_params.get("targets")))
+        },
+        targets: function(param){
+            
+        },
+        gallery_items: function(param){
+            var gallery_items = JSON.parse(param).map(function(item, index){
+
+                var src = "";
+        
+                if(item.media_type == "youtube_embed"){
+                    src = window["upload_gallery_item_modal_controller__get_youtube_embed_img_src"](item.link);
+                }
+                else if(item.media_type == "image"){
+                    src = $("#file_server_url_prefix_store").attr("value") + "/events/" + item.link;
+                }
+        
+                return {
+                    src: src, 
+                    media_type: item.media_type, 
+                    file_name: item.link, 
+                    link: item.link, 
+                    main_graphic: item.main_graphic, 
+                    cover_image: url_params.get("cover_image") == item.link ? true : false
+                };
+            });
+
+            window["upload_gallery_item_modal_controller__render_voting_panel"](gallery_items, function(){});
+        },
+        data_sources: function(param){
+            write_list_to_display("add_event_data_sources", JSON.parse(param));
+        },
+        tags: function(param){
+            
+
+            function convertObjectToSelectOptions(obj){
+                var htmlTags = '';
+                for (var tag in obj){
+                    htmlTags += '<option value="'+tag+'" selected="selected">'+obj[tag]+'</option>';
+                }
+                return htmlTags;
+            }
+
+
+            var tag_arr = JSON.parse(url_params.get("tags"));
+            var tag_obj = {};
+            for(var i = 0; i < tag_arr.length; i++){
+                tag_obj[i] = tag_arr[i];
+            }
+            
+            $('#beef_tags').html(convertObjectToSelectOptions(tag_obj)).trigger('change');
+        }
+    };
+
+    //loop through all available search params, if a mapping function is available for that param, then execute it
+    for(let url_param of url_params){
+        if (url_param[0] in param_function_mapping){
+            param_function_mapping[url_param[0]](url_param[1]);
+        }
     }
-
-    var urlParams = new URLSearchParams(window.location.search);
-    document.getElementById("beef_title").value = urlParams.get("title");
-    document.getElementById("beef_description").value = urlParams.get("description");
-    $('#beef_category').val(JSON.parse(urlParams.get("cat_id"))).trigger('change');
-
-
-    write_list_to_display("add_event_data_sources", JSON.parse(urlParams.get("data_sources")));
-    var date_split = urlParams.get("date").split("T")
-    document.getElementById("beef_date").value = date_split[0];
-    document.getElementById("beef_time").value = date_split[1].slice(0,5);
-
-    $("#beef_tags").val(JSON.parse(urlParams.get("tags"))).trigger('change');
-
-    window["select_actor_modal_controller__render_voting_panel"](JSON.parse(urlParams.get("aggressors")), JSON.parse(urlParams.get("targets")))
-
-    console.log(JSON.parse(urlParams.get("tags")));
-    console.log(JSON.parse(urlParams.get("gallery_items")));
 });
