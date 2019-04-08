@@ -75,7 +75,92 @@ var compare_event_dates = function (a, b) {
     return b.event_date.valueOf() - a.event_date.valueOf();
 }
 
-var create_beef_chains = function(event, callback, failure_callback){
+var execute_beef_chain_update = function(event, existing_beef_chains, success_callback, failure_callback){
+
+    var db_query_promises = []; //will hold config objects for database insert/updates
+
+    /*  build a promise to 
+    */
+    var build_promise = function(beef_chain){
+
+        var beef_chain_update_config = {
+            table: db_ref.get_beef_chain_table(),
+            match_id_object: beef_chain._id ? beef_chain._id : "000",
+            update_clause: beef_chain,
+            options: { upsert: true }
+        }
+
+        delete beef_chain_update_config.update_clause._id; //if _id is in the update clause, remove it
+
+        return new Promise(function(resolve, reject){
+
+            db_interface.updateSingle(beef_chain_update_config, function(data){
+                resolve(data);
+            },
+            function(data){
+                reject(data);
+            });
+        });
+    };
+
+    /*  loop through existing_beef_chains, where aggressor and target are both found in existing_beef_chain.actors,
+     *  push the new event_id to the beef_chain.event_ids and build a promise to execute the db query later.
+     *  if there is no beef_chain for this aggressor/target then build a promise based on the current aggressor and 
+     *  target
+    */
+    for(var aggressor_id = 0; aggressor_id < event.aggressors.length; aggressor_id++){
+        var aggressor = event.aggressors[aggressor_id];
+        targets_loop:
+        for(var target_id = 0; target_id < event.targets.length; target_id++){
+            var target = event.targets[target_id];
+            for(var i = 0; i < existing_beef_chains.length; i++){
+                var existing_beef_chain = existing_beef_chains[i];
+                var actors = existing_beef_chain.actors.map(function(actor){ return actor.str; })
+                if(actors.indexOf(aggressor.str) != -1 && actors.indexOf(target.str) != -1){
+                    //beef_chain found for aggressor and target
+                    existing_beef_chain.event_ids.push(event._id);
+                    db_query_promises.push(build_promise(existing_beef_chain));                    
+                    break targets_loop; //ensures that id an existing beef_chain is found, the code below will not be run
+                }
+            }
+
+            db_query_promises.push(build_promise(
+                BeefChain({
+                    actors: [ aggressor, target ],
+                    event_ids: [ event._id ]
+                })
+            )); 
+        };
+    };
+
+    Promise.all(db_query_promises).then(function(values){
+
+        var beef_chain_ids_to_be_pushed_to_event = []; //will hold all the beef_chain_ids that need to be pushed to the event
+
+        for(var i = 0; i < values.length; i++){
+            beef_chain_ids_to_be_pushed_to_event.push(values[i]._id);
+        }
+
+        var event_update_config = {
+            table: db_ref.get_current_event_table(),
+            match_id_object: event._id,
+            update_clause: { $push: { beef_chain_ids: { $each: beef_chain_ids_to_be_pushed_to_event } } },
+            options: { upsert: true }
+        };
+
+        db_interface.updateSingle(event_update_config, function(data){
+            success_callback(data);
+        },
+        function(error_object){
+            failure_callback(error_object);
+        });
+    }).catch(function(error){
+        logger.submit_log(logger.LOG_TYPE.ERROR, error);
+        failure_callback(error);
+    });
+}
+
+var create_beef_chains = function(event, success_callback, failure_callback){
 
     var aggregate_array = [{
         $match: { $or: [] }
@@ -100,90 +185,25 @@ var create_beef_chains = function(event, callback, failure_callback){
     }
 
     db_interface.get(query_config, function(existing_beef_chains){
-
-        var db_query_promises = []; //will hold config objects for database insert/updates
-
-        var build_promise = function(beef_chain){
-
-            var beef_chain_update_config = {
-                table: db_ref.get_beef_chain_table(),
-                match_id_object: beef_chain._id ? beef_chain._id : "000",
-                update_clause: beef_chain,
-                options: { upsert: true }
-            }
-
-            delete beef_chain_update_config.update_clause._id; //if _id is in the update clause, remove it
-
-            return new Promise(function(resolve, reject){
-
-                db_interface.updateSingle(beef_chain_update_config, function(data){
-                    if(data.failed){
-                        reject(data);
-                    }
-                    else{
-                        resolve(data);
-                    }
-                });
-            });
-        };
-
-        /*  loop through existing_beef_chains, where aggressor and target are both found in existing_beef_chain.actors,
-         *  push the new event_id to the beef_chain.event_ids and build a promise to execute the db query later.
-         *  if there is no beef_chain for this aggressor/target then build a promise based on the current aggressor and 
-         *  target
-        */
-        for(var aggressor_id = 0; aggressor_id < event.aggressors.length; aggressor_id++){
-            var aggressor = event.aggressors[aggressor_id];
-            targets_loop:
-            for(var target_id = 0; target_id < event.targets.length; target_id++){
-                var target = event.targets[target_id];
-                for(var i = 0; i < existing_beef_chains.length; i++){
-                    var existing_beef_chain = existing_beef_chains[i];
-                    var actors = existing_beef_chain.actors.map(function(actor){ return actor.str; })
-                    if(actors.indexOf(aggressor.str) != -1 && actors.indexOf(target.str) != -1){
-                        //beef_chain found for aggressor and target
-                        existing_beef_chain.event_ids.push(event._id);
-                        db_query_promises.push(build_promise(existing_beef_chain));                    
-                        break targets_loop; //ensures that id an existing beef_chain is found, the code below will not be run
-                    }
-                }
-
-                db_query_promises.push(build_promise(
-                    BeefChain({
-                        actors: [ aggressor, target ],
-                        events: [ event._id ]
-                    })
-                )); 
-            };
-        };
-
-        Promise.all(db_query_promises).then(function(values){
-
-            var beef_chain_ids_to_be_pushed_to_event = []; //will hold all the beef_chain_ids that need to be pushed to the event
-
-            for(var i = 0; i < values.length; i++){
-                beef_chain_ids_to_be_pushed_to_event.push(values[i]._id);
-            }
-
-            var event_update_config = {
-                table: db_ref.get_current_event_table(),
-                match_id_object: event._id,
-                update_clause: { $push: { beef_chain_ids: { $each: beef_chain_ids_to_be_pushed_to_event } } },
-                options: {}
-            };
-
-            db_interface.updateSingle(event_update_config, function(data){
-                callback(data);
-            }, function(error_object){
-                callback(error_object);
-            });
-        }).catch(function(error){
-            logger.submit_log(logger.LOG_TYPE.ERROR, error);
-            callback(error);
+        execute_beef_chain_update(event, existing_beef_chains, function(data){
+            success_callback(data);
+        },
+        function(error_object){
+            failure_callback(error_object);
         });
     },
     function(error_object){
-        callback(error_object);
+        if(error_object.no_results_found){
+            execute_beef_chain_update(event, [], function(data){
+                success_callback(data);
+            },
+            function(error_object){
+                failure_callback(error_object);
+            });
+        }
+        else{
+            failure_callback(error_object);
+        }
     });
 };
 
@@ -253,10 +273,22 @@ module.exports = {
     
         var initial_index = aggregate_array.length - 3;
     
-        for (var i = initial_index; i - initial_index < additional_aggregate_stages.length; i++) {
-            aggregate_array.splice(i, 0, additional_aggregate_stages[i - initial_index]);
+        for (var i = 0; i < additional_aggregate_stages.length; i++) {
+
+            if("$sort" in additional_aggregate_stages[i]){
+                aggregate_array.splice(1, 0, additional_aggregate_stages[i]);
+                //initial_index--;
+            }
+            if("$limit" in additional_aggregate_stages[i]){
+                aggregate_array.splice(aggregate_array.length - 1, 0, additional_aggregate_stages[i]);
+                initial_index--;
+            }
+            else{
+                aggregate_array.splice(initial_index + i, 0, additional_aggregate_stages[i]);
+            }
         }
     
+        console.log(aggregate_array);
         return aggregate_array;
     },
 
@@ -323,7 +355,6 @@ module.exports = {
 
     findEvents: function (query_parameters, callback) {
 
-        query_parameters.match_category = 1; //hard code all queries to only find rap events
         var match_query_content = {};
         var sort_query_content = {};
         var query_present = Object.keys(query_parameters).length === 0 && query_parameters.constructor === Object ? false : true; //check if request comes with query
@@ -342,10 +373,10 @@ module.exports = {
             else if (query_parameters.increasing_order == "event_date" || query_parameters.decreasing_order == "event_date") { sort_field_name = "event_date"; }
             else { query_present = false; }// if no valid queries provided, disallow a sort query
 
-            if (query_parameters.increasing_order) {
+            if (query_parameters.increasing_order) { //increasing order retrieves the newest events
                 sort_query_content[sort_field_name] = 1;
             }
-            else if (query_parameters.decreasing_order) {
+            else if (query_parameters.decreasing_order) { //increasing order retrieves the oldest events
                 sort_query_content[sort_field_name] = -1;
             }
 
@@ -360,6 +391,10 @@ module.exports = {
 
             //deal with $limit query
             if (query_parameters.limit) { limit_query_content = typeof query_parameters.limit == "string" ? parseInt(query_parameters.limit) : query_parameters.limit }
+        }
+
+        match_query_content["categories"] = {
+            $in: [0, 1]
         }
 
         var additional_aggregate_stages = [
@@ -400,7 +435,7 @@ module.exports = {
         };
 
         db_interface.get(query_config, function (results) {
-            callback(results)
+            callback(results);
         },
         function (error_object) {
             callback(error_object);

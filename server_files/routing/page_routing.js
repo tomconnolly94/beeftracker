@@ -100,19 +100,34 @@ router.get("/", token_authentication.recognise_user_token, blanket_middleware, f
     
     var featured_data_promise = new Promise(function(resolve, reject){
         event_controller.findEvents({ limit: 3, featured: true, decreasing_order: "date_added" }, function(data){
-            resolve(data);
+            if(data.failed){
+                resolve([]);
+            }
+            else{
+                resolve(data);
+            }
         });
     });
     
     var new_beef_data_promise = new Promise(function(resolve, reject){
-       event_controller.findEvents({ limit: 6, featured: false, decreasing_order: "date_added" }, function(data){
-           resolve(data);
+        event_controller.findEvents({ limit: 6, featured: false, increasing_order: "date_added" }, function(data){
+            if(data.failed){
+                resolve([]);
+            }
+            else{
+                resolve(data);
+            }
         });
     });
     
     var slider_data_promise = new Promise(function(resolve, reject){
-         event_controller.findEvents({ limit: 12, featured: false, increasing_order: "date_added" }, function(data){
-            resolve(data);
+         event_controller.findEvents({ limit: 12, featured: false, increasing_order: "popularity" }, function(data){
+            if(data.failed){
+                resolve([]);
+            }
+            else{
+                resolve(data);
+            }
         });
     });
     
@@ -129,7 +144,7 @@ router.get("/", token_authentication.recognise_user_token, blanket_middleware, f
     // });
     
     var classic_beef_data_promise = new Promise(function(resolve, reject){
-        event_controller.findEvents({ limit: 6, featured: false, increasing_order: "event_date" }, function(data){
+        event_controller.findEvents({ limit: 6, featured: false, decreasing_order: "event_date" }, function(data){
            resolve(data);
        });
     });
@@ -217,7 +232,12 @@ router.get("/add-beef", token_authentication.recognise_user_token, blanket_middl
 
     var actor_data_promise = new Promise(function(resolve, reject){
         actor_controller.findActors({ increasing_order: "name" }, function(data){
-            resolve(data);
+            if(data.failed){
+                reject(data);
+            }
+            else{
+                resolve(data);
+            }
         });
     });
     
@@ -256,7 +276,12 @@ router.get("/beef", token_authentication.recognise_user_token, blanket_middlewar
     
     var events_data_promise = new Promise(function(resolve, reject){
        event_controller.findEvents({ decreasing_order: "date_added", limit: 12 }, function(data){
+        if(data.failed){
+            resolve([]);
+        }
+        else{
             resolve(data);
+        }
         });
     });
     /*
@@ -274,7 +299,12 @@ router.get("/beef", token_authentication.recognise_user_token, blanket_middlewar
     */
     var slider_data_promise = new Promise(function(resolve, reject){
          event_controller.findEvents({ limit: 12, featured: false, increasing_order: "date_added" }, function(data){
-            resolve(data);
+            if(data.failed){
+                resolve([]);
+            }
+            else{
+                resolve(data);
+            }
         });
     });
     
@@ -387,7 +417,12 @@ router.get("/contact", token_authentication.recognise_user_token, blanket_middle
     
     var trending_data_promise = new Promise(function(resolve, reject){
         event_controller.findEvents({ limit: 3, featured: true }, function(data){
-            resolve(data);
+            if(data.failed){
+                resolve([]);
+            }
+            else{
+                resolve(data);
+            }
         });
     });
     
@@ -409,7 +444,12 @@ router.get("/profile", token_authentication.recognise_user_token, blanket_middle
         
         var events_added_by_user_promise = new Promise(function(resolve, reject){
             event_controller.findEvents({ match_user_id: view_parameters.user_data._id.toHexString(), limit: 3 }, function(data){
-                resolve(data);
+                if(data.failed){
+                    resolve([]);
+                }
+                else{
+                    resolve(data);
+                }
             });
         });
         
@@ -519,19 +559,34 @@ router.get("/scraping_dump", token_authentication.recognise_user_token, blanket_
             
             var scraped_event_data_promise = new Promise(function(resolve, reject){
                 scraped_data_controller.findScrapedEventData({ }, function(data){
-                    resolve(data);
+                    if(data.failed){
+                        resolve([]);
+                    }
+                    else{
+                        resolve(data);
+                    }
                 });
             });
             
             var categories_promise = new Promise(function(resolve, reject){
                event_categories_controller.getEventCategories(function(data){
-                   resolve(data);
+                    if(data.failed){
+                        resolve([]);
+                    }
+                    else{
+                        resolve(data);
+                    }
                 });
             });
 
             var actor_variable_fields_promise = new Promise(function(resolve, reject){
                actor_controller.getVariableActorFieldsConfig(function(data){
-                   resolve(data);
+                    if(data.failed){
+                        resolve([]);
+                    }
+                    else{
+                        resolve(data);
+                    }
                 });
             });
 

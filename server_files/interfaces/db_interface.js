@@ -178,8 +178,14 @@ module.exports = {
                 });
             } else {
                 //standard query to insert into live events table
-                db.collection(table).findOneAndUpdate({ _id: match_id_object }, update_clause, { $upsert: options.upsert ? true : false, returnOriginal: false }, function (err, result) {
-                    if (err || result.value == null) {
+                db.collection(table).findOneAndUpdate({ _id: match_id_object }, update_clause, { upsert: options.upsert ? true : false, returnNewDocument: true }, function (err, result) {
+                    if (result.lastErrorObject.upserted){
+                        update_clause._id = result.lastErrorObject.upserted;
+                        options.operation = "update";
+                        post_insert_procedure(db, update_clause, update_clause, table, options);
+                        success_callback(update_clause);
+                    }
+                    else if (err || result.value == null) {
                         console.log(err);
                         failure_callback({
                             failed: true,
