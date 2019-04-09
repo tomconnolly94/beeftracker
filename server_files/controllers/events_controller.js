@@ -271,13 +271,13 @@ module.exports = {
             { $project: event_projection }
         ];
     
-        var initial_index = aggregate_array.length - 3;
+        var initial_index = aggregate_array.length - 2;
     
         for (var i = 0; i < additional_aggregate_stages.length; i++) {
 
             if("$sort" in additional_aggregate_stages[i]){
-                aggregate_array.splice(1, 0, additional_aggregate_stages[i]);
-                //initial_index--;
+                aggregate_array.splice(aggregate_array.length - 1, 0, additional_aggregate_stages[i]);
+                initial_index--;
             }
             if("$limit" in additional_aggregate_stages[i]){
                 aggregate_array.splice(aggregate_array.length - 1, 0, additional_aggregate_stages[i]);
@@ -288,7 +288,6 @@ module.exports = {
             }
         }
     
-        console.log(aggregate_array);
         return aggregate_array;
     },
 
@@ -373,10 +372,10 @@ module.exports = {
             else if (query_parameters.increasing_order == "event_date" || query_parameters.decreasing_order == "event_date") { sort_field_name = "event_date"; }
             else { query_present = false; }// if no valid queries provided, disallow a sort query
 
-            if (query_parameters.increasing_order) { //increasing order retrieves the newest events
+            if (query_parameters.increasing_order) { //increasing order retrieves the oldest events
                 sort_query_content[sort_field_name] = 1;
             }
-            else if (query_parameters.decreasing_order) { //increasing order retrieves the oldest events
+            else if (query_parameters.decreasing_order) { //increasing order retrieves the newest events
                 sort_query_content[sort_field_name] = -1;
             }
 

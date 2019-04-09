@@ -110,7 +110,7 @@ router.get("/", token_authentication.recognise_user_token, blanket_middleware, f
     });
     
     var new_beef_data_promise = new Promise(function(resolve, reject){
-        event_controller.findEvents({ limit: 6, featured: false, increasing_order: "date_added" }, function(data){
+        event_controller.findEvents({ limit: 6, featured: false, decreasing_order: "date_added" }, function(data){
             if(data.failed){
                 resolve([]);
             }
@@ -144,7 +144,7 @@ router.get("/", token_authentication.recognise_user_token, blanket_middleware, f
     // });
     
     var classic_beef_data_promise = new Promise(function(resolve, reject){
-        event_controller.findEvents({ limit: 6, featured: false, decreasing_order: "event_date" }, function(data){
+        event_controller.findEvents({ limit: 6, featured: false, increasing_order: "event_date" }, function(data){
            resolve(data);
        });
     });
