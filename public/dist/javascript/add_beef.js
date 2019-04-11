@@ -9156,9 +9156,12 @@ $(function(){
                 var first_path_stage = window.location.pathname.split("/")[0] && original_url.split("/")[0].length > 0 ? original_url.split("/")[0] : null;
                     
                 if(query_params){
-                    var query_split = query_params.split("=");
-                    if(query_split[0] == "redirected_from"){
-                        window.location.href = query_split[1];
+                    var query_split = query_params.split("&");
+                    var first_query_param = query_split[0].split("=");
+                    if(first_query_param[0] == "redirected_from"){
+                        query_split.splice(0, 1);
+                        full_query = first_query_param[1] + "?" + query_split.join("&");
+                        window.location.href = full_query;
                     }
                     else{
                         window.location.href = "/profile";
@@ -16629,6 +16632,45 @@ $(function(){
     //assign to window so it is accessible to other controllers
     window["select_actor_modal_controller__render_voting_panel"] = render_voting_panel;
 });
+
+(function(exports){
+
+    // Your code goes here
+
+    exports.get_youtube_embed_img_src = function(input){
+       
+        var params = {};
+
+        if(input.includes("youtube")){
+            var input_params = [];
+            if(input.includes("embed")){
+                params.v = input.split("/")[input.split("/").length - 1];
+                input = "https://www.youtube.com/watch?v=" + params.v;
+            }
+            else{
+                input_params = input.split("?")
+                
+                if(input_params.length > 1 && input_params[1].includes("v=")){
+                    input_params = input_params[1];
+
+                    input_params.split("&").forEach(function(part) {
+                        var item = part.split("=");
+                        params[item[0]] = decodeURIComponent(item[1]);
+                    });
+                }
+                else{
+                    params.v = "";
+                }
+            }
+        }
+        else{
+            params.v = "";
+        }
+
+        return "https://img.youtube.com/vi/" + params.v + "/0.jpg";
+    };
+
+})(typeof exports === 'undefined'? this['youtube_url_translation'] = {}: exports);
 $(function(){
     function get_template_dir(){
         return "gallery_manager";
@@ -16780,54 +16822,18 @@ $(function(){
         
         $("#media_submit_button").removeAttr("disabled"); //enable the "add" button        
     });
-
-    var get_youtube_embed_img_src = function(input){
-        var params = {};
-        
-        if(input.includes("youtube")){
-            var input_params = [];
-            if(input.includes("embed")){
-                params.v = input.split("/")[input.split("/").length - 1];
-                input = "https://www.youtube.com/watch?v=" + params.v;
-            }
-            else{
-                input_params = input.split("?")
-                
-                if(input_params.length > 1 && input_params[1].includes("v=")){
-                    input_params = input_params[1];
-
-                    input_params.split("&").forEach(function(part) {
-                        var item = part.split("=");
-                        params[item[0]] = decodeURIComponent(item[1]);
-                    });
-                }
-                else{
-                    params.v = "";
-                }
-            }
-        }
-        else{
-            params.v = "";
-        }
-
-        return params.v;
-    }
-    
-    window["upload_gallery_item_modal_controller__get_youtube_embed_img_src"] = get_youtube_embed_img_src;
     
     //handler to handle a youtube link being added to the file input tag
     $("#youtube_video_link").on('input', function(e) {
         
-        window["upload_gallery_item_modal_controller__get_youtube_embed_img_src"](this.value);
-        let youtube_src = "";
+        var youtube_src = window["youtube_url_translation"].get_youtube_embed_img_src(this.value);
 
-        if(youtube_id.length > 1){
-            youtube_src = "https://img.youtube.com/vi/" + youtube_id + "/0.jpg";
+        if(youtube_src.length > 1){
             $("#media_submit_button").removeAttr("disabled"); //enable the "add" button
         }
 
         $('#media_preview').attr('x-media-type', "youtube_embed");
-        $('#media_preview').attr('x-media-link', input);
+        $('#media_preview').attr('x-media-link', this.value);
         $('#media_preview').attr('x-file-name', youtube_src);
         $('#media_preview').attr('src', youtube_src);
 
@@ -16957,6 +16963,29 @@ $(function(){
         reset_modal();
     });
     
+
+    //code to scan which gallery items are loaded into the page already and update the javascript
+    var preloaded_gallery_items = $("#gallery_manager div img");
+
+    for(var i = 0; i < preloaded_gallery_items.length; i++){
+
+        var gallery_item = preloaded_gallery_items[i];
+        
+        var main_graphic_attr = $(gallery_item).attr('x-main-graphic');
+        var cover_image_attr = $(gallery_item).attr('x-cover-image');
+
+        panel_gallery_items.push({ 
+            src: $(gallery_item).attr("src"), 
+            media_type: $(gallery_item).attr("x-media-type"), 
+            file_name: $(gallery_item).attr("x-file-name"), 
+            link: $(gallery_item).attr("x-media-link") , 
+            main_graphic: typeof main_graphic_attr !== typeof undefined && main_graphic_attr !== false ? true : false, 
+            cover_image: typeof cover_image_attr !== typeof undefined && cover_image_attr !== false ? true : false 
+        });
+
+        gallery_item_used_properties.set_as_main_graphic_used = typeof main_graphic_attr !== typeof undefined && main_graphic_attr !== false ? true : false;
+        gallery_item_used_properties.set_as_cover_image_used = typeof cover_image_attr !== typeof undefined && cover_image_attr !== false ? true : false;
+    }
 });
 $(function(){
     
@@ -17520,7 +17549,7 @@ $(function(){
                 var src = "";
         
                 if(item.media_type == "youtube_embed"){
-                    src = window["upload_gallery_item_modal_controller__get_youtube_embed_img_src"](item.link);
+                    src = window["youtube_url_translation"].get_youtube_embed_img_src(item.link);
                 }
                 else if(item.media_type == "image"){
                     src = $("#file_server_url_prefix_store").attr("value") + "/events/" + item.link;

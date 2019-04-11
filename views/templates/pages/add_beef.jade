@@ -33,43 +33,64 @@ append body
                                 //-a(href="#").btn.btn-secondary Cancel
                                 button(type="submit").btn.btn-primary.submit_new_event_button Submit
                     div.row.versus-panel#versus_panel
-                        +versus-panel([], [])
+                        - var aggressors = [];
+                        - var targets = [];
+                        - if(event_data){
+                            - var map_actor_src_field = function(actor){ actor.src = actor.img_title_fullsize; return actor;};
+                            - aggressors = event_data.aggressors.map(map_actor_src_field);
+                            - targets = event_data.targets.map(map_actor_src_field);
+                        - }
+                        +versus-panel(aggressors, targets)
                     div.row
                         div.col-12
                             div.form-row
                                 div.form-group.col-md-6
                                     label(for="beef_title") Title *
-                                    input(type="text").form-control#beef_title
+                                    input(type="text", value=event_data ? event_data.title : "").form-control#beef_title 
                                  div.form-group.col-md-6.row
+                                    - var date_split = event_data ? new Date(event_data.event_date).toISOString().split("T") : ["", "12:00"]
                                      div.form-group.col-md-6
                                         label(for="beef_date") Date *
-                                        input(type="date").form-control#beef_date
+                                        input(type="date", value=date_split[0]).form-control#beef_date
                                      div.form-group.col-md-6
                                         label(for="beef_time") Time *
-                                        input(type="time", value="12:00").form-control#beef_time 
+                                        input(type="time", value=date_split[1].slice(0,5)).form-control#beef_time 
                             div.form-row
                                 div.form-group.col-md-6
                                     label(for="beef_category") Category *
                                     select#beef_category.form-control(name="beef_category")
-                                        option(selected="selected", disabled="disabled") Select Category
+                                        option(selected=!event_data, disabled="disabled") Select Category
                                         each category in categories
-                                            option(value=category.cat_id) #{category.name}
+                                            option(value=category.cat_id, selected=event_data && category.cat_id == event_data.categories[0].cat_id) #{category.name}
                                 div.form-group.col-md-6
                                     label(for="beef_tags") Tags
                                     select#beef_tags.form-control(name="beef_tags", multiple="multiple")
-                                    
+                                        - if(event_data){
+                                            - for(var i = 0; i < event_data.tags.length; i++){
+                                                option(value=event_data.tags[i], selected) #{event_data.tags[i]}
+                                            - }
+                                        - }
                             div.form-row
                                 div.form-group.col-md-12
                                     label(for="beef_content_summernote") What happened? *
                                     textarea.form-control#beef_description
-                                    //-#beef_content_summernote
+                                        - if(event_data){
+                                            | #{event_data.description}
+                                        - }
                             
-                            +add-list([], "add_event_data_sources", "Data Sources")
+                            +add-list(event_data ? event_data.data_sources : [], "add_event_data_sources", "Data Sources")
                             
                             div.form-row
                                 div.form-group.col-md-12
                                     h2 Gallery *
                             div.row.gallery-manager#gallery_manager
+                                - if(gallery_items){
+                                    - gallery_items.map(function(gallery_item){
+                                        - if(gallery_item.media_type == "image"){
+                                            - gallery_item.src = file_server_url_builder(file_server_url_prefix, "events", gallery_item.link, "c_fill,g_face,h_240,w_350")
+                                        - }
+                                    - })
+                                - }
                                 +gallery-manager()
                                 
                     div.row

@@ -33,7 +33,7 @@ $(function(){
                 var src = "";
         
                 if(item.media_type == "youtube_embed"){
-                    src = window["upload_gallery_item_modal_controller__get_youtube_embed_img_src"](item.link);
+                    src = window["youtube_url_translation"].get_youtube_embed_img_src(item.link);
                 }
                 else if(item.media_type == "image"){
                     src = $("#file_server_url_prefix_store").attr("value") + "/events/" + item.link;

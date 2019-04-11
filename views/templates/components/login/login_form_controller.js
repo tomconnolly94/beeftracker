@@ -32,9 +32,12 @@ $(function(){
                 var first_path_stage = window.location.pathname.split("/")[0] && original_url.split("/")[0].length > 0 ? original_url.split("/")[0] : null;
                     
                 if(query_params){
-                    var query_split = query_params.split("=");
-                    if(query_split[0] == "redirected_from"){
-                        window.location.href = query_split[1];
+                    var query_split = query_params.split("&");
+                    var first_query_param = query_split[0].split("=");
+                    if(first_query_param[0] == "redirected_from"){
+                        query_split.splice(0, 1);
+                        full_query = first_query_param[1] + "?" + query_split.join("&");
+                        window.location.href = full_query;
                     }
                     else{
                         window.location.href = "/profile";

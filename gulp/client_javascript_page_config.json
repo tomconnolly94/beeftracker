@@ -30,6 +30,7 @@
 		"views/templates/components/add_list/add_list_controller.js",
 		"views/templates/components/add_actor_modal/add_actor_modal_controller.js",
 		"views/templates/components/select_actor_modal/select_actor_modal_controller.js",
+		"public/javascript/server_client_common/youtube_url_translation.js",
 		"views/templates/components/upload_gallery_item_modal/upload_gallery_item_modal_controller.js",
 		"public/javascript/submit_controllers/submit_actor_controller.js",
 		"public/javascript/submit_controllers/submit_event_controller.js",
