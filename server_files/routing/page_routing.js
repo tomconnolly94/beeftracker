@@ -244,6 +244,7 @@ router.get("/add-beef", token_authentication.recognise_user_token, blanket_middl
             view_parameters.categories = values[1];
             view_parameters.actor_variable_fields = values[2];
             view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
+            view_parameters.post_url = "/api/events";
 
             response.render("pages/add_beef.jade", view_parameters); 
         });
@@ -408,6 +409,73 @@ router.get("/disclaimer", token_authentication.recognise_user_token, blanket_mid
     
     response.render("pages/static/peripheral_pages/disclaimer.jade", view_parameters); 
 }); //disclaimer page
+router.get("/edit-beef/:event_id", url_param_validator.validate, token_authentication.recognise_user_token, blanket_middleware, function(request, response) {
+
+    var event_id = request.locals.validated_params.event_id;
+
+    var event_promise = new Promise(function(resolve, reject){
+        event_controller.findEvent(event_id, function(data){
+            if(data.failed){
+                reject(data);
+            }
+            else{
+                resolve(data);
+            }
+        });
+    });
+
+    var actor_data_promise = new Promise(function(resolve, reject){
+        actor_controller.findActors({ increasing_order: "name" }, function(data){
+            resolve(data);
+        });
+    });
+    
+    var categories_promise = new Promise(function(resolve, reject){
+       event_categories_controller.getEventCategories(function(data){
+           resolve(data);
+        });
+    });
+    
+    var actor_variable_fields_promise = new Promise(function(resolve, reject){
+       actor_controller.getVariableActorFieldsConfig(function(data){
+           resolve(data);
+        });
+    });
+    
+    if(request.locals && request.locals.authenticated_user){ //is user token found, then do not allow them to access the register page
+        
+        Promise.all([ event_promise, actor_data_promise, categories_promise, actor_variable_fields_promise ]).then(function(values){
+
+            var get_youtube_embed_img_src = require("../../public/javascript/server_client_common/youtube_url_translation").get_youtube_embed_img_src;
+
+            var map_actor_src_field = function(gallery_item){ 
+                gallery_item.src = gallery_item.link;
+                if(gallery_item.media_type == "youtube_embed"){
+                    gallery_item.src = get_youtube_embed_img_src(gallery_item.link);
+                }
+
+                return gallery_item;
+            };
+
+            var view_parameters = Object.assign({}, view_parameters_global);
+            view_parameters.event_data = values[0];
+            view_parameters.actor_data = values[1];
+            view_parameters.gallery_items = values[0].gallery_items.map(map_actor_src_field);
+            view_parameters.categories = values[2];
+            view_parameters.actor_variable_fields = values[3];
+            view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
+            view_parameters.post_url = "/api/update-requests";
+
+            response.render("pages/add_beef.jade", view_parameters); 
+        }).catch(function(error){
+            console.log(error);
+            response.render("pages/static/error.jade"); 
+        });
+    }
+    else{
+        response.redirect("/login?redirected_from=" + request.originalUrl.replace("?", "&"));
+    }
+}); // edit beef page
 router.get("/login", token_authentication.recognise_user_token, blanket_middleware, function(request, response) {
     
     var redirected_from = request.query && request.query.redirected_from ? request.query.redirected_from : null; //if user has been denied entry to a page and then redirected to login, access the page they were attempting to access
@@ -503,74 +571,6 @@ router.get("/terms-and-conditions", token_authentication.recognise_user_token, b
     
     response.render("pages/static/peripheral_pages/terms_and_conditions.jade", view_parameters); 
 }); //terms and conditions page
-router.get("/edit-beef/:event_id", url_param_validator.validate, token_authentication.recognise_user_token, blanket_middleware, function(request, response) {
-
-    var event_id = request.locals.validated_params.event_id;
-
-    var event_promise = new Promise(function(resolve, reject){
-        event_controller.findEvent(event_id, function(data){
-            if(data.failed){
-                reject(data);
-            }
-            else{
-                resolve(data);
-            }
-        });
-    });
-
-    var actor_data_promise = new Promise(function(resolve, reject){
-        actor_controller.findActors({ increasing_order: "name" }, function(data){
-            resolve(data);
-        });
-    });
-    
-    var categories_promise = new Promise(function(resolve, reject){
-       event_categories_controller.getEventCategories(function(data){
-           resolve(data);
-        });
-    });
-    
-    var actor_variable_fields_promise = new Promise(function(resolve, reject){
-       actor_controller.getVariableActorFieldsConfig(function(data){
-           resolve(data);
-        });
-    });
-    
-    if(request.locals && request.locals.authenticated_user){ //is user token found, then do not allow them to access the register page
-        
-        Promise.all([ event_promise, actor_data_promise, categories_promise, actor_variable_fields_promise ]).then(function(values){
-
-            var get_youtube_embed_img_src = require("../../public/javascript/server_client_common/youtube_url_translation").get_youtube_embed_img_src;
-
-            var map_actor_src_field = function(gallery_item){ 
-                gallery_item.src = gallery_item.link;
-                if(gallery_item.media_type == "youtube_embed"){
-                    console.log(gallery_item.link)
-                    console.log(get_youtube_embed_img_src(gallery_item.link))
-                    gallery_item.src = get_youtube_embed_img_src(gallery_item.link);
-                }
-
-                return gallery_item;
-            };
-
-            var view_parameters = Object.assign({}, view_parameters_global);
-            view_parameters.event_data = values[0];
-            view_parameters.actor_data = values[1];
-            view_parameters.gallery_items = values[0].gallery_items.map(map_actor_src_field);
-            view_parameters.categories = values[2];
-            view_parameters.actor_variable_fields = values[3];
-            view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
-
-            response.render("pages/add_beef.jade", view_parameters); 
-        }).catch(function(error){
-            console.log(error);
-            response.render("pages/static/error.jade"); 
-        });
-    }
-    else{
-        response.redirect("/login?redirected_from=" + request.originalUrl.replace("?", "&"));
-    }
-}); // edit beef page
 
 
 

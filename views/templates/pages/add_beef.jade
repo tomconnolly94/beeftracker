@@ -11,6 +11,7 @@ include ../components/google_adsense/adsense_banner_ad.jade
 
 append body
     div.bt-content
+        div.hidden#post_url(value=post_url)
         +add-actor-modal(actor_variable_fields)
         +upload-gallery-item-modal()
         +select-actor-modal()
@@ -31,7 +32,12 @@ append body
                         div.col-12
                             div.button-group.float-right
                                 //-a(href="#").btn.btn-secondary Cancel
-                                button(type="submit").btn.btn-primary.submit_new_event_button Submit
+                                - if(post_url.includes("update-request")){
+                                    button(type="submit").btn.btn-primary.submit_update_request_button Suggest update
+                                - } 
+                                - else{
+                                    button(type="submit").btn.btn-primary.submit_new_event_button Submit
+                                - }
                     div.row.versus-panel#versus_panel
                         - var aggressors = [];
                         - var targets = [];
@@ -97,7 +103,12 @@ append body
                         div.col-12
                             div.button-group.float-right
                                 //-a(href="#").btn.btn-secondary Cancel
-                                button(type="submit").btn.btn-primary.submit_new_event_button Submit
+                                - if(post_url.includes("update-request")){
+                                    button(type="submit").btn.btn-primary.submit_update_request_button Suggest update
+                                - } 
+                                - else{
+                                    button(type="submit").btn.btn-primary.submit_new_event_button Submit
+                                - }
 
 append js_scripts
     script(src="/js/add_beef.js")

@@ -26,7 +26,7 @@ router.use("/contact-requests", require("./api_sub_routing/contact_requests_rout
 router.use("/event-categories", require("./api_sub_routing/event_categories_routing.js"));
 router.use("/events", require("./api_sub_routing/events_routing.js"));
 //router.use("/scraped_data", require("./api_sub_routing/scraped_data_routing"));
-//router.use("/update-requests", require("./api_sub_routing/update_requests_routing.js"));
+router.use("/update-requests", require("./api_sub_routing/update_requests_routing.js"));
 router.use("/users", require("./api_sub_routing/users_routing.js"));
 router.use("/votes", require("./api_sub_routing/votes_routing.js"));
 

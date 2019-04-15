@@ -8,7 +8,7 @@ var update_request_validator = require("../../validation/update_request_validati
 var token_authentication = require("../../tools/token_authentication.js"); //get token authentication object
 var memoryUpload = require("../../config/multer_config.js").get_multer_object(); //get multer config
 var responses_object = require("./endpoint_response.js");
-var url_param_validator = require("../validation/url_param_validation");
+var url_param_validator = require("../../validation/url_param_validation");
 
 //init response functions
 var send_successful_response = responses_object.send_successful_response;
@@ -18,6 +18,7 @@ var send_unsuccessful_response = responses_object.send_unsuccessful_response;
 router.route('/').post(memoryUpload, update_request_validator.validate, function(request, response){
     
     var data = request.locals.validated_data
+    console.log(data);
     var files = request.files;
     
     update_request_controller.createUpdateRequest(data, files, function(data){

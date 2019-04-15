@@ -1,7 +1,6 @@
 $(function(){
 
     var url_params = new URLSearchParams(window.location.search);
-    console.log("Edit mode: " + url_params.get("_id") ? true : false);
 
     var param_function_mapping = {
         _id: function(param){

@@ -18,7 +18,7 @@ $(function(){
     //array to hold all current gallery items, purely to keep a state outside of the media submit button handler
     let panel_gallery_items = [];
 
-    gallery_item_used_properties = {
+    window["gallery_item_used_properties"] = {
         set_as_main_graphic_used: false,
         set_as_cover_image_used: false
     }
@@ -58,7 +58,7 @@ $(function(){
     }
 
     function set_gallery_item_property_used(property_name){
-        gallery_item_used_properties["set_as_" + property_name + "_used"] = true;
+        window["gallery_item_used_properties"]["set_as_" + property_name + "_used"] = true;
         $("#set_as_" + property_name).css("display", "none"); //hide set as cover checkbox input
     }
 
@@ -116,10 +116,10 @@ $(function(){
         
         $("#" + media_type + "_input_div").css("display", "block"); //show text input tag
         
-        if(gallery_item_used_properties["set_as_main_graphic_used"]){
+        if(window["gallery_item_used_properties"]["set_as_main_graphic_used"]){
             $("#set_as_main_graphic *").attr("disabled", "disabled").off('click'); //show main graphic checkbox input
         }
-        if(gallery_item_used_properties["set_as_cover_image_used"] && media_type == "image"){
+        if(window["gallery_item_used_properties"]["set_as_cover_image_used"] && media_type == "image"){
             $("#set_as_cover_image *").attr("disabled", "disabled").off('click'); //show set as cover checkbox input
         }
         
@@ -236,10 +236,10 @@ $(function(){
 
             if(this.parentElement.children[1].attributes[0].value == panel_gallery_items[i].src){
                 if(panel_gallery_items[i].main_graphic){
-                    gallery_item_used_properties["set_as_main_graphic_used"] = false;
+                    window["gallery_item_used_properties"]["set_as_main_graphic_used"] = false;
                 }
                 if(panel_gallery_items[i].cover_image){
-                    gallery_item_used_properties["set_as_cover_image_used"] = false;
+                    window["gallery_item_used_properties"]["set_as_cover_image_used"] = false;
                 }
                 panel_gallery_items.splice(i, 1);
                 i--;
@@ -253,8 +253,8 @@ $(function(){
         
         let media_type = $(this).children("img").attr("x-media-type");
         
-        /*gallery_item_used_properties["set_as_main_graphic_used"] = false;
-        gallery_item_used_properties["set_as_cover_image_used"] = false;*/
+        /*window["gallery_item_used_properties"]["set_as_main_graphic_used"] = false;
+        window["gallery_item_used_properties"]["set_as_cover_image_used"] = false;*/
         //set modal fields
         $("#upload_gallery_item_modal").modal("show"); //show modal
         $("#media_preview").attr("src", $(this).children("img").attr("src"));
@@ -269,10 +269,10 @@ $(function(){
         $("#set_as_cover_image_checkbox").prop("checked", $(this).children("img").attr("x-cover-image") == "x-cover-image" ? true : false);
         $("#set_as_cover_image").css("display", "block");// $(this).children("img").attr("x-cover-image") == "x-cover-image" ? "block" : "none");
         
-        if( $(this).children("img").attr("x-main-graphic") == "x-main-graphic" || !gallery_item_used_properties["set_as_main_graphic_used"]){
+        if( $(this).children("img").attr("x-main-graphic") == "x-main-graphic" || !window["gallery_item_used_properties"]["set_as_main_graphic_used"]){
             $("#set_as_main_graphic *").attr("disabled", false).off('click'); //show main graphic checkbox input
         }
-        if($(this).children("img").attr("x-cover-image") == "x-cover-image" || !gallery_item_used_properties["set_as_cover_image_used"]){
+        if($(this).children("img").attr("x-cover-image") == "x-cover-image" || !window["gallery_item_used_properties"]["set_as_cover_image_used"]){
             $("#set_as_cover_image *").attr("disabled", false).off('click'); //show set as cover checkbox input
         }
         
@@ -310,7 +310,12 @@ $(function(){
             cover_image: typeof cover_image_attr !== typeof undefined && cover_image_attr !== false ? true : false 
         });
 
-        gallery_item_used_properties.set_as_main_graphic_used = typeof main_graphic_attr !== typeof undefined && main_graphic_attr !== false ? true : false;
-        gallery_item_used_properties.set_as_cover_image_used = typeof cover_image_attr !== typeof undefined && cover_image_attr !== false ? true : false;
+        if(typeof main_graphic_attr !== typeof undefined && main_graphic_attr !== false){
+            window["gallery_item_used_properties"].set_as_main_graphic_used = true;
+        }
+
+        if(typeof cover_image_attr !== typeof undefined && cover_image_attr !== false){
+            window["gallery_item_used_properties"].set_as_cover_image_used = true;
+        }
     }
 });

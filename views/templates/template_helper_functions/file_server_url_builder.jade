@@ -4,10 +4,11 @@
         - var yt_id = image_id.split("embed/")[1].split("?")[0];
         - return `https://img.youtube.com/vi/${yt_id}/0.jpg`;
     - }
-    - else{
-        
-    - }
+
     - var split_prefix = prefix.split("/");
+    -if(image_id.includes(split_prefix[2])){
+        - return image_id;
+    - }
     - split_prefix.splice(split_prefix.length-1, 0, image_resize_params);
     - var image_url = split_prefix.join("/");
     

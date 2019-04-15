@@ -38,13 +38,13 @@ $(function(){
         $(".remove_actor").unbind().click(function(){
             
             for(var i = 0; i < panel_aggressors.length; i++){
-                if(panel_aggressors[i].id == $(this).parent().children("h4").attr("x-actor-id")){
+                if(panel_aggressors[i]._id == $(this).parent().children("h4").attr("x-actor-id")){
                     panel_aggressors.splice(i, 1);
                 }
             }
             
             for(var i = 0; i < panel_targets.length; i++){
-                if(panel_targets[i].id == $(this).parent().children("h4").attr("x-actor-id")){
+                if(panel_targets[i]._id == $(this).parent().children("h4").attr("x-actor-id")){
                     panel_targets.splice(i, 1);
                 }
             }
@@ -77,7 +77,7 @@ $(function(){
         var new_actor_record = {
             src: image_link,
             name: actor_name,
-            id: actor_id
+            _id: actor_id
         };
                 
         render_voting_panel(actor_type == "beefer" ? panel_aggressors.concat([ new_actor_record ]) : panel_aggressors, actor_type == "beefee" ? panel_targets.concat([ new_actor_record ]) : panel_targets)

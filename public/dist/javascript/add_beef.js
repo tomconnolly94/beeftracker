@@ -16553,13 +16553,13 @@ $(function(){
         $(".remove_actor").unbind().click(function(){
             
             for(var i = 0; i < panel_aggressors.length; i++){
-                if(panel_aggressors[i].id == $(this).parent().children("h4").attr("x-actor-id")){
+                if(panel_aggressors[i]._id == $(this).parent().children("h4").attr("x-actor-id")){
                     panel_aggressors.splice(i, 1);
                 }
             }
             
             for(var i = 0; i < panel_targets.length; i++){
-                if(panel_targets[i].id == $(this).parent().children("h4").attr("x-actor-id")){
+                if(panel_targets[i]._id == $(this).parent().children("h4").attr("x-actor-id")){
                     panel_targets.splice(i, 1);
                 }
             }
@@ -16592,7 +16592,7 @@ $(function(){
         var new_actor_record = {
             src: image_link,
             name: actor_name,
-            id: actor_id
+            _id: actor_id
         };
                 
         render_voting_panel(actor_type == "beefer" ? panel_aggressors.concat([ new_actor_record ]) : panel_aggressors, actor_type == "beefee" ? panel_targets.concat([ new_actor_record ]) : panel_targets)
@@ -16691,7 +16691,7 @@ $(function(){
     //array to hold all current gallery items, purely to keep a state outside of the media submit button handler
     let panel_gallery_items = [];
 
-    gallery_item_used_properties = {
+    window["gallery_item_used_properties"] = {
         set_as_main_graphic_used: false,
         set_as_cover_image_used: false
     }
@@ -16731,7 +16731,7 @@ $(function(){
     }
 
     function set_gallery_item_property_used(property_name){
-        gallery_item_used_properties["set_as_" + property_name + "_used"] = true;
+        window["gallery_item_used_properties"]["set_as_" + property_name + "_used"] = true;
         $("#set_as_" + property_name).css("display", "none"); //hide set as cover checkbox input
     }
 
@@ -16789,10 +16789,10 @@ $(function(){
         
         $("#" + media_type + "_input_div").css("display", "block"); //show text input tag
         
-        if(gallery_item_used_properties["set_as_main_graphic_used"]){
+        if(window["gallery_item_used_properties"]["set_as_main_graphic_used"]){
             $("#set_as_main_graphic *").attr("disabled", "disabled").off('click'); //show main graphic checkbox input
         }
-        if(gallery_item_used_properties["set_as_cover_image_used"] && media_type == "image"){
+        if(window["gallery_item_used_properties"]["set_as_cover_image_used"] && media_type == "image"){
             $("#set_as_cover_image *").attr("disabled", "disabled").off('click'); //show set as cover checkbox input
         }
         
@@ -16909,10 +16909,10 @@ $(function(){
 
             if(this.parentElement.children[1].attributes[0].value == panel_gallery_items[i].src){
                 if(panel_gallery_items[i].main_graphic){
-                    gallery_item_used_properties["set_as_main_graphic_used"] = false;
+                    window["gallery_item_used_properties"]["set_as_main_graphic_used"] = false;
                 }
                 if(panel_gallery_items[i].cover_image){
-                    gallery_item_used_properties["set_as_cover_image_used"] = false;
+                    window["gallery_item_used_properties"]["set_as_cover_image_used"] = false;
                 }
                 panel_gallery_items.splice(i, 1);
                 i--;
@@ -16926,8 +16926,8 @@ $(function(){
         
         let media_type = $(this).children("img").attr("x-media-type");
         
-        /*gallery_item_used_properties["set_as_main_graphic_used"] = false;
-        gallery_item_used_properties["set_as_cover_image_used"] = false;*/
+        /*window["gallery_item_used_properties"]["set_as_main_graphic_used"] = false;
+        window["gallery_item_used_properties"]["set_as_cover_image_used"] = false;*/
         //set modal fields
         $("#upload_gallery_item_modal").modal("show"); //show modal
         $("#media_preview").attr("src", $(this).children("img").attr("src"));
@@ -16942,10 +16942,10 @@ $(function(){
         $("#set_as_cover_image_checkbox").prop("checked", $(this).children("img").attr("x-cover-image") == "x-cover-image" ? true : false);
         $("#set_as_cover_image").css("display", "block");// $(this).children("img").attr("x-cover-image") == "x-cover-image" ? "block" : "none");
         
-        if( $(this).children("img").attr("x-main-graphic") == "x-main-graphic" || !gallery_item_used_properties["set_as_main_graphic_used"]){
+        if( $(this).children("img").attr("x-main-graphic") == "x-main-graphic" || !window["gallery_item_used_properties"]["set_as_main_graphic_used"]){
             $("#set_as_main_graphic *").attr("disabled", false).off('click'); //show main graphic checkbox input
         }
-        if($(this).children("img").attr("x-cover-image") == "x-cover-image" || !gallery_item_used_properties["set_as_cover_image_used"]){
+        if($(this).children("img").attr("x-cover-image") == "x-cover-image" || !window["gallery_item_used_properties"]["set_as_cover_image_used"]){
             $("#set_as_cover_image *").attr("disabled", false).off('click'); //show set as cover checkbox input
         }
         
@@ -16983,8 +16983,13 @@ $(function(){
             cover_image: typeof cover_image_attr !== typeof undefined && cover_image_attr !== false ? true : false 
         });
 
-        gallery_item_used_properties.set_as_main_graphic_used = typeof main_graphic_attr !== typeof undefined && main_graphic_attr !== false ? true : false;
-        gallery_item_used_properties.set_as_cover_image_used = typeof cover_image_attr !== typeof undefined && cover_image_attr !== false ? true : false;
+        if(typeof main_graphic_attr !== typeof undefined && main_graphic_attr !== false){
+            window["gallery_item_used_properties"].set_as_main_graphic_used = true;
+        }
+
+        if(typeof cover_image_attr !== typeof undefined && cover_image_attr !== false){
+            window["gallery_item_used_properties"].set_as_cover_image_used = true;
+        }
     }
 });
 $(function(){
@@ -17339,9 +17344,9 @@ $(function(){
         });
     }
     
-    function submit_http_post_req(form_data){
+    function submit_http_post_req(form_data, post_url){
         $.ajax({
-            url: "/api/events",
+            url: post_url,
             data: form_data,
             processData: false,
             contentType: false,
@@ -17381,39 +17386,61 @@ $(function(){
                 }
             }
         });
-}
-    
-    $(".submit_new_event_button").unbind().click(function(event){
-        event.preventDefault();
-        
-        //get form contents
-        var title = $("#beef_title").val();
-        var date = $("#beef_date").val().split("-");
-        var time = $("#beef_time").val().split(":");
+    }
+
+    function extract_actors_from_page(){
         var aggressors_li = $(".beefer");
         var targets_li = $(".beefee");
-        var category = $("#beef_category").select2().find(":selected").val();
-        var tags = $("#beef_tags").select2().val();
-        //var description = $("#beef_content_summernote").val();
-        var description = $("#beef_description").val().replace(/&/g, '+'); //XSS doesnt like the '&' character, replace it with a '+' to bypass validation
-        var li_items_data_sources = $("#add_event_data_sources").find("li");
-        var data_sources = [];
         var aggressors = [];
         var targets = [];
         
         //format aggressors
         for(var i = 0; i < aggressors_li.length; i++){
             if($(aggressors_li[i]).children("div").children("h4").attr("x-actor-id")){
-                aggressors.push($(aggressors_li[i]).children("div").children("h4").attr("x-actor-id"));
+
+                var new_actor_record = {
+                    src: $(aggressors_li[i]).children("div").children("a").children("img").attr("src"),
+                    name: $(aggressors_li[i]).children("div").children("h4").text(),
+                    _id: $(aggressors_li[i]).children("div").children("h4").attr("x-actor-id")
+                };
+
+                aggressors.push(new_actor_record);
             }
         }
         
         //format aggressors
         for(var i = 0; i < targets_li.length; i++){
             if($(targets_li[i]).children("div").children("h4").attr("x-actor-id")){
-                targets.push($(targets_li[i]).children("div").children("h4").attr("x-actor-id"));
+
+                var new_actor_record = {
+                    src: $(targets_li[i]).children("div").children("a").children("img").attr("src"),
+                    name: $(targets_li[i]).children("div").children("h4").text(),
+                    _id: $(targets_li[i]).children("div").children("h4").attr("x-actor-id")
+                };
+
+                targets.push(new_actor_record);
             }
         }
+
+        return [aggressors, targets];
+    }
+
+    function extract_data_from_page(){
+
+        //get form contents
+        var title = $("#beef_title").val();
+        var date = $("#beef_date").val().split("-");
+        var time = $("#beef_time").val().split(":");
+        var category = $("#beef_category").select2().find(":selected").val();
+        var tags = $("#beef_tags").select2().val();
+        //var description = $("#beef_content_summernote").val();
+        var description = $("#beef_description").val().replace(/&/g, '+'); //XSS doesnt like the '&' character, replace it with a '+' to bypass validation
+        var li_items_data_sources = $("#add_event_data_sources").find("li");
+        var data_sources = [];
+
+        var actors = extract_actors_from_page();
+        var aggressors = actors[0].map(function(actor){ return actor._id });
+        var targets = actors[1].map(function(actor){ return actor._id });;
         
         //extract data sources
         for(var i = 0; i < li_items_data_sources.length; i++){
@@ -17422,7 +17449,6 @@ $(function(){
         
         var li_items_gallery_manager = $("#gallery_manager").find(".gallery-manager-item");
         var gallery_items = [];
-        var form_data = new FormData();
         
         //extract gallery items
         for(var i = 0; i < li_items_gallery_manager.length; i++){
@@ -17437,8 +17463,13 @@ $(function(){
             var link = null;
             
             if(media_type == "image"){
-                file = b64toBlob(item.children[1].currentSrc.split("base64,")[1]);
-                link = "img" + i;
+                if(item.children[1].currentSrc.includes("base64")){
+                    file = b64toBlob(item.children[1].currentSrc.split("base64,")[1]);
+                    link = "img" + i;
+                }
+                else{
+                    link = item.children[1].currentSrc;
+                }
             }
             else if(media_type == "youtube_embed"){
                 link = media_link;
@@ -17453,10 +17484,6 @@ $(function(){
             }
 
             gallery_items.push(gallery_item_formatted);
-            
-            if(media_type == "image"){
-                form_data.append("file-" + i, gallery_item_formatted.file, gallery_item_formatted.link);
-            }
         }
         
         var formatted_date = new Date(parseInt(date[0]), parseInt(date[1])-1, parseInt(date[2]), parseInt(time[0]), parseInt(time[1]));
@@ -17474,18 +17501,74 @@ $(function(){
             record_origin: "submitted"
         }
 
+        return event_submission;
+    }
+    
+    $(".submit_new_event_button").unbind().click(function(event){
+        event.preventDefault();
+        
+        var event_submission = extract_data_from_page();
         var validation_result = validate_event_submission(event_submission)
         
         if(validation_result == "validation_successful"){
             
+            var form_data = new FormData();
+            //add image files to formdata
+            for(var i = 0; i < event_submission.gallery_items.length; i++){
+
+                var gallery_item = event_submission.gallery_items[i];
+
+                if(gallery_item.media_type == "image" && gallery_item.file){
+                    form_data.append("file-" + i, gallery_item.file, gallery_item.link);
+                }
+            }
+
             form_data.append("data", JSON.stringify(event_submission));
+            var post_url = $("#post_url").attr("value");
         
-            submit_http_post_req(form_data);
+            submit_http_post_req(form_data, post_url);
         }
         else{
             render_error_messages([ validation_result ]);
         }
     }); 
+    
+    $(".submit_update_request_button").unbind().click(function(event){
+        event.preventDefault();
+        
+        var event_submission = extract_data_from_page();
+        var validation_result = validate_event_submission(event_submission)
+        
+        if(validation_result == "validation_successful"){
+
+            var update_request = {
+                event_data: event_submission,
+                comment: ""
+            }
+            
+            var form_data = new FormData();
+            //add image files to formdata
+            for(var i = 0; i < event_submission.gallery_items.length; i++){
+
+                var gallery_item = event_submission.gallery_items[i];
+
+                if(gallery_item.media_type == "image" && gallery_item.file){
+                    form_data.append("file-" + i, gallery_item.file, gallery_item.link);
+                }
+            }
+            
+            form_data.append("data", JSON.stringify(update_request));
+            var post_url = $("#post_url").attr("value");
+        
+            submit_http_post_req(form_data, post_url);
+        }
+        else{
+            render_error_messages([ validation_result ]);
+        }
+    });
+
+    var actors = extract_actors_from_page();
+    window["select_actor_modal_controller__render_voting_panel"](actors[0], actors[1]);
 });
 
 $('#beef_category').select2({
@@ -17517,7 +17600,6 @@ $('#beef_tags').select2({
 $(function(){
 
     var url_params = new URLSearchParams(window.location.search);
-    console.log("Edit mode: " + url_params.get("_id") ? true : false);
 
     var param_function_mapping = {
         _id: function(param){
