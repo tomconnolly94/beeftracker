@@ -106,6 +106,10 @@ module.exports = {
         ],
         record_origin: "record_origin",
         tags: [ "tag_1", "tag_2"],
-        user_id: dummy_object_id
+        user_id: dummy_object_id,
+        votes: {
+            "upvotes" : 22,
+            "downvotes" : 10
+        }
     }
 }

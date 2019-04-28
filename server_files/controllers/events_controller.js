@@ -207,6 +207,16 @@ var create_beef_chains = function(event, success_callback, failure_callback){
     });
 };
 
+var calculate_event_rating = function(votes){
+    if(votes){
+        var rating = Math.round( (votes.upvotes / ( votes.upvotes + votes.downvotes ) ) * 5 )
+        return rating;
+    }
+    else{
+        return 0;
+    }
+}
+
 module.exports = {
     get_aggregate_array: function (match_query_content, additional_aggregate_stages) {
         var aggregate_array = [
@@ -434,6 +444,11 @@ module.exports = {
         };
 
         db_interface.get(query_config, function (results) {
+            
+            for(var i = 0; i < results.length; i++){
+                results[i].rating = calculate_event_rating(results[i].votes);
+            }
+
             callback(results);
         },
         function (error_object) {
@@ -475,6 +490,7 @@ module.exports = {
         db_interface.get(query_config, function (results) {
 
             var result = results[0];
+            result.rating = calculate_event_rating(result.votes);
             
             //sort beef chain events using event dates using above compare function
             for (var i = 0; i < result.beef_chains.length; i++) {

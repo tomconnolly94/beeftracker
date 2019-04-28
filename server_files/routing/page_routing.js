@@ -33,11 +33,6 @@ var view_parameters_global = {
     server_rendered: true
 }
 
-function calculate_event_rating(votes){
-    var rating = Math.round( (votes.upvotes / ( votes.upvotes + votes.downvotes ) ) * 5 )
-    return rating;
-}
-
 //find full user record from validated user token
 function resolve_user_from_locals_token(request, callback){
     user_controller.findUser(request.locals.authenticated_user.id, request.locals.authenticated_user.is_admin, function(data){

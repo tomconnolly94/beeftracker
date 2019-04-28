@@ -95,6 +95,7 @@ module.exports = {
     },
     
     deauthenticateUser: function(response, callback){
+        console.log("deauth triggered")
         //set all cookies to expire immediately
         response.cookie( "bftkr_auth", "0", { expires: new Date(0), httpOnly: cookies_http_only, secure: cookies_secure });
         response.cookie( "bftkr_logged_in", "false", { expires: new Date(0), httpOnly: false });

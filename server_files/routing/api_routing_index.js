@@ -30,31 +30,31 @@ router.use("/events", require("./api_sub_routing/events_routing.js"));
 router.use("/users", require("./api_sub_routing/users_routing.js"));
 router.use("/votes", require("./api_sub_routing/votes_routing.js"));
 
-//auth
-router.route("/authenticate").post(authentication_request_validator.validate, function(request, response){
+// //auth
+// router.route("/authenticate").post(authentication_request_validator.validate, function(request, response){
     
-    var auth_details = request.locals.validated_data;
-    var headers = request.headers;
+//     var auth_details = request.locals.validated_data;
+//     var headers = request.headers;
     
-    authentication_controller.authenticateUser(auth_details, headers, response, function(data, cookie_details){
-        if(data.failed){
-            send_unsuccessful_response(response, 400, data);
-        }
-        else{
-            send_successful_response(response, 200, data);
-        }
-    });
-});//built, written, not tested
-router.route("/deauthenticate").get(function(request, response){
-    authentication_controller.deauthenticateUser(response, function(data){
-        if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
-        }
-        else{
-            send_successful_response(response, 200, data);
-        }
-    });
-});//built, written, not tested
+//     authentication_controller.authenticateUser(auth_details, headers, response, function(data, cookie_details){
+//         if(data.failed){
+//             send_unsuccessful_response(response, 400, data);
+//         }
+//         else{
+//             send_successful_response(response, 200, data);
+//         }
+//     });
+// });//built, written, not tested
+// router.route("/deauthenticate").get(function(request, response){
+//     authentication_controller.deauthenticateUser(response, function(data){
+//         if(data.failed){
+//             send_unsuccessful_response(response, 400, data.message);
+//         }
+//         else{
+//             send_successful_response(response, 200, data);
+//         }
+//     });
+// });//built, written, not tested
 
 //broken link reporting
 router.route("/report-broken-link").get(function(request, response){
