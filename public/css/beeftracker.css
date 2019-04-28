@@ -6654,7 +6654,8 @@ h1, h2, h3, h4, h5 {
 
 p {
   color: #222222;
-  font-size: 18px; }
+  font-size: 16px;
+  text-align: justify; }
 
 header {
   padding: 10px 0;
@@ -6670,6 +6671,9 @@ header {
 
 header.container, header.bt-content {
   max-width: 100%; }
+  header.container .mobile-logo-container, header.bt-content .mobile-logo-container {
+    text-align: center;
+    padding-bottom: 15px; }
 
 .bt-content-full-width {
   padding: 20px 0px 40px; }

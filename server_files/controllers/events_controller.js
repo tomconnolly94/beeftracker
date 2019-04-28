@@ -90,8 +90,6 @@ var execute_beef_chain_update = function(event, existing_beef_chains, success_ca
             options: { upsert: true }
         }
 
-        console.log(beef_chain_update_config);
-
         delete beef_chain_update_config.update_clause._id; //if _id is in the update clause, remove it
 
         return new Promise(function(resolve, reject){
@@ -126,7 +124,6 @@ var execute_beef_chain_update = function(event, existing_beef_chains, success_ca
                 }
             }
 
-            console.log("no beef_chains found creating upsert config");
             db_query_promises.push(build_promise(
                 BeefChain({
                     actors: [ aggressor, target ],
