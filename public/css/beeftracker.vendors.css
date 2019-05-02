@@ -4924,8 +4924,8 @@ Courtesy: http://bootsnipp.com/snippets/featured/loading-button-effect-no-js
   font-family: "summernote";
   font-style: normal;
   font-weight: normal;
-  src: url("./font/summernote.eot?dbafe969167589eda84514394d126413");
-  src: url("./font/summernote.eot?#iefix") format("embedded-opentype"), url("./font/summernote.woff?dbafe969167589eda84514394d126413") format("woff"), url("./font/summernote.ttf?dbafe969167589eda84514394d126413") format("truetype"); }
+  src: url("./font/summernote.eot?4c7e83314b68cfa6a0d18a8b4690044b");
+  src: url("./font/summernote.eot?4c7e83314b68cfa6a0d18a8b4690044b#iefix") format("embedded-opentype"), url("./font/summernote.woff?4c7e83314b68cfa6a0d18a8b4690044b") format("woff"), url("./font/summernote.ttf?4c7e83314b68cfa6a0d18a8b4690044b") format("truetype"); }
 
 [class^="note-icon-"]:before, [class*=" note-icon-"]:before {
   display: inline-block;
@@ -5883,12 +5883,14 @@ a.note-dropdown-item, a.note-dropdown-item:hover {
 .note-popover .note-popover-content .note-style h1, .note-toolbar .note-style h1, .note-popover .note-popover-content .note-style h2, .note-toolbar .note-style h2, .note-popover .note-popover-content .note-style h3, .note-toolbar .note-style h3, .note-popover .note-popover-content .note-style h4, .note-toolbar .note-style h4, .note-popover .note-popover-content .note-style h5, .note-toolbar .note-style h5, .note-popover .note-popover-content .note-style h6, .note-toolbar .note-style h6, .note-popover .note-popover-content .note-style blockquote, .note-toolbar .note-style blockquote {
   margin: 0; }
 
+.note-popover .note-popover-content .note-color-all .note-dropdown-menu, .note-toolbar .note-color-all .note-dropdown-menu {
+  min-width: 346px; }
+
 .note-popover .note-popover-content .note-color .dropdown-toggle, .note-toolbar .note-color .dropdown-toggle {
   width: 20px;
   padding-left: 5px; }
 
 .note-popover .note-popover-content .note-color .note-dropdown-menu, .note-toolbar .note-color .note-dropdown-menu {
-  min-width: 346px;
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
   box-sizing: content-box; }
@@ -5908,7 +5910,7 @@ a.note-dropdown-item, a.note-dropdown-item:hover {
   text-align: center;
   border-bottom: 1px solid #eee; }
 
-.note-popover .note-popover-content .note-color .note-dropdown-menu .note-palette .note-color-reset, .note-toolbar .note-color .note-dropdown-menu .note-palette .note-color-reset {
+.note-popover .note-popover-content .note-color .note-dropdown-menu .note-palette .note-color-reset, .note-toolbar .note-color .note-dropdown-menu .note-palette .note-color-reset, .note-popover .note-popover-content .note-color .note-dropdown-menu .note-palette .note-color-select, .note-toolbar .note-color .note-dropdown-menu .note-palette .note-color-select {
   width: 100%;
   padding: 2px 3px;
   margin: 3px;
@@ -5925,11 +5927,17 @@ a.note-dropdown-item, a.note-dropdown-item:hover {
 .note-popover .note-popover-content .note-color .note-dropdown-menu .note-palette .note-color-reset:hover, .note-toolbar .note-color .note-dropdown-menu .note-palette .note-color-reset:hover {
   background: #eee; }
 
-.note-popover .note-popover-content .note-para .note-dropdown-menu, .note-toolbar .note-para .note-dropdown-menu {
+.note-popover .note-popover-content .note-color .note-dropdown-menu .note-palette .note-color-select-btn, .note-toolbar .note-color .note-dropdown-menu .note-palette .note-color-select-btn {
+  display: none; }
+
+.note-popover .note-popover-content .note-color .note-dropdown-menu .note-palette .note-holder-custom .note-color-btn, .note-toolbar .note-color .note-dropdown-menu .note-palette .note-holder-custom .note-color-btn {
+  border: 1px solid #eee; }
+
+.note-popover .note-popover-content .note-style .note-dropdown-menu, .note-toolbar .note-style .note-dropdown-menu {
   min-width: 216px;
   padding: 5px; }
 
-.note-popover .note-popover-content .note-para .note-dropdown-menu > div:first-child, .note-toolbar .note-para .note-dropdown-menu > div:first-child {
+.note-popover .note-popover-content .note-style .note-dropdown-menu > div:first-child, .note-toolbar .note-style .note-dropdown-menu > div:first-child {
   margin-right: 5px; }
 
 .note-popover .note-popover-content .note-btn-fontname .note-dropdown-menu, .note-toolbar .note-btn-fontname .note-dropdown-menu {
