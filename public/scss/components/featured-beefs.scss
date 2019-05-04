@@ -6,11 +6,11 @@
             &.x-large {
                 @include media-breakpoint-only(sm) {
                     height:270px;
-                    max-width:104vw;
+                    max-width:103.6vw;
                 }
                 @include media-breakpoint-only(xs) {
                     height:270px;
-                    max-width:104vw;
+                    max-width:103.6vw;
                 }
             }
 

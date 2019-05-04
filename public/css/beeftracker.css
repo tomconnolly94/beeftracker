@@ -6361,12 +6361,12 @@ figure.masonry-item.soundcloud-item .play-button {
 @media (min-width: 576px) and (max-width: 767.98px) {
   .featured-beefs-section .primary-featured-beef .beef-thumbnail.x-large {
     height: 270px;
-    max-width: 104vw; } }
+    max-width: 103.6vw; } }
 
 @media (max-width: 575.98px) {
   .featured-beefs-section .primary-featured-beef .beef-thumbnail.x-large {
     height: 270px;
-    max-width: 104vw; } }
+    max-width: 103.6vw; } }
 
 .featured-beefs-section .secondary-featured-beefs .secondary-featured-beef {
   /*.beef-thumbnail {
