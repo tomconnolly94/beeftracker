@@ -5230,13 +5230,13 @@ section {
   @media (min-width: 576px) and (max-width: 767.98px) {
     .beef-thumbnail {
       height: 270px;
-      max-width: 104vw; } }
+      max-width: 103.6vw; } }
   @media (max-width: 575.98px) {
     .beef-thumbnail {
       margin-left: -11%;
       margin-right: -10%;
       height: 270px;
-      max-width: 104vw; } }
+      max-width: 103.6vw; } }
   .beef-thumbnail.large {
     height: 300px; }
   .beef-thumbnail.x-large {
