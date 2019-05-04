@@ -5181,7 +5181,8 @@ section {
     padding-top: 20px; }
     @media (max-width: 575.98px) {
       section .content {
-        padding: 20px 10px; } }
+        padding: 20px 10px;
+        margin: 0px; } }
 
 .section-toolbar {
   padding-top: 20px;
@@ -5972,16 +5973,6 @@ div#smartwizard:before {
 
 #beef-search-container #search_results {
   padding: 15px; }
-
-@media (max-width: 767.98px) {
-  .js-grid {
-    margin-left: -13%;
-    margin-right: -12%; } }
-
-@media (max-width: 575.98px) {
-  .js-grid {
-    margin-left: -13%;
-    margin-right: -12%; } }
 
 @media (max-width: 767.98px) {
   .fancybox-slide {
