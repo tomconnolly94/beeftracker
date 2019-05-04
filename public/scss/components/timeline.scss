@@ -6,7 +6,8 @@
     white-space: nowrap;
     overflow-x: hidden;
     padding-top: 0;
-    cursor:move;
+    cursor: move;
+
     p {
         color: $brand-primary;
     }
@@ -25,7 +26,7 @@
     display: inline-block;
     list-style-type: none;
     width: 160px;
-    height:3px;
+    height: 3px;
     background: $brand-primary;
 
     &.active {
@@ -36,16 +37,17 @@
 
         .beef-thumbnail {
             //height: 265px !important;
-            border: solid $brand-primary 4px;;
+            border: solid $brand-primary 4px;
+            ;
         }
     }
 
-  .beef-thumbnail {
-    height: 185px !important;
-  }
+    .beef-thumbnail {
+        height: 185px !important;
+    }
 
     a {
-    position: absolute;
+        position: absolute;
         left: calc(15% + 26px);
         width: 240px;
         padding: 0;
@@ -53,7 +55,7 @@
         white-space: normal;
         color: black;
         background: white;
-        
+
         h1 {
             text-align: "center";
         }
@@ -85,30 +87,34 @@
     top: -3px;
     margin-left: 0;
 }
+
 .timeline ol li.empty:not(:last-child)::after {
-    width:0;
-    height:0;
+    width: 0;
+    height: 0;
 }
 
-.timeline ol li/*:not(:last-child)*/::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: calc(100% + 1px);
-  bottom: 0;
-  width: 12px;
-  height: 12px;
-  transform: translateY(-50%);
-  border-radius: 50%;
-  background: #F45B69;
+.timeline ol li
+
+/*:not(:last-child)*/
+::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 1px);
+    bottom: 0;
+    width: 12px;
+    height: 12px;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background: #F45B69;
 }
 
 
 
 
 .timeline ol li:nth-child(odd) a {
-  top: -16px;
-  transform: translateY(-100%);
+    top: -16px;
+    transform: translateY(-100%);
 }
 
 .timeline ol li:nth-child(odd) a::before {
@@ -120,11 +126,11 @@
 }
 
 .timeline ol li:nth-child(even) a {
-  top: calc(100% + 16px);
+    top: calc(100% + 16px);
 }
 
 .timeline ol li:nth-child(even) a::before {
-      top: -16px;
+    top: -16px;
     border-width: 8px 8px 8px 8px;
     border-color: transparent transparent $brand-primary transparent;
     text-align: center;
@@ -132,10 +138,10 @@
 }
 
 .timeline time {
-  display: block;
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 8px;
+    display: block;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 8px;
 }
 
 
@@ -144,88 +150,92 @@
 
 .timeline-container .arrows {
 
-  margin:0;
+    margin: 0;
 
-  text-align: right;
+    text-align: right;
 
-  button {
-    background: 0;
-    border:0;
+    button {
+        background: 0;
+        border: 0;
 
-    outline: 0;
-    cursor: pointer;
-  }
+        outline: 0;
+        cursor: pointer;
+    }
 }
 
-.timeline-container  .arrows .arrow__prev {
-  margin-right: 20px;
+.timeline-container .arrows .arrow__prev {
+    margin-right: 20px;
 }
 
-.timeline-container  .disabled {
-  opacity: .5;
+.timeline-container .disabled {
+    opacity: .5;
 }
 
-.timeline-container  .arrows i {
-  font-size: 30px;
-  color: $brand-primary;
+.timeline-container .arrows i {
+    font-size: 30px;
+    color: $brand-primary;
+}
+
+.timeline-actor-avatar-container {
+    width:auto;
 }
 
 
 /* GENERAL MEDIA QUERIES
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 @media screen and (max-width: 599px) {
-  // .timeline ol,
-  // .timeline ol li {
-  //   width: auto;
-  // }
+    // .timeline ol,
+    // .timeline ol li {
+    //   width: auto;
+    // }
 
-  // .timeline ol {
-  //   padding: 0;
-  //   transform: none !important;
-  // }
+    // .timeline ol {
+    //   padding: 0;
+    //   transform: none !important;
+    // }
 
-  // .timeline ol li {
-  //   display: block;
-  //   height: auto;
-  //   background: transparent;
-  // }
+    // .timeline ol li {
+    //   display: block;
+    //   height: auto;
+    //   background: transparent;
+    // }
 
-  // .timeline ol li:first-child {
-  //   margin-top: 25px;
-  // }
+    // .timeline ol li:first-child {
+    //   margin-top: 25px;
+    // }
 
-  // .timeline ol li:not(:first-child) {
-  //   margin-left: auto;
-  // }
+    // .timeline ol li:not(:first-child) {
+    //   margin-left: auto;
+    // }
 
-  // .timeline ol li a {
-  //   width: 94%;
-  //   height: auto !important;
-  //   margin: 0 auto 25px;
-  // }
+    // .timeline ol li a {
+    //   width: 94%;
+    //   height: auto !important;
+    //   margin: 0 auto 25px;
+    // }
 
-  // .timeline ol li a {
-  //   position: static;
-  // }
+    // .timeline ol li a {
+    //   position: static;
+    // }
 
-  // .timeline ol li:nth-child(odd) a {
-  //   transform: none;
-  // }
+    // .timeline ol li:nth-child(odd) a {
+    //   transform: none;
+    // }
 
-  // .timeline ol li:nth-child(odd) a::before,
-  // .timeline ol li:nth-child(even) a::before {
-  //   left: 50%;
-  //   top: 100%;
-  //   transform: translateX(-50%);
-  //   border: none;
-  //   border-left: 1px solid white;
-  //   height: 25px;
-  // }
+    // .timeline ol li:nth-child(odd) a::before,
+    // .timeline ol li:nth-child(even) a::before {
+    //   left: 50%;
+    //   top: 100%;
+    //   transform: translateX(-50%);
+    //   border: none;
+    //   border-left: 1px solid white;
+    //   height: 25px;
+    // }
 
-  // .timeline ol li:last-child,
-  // .timeline ol li:nth-last-child(2) a::before,
-  // .timeline ol li:not(:last-child)::after,
-  // .timeline .arrows {
-  //   display: none;
-  // }
+    // .timeline ol li:last-child,
+    // .timeline ol li:nth-last-child(2) a::before,
+    // .timeline ol li:not(:last-child)::after,
+    // .timeline .arrows {
+    //   display: none;
+    // }
 }

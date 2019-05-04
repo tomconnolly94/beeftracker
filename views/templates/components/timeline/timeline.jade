@@ -12,7 +12,7 @@ mixin timeline-section(data, main_event_beef_chain_index)
                   i.fas.fa-chevron-left
                 button.arrow.arrow__next
                   i.fas.fa-chevron-right
-            div.col-md-2.offset-5
+            div.col-md-2.offset-5.timeline-actor-avatar-container
                 //-h4(style="text-align: center;") #{event_data.aggressors[aggressor_index].name}
                 a(href="/actor/" + event_data.aggressors[aggressor_index]._id)
                     //-img.actor-avatar(src="https://res.cloudinary.com/hghz4zts3/image/upload/c_fill,g_face,h_150,w_150/v1514066941/actors/220px-Official_portrait_of_Jeremy_Corbyn_crop_2" )
@@ -58,7 +58,7 @@ mixin timeline-section(data, main_event_beef_chain_index)
                     | &nbsp;
                     p(style="float:right; margin:5px;") The beginning of Time
                     
-        div.col-md-2.offset-5(style="margin-bottom:20px;")
+        div.col-md-2.offset-5.timeline-actor-avatar-container(style="margin-bottom:20px;")
             //-h4(style="text-align: center;") #{event_data.targets[target_index].name}
             a(href="/actor/" + event_data.targets[target_index]._id)
                 img.actor-avatar.sml(src=file_server_url_builder(file_server_url_prefix, "actors", event_data.targets[target_index].img_title_fullsize, "c_fill,g_face,h_75,w_75") )
