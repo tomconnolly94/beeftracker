@@ -8,14 +8,14 @@
     
     @include media-breakpoint-only(sm) {
         height:270px;
-        max-width:104vw;
+        max-width:103vw;
     }
 
     @include media-breakpoint-only(xs) {
         margin-left: -11%;
         margin-right:-10%;
         height: 270px;
-        max-width:104vw;
+        max-width:103vw;
     }
     
     &.large {
