@@ -1,5 +1,6 @@
 .swiper-container {
     height:290px;
+    max-width:100vw;
 
     @include media-breakpoint-only(xs) {
         margin-left: -13%;
