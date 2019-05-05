@@ -38,25 +38,46 @@ $(function(){
         
         //$("#upload_gallery_item_modal").modal("hide"); //hide modal
     }
+
+    function check_if_setting_is_used(setting){
+        var img_tags = $(".gallery-manager-item img");
+
+        for(var i = 0; i < img_tags.length; i++){
+            var img_tag = img_tags[i];
+
+            if(img_tag.hasAttribute(setting)){
+                return true;
+            }
+        }
+        return false;
+    }
     
     function add_or_update_gallery_item(){
-        
-        if($("#set_as_main_graphic_checkbox").prop("checked")){
-            set_as_main_graphic_used = true;
-            $("#set_as_main_graphic").css("display", "none"); //hide set as cover checkbox input
-        }
-        
-        if($("#set_as_cover_image_checkbox").prop("checked")){
-            set_as_cover_image_used = true;
-            $("#set_as_cover_image").css("display", "none"); //hide set as cover checkbox input
-        }
-        
+
         load_template_render_function("gallery_manager/gallery_manager", function(status){
             $("#gallery_manager").html(window["gallery_manager_tmpl_render_func"]({ gallery_items: gallery_items }));
 
             //clear and close modal
             //reset_modal();
             $("#upload_gallery_item_modal").modal("hide"); //hide modal
+
+            if(check_if_setting_is_used("x-main-graphic")){
+                set_as_main_graphic_used = true;
+                $("#set_as_main_graphic").css("display", "none"); //hide set as main graphic checkbox input
+            }
+            else{
+                set_as_main_graphic_used = false;
+                //$("#set_as_main_graphic").css("display", "block"); //hide set as cover image checkbox input
+            }
+
+            if(check_if_setting_is_used("x-cover-image")){
+                set_as_cover_image_used = true;
+                $("#set_as_cover_image").css("display", "none"); //hide set as cover image checkbox input
+            }
+            else{
+                set_as_cover_image_used = false;
+                //$("#set_as_cover_image").css("display", "block"); //hide set as cover image checkbox input
+            }
         });
     }
     

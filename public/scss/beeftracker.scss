@@ -86,9 +86,9 @@ a {
 		color: $brand-primary-shadow;
 	}
 
-	&:active {
+	// &:active {
 
-	}
+	// }
     
     &.disabled_anchor{
         pointer-events: none;
@@ -110,6 +110,10 @@ p {
 	color: $text-color;
 	font-size: 16px;
 	text-align: justify;
+
+	&.copyright{
+		text-align:center;
+	}
 }
 
 header {
