@@ -59,6 +59,7 @@ router.use("/votes", require("./api_sub_routing/votes_routing.js"));
 //broken link reporting
 router.route("/report-broken-link").get(function(request, response){
    console.log("link reported broken.") //unimplemented
+   response.status(501).send({});
 });
 
 //handle errors

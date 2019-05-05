@@ -238,6 +238,11 @@ router.get("/add-beef", token_authentication.recognise_user_token, blanket_middl
     
     var categories_promise = new Promise(function(resolve, reject){
        event_categories_controller.getEventCategories(function(data){
+           data = data.filter(function(category_obj){
+               if([0, 1].indexOf(category_obj.cat_id) != -1){
+                   return category_obj;
+               }
+           });
            resolve(data);
         });
     });
