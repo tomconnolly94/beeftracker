@@ -5,6 +5,7 @@ var valid_url = require('valid-url');
 //internal dependencies
 var actor_data_validator = require("../validation/actor_validation");
 var event_data_validator = require("../validation/event_validation");
+var logger = require("../tools/logging.js");
 
 module.exports = {
     
@@ -14,14 +15,16 @@ module.exports = {
     },
     
     validate: function(request, response, next){
-        console.log("validator started.");
+
+        var filename_split = __filename.split("/");
+        logger.submit_log(logger.LOG_TYPE.INFO, filename_split[filename_split.length - 1].split(".")[0] + " started.");
         
         request.body = JSON.parse(request.body.data); //get form data
-                        
+
         //validate title
-        request.checkBody("user_id", "Field is empty.").notEmpty();
-        request.checkBody("user_id", "Field is null.").not_null();
-        request.checkBody("user_id", "No event_id provided.").test_mongodb_object_id();
+        request.checkBody("existing_id", "Field is empty.").notEmpty();
+        request.checkBody("existing_id", "Field is null.").not_null();
+        request.checkBody("existing_id", "No existing_id provided.").test_mongodb_object_id();
 
         //validate type
         request.checkBody("type", "Field is empty").notEmpty();
@@ -40,33 +43,63 @@ module.exports = {
                 else{
                     console.log("validation succeeded.");
                     if(!request.locals){ request.locals = {}; }
-                    request.locals.validated_data = {
+                    var validated_metadata = {
                         user_id: request.body.user_id,
                         type: request.body.type,
-                        data: request.body.data
+                        existing_id: request.body.existing_id
                     };
-                    next();
+
+
+                    var full_object = request.body;
+                    request.body = request.body.update_data;
+
+                    //determine which kind of data to validate
+                    if(full_object.type == "event"){
+                        event_data_validator.validate(request, response, function(){
+                            request.locals.validated_data = {
+                                data: request.locals.validated_data,
+                                user_id: validated_metadata["user_id"],
+                                type: validated_metadata["type"],
+                                existing_id: validated_metadata["existing_id"],
+                            }
+                            next();
+                        });
+                    }
+                    else if(full_object.type == "actor"){
+                        actor_data_validator.validate(request, response, function(){
+                            request.locals.validated_data = {
+                                data: request.locals.validated_data,
+                                user_id: validated_metadata["user_id"],
+                                type: validated_metadata["type"],
+                                existing_id: validated_metadata["existing_id"],
+                            }
+                            next();
+                        });
+                    }
+                    else{
+                        console.log("validation failed.");
+                        response.status(400).send({ failed: true, stage: "validation", message: "Validation failed, please format input data properly."});
+                    }
                 }
             });
         }
         
-        var full_object = request.body;
-        request.body = request.body.data;
+        inspect_errors(request, response, next);
         
-        //determine which kind of data to validate
-        if(full_object.type == "event"){
-            event_data_validator.validate(request, response, function(){
-                inspect_errors(request, response, next);
-            });
-        }
-        else if(full_object.type == "actor"){
-            actor_data_validator.validate(request, response, function(){
-                inspect_errors(request, response, next);
-            });
-        }
-        else{
-            console.log("validation failed.");
-            response.status(400).send({ failed: true, stage: "validation", message: "Validation failed, please format input data properly."});
-        }
+        // //determine which kind of data to validate
+        // if(full_object.type == "event"){
+        //     event_data_validator.validate(request, response, function(){
+        //         inspect_errors(request, response, next);
+        //     });
+        // }
+        // else if(full_object.type == "actor"){
+        //     actor_data_validator.validate(request, response, function(){
+        //         inspect_errors(request, response, next);
+        //     });
+        // }
+        // else{
+        //     console.log("validation failed.");
+        //     response.status(400).send({ failed: true, stage: "validation", message: "Validation failed, please format input data properly."});
+        // }
     }
 };

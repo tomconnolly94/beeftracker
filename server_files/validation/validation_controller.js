@@ -79,6 +79,9 @@ var master_functions_object = {
             else if(gallery_item["main_graphic"] == 'undefined'){
                 return false;
             }
+            else if(gallery_item["cover_image"] == 'undefined'){
+                return false;
+            }
         }
         return true
     },

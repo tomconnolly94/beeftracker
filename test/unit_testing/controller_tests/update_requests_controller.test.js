@@ -49,10 +49,10 @@ describe('Module: update_requests_controller', function () {
 
             db_insert_callback_spy(); 
             assert.exists(query_config.table);
-            assert.equal(db_ref.get_event_update_requests_table(), query_config.table);
+            assert.equal(db_ref.get_update_requests_table(), query_config.table);
             assert.exists(query_config.record);
             assert.exists(query_config.record.update_data);
-            assert.exists(query_config.record.existing_event_id);
+            assert.exists(query_config.record.existing_id);
             assert.exists(query_config.record.user_id);
             assert.exists(query_config.options);
             callback({ _id: globals.dummy_object_id });
@@ -70,9 +70,9 @@ describe('Module: update_requests_controller', function () {
         };
 
         var update_request_data = {
-            event: true,
+            type: "event",
             user_id: globals.dummy_object_id,
-            existing_event_id: globals.dummy_object_id,
+            existing_id: globals.dummy_object_id,
             data: globals.event_example
         };
 

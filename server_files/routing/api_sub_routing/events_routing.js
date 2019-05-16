@@ -64,6 +64,7 @@ router.route('/:event_id').put(url_param_validator.validate, token_authenticatio
     var data = request.locals.validated_data;
     var files = request.files;
     var existing_event_id = request.locals.validated_params.event_id;
+    data.user_id = request.locals.authenticated_user.id;
     
     event_controller.updateEvent(data, files, existing_event_id, function(data){
         if(data.failed){

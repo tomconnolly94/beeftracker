@@ -70,12 +70,8 @@ module.exports = {
         return "comments";
     },
     
-    get_event_update_requests_table: function(){
-        return "event_update_requests";
-    },
-    
-    get_actor_update_requests_table: function(){
-        return "event_update_requests";
+    get_update_requests_table: function(){
+        return "update_requests";
     },
     
     get_password_reset_request_table: function(){

@@ -222,7 +222,7 @@ module.exports = {
                 if (delete_multiple_records) {
 
                     //standard query to match an event and resolve aggressor and targets references
-                    db.collection(table).remove(match_query).toArray(function (err) {
+                    db.collection(table).remove(match_query, function (err, obj) {
                         //handle error
                         if (err) {
                             console.log(err);

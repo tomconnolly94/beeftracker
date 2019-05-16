@@ -10,10 +10,11 @@
 
 //external dependencies
 var jsdiff = require('diff');
+var BSON = require('bson');
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
-var storage_ref = require("../config/storage_config.js");
+var storage_config = require("../config/storage_config.js");
 var storage_interface = require('../interfaces/storage_interface.js');
 var db_interface = require('../interfaces/db_interface.js');
 var format_embeddable_items = require('../tools/formatting.js').format_embeddable_items;
@@ -26,24 +27,25 @@ module.exports = {
     createUpdateRequest: function(update_request, files, callback){
         
         var object_data = update_request.data;
+        object_data.user_id = update_request.user_id;
         var object_type;
         var insert_object;
         
-        if(update_request.event){
+        if(update_request.type == "event"){
             insert_object = format_event_data(object_data);
-            insert_object._id = update_request.existing_event_id;
+            insert_object._id = update_request.existing_id;
             object_type = "events";
         }
-        else if(update_request.actor){
+        else if(update_request.type == "actor"){
             insert_object = format_actor_data(object_data);
-            insert_object._id = update_request.existing_actor_id;
+            insert_object._id = update_request.existing_id;
             object_type = "actors";
         }
                 
         var insert = function(insert_object, incoming_data){
 
             var query_config = {
-                table: db_ref.get_current_event_table(),
+                table: db_ref["get_current_" + incoming_data.type + "_table"](),
                 aggregate_array: [
                     {
                         $match: { _id: insert_object._id }
@@ -80,17 +82,23 @@ module.exports = {
                 };
 
                 var insert_config = {
-                    table: db_ref.get_event_update_requests_table(),
+                    table: db_ref.get_update_requests_table(),
                     record: {
                         update_data: insert_object,
-                        existing_event_id: incoming_data.existing_event_id,
-                        user_id: incoming_data.user_id
+                        existing_id: incoming_data.existing_id,
+                        user_id: incoming_data.user_id,
+                        type: incoming_data.type
                     },
                     options: db_options
                 };
-                
                 db_interface.insert(insert_config, function(result){
-                    callback(result);
+                    callback({ 
+                        _id: result._id, 
+                        gallery_items: insert_object.gallery_items 
+                    });
+                },
+                function(error_object){
+                    callback(error_object);
                 });
             },
             function(error_object){
@@ -104,7 +112,7 @@ module.exports = {
             insert_object.gallery_items = format_embeddable_items(insert_object.gallery_items, files);
 
             var upload_config = {
-                record_type: storage_ref.get_update_requests_folder() + "/" + object_type,
+                record_type: storage_config.get_update_requests_folder() + "/" + object_type,
                 item_data: insert_object.gallery_items,
                 files: files
             };
@@ -135,35 +143,14 @@ module.exports = {
     findUpdateRequest: function(update_request_id, callback){
 
         var query_config = {
-            table: db_ref.get_comments_table(),
+            table: db_ref.get_update_requests_table(),
             aggregate_array: [
-                { $match: { _id: BSON.ObjectID.createFromHexString(comment_id) } },
+                { $match: { _id: BSON.ObjectID.createFromHexString(update_request_id) } },
                 { $lookup : {
                     from: db_ref.get_user_details_table(),
                     localField: "user_id",
                     foreignField: "_id",
                     as: "user" 
-                }},
-                { $project: {
-                    "text": 1,
-                    "date_added": 1,
-                    "likes": 1,
-                    "event_id": 1,
-                    "actor_id": 1,
-                    "user": {
-                        $let: {
-                            vars: {
-                                first_user: {
-                                    "$arrayElemAt": [ "$user", 0 ]
-                                }
-                            },
-                            in: {
-                                first_name: "$$first_user.first_name",
-                                last_name: "$$first_user.last_name",
-                                img_title: "$$first_user.img_title"
-                            }
-                        }
-                    }
                 }}
             ]
         }
@@ -178,13 +165,34 @@ module.exports = {
     
     deleteUpdateRequest: function(update_request_id, callback){
 
+        // TODO: add code to remove the image from the file server, take code from events_controller.js
+
         var query_config = {
-            table: db_ref.get_event_update_requests_table(),
-            match_query: { _id: BSON.ObjectID.createFromHexString(comment_id) }
+            table: db_ref.get_update_requests_table(),
+            delete_multiple_records: false,
+            match_query: { _id: BSON.ObjectID.createFromHexString(update_request_id) }
         }
 
-        db_interface.get(query_config, function(results){
-            callback(results[0]);
+        db_interface.delete(query_config, function(result){
+
+            var update_request_sub_folder = "";
+
+            if(result.type == "actor"){
+                update_request_sub_folder = "actors";
+            }
+            else if(result.type == "event"){
+                update_request_sub_folder = "events";
+            }
+
+            var remove_config = {
+                items: result.update_data.gallery_items.filter(gallery_item => gallery_item.media_type == "image"),
+                record_type: storage_config.get_update_requests_folder() + "/" + update_request_sub_folder
+            };
+
+            //remove all image based gallery items from the file server
+            storage_interface.remove(remove_config, function(){
+                callback(result);
+            });
         },
         function(error_object){
             callback(error_object);

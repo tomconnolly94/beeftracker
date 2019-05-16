@@ -661,7 +661,7 @@ module.exports = {
                         reject(error_object);
                     });
                 })
-            )
+            );
 
             for(var i = 0; i < event.beef_chain_ids.length; i++){
 

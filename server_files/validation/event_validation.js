@@ -1,6 +1,8 @@
 //external dependencies
+var underscore = require('underscore');
 
 //internal dependencies
+var logger = require("../tools/logging.js");
 
 module.exports = {
     
@@ -11,7 +13,9 @@ module.exports = {
     },
     
     validate: function(request, response, next){
-        
+        var filename_split = __filename.split("/");
+        logger.submit_log(logger.LOG_TYPE.INFO, filename_split[filename_split.length - 1].split(".")[0] + " started.");
+
         var xss_warning = "Potential HTML code found, please remove this.";
                 
         //access form data and reassign it to the request body
@@ -78,14 +82,16 @@ module.exports = {
         request.getValidationResult().then(function(validationResult){
             
             if(validationResult.array().length > 0 ){
-                console.log("validation failed.");
-                console.log(validationResult.array());
+                logger.submit_log(logger.LOG_TYPE.ERROR, "validation failed.");
+                logger.submit_log(logger.LOG_TYPE.ERROR, validationResult.array());
                 response.status(400).send({ failed: true, stage: "server_validation", message: "Validation faled, please format input data properly.", details: validationResult.array() });
             }
             else{
-                console.log("validation succeeded.");
+                logger.submit_log(logger.LOG_TYPE.INFO, "validation succeeded.");
                 if(!request.locals){ request.locals = {}; }
-                request.locals.validated_data = {
+                if(!request.locals.validated_data){ request.locals.validated_data = {}; }
+
+                underscore.extend(request.locals.validated_data, {
                     title: request.body.title,
                     aggressors: request.body.aggressors,
                     targets: request.body.targets,
@@ -98,7 +104,7 @@ module.exports = {
                     user_id: request.body.user_id,
                     record_origin: request.body.record_origin,
                     tags: request.body.tags,
-                };
+                });
                 next();
             }
         });

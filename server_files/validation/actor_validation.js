@@ -1,4 +1,5 @@
 //external dependencies
+var underscore = require('underscore');
 
 //internal dependencies
 var logger = require("../tools/logging.js");
@@ -13,7 +14,8 @@ module.exports = {
     
     validate: function(request, response, next){
         
-        logger.submit_log(logger.LOG_TYPE.INFO, "validation started.");
+        var filename_split = __filename.split("/");
+        logger.submit_log(logger.LOG_TYPE.INFO, filename_split[filename_split.length - 1].split(".")[0] + " started.");
         
         //access form data and reassign it to the request body
         if (typeof request.body.data === 'string' || request.body.data instanceof String){
@@ -100,7 +102,9 @@ module.exports = {
             else{
                 logger.submit_log(logger.LOG_TYPE.INFO, "validation succeeded.");
                 if(!request.locals){ request.locals = {}; }
-                request.locals.validated_data = {
+                if(!request.locals.validated_data){ request.locals.validated_data = {}; }
+                
+                underscore.extend(request.locals.validated_data, {
                     name: request.body.name,
                     date_of_origin: request.body.date_of_origin,
                     place_of_origin: request.body.place_of_origin,
@@ -113,7 +117,7 @@ module.exports = {
                     links: request.body.links,
                     gallery_items: request.body.gallery_items,
                     record_origin: request.body.record_origin
-                };
+                });
                 next();
             }
         });

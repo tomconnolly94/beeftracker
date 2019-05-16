@@ -32,7 +32,8 @@ var upload_to_cloudinary = function(img_url, callback){
         if(result.error){ console.log(result.error); }
         else{
             if(result.public_id){
-                callback(result.public_id.split("/")[1]);
+                var public_id_components = result.public_id.split("/")
+                callback(public_id_components[public_id_components.length - 1]);
             }
             else{
                 callback("");                
