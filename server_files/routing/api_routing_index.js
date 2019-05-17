@@ -48,9 +48,9 @@ router.use("/votes", require("./api_sub_routing/votes_routing.js"));
 // });//built, written, not tested
 
 //broken link reporting
-router.route("/report-broken-link").get(function(request, response){
+router.route("/report-broken-link").post(function(request, response){
    console.log("link reported broken.") //unimplemented
-   response.status(501).send({});
+   send_successful_response(response, 204, {});
 });
 
 //handle errors

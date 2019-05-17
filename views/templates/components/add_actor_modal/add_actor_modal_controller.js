@@ -1,3 +1,61 @@
+
+$(function() {
+	$('#smartwizard').smartWizard({
+		theme: 'circles',
+		cycleSteps: true,
+		keyNavigation: false,
+		toolbarSettings: {
+			showNextButton: false,
+			showPreviousButton: false,
+		},
+		anchorSettings: {
+			//-anchorClickable: true,
+			enableAllAnchors: true
+		}
+	});
+
+	var next = 1;
+	$(".add-more").click(function(e){
+		e.preventDefault();
+		var addto = "#field" + next;
+		var addRemove = "#field" + (next);
+		next = next + 1;
+		var newIn = '<input autocomplete="off" class="input form-control" id="field' + next + '" name="field' + next + '" type="text">';
+		var newInput = $(newIn);
+		var removeBtn = '<button id="remove' + (next - 1) + '" class="btn btn-danger remove-me" >-</button></div><div id="field">';
+		var removeButton = $(removeBtn);
+		$(addto).after(newInput);
+		$(addRemove).after(removeButton);
+		$("#field" + next).attr('data-source',$(addto).attr('data-source'));
+		$("#count").val(next);
+
+		$('.remove-me').click(function(e){
+			e.preventDefault();
+			var fieldNum = this.id.charAt(this.id.length-1);
+			var fieldID = "#field" + fieldNum;
+			$(this).remove();
+			$(fieldID).remove();
+		});
+	});
+
+	//Associated Actors
+	function formatState (state) {
+		if (!state.id) {
+			return state.text;
+		}
+		var $state = $(
+			'<span><img style="width: 48px; border-radius: 48px" src="'+state.element.getAttribute('image_src') + '" class="img-flag" /> ' + state.text + '</span>'
+		);
+		return $state;
+	};
+
+	$(".associated-actors-select").select2({
+		templateResult: formatState,
+		theme: 'classic',
+		width: "100%"
+	});
+});
+
 //function to be run after actor is submitted successfully
 var post_submit_actor_callback = function(){};
 
@@ -45,7 +103,7 @@ $(function(){
         $(this).addClass("active"); //add active class to seelcted option
         
         var template_dir = "add_actor_modal";
-        var template_name = "add_actor_variable_field_panel";
+        var template_name = "add-actor-variable-field-panel";
         var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
         var browser = $("#browser").attr("value"); //extract file server url prefix from hidden div
         

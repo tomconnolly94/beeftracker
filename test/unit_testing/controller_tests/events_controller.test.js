@@ -474,7 +474,6 @@ describe('Module: event_controller', function () {
     it('createEvent', function (done) {
 
         //this.timeout(8000); // A very long environment setup.
-        var gallery_items = globals.dummy_object_id + "g";
         var db_insert_spy = sinon.spy();
         var db_get_spy = sinon.spy();
         var db_update_single_spy = sinon.spy();
@@ -484,7 +483,7 @@ describe('Module: event_controller', function () {
             db_insert_spy();
             callback({ 
                 _id: globals.dummy_object_id,
-                gallery_items: gallery_items,
+                gallery_items: event_example.gallery_items,
                 beef_chain_ids: beef_chain_ids,
                 aggressors: event_example.aggressors,
                 targets: event_example.targets,
@@ -495,7 +494,7 @@ describe('Module: event_controller', function () {
             db_get_spy();
             callback({ 
                 _id: globals.dummy_object_id,
-                gallery_items: gallery_items,
+                gallery_items: event_example.gallery_items,
                 beef_chain_ids: beef_chain_ids 
             }); 
         };
@@ -505,40 +504,28 @@ describe('Module: event_controller', function () {
             callback({
                 _id: globals.dummy_object_id,
                 beef_chain_ids: beef_chain_ids,
-                gallery_items: gallery_items
+                gallery_items: event_example.gallery_items
             }); 
         };
         
-        var files = event_example.gallery_items;
+        var files = [ event_example.gallery_items[1].file ];
         
         storage_interface.upload = function(upload_config, callback){
             si_upload_spy();
             callback(upload_config.item_data);
         };
-        
-        var promise = new Promise(function(resolve, reject) {
-            events_controller.createEvent(event_example, files, function(result){
-                callback_spy();
-                resolve(result);
-            });
-        });
-        
-        promise.then(function(result) {
 
+        events_controller.createEvent(event_example, files, function(result){
             assert.equal(globals.dummy_object_id, result._id);
             //simply testing that what is returned by the db_interface.insert function is returned by the controller function
-            assert.equal(gallery_items, result.gallery_items);
+            assert.equal(event_example.gallery_items, result.gallery_items);
             assert.isTrue(globals.compare_objects(beef_chain_ids, result.beef_chain_ids));
 
             assert(db_insert_spy.called);
             assert(db_get_spy.called);
             assert(db_update_single_spy.called);
             assert(si_upload_spy.called);
-            assert(callback_spy.called);
             done();
-        }).catch(function(error){
-            throw error;
-            console.log(error);
         });
     });
     

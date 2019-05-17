@@ -2,8 +2,6 @@ extends ../layouts/layout.jade
 include ../components/login/login_form.jade
 include ../components/google_adsense/adsense_banner_ad.jade
 
-append scripts
-
 append body
 
     div.row(style="margin:20px;")
@@ -17,3 +15,6 @@ append body
 
     div.bt-content
         +login-form("page")
+
+append js_scripts
+    script(src="/js/login.js")

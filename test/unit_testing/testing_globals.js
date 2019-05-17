@@ -89,11 +89,10 @@ module.exports = {
             },
             {
                 "media_type" : "image",
-                "link" : "image",
-                "main_graphic" : false,
-                "file" : null,
-                "file_name" : "image",
-                "originalname": "image"
+                "link": "link2",
+                "file_name": "image2",
+                "file": { "name": "file2", "originalname": "link2" },
+                "main_graphic": false
             }
         ],
         categories: [

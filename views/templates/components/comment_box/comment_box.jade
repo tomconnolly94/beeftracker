@@ -32,9 +32,6 @@ mixin comment-box(comments, content_classification)
                                         button.btn.btn-primary.float-right#submit_comment(type="submit", disabled) Submit
             div#comment_box_display
                 +comment-box-display(comments)
-                
-    append scripts
-        script(src="/component_controllers/comment_box/comment_box_controller.js")
 
 mixin comment-box-section(data, content_classification)
     //+section('BEEF', 'COMMENTS', 'fa-comments')

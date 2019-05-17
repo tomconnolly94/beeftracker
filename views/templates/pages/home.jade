@@ -4,7 +4,7 @@ include ../components/add_beef_call_to_action/add_beef_call_to_action.jade
 include ../components/featured_beef/featured_beef.jade
 include ../components/category_browser/category_browser.jade
 include ../components/google_adsense/adsense_banner_ad.jade
-//include ../layouts/horizontal_slider.jade
+include ../layouts/horizontal_slider.jade
 
 append body
     div.bt-content
@@ -17,7 +17,7 @@ append body
                         | to start contributing today!
 
     div.bt-content
-        - if(featured_data.length > 2){
+        - if(featured_data && featured_data.length == 3){
             +featured-beef-section(featured_data, "events", "c_fill,g_face,h_215,w_350")
             +adsense-banner-ad()
         - }
@@ -63,8 +63,10 @@ append body
                +horizontal-slider('featured_beefs_slider_full', slider_data, "events", "c_fill,g_face,h_219,w_340")
 
 
-append scripts
-    //-+horizontal-slider-js('featured_beefs_slider')
-    //-+horizontal-slider-js('featured_beefs_slider_full')
-    +horizontal-slider-js('featured_beefs_slider_full')
-    script(src="/bower_components/swiper/dist/js/swiper.js")
+append js_scripts
+    script(src="/js/home.js")
+    script.
+        $(function(){
+            init_horizontal_slider('featured_beefs_slider_full')
+        })
+        

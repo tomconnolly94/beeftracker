@@ -30,7 +30,7 @@ describe('Module: update_requests_controller', function () {
         db_insert_callback_spy = sinon.spy();
     });
 
-    it('createUpdateRequest', function () {
+    it('createUpdateRequest', function (done) {
         
         var return_obj = { _id: globals.dummy_object_id };
 
@@ -89,11 +89,9 @@ describe('Module: update_requests_controller', function () {
 
         update_requests_controller.createUpdateRequest(update_request_data, update_request_files, function(result){
             assert.deepEqual(return_obj, result);
-            callback_spy();
+            assert(db_get_callback_spy.called);
+            assert(storage_upload_callback_spy.called);
+            done();
         });
-
-        assert(db_get_callback_spy.called);
-        assert(storage_upload_callback_spy.called);
-        assert(callback_spy.called);
     });
 });

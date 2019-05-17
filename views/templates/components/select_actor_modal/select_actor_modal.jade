@@ -1,25 +1,7 @@
 include ../../layouts/modal.jade
 include ../../template_helper_functions/file_server_url_builder.jade
 
-mixin select-actor-modal-js()
-    script.
-        $(function() {
-            $('#select_actor').select2({
-                placeholder: 'Select actor ',
-                theme: 'classic',
-                width: "100%",
-                dropdownParent: $("#selector_actor_modal")
-            });
-            $('#selector_actor_modal #add_new_actor').click(function() {
-                $('#selector_actor_modal').modal('hide');
-                $('#add_actor_modal').modal({
-                    show: true
-                });
-            });
-        });
-
 mixin select-actor-modal()
-    
     +modal('Select Actor', '#', false)(id="selector_actor_modal", large_modal=false)
         div.row
             div.col-md-12
@@ -45,6 +27,4 @@ mixin select-actor-modal()
                         div.btn-group(role="group").float-right
                             button(type="button", id="select_actor_modal_cancel", data-dismiss="modal").btn.btn-secondary Cancel
                             button(type="button", id="select_actor_modal_submit", disabled).btn.btn-primary Select
-    append scripts
-        script(src="/component_controllers/select_actor_modal/select_actor_modal_controller.js" async)
 

@@ -185,7 +185,8 @@ a.btn {
 .btn {
 
 	text-transform:uppercase;
-    margin: 2px;
+	margin: 2px;
+	font-size: 0.8rem;
 
 	span.fas:first-child {
 		padding-right:5px;
@@ -194,6 +195,10 @@ a.btn {
 	&.btn-lg {
 		font-size: 14px;
 		padding: 0.6rem 1rem;
+	}
+
+	&.btn-banner {
+		margin: 10px 0px;
 	}
     
 	&.btn-float {

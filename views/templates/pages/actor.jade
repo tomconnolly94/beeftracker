@@ -5,12 +5,6 @@ include ../components/related_actors/related_actors.jade
 include ../layouts/masonry_gallery.jade
 include ../components/google_adsense/adsense_banner_ad.jade
 
-append body_scripts
-    script(src="/bower_components/shufflejs/dist/shuffle.js" async)
-    script(src="/bower_components/fancybox/dist/jquery.fancybox.js" async)
-    +masonry-gallery-script()
-    //+timeline-section-js()
-
 append body
 
     - var letter_mapping = ["one", "two", "three", "four", "five" ]
@@ -53,3 +47,6 @@ append body
             //+timeline-section()
         +section('EXPLORE', 'GALLERY', '')
             +masonry-gallery-section(actor_data.gallery_items, "actors")
+
+append js_scripts
+    script(src="/js/actor.js" async)

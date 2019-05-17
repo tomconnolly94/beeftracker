@@ -525,72 +525,75 @@ module.exports = {
         }
         else {
             //find gallery items that need their embedding links generated
-            event_insert.gallery_items = format_embeddable_items(event_insert.gallery_items, files);
+            format_embeddable_items(event_insert.gallery_items, files, function(formatted_items){
 
-            var upload_config = {
-                record_type: storage_config.get_event_images_folder(),
-                item_data: event_insert.gallery_items,
-                files: files
-            };
+                event_insert.gallery_items = formatted_items;
 
-            storage_interface.upload(upload_config, function (items) {
-
-                //function to remove file extension
-                var strip_file_ext = function (string) {
-                    var split_string = string.split(".");
-
-                    if (split_string.length > 1) {
-                        var ext = split_string.pop();
-                        string = string.replace(ext, "");
-                    }
-
-                    return string;
-                }
-
-                //remove file objects to avoid adding file buffer to the db
-                for (var i = 0; i < event_insert.gallery_items.length; i++) {
-
-                    //remove file extension from all image gallery items
-                    if (event_insert.gallery_items[i].media_type == "image") { //set file to null to avoid storing file buffer in db
-                        event_insert.gallery_items[i].link = strip_file_ext(event_insert.gallery_items[i].link);
-                        event_insert.gallery_items[i].file_name = strip_file_ext(event_insert.gallery_items[i].file_name);
-                    }
-
-                    if (event_insert.gallery_items[i].file) { //set file to null to avoid storing file buffer in db
-                        event_insert.gallery_items[i].file = null;
-                    }
-
-                    if (event_insert.gallery_items[i].cover_image) {
-                        event_insert.cover_image = event_insert.gallery_items[i].link; //save thumbnail main graphic ref
-                    }
-                }
-
-                var options = {
-                    send_email_notification: false,
-                    email_notification_text: "Beef",
-                    add_to_scraped_confirmed_table: record_origin == "scraped" ? true : false
+                var upload_config = {
+                    record_type: storage_config.get_event_images_folder(),
+                    item_data: event_insert.gallery_items,
+                    files: files
                 };
 
-                var insert_config = {
-                    table: db_ref.get_current_event_table(),
-                    record: event_insert,
-                    options: options
-                }
+                storage_interface.upload(upload_config, function (items) {
 
-                db_interface.insert(insert_config, function (result) {
-                    create_beef_chains(result, function(full_event){
-                        callback({
-                            _id: full_event._id,
-                            beef_chain_ids: full_event.beef_chain_ids,
-                            gallery_items: full_event.gallery_items
+                    //function to remove file extension
+                    var strip_file_ext = function (string) {
+                        var split_string = string.split(".");
+
+                        if (split_string.length > 1) {
+                            var ext = split_string.pop();
+                            string = string.replace(ext, "");
+                        }
+
+                        return string;
+                    }
+
+                    //remove file objects to avoid adding file buffer to the db
+                    for (var i = 0; i < event_insert.gallery_items.length; i++) {
+
+                        //remove file extension from all image gallery items
+                        if (event_insert.gallery_items[i].media_type == "image") { //set file to null to avoid storing file buffer in db
+                            event_insert.gallery_items[i].link = strip_file_ext(event_insert.gallery_items[i].link);
+                            event_insert.gallery_items[i].file_name = strip_file_ext(event_insert.gallery_items[i].file_name);
+                        }
+
+                        if (event_insert.gallery_items[i].file) { //set file to null to avoid storing file buffer in db
+                            event_insert.gallery_items[i].file = null;
+                        }
+
+                        if (event_insert.gallery_items[i].cover_image) {
+                            event_insert.cover_image = event_insert.gallery_items[i].link; //save thumbnail main graphic ref
+                        }
+                    }
+
+                    var options = {
+                        send_email_notification: false,
+                        email_notification_text: "Beef",
+                        add_to_scraped_confirmed_table: record_origin == "scraped" ? true : false
+                    };
+
+                    var insert_config = {
+                        table: db_ref.get_current_event_table(),
+                        record: event_insert,
+                        options: options
+                    }
+
+                    db_interface.insert(insert_config, function (result) {
+                        create_beef_chains(result, function(full_event){
+                            callback({
+                                _id: full_event._id,
+                                beef_chain_ids: full_event.beef_chain_ids,
+                                gallery_items: full_event.gallery_items
+                            });
+                        },
+                        function(error_object){
+                            callback(error_object);
                         });
                     },
                     function(error_object){
                         callback(error_object);
                     });
-                },
-                function(error_object){
-                    callback(error_object);
                 });
             });
         }

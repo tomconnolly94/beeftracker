@@ -1,0 +1,72 @@
+{
+	"scraping_dump": [
+		"bower_components/select2/dist/js/select2.full.js",
+		"views/templates/components/add_actor_modal/add_actor_modal_controller.js",
+		"public/javascript/submit_controllers/submit_actor_controller.js",
+		"views/templates/components/add_list/add_list_controller.js",
+		"views/templates/components/scraped_event_data_form/scraped_event_data_form_controller.js"
+	],
+	"disclaimer": [],
+	"privacy_policy": [],
+	"terms_and_conditions": [],
+	"about": [],
+	"contact": [],
+	"error": [],
+	"offline": [],
+	"successful_submission": [],
+	"actor": [
+		"bower_components/shufflejs/dist/shuffle.js",
+		"bower_components/fancybox/dist/jquery.fancybox.js",
+		"views/templates/layouts/masonry_gallery.js",
+		"views/templates/components/timeline/timeline.js"
+	],
+	"actors": [
+		"views/templates/components/pagination/pagination_controller.js",
+		"views/templates/components/section_control_toolbar/section_control_toolbar_controller.js"
+	],
+	"add_beef": [
+		"bower_components/select2/dist/js/select2.full.js",
+		"bower_components/smartwizard/dist/js/jquery.smartWizard.js",
+		"views/templates/components/add_list/add_list_controller.js",
+		"views/templates/components/add_actor_modal/add_actor_modal_controller.js",
+		"views/templates/components/select_actor_modal/select_actor_modal_controller.js",
+		"public/javascript/server_client_common/youtube_url_translation.js",
+		"views/templates/components/upload_gallery_item_modal/upload_gallery_item_modal_controller.js",
+		"public/javascript/submit_controllers/submit_actor_controller.js",
+		"public/javascript/submit_controllers/submit_event_controller.js",
+		"views/templates/pages/add_beef_page_controller.js",
+		"public/javascript/load_url_params_to_page.js"
+	],
+	"beef": [
+		"bower_components/shufflejs/dist/shuffle.js",
+		"bower_components/fancybox/dist/jquery.fancybox.js",
+		"bower_components/select2/dist/js/select2.full.js",
+		"views/templates/components/comment_box/comment_box_controller.js",
+		"views/templates/components/voting_panel/voting_panel_controller.js",
+		"views/templates/pages/beef_page_controller.js",
+		"views/templates/layouts/masonry_gallery.js",
+		"views/templates/components/timeline/timeline.js"
+	],
+	"beefs": [
+		"bower_components/swiper/dist/js/swiper.js",
+		"views/templates/components/category_browser/category_browser_controller.js",
+		"views/templates/components/pagination/pagination_controller.js",
+		"views/templates/components/section_control_toolbar/section_control_toolbar_controller.js"
+	],
+	"home": [
+		"bower_components/swiper/dist/js/swiper.js",
+		"views/templates/layouts/horizontal_slider.js",
+		"views/templates/components/login/login_form_controller.js",
+		"views/templates/components/category_browser/category_browser_controller.js"
+	],
+	"login": [],
+	"register": [
+		"bower_components/select2/dist/js/select2.full.js",
+		"views/templates/components/register_form/register_form_controller.js"
+	],
+	"user_profile": [
+		"public/javascript/submit_controllers/submit_user_data_controller.js",
+		"views/templates/layouts/masonry_gallery.js",
+		"views/templates/components/timeline/timeline.js"
+	]
+}

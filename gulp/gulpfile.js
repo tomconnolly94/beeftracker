@@ -1,47 +1,70 @@
 var gulp        = require('gulp'),
-    gutil       = require('gulp-util'),
-    sass        = require('gulp-sass'),
-    uglify      = require('gulp-uglify'),
-    jade        = require('gulp-jade'),
-    concat      = require('gulp-concat'),
-    livereload  = require('gulp-livereload'),
-    marked      = require('marked'), // For :markdown filter in jade
-    path        = require('path'),
-    gulpCopy        = require('gulp-copy'),
-    connect = require('gulp-connect');
+	gutil       = require('gulp-util'),
+	sass        = require('gulp-sass'),
+	uglify      = require('gulp-uglify'),
+	jade        = require('gulp-jade'),
+	concat      = require('gulp-concat'),
+	livereload  = require('gulp-livereload'),
+	marked      = require('marked'), // For :markdown filter in jade
+	path        = require('path'),
+	gulpCopy        = require('gulp-copy'),
+	connect = require('gulp-connect'),
+	fs = require('fs');
 
-let compiled_css_directory = "public/css";
-let scss_directory = "public/scss/*.scss";
-let compiled_webfonts_directory = "public/fonts";
-let compiled_font_directory = "public/css/font";
-let js_out_directory = "public/javascript/"
+let path_to_root = "../";
+let compiled_css_directory = path_to_root + "public/dist/css";
+let scss_directory = path_to_root + "public/scss/*.scss";
+let compiled_webfonts_directory = path_to_root + "public/fonts";
+let compiled_font_directory = path_to_root + "public/dist/css/font";
+let js_out_directory = path_to_root + "public/dist/javascript/"
 
 
 // --- Basic Tasks ---
 gulp.task('css', function() {
-  return gulp.src(scss_directory)
-    .pipe( sass({outputStyle: 'nested'}).on('error', sass.logError) )
-    .pipe( gulp.dest(compiled_css_directory) )
-    .pipe( connect.reload() );
+	return gulp.src(scss_directory)
+		.pipe( sass({outputStyle: 'nested'}).on('error', sass.logError) )
+		.pipe( gulp.dest(compiled_css_directory) )
+		.pipe( connect.reload() );
 
 });
 
 gulp.task('css_fonts', function() {
-  return gulp.src(['node_modules/summernote/dist/font/summernote.ttf', 'node_modules/summernote/dist/font/summernote.woff'])
-    .pipe( gulp.dest(compiled_font_directory))
-    .pipe( connect.reload() );
+	return gulp.src(['node_modules/summernote/dist/font/summernote.ttf', 'node_modules/summernote/dist/font/summernote.woff'])
+		.pipe( gulp.dest(compiled_font_directory))
+		.pipe( connect.reload() );
 
 });
 
-/*
+var client_javascript_page_config = JSON.parse(fs.readFileSync('client_javascript_page_config.json', 'utf8'));
+var universal_javascript_files = [
+	"node_modules/jquery/dist/jquery.min.js",
+	"node_modules/jquery-lazy/jquery.lazy.min.js",
+	"node_modules/toastr/build/toastr.min.js",
+	"bower_components/bootstrap/dist/js/bootstrap.bundle.js",
+	"bower_components/hammerjs/hammer.js",
+	"public/javascript/service_worker/service_worker_init.js",
+	"public/javascript/globals.js",
+	"views/templates/components/login/login_form_controller.js",
+	"views/templates/components/inline_beef_search/inline_beef_search_controller.js"
+]
+
 gulp.task('js', function() {
-  return gulp.src('src/scripts/*.js')
-    // .pipe( uglify() )
-    // .pipe( concat('all.min.js'))
-    .pipe( gulp.dest(js_out_directory))
-    .pipe( connect.reload());
+
+	var pages = Object.keys(client_javascript_page_config);
+
+	for(var i = 0; i < pages.length; i++){
+		var page = pages[i];
+		var add_relative_path = function(item){ return path_to_root + item; };
+		var specific_js_scripts = client_javascript_page_config[page].map(add_relative_path);
+		var relevant_js_scripts = universal_javascript_files.map(add_relative_path).concat(specific_js_scripts);
+
+    gulp.src(relevant_js_scripts)
+			// .pipe( uglify() )
+			.pipe(concat(page + ".js"))
+			.pipe(gulp.dest(js_out_directory))
+			.pipe(connect.reload());
+	}
 });
-*/
 
 /*
 gulp.task('templates', function() {
@@ -130,5 +153,5 @@ gulp.task('html', function () {
 
 // Default Task
 //gulp.task('build', ['js', 'vendor_js', 'css', 'css_fonts', 'images', 'templates', 'icons']);
-gulp.task('build', ['css', 'css_fonts', 'icons']);
+gulp.task('build', ['css', 'css_fonts', 'icons', 'js']);
 //gulp.task('default', ['js', 'vendor_js', 'css', 'css_fonts', 'images', 'templates', 'icons', 'server','watch']);

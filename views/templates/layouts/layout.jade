@@ -5,15 +5,16 @@ include ../components/add_beef_call_to_action/add_beef_call_to_action.jade
 include ../components/login/login_modal.jade
 include ../components/inline_beef_search/inline_beef_search.jade
 include ../components/search_results/search_results.jade
+include ../components/login/login_modal.jade
 
 doctype html
 html(lang="en")
 
-    head
-    
-        block head_tags
-        
+    block head_tags
         title Beeftracker | Home of Conflict
+
+    head
+
         //meta tags
         meta(name="author" content="Tom Connolly")
         meta(name="description" content="Beeftracker is a brand new web application designed to bring you the very latest in beef-related news! Whether its your favourite rapper or most hated politician, everyone is beefing and we have it all right here!")
@@ -28,14 +29,6 @@ html(lang="en")
         link(href='/stylesheets/beeftracker.css', rel='stylesheet')
         link(href='/modules/toastr/build/toastr.css', rel='stylesheet')
         link(href='/manifest.json', rel='manifest')
-        //script tags
-        script(type="text/javascript", src="/modules/jquery/dist/jquery.min.js")
-        script(type="text/javascript", src="/modules/jquery-lazy/jquery.lazy.min.js")
-        script(type="text/javascript", src="/modules/toastr/build/toastr.min.js")
-        script(type="text/javascript", src="/bower_components/bootstrap/dist/js/bootstrap.bundle.js", async)
-        script(type="text/javascript", src="/bower_components/hammerjs/hammer.js", async)
-        script(type="text/javascript", src="/js/service_worker/service_worker_init.js", async)
-        script(type="text/javascript", src="/js/globals.js", async)
 
         script(async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js")
         //-script.
@@ -43,6 +36,7 @@ html(lang="en")
                 google_ad_client: "ca-pub-2566324736007588",
                 enable_page_level_ads: true
             });
+
     
     body
         div.loader
@@ -55,7 +49,7 @@ html(lang="en")
                     a(href="/")
                         img(src='/logo/logo@256.png', alt='Beeftracker')
                 div.col-md-3
-                    a.btn.btn-primary.btn-lg.float-right.add-beef-button(href="/add-beef")
+                    a.btn.btn-primary.btn-banner.float-right.add-beef-button(href="/add-beef")
                         span.fas.fa-star
                         | Add Beef
         header.container.d-block.d-md-none
@@ -154,8 +148,9 @@ html(lang="en")
         //+register-modal()
         block body_scripts
         
-        div#fb-root    
-        block scripts
+        div#fb-root
+
+        block js_scripts
         
         script.
             $(function() { //code to exexcute lazy loading of images

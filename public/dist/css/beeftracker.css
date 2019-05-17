@@ -6537,6 +6537,22 @@ figure.masonry-item.soundcloud-item .play-button {
       @media (max-width: 667px) {
         .beef-content-container .beef-summary .beef-thumb img {
           padding-right: 10px; } }
+  .beef-content-container .beef-summary div.main-graphic-undertext {
+    text-align: center;
+    font-size: 13px;
+    padding: 5px 20px; }
+    .beef-content-container .beef-summary div.main-graphic-undertext input {
+      background: none !important;
+      color: inherit;
+      border: none;
+      padding: 0 !important;
+      font: inherit;
+      /*border is optional*/
+      border-bottom: 1px solid #444;
+      cursor: pointer; }
+  .beef-content-container .beef-summary p.beef-description {
+    text-align: justify;
+    text-justify: inter-word; }
   @media (max-width: 767.98px) {
     .beef-content-container .beef-content-left-side .beef-content-thumb {
       text-align: center; }
@@ -6572,7 +6588,8 @@ figure.masonry-item.soundcloud-item .play-button {
     padding-bottom: 56.25%;
     padding-top: 35px;
     height: 0;
-    overflow: hidden; }
+    overflow: hidden;
+    margin-bottom: 50px; }
     .beef-content-container .beef-body-content-video iframe {
       border: 5px solid #DF3E3E;
       border-radius: 5px;
@@ -6696,12 +6713,15 @@ a.btn {
 
 .btn {
   text-transform: uppercase;
-  margin: 2px; }
+  margin: 2px;
+  font-size: 0.8rem; }
   .btn span.fas:first-child {
     padding-right: 5px; }
   .btn.btn-lg {
     font-size: 14px;
     padding: 0.6rem 1rem; }
+  .btn.btn-banner {
+    margin: 10px 0px; }
   .btn.btn-float {
     float: right; }
   .btn.btn-sm, .btn.btn-md {

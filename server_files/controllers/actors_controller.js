@@ -285,69 +285,71 @@ module.exports = {
         }
         else{        
             //find gallery items that need their embedding links generated
-            actor_insert.gallery_items = format_embeddable_items(actor_insert.gallery_items, files);
+            format_embeddable_items(actor_insert.gallery_items, files, function(formatted_items){
+                actor_insert.gallery_items = formatted_items;
             
-            var upload_config = {
-                record_type: storage_ref.get_actor_images_folder(),
-                item_data: actor_insert.gallery_items,
-                files: files
-            }
-            
-            storage_interface.upload(upload_config, function(items){
-
-                actor_insert.gallery_items = items;
-
-                //function to remove file extension
-                var strip_file_ext = function(string){
-                    var split_string = string.split(".");
-
-                    if(split_string.length > 1){
-                        var ext = split_string.pop();
-                        string = string.replace(ext, "");
-                    }
-
-                    return string;
-                }                
-
-                //remove file objects to avoid adding file buffer to the db
-                for(var i = 0; i < actor_insert.gallery_items.length; i++){
-
-                    //remove file extension from all image gallery items
-                    if(actor_insert.gallery_items[i].media_type == "image"){ //set file to null to avoid storing file buffer in db
-                        actor_insert.gallery_items[i].link = strip_file_ext(actor_insert.gallery_items[i].link);
-                        actor_insert.gallery_items[i].file_name = strip_file_ext(actor_insert.gallery_items[i].file_name);
-                    }
-
-                    if(actor_insert.gallery_items[i].file){
-                        actor_insert.gallery_items[i].file = null;
-                    }
-
-                    if(actor_insert.gallery_items[i].main_graphic){
-                        actor_insert.img_title_fullsize = actor_insert.gallery_items[i].link; //save fullsize main graphic ref
-                        //actor_insert.img_title_thumbnail = actor_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
-                    }
+                var upload_config = {
+                    record_type: storage_ref.get_actor_images_folder(),
+                    item_data: actor_insert.gallery_items,
+                    files: files
                 }
-
-                var options = {
-                    send_email_notification: true,
-                    email_notification_text: "Beef",
-                    add_to_scraped_confirmed_table: record_origin == "scraped" ? true : false
-                };
                 
-                var insert_config = {
-                    table: db_ref.get_current_actor_table(),
-                    record: actor_insert,
-                    options: options
-                };
+                storage_interface.upload(upload_config, function(items){
 
-                db_interface.insert(insert_config, function(result){
-                    callback({
-                        _id: result._id,
-                        gallery_items: result.gallery_items
+                    actor_insert.gallery_items = items;
+
+                    //function to remove file extension
+                    var strip_file_ext = function(string){
+                        var split_string = string.split(".");
+
+                        if(split_string.length > 1){
+                            var ext = split_string.pop();
+                            string = string.replace(ext, "");
+                        }
+
+                        return string;
+                    }                
+
+                    //remove file objects to avoid adding file buffer to the db
+                    for(var i = 0; i < actor_insert.gallery_items.length; i++){
+
+                        //remove file extension from all image gallery items
+                        if(actor_insert.gallery_items[i].media_type == "image"){ //set file to null to avoid storing file buffer in db
+                            actor_insert.gallery_items[i].link = strip_file_ext(actor_insert.gallery_items[i].link);
+                            actor_insert.gallery_items[i].file_name = strip_file_ext(actor_insert.gallery_items[i].file_name);
+                        }
+
+                        if(actor_insert.gallery_items[i].file){
+                            actor_insert.gallery_items[i].file = null;
+                        }
+
+                        if(actor_insert.gallery_items[i].main_graphic){
+                            actor_insert.img_title_fullsize = actor_insert.gallery_items[i].link; //save fullsize main graphic ref
+                            //actor_insert.img_title_thumbnail = actor_insert.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
+                        }
+                    }
+
+                    var options = {
+                        send_email_notification: true,
+                        email_notification_text: "Beef",
+                        add_to_scraped_confirmed_table: record_origin == "scraped" ? true : false
+                    };
+                    
+                    var insert_config = {
+                        table: db_ref.get_current_actor_table(),
+                        record: actor_insert,
+                        options: options
+                    };
+
+                    db_interface.insert(insert_config, function(result){
+                        callback({
+                            _id: result._id,
+                            gallery_items: result.gallery_items
+                        });
+                    },
+                    function(error_object){
+                        callback(error_object)
                     });
-                },
-                function(error_object){
-                    callback(error_object)
                 });
             });
         }

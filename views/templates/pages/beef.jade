@@ -9,85 +9,8 @@ include ../layouts/masonry_gallery.jade
 include ../components/google_adsense/adsense_banner_ad.jade
 include ../template_helper_functions/file_server_url_builder.jade
 
-append scripts
-    script(src="/bower_components/shufflejs/dist/shuffle.js")
-    script(src="/bower_components/fancybox/dist/jquery.fancybox.js" async)
-    script(src="/bower_components/select2/dist/js/select2.full.js")
-
-append body_scripts
-    +masonry-gallery-script()
-    +timeline-section-js()
-    script.
-        //Associated Actors
-        function formatState (state) {
-            if (!state.id || state.element.getAttribute('disabled')) {
-                return state.text;
-            }
-            var $state = $(
-                '<span><img style="width: 48px;" src="'+state.element.getAttribute('image_src') + '" class="img-flag" /> ' + state.text + '</span>'
-            );
-            return $state;
-        };
-
-        function handle_also_appears_in_select(element){
-            window.location = element.value + window.location.pathname.split("/").pop();
-        }
-
-        //Also appears in selector
-        var aaisEl = $(".also-appears-in-select");
-        aaisEl.select2({
-            placeholder: "Event also appears in...",
-            templateResult: formatState,
-            theme: 'classic',
-            width: "100%",
-            minimumResultsForSearch: -1 //Disable search
-        });
-        
-        aaisEl.on('select2:select', function (e) {
-            var new_url_path = e.params.data.id + window.location.pathname.split("/").pop();
-            //alert("new_url_path " + new_url_path);
-            window.location = new_url_path;
-        });
-
-        var youtube_element = document.getElementById("youtube_iframe");
-
-        if(youtube_element && false){
-            var youtube_video_id = youtube_element.src.split("embed/")[1].split("?")[0];
-            var youtube_video_check_url = "https://i1.ytimg.com/vi/" + youtube_video_id + "/hqdefault.jpg"
-
-            $.ajax({
-                url: youtube_video_check_url,
-                type: 'GET',
-                beforeSend: function(request) {
-                    request.setRequestHeader("Access-Control-Allow-Origin", true);
-                },
-                success: function(ytresponse, more, more2){
-                    console.log(ytresponse);
-                },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    console.log("ERROR: ", XMLHttpRequest);
-                    report_broken_link(youtube_video_check_url)
-                }
-            });
-
-            function report_broken_link(link){
-                $.ajax({
-                    url: "/api/report-broken-link",
-                    type: 'GET',
-                    success: function(ytresponse, more, more2){
-                        console.log(ytresponse)
-                    },
-                    error: function(XMLHttpRequest, textStatus, errorThrown) {
-                        console.log("ERROR: ", XMLHttpRequest);
-                        //window.location = "/login";
-
-                    }
-                });
-            }
-        }
-
 block head_tags
-    title #{event_data.title}
+    title #{event_data.title} - Beeftracker
     //facebook meta tags
     meta(property="og:title" content="Beeftracker - " + event_data.title)
     meta(property="og:description" content=event_data.description)
@@ -112,12 +35,18 @@ append body
     
     - var letter_mapping = ["one", "two", "three", "four", "five" ]
     
-    - var aggressor_index;
-    - var target_index;
-        
-    - aggressor_index = event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) != -1 ? event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) : event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[1]))
-    - target_index = event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) != -1 ? event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) : event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[1]))
+    - var aggressor_index = event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) != -1 ? event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) : event_data.aggressors.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[1]))
+    - var target_index = event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) != -1 ? event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[0])) : event_data.targets.map(function(e){ return String(e._id) } ).indexOf(String(event_data.beef_chains[main_event_beef_chain_index].actors[1]))
     
+    - var aggressor_ids_to_string = JSON.stringify(event_data.aggressors.map(function(aggressor){ return { id: aggressor._id, name: aggressor.name, src: aggressor.img_title_fullsize } }));
+    - var targets_to_string = JSON.stringify(event_data.targets.map(function(target){ return { id: target._id, name: target.name, src: target.img_title_fullsize }; }));
+    - var gallery_items_to_string = JSON.stringify(event_data.gallery_items);
+    - var data_sources_to_string = JSON.stringify(event_data.data_sources);
+    - var tags_to_string = JSON.stringify(event_data.tags);
+    - var category_id_to_string = event_data.categories[0].cat_id;
+
+    - var edit_beef_params = `_id=${event_data._id}&title=${event_data.title}&date=${event_data.event_date.toISOString()}&description=${event_data.description}&cat_id=${category_id_to_string}&aggressors=${aggressor_ids_to_string}&targets=${targets_to_string}&gallery_items=${gallery_items_to_string}&data_sources=${data_sources_to_string}&tags=${tags_to_string}&cover_image=${event_data.cover_image}`;
+
     div.bt-content-full-width.beef-background-banner(style="background-image: url('" + file_server_url_builder(file_server_url_prefix, "events", event_data.cover_image, "c_fill,g_face,h_150,w_150", "webp") + "')")
 
     div.bt-content.bt-content-shift-up
@@ -132,12 +61,21 @@ append body
                     span.category-name #{event_data.categories[0].name}
                 div.beef-content-contribute
                     a.btn.btn-primary.add-beef-button(href="/add-beef") Contribute
+                div.beef-content-contribute
+                    a.btn.btn-primary.add-beef-button(href="/add-beef?" + edit_beef_params) Edit
             
             div.beef-content-container
                 div.col-md-12.beef-summary
+
+                    - if(main_graphic.media_type != "image")
+                        form(action="/api/report-broken-link",method="POST")
+                            div.main-graphic-undertext
+                                input(type="submit",value="Is the media below broken? Report it here with a single click!")
+
                     - if(main_graphic.media_type == "soundcloud_embed")
                         div.beef-body-content-soundcloud
                             iframe(height="300", scrolling="no", frameborder="no", allow="autoplay", src=main_graphic.link)
+                            - console.log(main_graphic.link)
                     - else if(main_graphic.media_type == "youtube_embed")
                         div.beef-body-content-youtube-video
                             iframe(id="youtube_iframe", height="315", scrolling="no", frameborder="no", src=main_graphic.link, allow="autoplay; encrypted-media")
@@ -157,8 +95,8 @@ append body
                         +voting-panel()
                     - }
 
-                    p.
-                        #{event_data.description}
+                    p.beef-description #{event_data.description}
+                    
                     - if(related_events.length > 0){
                         +related-beefs(related_events, "events", "c_fill,g_face,h_120,w_120", event_data._id)
                     - }
@@ -225,4 +163,5 @@ append body
             +adsense-banner-ad()
             +comment-box-section(comment_data, "event")
 
-
+append js_scripts
+    script(src="/js/beef.js")

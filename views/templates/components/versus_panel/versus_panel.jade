@@ -27,7 +27,7 @@ mixin versus-panel(aggressors, targets)
                     a.selector.select_actor_beefer(id="select_actor_beefer_" + i)
                         img.actor-avatar(src=file_server_url_builder(file_server_url_prefix, "actors", aggressors[i].src, "c_fill,g_face,h_150,w_150", "webp"))
                         //-i.fas.fa-plus
-                    h4#beefer_name(x-actor-id=aggressors[i].id) #{aggressors[i].name}
+                    h4#beefer_name(x-actor-id=aggressors[i]._id) #{aggressors[i].name}
         -}
         - else if(i == aggressors.length){ //make sure to paint an extra button to allow adding more actors
             div.col-5.beefer
@@ -54,7 +54,7 @@ mixin versus-panel(aggressors, targets)
                     a.selector.select_actor_beefee(id="select_actor_beefer_" + i)
                         img.actor-avatar(src=file_server_url_builder(file_server_url_prefix, "actors", targets[i].src, "c_fill,g_face,h_150,w_150", "webp"))
                         //-i.fas.fa-plus
-                    h4#beefee_name(x-actor-id=targets[i].id) #{targets[i].name}
+                    h4#beefee_name(x-actor-id=targets[i]._id) #{targets[i].name}
         -}
         - else if(i == targets.length){ //make sure to paint an extra button to allow adding more actors
             div.col-5.beefee

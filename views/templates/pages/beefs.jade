@@ -32,8 +32,7 @@ append body
                +horizontal-slider('featured_beefs_slider_full', slider_data, "events", "c_fill,g_face,h_219,w_340")
 
         
-append scripts
-    +horizontal-slider-js('featured_beefs_slider')
-    +horizontal-slider-js('featured_beefs_slider_full')
-    +horizontal-slider-js('featured_beefs_slider_dark')
-    script(src="/bower_components/swiper/dist/js/swiper.js")
+append js_scripts
+    script(src="/js/beefs.js")
+    script.
+        init_horizontal_slider('featured_beefs_slider_full')

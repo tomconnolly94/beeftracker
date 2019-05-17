@@ -109,30 +109,39 @@ module.exports = {
         if(insert_object.gallery_items && insert_object.gallery_items.length > 0){
             
             //find gallery items that need their embedding links generated
-            insert_object.gallery_items = format_embeddable_items(insert_object.gallery_items, files);
+            format_embeddable_items(insert_object.gallery_items, files, function(formatted_items){
+                
+                insert_object.gallery_items = formatted_items;
 
-            var upload_config = {
-                record_type: storage_config.get_update_requests_folder() + "/" + object_type,
-                item_data: insert_object.gallery_items,
-                files: files
-            };
+                var upload_config = {
+                    record_type: storage_config.get_update_requests_folder() + "/" + object_type,
+                    item_data: insert_object.gallery_items,
+                    files: files
+                };
 
-            storage_interface.upload(upload_config, function(items){
+                var upload_config = {
+                    record_type: storage_ref.get_update_requests_folder() + "/" + object_type,
+                    item_data: insert_object.gallery_items,
+                    files: files
+                };
 
-                insert_object.gallery_items = items;
+                storage_interface.upload(upload_config, function(items){
 
-                //remove file objects to avoid adding file buffer to the db
-                for(var i = 0; i < insert_object.gallery_items.length; i++){
-                    if(insert_object.gallery_items[i].file){
-                        insert_object.gallery_items[i].file = null;
+                    insert_object.gallery_items = items;
+
+                    //remove file objects to avoid adding file buffer to the db
+                    for(var i = 0; i < insert_object.gallery_items.length; i++){
+                        if(insert_object.gallery_items[i].file){
+                            insert_object.gallery_items[i].file = null;
+                        }
+
+                        if(insert_object.gallery_items[i].main_graphic){
+                            insert_object.img_title_fullsize = insert_object.gallery_items[i].link; //save fullsize main graphic ref
+                            insert_object.img_title_thumbnail = insert_object.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
+                        }
                     }
-
-                    if(insert_object.gallery_items[i].main_graphic){
-                        insert_object.img_title_fullsize = insert_object.gallery_items[i].link; //save fullsize main graphic ref
-                        insert_object.img_title_thumbnail = insert_object.gallery_items[i].thumbnail_img_title; //save thumbnail main graphic ref
-                    }
-                }
-                insert(insert_object, update_request);
+                    insert(insert_object, update_request);
+                });
             });
         }
         else{
