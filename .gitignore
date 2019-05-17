@@ -1,4 +1,4 @@
-# Node build artifacts
+# Dependency files
 node_modules
 bower_components
 npm-debug.log
@@ -7,6 +7,9 @@ npm-debug.log
 *.env
 *.dev
 .DS_Store
+
+# Build output
+/public/dist/*
 
 # Docker
 Dockerfile
