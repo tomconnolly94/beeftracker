@@ -120,7 +120,7 @@ module.exports = {
                 };
 
                 var upload_config = {
-                    record_type: storage_ref.get_update_requests_folder() + "/" + object_type,
+                    record_type: storage_config.get_update_requests_folder() + "/" + object_type,
                     item_data: insert_object.gallery_items,
                     files: files
                 };

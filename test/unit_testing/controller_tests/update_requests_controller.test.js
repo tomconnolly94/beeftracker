@@ -32,7 +32,10 @@ describe('Module: update_requests_controller', function () {
 
     it('createUpdateRequest', function (done) {
         
-        var return_obj = { _id: globals.dummy_object_id };
+        var return_obj = { 
+            _id: globals.dummy_object_id,
+            gallery_items: globals.event_example.gallery_items
+        };
 
         db_interface.get = function(query_config, callback){
 
@@ -88,7 +91,7 @@ describe('Module: update_requests_controller', function () {
         ];
 
         update_requests_controller.createUpdateRequest(update_request_data, update_request_files, function(result){
-            assert.deepEqual(return_obj, result);
+            globals.compare_objects(return_obj, result);
             assert(db_get_callback_spy.called);
             assert(storage_upload_callback_spy.called);
             done();

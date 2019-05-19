@@ -24,6 +24,7 @@ var actor_schema = new Schema({
         link: String,
         file_name: String,
         main_graphic: Boolean,
+        cover_image: Boolean,
         file: {}
     }],
     img_title_thumbnail: String,

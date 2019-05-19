@@ -85,14 +85,16 @@ module.exports = {
                 "link" : "https://www.youtube.com/embed/0ePQKD9iBfU",
                 "main_graphic" : true,
                 "file" : null,
-                "file_name" : null
+                "file_name" : null,
+                "cover_image" : "image"
             },
             {
                 "media_type" : "image",
                 "link": "link2",
                 "file_name": "image2",
                 "file": { "name": "file2", "originalname": "link2" },
-                "main_graphic": false
+                "main_graphic": false,
+                "cover_image" : "image"
             }
         ],
         categories: [
