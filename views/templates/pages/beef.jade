@@ -118,30 +118,30 @@ append body
                     a(href="/actor/" + event_data.targets[target_index]._id)
                         img(src=file_server_url_builder(file_server_url_prefix, "actors", event_data.targets[target_index].img_title_fullsize, "c_fill,g_face,h_150,w_150", "webp")).actor-avatar
         
-        div.row(style="text-align:center")
-            div.col-md-4.offset-md-4
-                select.form-control.also-appears-in-select
-                    option
-                    each aggressor in event_data.aggressors
-                        each target in event_data.targets                        
-                            - if(!(String(aggressor._id) == String(event_data.aggressors[aggressor_index]._id) && String(target._id) == String(event_data.targets[target_index]._id))){ //-make sure neither the main aggressor or main target  are in the drop down
-                                
-                                - var beef_chain_id;
-                                
-                                - for(var i = 0; i < event_data.beef_chain_ids.length; i++){
-                                                                
-                                    - if(event_data.beef_chains[i].actors.map(function(e){ return String(e) }).indexOf(String(aggressor._id)) != -1 && event_data.beef_chains[i].actors.map(function(e){ return String(e) }).indexOf(String(target._id)) != -1){
-                                        - beef_chain_id = event_data.beef_chain_ids[i];
-                                        - break;
+        - if(event_data.beef_chain_ids.length > 1){
+            div.row(style="text-align:center")
+                div.col-md-4.offset-md-4
+                    select.form-control.also-appears-in-select
+                        option
+                        each aggressor in event_data.aggressors
+                            each target in event_data.targets                        
+                                - if(!(String(aggressor._id) == String(event_data.aggressors[aggressor_index]._id) && String(target._id) == String(event_data.targets[target_index]._id))){ //-make sure neither the main aggressor or main target  are in the drop down
+                                    
+                                    - var beef_chain_id;
+                                    
+                                    - for(var i = 0; i < event_data.beef_chain_ids.length; i++){
+                                                                    
+                                        - if(event_data.beef_chains[i].actors.map(function(e){ return String(e) }).indexOf(String(aggressor._id)) != -1 && event_data.beef_chains[i].actors.map(function(e){ return String(e) }).indexOf(String(target._id)) != -1){
+                                            - beef_chain_id = event_data.beef_chain_ids[i];
+                                            - break;
+                                        - }
                                     - }
+                                    
+                                    option(image_src=file_server_url_builder(file_server_url_prefix, "events", event_data.cover_image, "c_fill,g_face,h_150,w_150", "webp"), value="/beef/" + beef_chain_id + "/") #{aggressor.name} v. #{target.name}
                                 - }
-                                
-                                option(image_src=file_server_url_builder(file_server_url_prefix, "events", event_data.cover_image, "c_fill,g_face,h_150,w_150", "webp"), value="/beef/" + beef_chain_id + "/") #{aggressor.name} v. #{target.name}
-                            - }
+        - }
                         
         div.row
-
-            - console.log(event_data)
             +timeline-section(event_data, main_event_beef_chain_index)
             div.col-md-12.small_cta
                 h3 See something missing? 

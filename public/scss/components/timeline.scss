@@ -93,10 +93,7 @@
     height: 0;
 }
 
-.timeline ol li
-
-/*:not(:last-child)*/
-::after {
+.timeline ol li::after {
     content: '';
     position: absolute;
     top: 50%;

@@ -6179,7 +6179,7 @@ figure.masonry-item.soundcloud-item .play-button {
   width: 0;
   height: 0; }
 
-.timeline ol li ::after {
+.timeline ol li::after {
   content: '';
   position: absolute;
   top: 50%;

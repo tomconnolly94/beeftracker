@@ -27,9 +27,9 @@ $(function(){
             return { location: "categories", problem: "Please enter a category" };
         }
         
-        if(!event_submission.tags || event_submission.tags.length < 1){
-            return { location: "tags", problem: "Please enter at least one tag" };
-        }
+        // if(!event_submission.tags || event_submission.tags.length < 1){
+        //     return { location: "tags", problem: "Please enter at least one tag" };
+        // }
         
         if(!event_submission.data_sources || event_submission.data_sources.length < 1){
             return { location: "data_sources", problem: "Please enter at least one data source" };
