@@ -83,6 +83,22 @@ $(function(){
         });
     }
 
+
+
+    function check_if_setting_is_used(setting){
+        var img_tags = $(".gallery-manager-item img");
+
+        for(var i = 0; i < img_tags.length; i++){
+            var img_tag = img_tags[i];
+
+            if(img_tag.hasAttribute(setting)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+
     //assign to window so it is accessible to other controllers
     window["upload_gallery_item_modal_controller__render_voting_panel"] = render_voting_panel;
     
