@@ -383,7 +383,7 @@ router.get("/beef/:beef_chain_id/:event_id", url_param_validator.validate, token
 
         Promise.all([ main_event_data_promise ]).then(function(values) {
             //- find the beef_chain index using the beef chain accessed from the db and the current_beef_chain_id accessed via the path of the page request
-            var beef_chain_index = values[0].event_data.beef_chain_ids.map(function(_id){ return String(_id) } ).indexOf(String(beef_chain_id));
+            var beef_chain_index = values[0].event_data.beef_chains.indexOf(values[0].event_data.beef_chains.find(beef_chain => String(beef_chain._id) == String(beef_chain_id)));
 
             //if beef chain index is not larger than 0 then the selected event cannot be found in the requested beef_chain
             if(beef_chain_index >= 0){

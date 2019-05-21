@@ -17,8 +17,7 @@ var send_unsuccessful_response = responses_object.send_unsuccessful_response;
 //Update request endpoints
 router.route('/').post(memoryUpload, update_request_validator.validate, token_authentication.authenticate_endpoint_with_user_token, function(request, response){
     
-    var data = request.locals.validated_data
-    console.log(data);
+    var data = request.locals.validated_data;
     var files = request.files;
     data.user_id = request.locals.authenticated_user.id;
     
