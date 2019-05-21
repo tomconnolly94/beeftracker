@@ -61,13 +61,13 @@ append body
                     span.category-name #{event_data.categories[0].name}
                 div.beef-content-contribute
                     a.btn.btn-primary.add-beef-button(href="/add-beef") Contribute
-                div.beef-content-contribute
+                //-div.beef-content-contribute
                     a.btn.btn-primary.add-beef-button(href="/add-beef?" + edit_beef_params) Edit
             
             div.beef-content-container
                 div.col-md-12.beef-summary
 
-                    - if(main_graphic.media_type != "image")
+                    - if(main_graphic.media_type != "image" && false)
                         form(action="/api/report-broken-link",method="POST")
                             div.main-graphic-undertext
                                 input(type="submit",value="Is the media below broken? Report it here with a single click!")
