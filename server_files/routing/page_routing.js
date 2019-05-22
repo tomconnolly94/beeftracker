@@ -93,20 +93,20 @@ function blanket_middleware(request, response, next){
 }
 
 router.get("/", token_authentication.recognise_user_token, blanket_middleware, function(request, response){
-
-    // var featured_data_promise = new Promise(function(resolve, reject){
-    //     event_controller.findEvents({ limit: 3, featured: true, decreasing_order: "date_added" }, function(data){
-    //         if(data.failed){
-    //             resolve([]);
-    //         }
-    //         else{
-    //             resolve(data);
-    //         }
-    //     });
-    // });
     
     var new_beef_data_promise = new Promise(function(resolve, reject){
         event_controller.findEvents({ limit: 6, featured: false, decreasing_order: "date_added" }, function(data){
+            if(data.failed){
+                resolve([]);
+            }
+            else{
+                resolve(data);
+            }
+        });
+    });
+
+    var random_data_promise = new Promise(function(resolve, reject){
+        event_controller.findEvents({ limit: 6 }, function(data){
             if(data.failed){
                 resolve([]);
             }
@@ -127,31 +127,19 @@ router.get("/", token_authentication.recognise_user_token, blanket_middleware, f
         });
     });
     
-    // var category_event_data_promise = new Promise(function(resolve, reject){
-    //    event_controller.findEvents({ match_category: "0", limit: 6 }, function(data){
-    //        resolve(data);
-    //     });
-    // });
-    
-    // var categories_promise = new Promise(function(resolve, reject){
-    //    event_categories_controller.getEventCategories(function(data){
-    //        resolve(data);
-    //     });
-    // });
-    
     var classic_beef_data_promise = new Promise(function(resolve, reject){
         event_controller.findEvents({ limit: 6, featured: false, increasing_order: "event_date" }, function(data){
            resolve(data);
        });
     });
 
-    Promise.all([ /*featured_data_promise,*/ new_beef_data_promise, slider_data_promise, classic_beef_data_promise  ]).then(function(values) {
+    Promise.all([ new_beef_data_promise, random_data_promise, slider_data_promise, classic_beef_data_promise  ]).then(function(values) {
         
         var view_parameters = Object.assign({}, view_parameters_global);
-        //view_parameters.featured_data = values[0];
         view_parameters.new_beef_data = values[0];
-        view_parameters.slider_data = values[1];
-        view_parameters.classic_beef_data = values[2];
+        view_parameters.random_beef_data = values[1];
+        view_parameters.slider_data = values[2];
+        view_parameters.classic_beef_data = values[3];
         view_parameters.user_data = request.locals && request.locals.authenticated_user ? request.locals.authenticated_user : null;
         
         response.render("pages/home.jade", view_parameters);

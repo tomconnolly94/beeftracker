@@ -388,6 +388,31 @@ describe('Module: event_controller', function () {
         assert(callback_spy.called);
     });
 
+    it('findEvents - random query', function () {
+
+        var db_interface_callback_spy = sinon.spy();
+        var expected_results = 30;
+        
+        db_interface.get = function(query_config, success_callback){
+            db_interface_callback_spy();
+            assert.exists(query_config.aggregate_array);
+            success_callback(query_config.aggregate_array); 
+        };
+
+        events_controller.findEvents({}, function(results){
+            callback_spy();
+            var index_of_limit_query = get_index_of_aggregate_stage(results, "$limit");
+            var index_of_sample_query = get_index_of_aggregate_stage(results, "$sample");
+            var result = results[index_of_limit_query]["$limit"];
+            var sample_size = results[index_of_sample_query]["$sample"]["size"];
+            assert.deepEqual(result, expected_results);
+            assert.deepEqual(sample_size, expected_results);
+        });
+        
+        assert(db_interface_callback_spy.called);
+        assert(callback_spy.called);
+    });
+
     it('findEvents - failure', function () {
 
         var db_interface_callback_spy = sinon.spy();

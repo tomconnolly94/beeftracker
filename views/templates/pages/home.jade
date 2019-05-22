@@ -47,7 +47,14 @@ append body
 append body
     div.bt-content
         +adsense-banner-ad()
-        +section('CLASSIC', 'BEEF', 'fa-clock', 'Find the old stanky beef!')
+        +section('RANDOM', 'BEEF', 'fa-clock', 'Roll the Dice!')
+            div.row
+                +thumbnail-grid(random_beef_data, "events")
+
+append body
+    div.bt-content
+        +adsense-banner-ad()
+        +section('CLASSIC', 'BEEF', 'fa-clock', 'Find the old stanky ones!')
             div.row
                 +thumbnail-grid(classic_beef_data, "events")
 

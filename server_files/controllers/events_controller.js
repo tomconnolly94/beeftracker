@@ -280,6 +280,15 @@ module.exports = {
             },
             { $project: event_projection }
         ];
+
+        //if no $sort clause and no $match clause is provided, replace the empty $match clause with a $sample clause to randomise results
+        if(Object.keys(match_query_content).length == 0 && !additional_aggregate_stages.find(function(stage){ return stage.hasOwnProperty("$sort") })){
+            aggregate_array.splice(1, 0, { 
+                $sample: { 
+                    size: additional_aggregate_stages.find(function(stage){ return stage.hasOwnProperty("$limit") })["$limit"] 
+                }
+            });
+        }
     
         var initial_index = aggregate_array.length - 2;
     
@@ -390,20 +399,19 @@ module.exports = {
             }
 
             //deal with $match queries
-            if (query_parameters.featured != null) { match_query_content["featured"] = query_parameters.featured }
-            if (query_parameters.match_title) { match_query_content["title"] = { $regex: query_parameters.match_title, $options: "i" } }
-            if (query_parameters.match_actor) { match_query_content["$or"] = [{ aggressors: query_parameters.match_actor }, { targets: query_parameters.match_actor }] }
-            if (query_parameters.match_category) { match_query_content["categories"] = typeof query_parameters.match_category == "string" ? parseInt(query_parameters.match_category) : query_parameters.match_category }
-            if (query_parameters.match_beef_chain_id) { match_query_content["beef_chain_ids"] = query_parameters.match_beef_chain_id }
-            if (query_parameters.match_user_id) { match_query_content["contributions"] = { $elemMatch: { user: BSON.ObjectID.createFromHexString(query_parameters.match_user_id) } } }
-            if (query_parameters.match_event_ids) { match_query_content["_id"] = { $in: query_parameters.match_event_ids }}
+            if(query_parameters.random){ match_query_content["random"] = true }
+            else {
+                if (query_parameters.featured != null) { match_query_content["featured"] = query_parameters.featured }
+                if (query_parameters.match_title) { match_query_content["title"] = { $regex: query_parameters.match_title, $options: "i" } }
+                if (query_parameters.match_actor) { match_query_content["$or"] = [{ aggressors: query_parameters.match_actor }, { targets: query_parameters.match_actor }] }
+                if (query_parameters.match_category) { match_query_content["categories"] = typeof query_parameters.match_category == "string" ? parseInt(query_parameters.match_category) : query_parameters.match_category }
+                if (query_parameters.match_beef_chain_id) { match_query_content["beef_chain_ids"] = query_parameters.match_beef_chain_id }
+                if (query_parameters.match_user_id) { match_query_content["contributions"] = { $elemMatch: { user: BSON.ObjectID.createFromHexString(query_parameters.match_user_id) } } }
+                if (query_parameters.match_event_ids) { match_query_content["_id"] = { $in: query_parameters.match_event_ids }}
+            }
 
             //deal with $limit query
             if (query_parameters.limit) { limit_query_content = typeof query_parameters.limit == "string" ? parseInt(query_parameters.limit) : query_parameters.limit }
-        }
-
-        match_query_content["categories"] = {
-            $in: [0, 1]
         }
 
         var additional_aggregate_stages = [
@@ -438,6 +446,11 @@ module.exports = {
 
         var aggregate_array = module.exports.get_aggregate_array(match_query_content, additional_aggregate_stages);
         
+        //force only selection of grime or rap events
+        aggregate_array[0]["$match"]["categories"] = {
+            $in: [0, 1]
+        }
+
         var query_config = {
             table: db_ref.get_current_event_table(),
             aggregate_array: aggregate_array
