@@ -29,20 +29,20 @@ router.use("/votes", require("./api_sub_routing/votes_routing.js"));
     
 //     authentication_controller.authenticateUser(auth_details, headers, response, function(data, cookie_details){
 //         if(data.failed){
-//             send_unsuccessful_response(response, 400, data);
+//             send_unsuccessful_api_response(response, 400, data);
 //         }
 //         else{
-//             send_successful_response(response, 200, data);
+//             send_successful_api_response(response, 200, data);
 //         }
 //     });
 // });//built, written, not tested
 // router.route("/deauthenticate").get(function(request, response){
 //     authentication_controller.deauthenticateUser(response, function(data){
 //         if(data.failed){
-//             send_unsuccessful_response(response, 400, data.message);
+//             send_unsuccessful_api_response(response, 400, data.message);
 //         }
 //         else{
-//             send_successful_response(response, 200, data);
+//             send_successful_api_response(response, 200, data);
 //         }
 //     });
 // });//built, written, not tested
@@ -50,7 +50,7 @@ router.use("/votes", require("./api_sub_routing/votes_routing.js"));
 //broken link reporting
 router.route("/report-broken-link").post(function(request, response){
    console.log("link reported broken.") //unimplemented
-   send_successful_response(response, 204, {});
+   send_successful_api_response(response, 204, {});
 });
 
 //handle errors

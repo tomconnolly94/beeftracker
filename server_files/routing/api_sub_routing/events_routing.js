@@ -8,12 +8,12 @@ var event_peripherals_controller = require('../../controllers/events_peripherals
 var event_data_validator = require("../../validation/event_validation");
 var token_authentication = require("../../tools/token_authentication.js"); //get token authentication object
 var memoryUpload = require("../../config/multer_config.js").get_multer_object(); //get multer config
-var responses_object = require("./endpoint_response.js");
+var responses_object = require("../endpoint_response.js");
 var url_param_validator = require("../../validation/url_param_validation");
 
 //init response functions
-var send_successful_response = responses_object.send_successful_response;
-var send_unsuccessful_response = responses_object.send_unsuccessful_response;
+var send_successful_api_response = responses_object.send_successful_api_response;
+var send_unsuccessful_api_response = responses_object.send_unsuccessful_api_response;
 
 // Events endpoints
 router.route('/').get(function(request, response){
@@ -22,10 +22,10 @@ router.route('/').get(function(request, response){
     
     event_controller.findEvents(query, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            send_unsuccessful_api_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, 200, data);
+            send_successful_api_response(response, 200, data);
         }
     });
 });//built, written, tested
@@ -37,10 +37,10 @@ router.route('/:event_id').get(url_param_validator.validate, function(request, r
         if(data.failed){
             var code = 400;
             if(data.no_results_found){ code = 404; }
-            send_unsuccessful_response(response, code, data.message);
+            send_unsuccessful_api_response(response, code, data.message);
         }
         else{
-            send_successful_response(response, 200, data);
+            send_successful_api_response(response, 200, data);
         }
     });
 });//built, written, tested
@@ -52,10 +52,10 @@ router.route('/').post(token_authentication.authenticate_endpoint_with_user_toke
     
     event_controller.createEvent(data, files, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            send_unsuccessful_api_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, 201, data);
+            send_successful_api_response(response, 201, data);
         }
     });
 });//built, written, tested, needs specific user auth
@@ -68,10 +68,10 @@ router.route('/:event_id').put(url_param_validator.validate, token_authenticatio
     
     event_controller.updateEvent(data, files, existing_event_id, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            send_unsuccessful_api_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, 200, data);
+            send_successful_api_response(response, 200, data);
         }
     });
 });//built, written, tested, needs admin auth
@@ -81,10 +81,10 @@ router.route('/:event_id').delete(url_param_validator.validate, token_authentica
     
     event_controller.deleteEvent(event_id, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            send_unsuccessful_api_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, 200, data);
+            send_successful_api_response(response, 200, data);
         }
     });
 });//built, written, tested, needs admin auth
@@ -97,10 +97,10 @@ router.route('/from-beef-chain/:beef_chain_id').get(url_param_validator.validate
 
     event_peripherals_controller.findEventsFromBeefChain(beef_chain_id, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            send_unsuccessful_api_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, 200, data);
+            send_successful_api_response(response, 200, data);
         }
     });
 });//built, written, tested
@@ -110,10 +110,10 @@ router.route('/related-to-event/:event_id').get(url_param_validator.validate, fu
 
     event_peripherals_controller.findEventsRelatedToEvent(event_id, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            send_unsuccessful_api_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, 200, data);
+            send_successful_api_response(response, 200, data);
         }
     });
 });//built, written, needs manual testing with valid data
@@ -123,10 +123,10 @@ router.route('/related-to-actor/:actor_id').get(url_param_validator.validate, fu
 
     event_peripherals_controller.findEventsRelatedToActor(actor_id, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            send_unsuccessful_api_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, 200, data);
+            send_successful_api_response(response, 200, data);
         }
     });
 });//built, written, needs manual testing with valid data

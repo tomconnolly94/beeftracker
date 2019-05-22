@@ -7,11 +7,11 @@ var votes_controller = require('../../controllers/votes_controller');
 var vote_data_validator = require("../../validation/vote_data_validation");
 var token_authentication = require("../../tools/token_authentication.js"); //get token authentication object
 var memoryUpload = require("../../config/multer_config.js").get_multer_object(); //get multer config
-var responses_object = require("./endpoint_response.js");
+var responses_object = require("../endpoint_response.js");
 
 //init response functions
-var send_successful_response = responses_object.send_successful_response;
-var send_unsuccessful_response = responses_object.send_unsuccessful_response;
+var send_successful_api_response = responses_object.send_successful_api_response;
+var send_unsuccessful_api_response = responses_object.send_unsuccessful_api_response;
 
 
 router.route('/events').put( token_authentication.recognise_user_token, vote_data_validator.validate, function(request, response){
@@ -22,10 +22,10 @@ router.route('/events').put( token_authentication.recognise_user_token, vote_dat
     
     votes_controller.addVoteToEvent(event_id, vote_direction, user_id, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            send_unsuccessful_api_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, 200, data);
+            send_successful_api_response(response, 200, data);
         }
     });
 });//built, written, tested

@@ -8,6 +8,11 @@ var cookie_parser = require("../tools/cookie_parsing.js");
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
 var logger = require("../tools/logging");
 var url_param_validator = require("../validation/url_param_validation");
+var responses_object = require("./endpoint_response.js");
+
+//extract response functions
+var send_successful_page_response = responses_object.send_unsuccessful_api_response;
+var send_unsuccessful_page_response = responses_object.send_unsuccessful_api_response;
 
 //endpoint controllers
 var actor_controller = require("../controllers/actors_controller.js");

@@ -6,12 +6,12 @@ var router = express.Router();
 var comments_controller = require('../../controllers/comments_controller');
 var comment_data_validator = require("../../validation/comment_validation");
 var token_authentication = require("../../tools/token_authentication.js"); //get token authentication object
-var responses_object = require("./endpoint_response.js");
+var responses_object = require("../endpoint_response.js");
 var url_param_validator = require("../../validation/url_param_validation");
 
 //init response functions
-var send_successful_response = responses_object.send_successful_response;
-var send_unsuccessful_response = responses_object.send_unsuccessful_response;
+var send_successful_api_response = responses_object.send_successful_api_response;
+var send_unsuccessful_api_response = responses_object.send_unsuccessful_api_response;
 
 //Comments endpoints
 router.route('/').post(token_authentication.authenticate_endpoint_with_user_token, comment_data_validator.validate, function(request, response){
@@ -21,10 +21,10 @@ router.route('/').post(token_authentication.authenticate_endpoint_with_user_toke
     
     comments_controller.createComment(comment_data, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            send_unsuccessful_api_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, 201, data);
+            send_successful_api_response(response, 201, data);
         }
     });
 });//built, written, tested, needs specific user auth
@@ -36,10 +36,10 @@ router.route('/events/:event_id').get(url_param_validator.validate, function(req
         if(data.failed){
             var code = 400;
             if(data.no_results_found){ code = 404; }
-            send_unsuccessful_response(response, code, data.message);
+            send_unsuccessful_api_response(response, code, data.message);
         }
         else{
-            send_successful_response(response, 200, data);
+            send_successful_api_response(response, 200, data);
         }
     });
 });//built, written, tested
@@ -48,10 +48,10 @@ router.route('/actors/:actor_id').get(url_param_validator.validate, function(req
         if(data.failed){
             var code = 400;
             if(data.no_results_found){ code = 404; }
-            send_unsuccessful_response(response, code, data.message);
+            send_unsuccessful_api_response(response, code, data.message);
         }
         else{
-            send_successful_response(response, 200, data);
+            send_successful_api_response(response, 200, data);
         }
     });
 });//built, written, tested
@@ -63,10 +63,10 @@ router.route('/beef_chains/:beef_chain_id').get(url_param_validator.validate, fu
         if(data.failed){
             var code = 400;
             if(data.no_results_found){ code = 404; }
-            send_unsuccessful_response(response, code, data.message);
+            send_unsuccessful_api_response(response, code, data.message);
         }
         else{
-            send_successful_response(response, 200, data);
+            send_successful_api_response(response, 200, data);
         }
     });
 });//built, written, tested
@@ -78,10 +78,10 @@ router.route('/:comment_id').get(url_param_validator.validate, function(request,
         if(data.failed){
             var code = 400;
             if(data.no_results_found){ code = 404; }
-            send_unsuccessful_response(response, code, data.message);
+            send_unsuccessful_api_response(response, code, data.message);
         }
         else{
-            send_successful_response(response, 200, data);
+            send_successful_api_response(response, 200, data);
         }
     });
 });//built, written, tested, needs specific user or admin auth
@@ -93,10 +93,10 @@ router.route('/:comment_id').delete(url_param_validator.validate, token_authenti
         if(data.failed){
             var code = 400;
             if(data.no_results_found){ code = 404; }
-            send_unsuccessful_response(response, code, data.message);
+            send_unsuccessful_api_response(response, code, data.message);
         }
         else{
-            send_successful_response(response, 200);
+            send_successful_api_response(response, 200);
         }
     });
 });//built, written, tested, needs specific user or admin auth

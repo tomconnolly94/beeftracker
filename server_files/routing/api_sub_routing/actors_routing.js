@@ -7,12 +7,12 @@ var actor_controller = require('../../controllers/actors_controller');
 var actor_data_validator = require("../../validation/actor_validation");
 var token_authentication = require("../../tools/token_authentication.js"); //get token authentication object
 var memoryUpload = require("../../config/multer_config.js").get_multer_object(); //get multer config
-var responses_object = require("./endpoint_response.js");
+var responses_object = require("../endpoint_response.js");
 var url_param_validator = require("../../validation/url_param_validation");
 
 //init response functions
-var send_successful_response = responses_object.send_successful_response;
-var send_unsuccessful_response = responses_object.send_unsuccessful_response;
+var send_successful_api_response = responses_object.send_successful_api_response;
+var send_unsuccessful_api_response = responses_object.send_unsuccessful_api_response;
 
 //Actors endpoints
 router.route('/').get(function(request, response){
@@ -21,10 +21,10 @@ router.route('/').get(function(request, response){
     
     actor_controller.findActors(query, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, "No actors found.");
+            send_unsuccessful_api_response(response, 400, "No actors found.");
         }
         else{
-            send_successful_response(response, 200, data);
+            send_successful_api_response(response, 200, data);
         }
     });
     
@@ -37,10 +37,10 @@ router.route('/:actor_id').get(url_param_validator.validate, function(request, r
         if(data.failed){
             var code = 400;
             if(data.no_results_found){ code = 404; }
-            send_unsuccessful_response(response, code, "Actor not found.");
+            send_unsuccessful_api_response(response, code, "Actor not found.");
         }
         else{
-            send_successful_response(response, 200, data);
+            send_successful_api_response(response, 200, data);
         }
     });
 });//built, written, tested
@@ -51,10 +51,10 @@ router.route('/').post(token_authentication.authenticate_endpoint_with_user_toke
         
     actor_controller.createActor(data, files, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            send_unsuccessful_api_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, 201, data);
+            send_successful_api_response(response, 201, data);
         }
     });
     
@@ -67,10 +67,10 @@ router.route('/:actor_id').put(url_param_validator.validate, token_authenticatio
         
     actor_controller.updateActor(data, files, actor_id, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            send_unsuccessful_api_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, 200, data);
+            send_successful_api_response(response, 200, data);
         }
     });
 });//built, written, tested, needs admin auth
@@ -80,10 +80,10 @@ router.route('/:actor_id').delete(url_param_validator.validate, token_authentica
 
     actor_controller.deleteActor(actor_id, function(data){
         if(data.failed){
-            send_unsuccessful_response(response, 400, data.message);
+            send_unsuccessful_api_response(response, 400, data.message);
         }
         else{
-            send_successful_response(response, 200);
+            send_successful_api_response(response, 200);
         }
     });
 });//built, written, tested, needs admin auth
