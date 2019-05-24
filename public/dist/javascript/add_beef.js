@@ -16450,11 +16450,11 @@ $(function() {
 		return $state;
 	};
 
-	$(".associated-actors-select").select2({
-		templateResult: formatState,
-		theme: 'classic',
-		width: "100%"
-	});
+	// $(".associated-actors-select").select2({
+	// 	templateResult: formatState,
+	// 	theme: 'classic',
+	// 	width: "100%"
+	// });
 });
 
 //function to be run after actor is submitted successfully
@@ -16504,7 +16504,7 @@ $(function(){
         $(this).addClass("active"); //add active class to seelcted option
         
         var template_dir = "add_actor_modal";
-        var template_name = "add-actor-variable-field-panel";
+        var template_name = "add_actor_variable_field_panel";
         var file_server_url_prefix = $("#file_server_url_prefix_store").attr("value"); //extract file server url prefix from hidden div
         var browser = $("#browser").attr("value"); //extract file server url prefix from hidden div
         
