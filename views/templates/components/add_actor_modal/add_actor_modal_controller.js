@@ -9,7 +9,6 @@ $(function() {
 			showPreviousButton: false,
 		},
 		anchorSettings: {
-			//-anchorClickable: true,
 			enableAllAnchors: true
 		}
 	});

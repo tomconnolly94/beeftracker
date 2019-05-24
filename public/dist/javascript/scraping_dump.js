@@ -15754,7 +15754,6 @@ $(function() {
 			showPreviousButton: false,
 		},
 		anchorSettings: {
-			//-anchorClickable: true,
 			enableAllAnchors: true
 		}
 	});
@@ -15793,12 +15792,6 @@ $(function() {
 		);
 		return $state;
 	};
-
-	// $(".associated-actors-select").select2({
-	// 	templateResult: formatState,
-	// 	theme: 'classic',
-	// 	width: "100%"
-	// });
 });
 
 //function to be run after actor is submitted successfully
