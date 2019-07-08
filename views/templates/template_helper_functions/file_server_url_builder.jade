@@ -2,6 +2,7 @@
 
     - if(!image_id){
         - console.log("#### NO IMAGE_ID in file_server_url_builder.jade. data: ", prefix, directory_path, image_id, image_resize_params, extension)
+        - return "";
     - }
 
     - if(image_id && image_id.includes("www.youtube.com/embed")){

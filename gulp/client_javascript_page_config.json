@@ -33,7 +33,9 @@
 		"public/javascript/server_client_common/youtube_url_translation.js",
 		"views/templates/components/upload_gallery_item_modal/upload_gallery_item_modal_controller.js",
 		"public/javascript/submit_controllers/submit_actor_controller.js",
-		"public/javascript/submit_controllers/submit_event_controller.js",
+		"public/javascript/submit_controllers/submit_event/event_input_validator.js",
+		"public/javascript/submit_controllers/submit_event/helper_functions.js",
+		"public/javascript/submit_controllers/submit_event/click_listeners.js",
 		"views/templates/pages/add_beef_page_controller.js",
 		"public/javascript/load_url_params_to_page.js"
 	],

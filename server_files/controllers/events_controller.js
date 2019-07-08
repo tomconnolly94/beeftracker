@@ -472,21 +472,28 @@ module.exports = {
     findEvent: function (event_id, callback) {
 
         var additional_aggregate_stages = [
-            { "$lookup": { 
-                from: "comments", 
+            {"$lookup": { 
+                from: db_ref.get_comments_table(), 
                 localField: "_id", 
                 foreignField: "event_id", 
                 as: "comments"  
             }},
+            // { "$unwind": "$comments"},
+            // {"$lookup": { 
+            //     from: db_ref.get_user_details_table(),
+            //     localField: "comments.user", 
+            //     foreignField: "_id",
+            //     as: "comments.user_obj"
+            // }},
             {"$lookup": { 
-                from: "beef_chains", 
+                from: db_ref.get_beef_chain_table(), 
                 localField: "beef_chain_ids", 
                 foreignField: "_id", 
                 as: "beef_chains"  
             }}, 
             { "$unwind": "$beef_chains"},
-            { '$lookup': 
-                { from: 'event_data_v4',
+            { "$lookup": 
+                { from: db_ref.get_current_event_table(), 
                     localField: 'beef_chains.event_ids',
                     foreignField: '_id',
                     as: 'beef_chains.events' 
