@@ -1,15 +1,16 @@
-var gulp        = require('gulp'),
-	gutil       = require('gulp-util'),
-	sass        = require('gulp-sass'),
-	uglify      = require('gulp-uglify'),
-	jade        = require('gulp-jade'),
-	concat      = require('gulp-concat'),
-	livereload  = require('gulp-livereload'),
-	marked      = require('marked'), // For :markdown filter in jade
-	path        = require('path'),
-	gulpCopy        = require('gulp-copy'),
-	connect = require('gulp-connect'),
-	fs = require('fs');
+var gulp = require('gulp'),
+    sass = require('gulp-sass'),
+    concat = require('gulp-concat'),
+    connect = require('gulp-connect'),
+    uglify = require('gulp-uglify'),
+	fs = require('fs'),
+	file = require('gulp-file'),
+	footer = require('gulp-footer'),
+	map = require('map-stream'),
+	async = require('async');
+
+	//import server .env file
+require("dotenv").config({ path: '../.env' });
 
 let path_to_root = "../";
 let compiled_css_directory = path_to_root + "public/dist/css";
@@ -48,22 +49,103 @@ var universal_javascript_files = [
 	"views/templates/components/inline_beef_search/inline_beef_search_controller.js"
 ]
 
-gulp.task('js', function() {
+gulp.task('js', function(done) {
 
-	var pages = Object.keys(client_javascript_page_config);
+	var page_names = Object.keys(client_javascript_page_config);
+	var page_promises = [];
 
-	for(var i = 0; i < pages.length; i++){
-		var page = pages[i];
-		var add_relative_path = function(item){ return path_to_root + item; };
-		var specific_js_scripts = client_javascript_page_config[page].map(add_relative_path);
-		var relevant_js_scripts = universal_javascript_files.map(add_relative_path).concat(specific_js_scripts);
+	for(var page_name_index = 0; page_name_index < page_names.length; page_name_index++){
 
-    gulp.src(relevant_js_scripts)
-			// .pipe( uglify() )
-			.pipe(concat(page + ".js"))
-			.pipe(gulp.dest(js_out_directory))
-			.pipe(connect.reload());
+		var page_promise = new Promise(function(resolve, reject){
+			var page_name = page_names[page_name_index];
+			console.log(page_name, "start");
+			var add_relative_path = function(item){ return path_to_root + item; };
+			var specific_js_scripts = client_javascript_page_config[page_name].map(add_relative_path);
+			var relative_universal_javascript_files = universal_javascript_files.map(add_relative_path);
+			var relevant_js_scripts = relative_universal_javascript_files.concat(specific_js_scripts);
+
+			if(process.env.NODE_ENV == "heroku_production"){
+				gulp.src(relevant_js_scripts)
+					// .pipe( uglify() )
+					.pipe(concat(page_name + ".js"))
+					.pipe(gulp.dest(js_out_directory))
+					//.pipe(connect.reload());
+			}
+			else if(process.env.NODE_ENV == "local_dev"){
+		
+				var file_string = "\n";//"$(function(){";
+
+				for(var specific_js_scripts_index = 0; specific_js_scripts_index < specific_js_scripts.length; specific_js_scripts_index++){
+
+					var specific_js_script = specific_js_scripts[specific_js_scripts_index];
+
+					//declare route replacement mappings
+					var path_replacement_mappings = {
+						"public/javascript": "dev-js",
+						//"views/templates": "views",
+						"views/templates/components": "dev-component-js",
+						"views/templates/layouts": "dev-layout-js",
+						"views/templates/pages": "dev-page-js",
+						"..": ""
+					}
+
+					var path_replacement_mappings_keys = Object.keys(path_replacement_mappings);
+
+					//modify each path to use the available server route, not the directory structure
+					for(var mapping_index = 0; mapping_index < path_replacement_mappings_keys.length; mapping_index++){
+
+						var mapping_key = path_replacement_mappings_keys[mapping_index];
+
+						if(specific_js_script.includes(mapping_key)){
+							specific_js_script = specific_js_script.replace(mapping_key, path_replacement_mappings[mapping_key]);
+						}
+					}
+
+					// file_string += `\n	jQuery.ajax({
+					// 	url: "${specific_js_script}",
+					// 	dataType: 'script',
+					// 	success: function(){ console.log("Indirectly loaded script: ${specific_js_script}")},
+					// 	async: true
+					// });
+					
+					// `
+
+					file_string += `\n$.getScript("${specific_js_script}"); `;
+				}
+				//file_string += `});`; //close initial $(function(){ 
+
+				async.series([
+					function (next) {
+						gulp.src(relative_universal_javascript_files)
+							// .pipe( uglify() )
+							.pipe(concat(page_name + ".js"))
+							.pipe(gulp.dest(js_out_directory))
+							.on('end', next);
+					},
+					function (next) {
+						//write ajax call to `page_name + ".js"` file to indirectly load specific_js_script
+						gulp.src(js_out_directory + page_name + ".js")
+							.pipe(map(function(file, cb) {
+								var fileContents = file.contents.toString();
+								// --- do any string manipulation here ---
+								fileContents = fileContents += file_string;
+								file.contents = new Buffer(fileContents);
+								cb(null, file);
+							}))
+							.pipe(gulp.dest(js_out_directory))
+							.on('end', next);
+					}
+				], resolve);
+			}
+		});
+
+		page_promises.push(page_promise);
 	}
+
+	Promise.all(page_promises).then(function(values){
+		done();
+	});
+
 });
 
 /*

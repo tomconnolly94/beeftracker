@@ -9285,6 +9285,7 @@ $(function(){
         make_search_request();
     });
 });
+<<<<<<< HEAD
 /*!
  * Select2 4.0.5
  * https://select2.github.io
@@ -17728,21 +17729,17 @@ $(function(){
                 return htmlTags;
             }
 
+=======
+>>>>>>> 66984e1... file re-organisation; gulp build dev
 
-            var tag_arr = JSON.parse(url_params.get("tags"));
-            var tag_obj = {};
-            for(var i = 0; i < tag_arr.length; i++){
-                tag_obj[i] = tag_arr[i];
-            }
-            
-            $('#beef_tags').html(convertObjectToSelectOptions(tag_obj)).trigger('change');
-        }
-    };
-
-    //loop through all available search params, if a mapping function is available for that param, then execute it
-    for(let url_param of url_params){
-        if (url_param[0] in param_function_mapping){
-            param_function_mapping[url_param[0]](url_param[1]);
-        }
-    }
-});
+$.getScript("/bower_components/select2/dist/js/select2.full.js"); 
+$.getScript("/bower_components/smartwizard/dist/js/jquery.smartWizard.js"); 
+$.getScript("/dev-component-js/add_list/add_list_controller.js"); 
+$.getScript("/dev-component-js/add_actor_modal/add_actor_modal_controller.js"); 
+$.getScript("/dev-component-js/select_actor_modal/select_actor_modal_controller.js"); 
+$.getScript("/dev-js/server_client_common/youtube_url_translation.js"); 
+$.getScript("/dev-component-js/upload_gallery_item_modal/upload_gallery_item_modal_controller.js"); 
+$.getScript("/dev-js/submit_controllers/submit_actor_controller.js"); 
+$.getScript("/dev-js/submit_controllers/submit_event_controller.js"); 
+$.getScript("/dev-page-js/add_beef_page_controller.js"); 
+$.getScript("/dev-js/load_url_params_to_page.js"); 
