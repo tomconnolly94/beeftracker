@@ -58,7 +58,7 @@ gulp.task('js', function(done) {
 
 		var page_promise = new Promise(function(resolve, reject){
 			var page_name = page_names[page_name_index];
-			console.log(page_name, "start");
+			//console.log(page_name, "start");
 			var add_relative_path = function(item){ return path_to_root + item; };
 			var specific_js_scripts = client_javascript_page_config[page_name].map(add_relative_path);
 			var relative_universal_javascript_files = universal_javascript_files.map(add_relative_path);
@@ -66,14 +66,51 @@ gulp.task('js', function(done) {
 
 			if(process.env.NODE_ENV == "heroku_production"){
 				gulp.src(relevant_js_scripts)
-					// .pipe( uglify() )
+					.pipe( uglify() )
 					.pipe(concat(page_name + ".js"))
 					.pipe(gulp.dest(js_out_directory))
 					//.pipe(connect.reload());
 			}
 			else if(process.env.NODE_ENV == "local_dev"){
 		
-				var file_string = "\n";//"$(function(){";
+				//initial file_string content extends jQuery to load dev js scripts as external files so theya re available in the chrome debugger
+				var file_string = `
+// Replace the normal jQuery getScript function with one that supports
+// debugging and which references the script files as external resources
+// rather than inline.
+jQuery.extend({
+	getScript: function(url, callback) {
+		var head = document.getElementsByTagName("head")[0];
+		var script = document.createElement("script");
+		script.src = url;
+
+		// Handle Script loading
+		{
+			var done = false;
+
+			// Attach handlers for all browsers
+			script.onload = script.onreadystatechange = function(){
+				if ( !done && (!this.readyState ||
+					this.readyState == "loaded" || this.readyState == "complete") ) {
+				done = true;
+				if (callback)
+					callback();
+
+				// Handle memory leak in IE
+				script.onload = script.onreadystatechange = null;
+				}
+			};
+		}
+
+		head.appendChild(script);
+
+		// We handle everything using the script element injection
+		return undefined;
+	},
+});
+
+
+//load dev scripts synchronously`;
 
 				for(var specific_js_scripts_index = 0; specific_js_scripts_index < specific_js_scripts.length; specific_js_scripts_index++){
 
@@ -101,33 +138,30 @@ gulp.task('js', function(done) {
 						}
 					}
 
-					// file_string += `\n	jQuery.ajax({
-					// 	url: "${specific_js_script}",
-					// 	dataType: 'script',
-					// 	success: function(){ console.log("Indirectly loaded script: ${specific_js_script}")},
-					// 	async: true
-					// });
+					file_string += `\n$.getScript("${specific_js_script}"`;
 					
-					// `
-
-					file_string += `\n$.getScript("${specific_js_script}"); `;
+					if(specific_js_scripts_index != specific_js_scripts.length -1){
+						file_string += `,\nfunction(){`;
+					}
+					else{
+						file_string += `)`
+					}
 				}
-				//file_string += `});`; //close initial $(function(){ 
+				file_string += Array(specific_js_scripts.length).join('})');
 
 				async.series([
 					function (next) {
 						gulp.src(relative_universal_javascript_files)
-							// .pipe( uglify() )
+							//.pipe( uglify() )
 							.pipe(concat(page_name + ".js"))
 							.pipe(gulp.dest(js_out_directory))
 							.on('end', next);
 					},
 					function (next) {
-						//write ajax call to `page_name + ".js"` file to indirectly load specific_js_script
+						//append file_string to dist file
 						gulp.src(js_out_directory + page_name + ".js")
 							.pipe(map(function(file, cb) {
 								var fileContents = file.contents.toString();
-								// --- do any string manipulation here ---
 								fileContents = fileContents += file_string;
 								file.contents = new Buffer(fileContents);
 								cb(null, file);

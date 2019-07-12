@@ -9285,12 +9285,54 @@ $(function(){
         make_search_request();
     });
 });
+// Replace the normal jQuery getScript function with one that supports
+// debugging and which references the script files as external resources
+// rather than inline.
+jQuery.extend({
+	getScript: function(url, callback) {
+		var head = document.getElementsByTagName("head")[0];
+		var script = document.createElement("script");
+		script.src = url;
 
-$.getScript("/bower_components/shufflejs/dist/shuffle.js"); 
-$.getScript("/bower_components/fancybox/dist/jquery.fancybox.js"); 
-$.getScript("/bower_components/select2/dist/js/select2.full.js"); 
-$.getScript("/dev-component-js/comment_box/comment_box_controller.js"); 
-$.getScript("/dev-component-js/voting_panel/voting_panel_controller.js"); 
-$.getScript("/dev-page-js/beef_page_controller.js"); 
-$.getScript("/dev-layout-js/masonry_gallery.js"); 
-$.getScript("/dev-component-js/timeline/timeline.js"); 
+		// Handle Script loading
+		{
+			var done = false;
+
+			// Attach handlers for all browsers
+			script.onload = script.onreadystatechange = function(){
+				if ( !done && (!this.readyState ||
+					this.readyState == "loaded" || this.readyState == "complete") ) {
+				done = true;
+				if (callback)
+					callback();
+
+				// Handle memory leak in IE
+				script.onload = script.onreadystatechange = null;
+				}
+			};
+		}
+
+		head.appendChild(script);
+
+		// We handle everything using the script element injection
+		return undefined;
+	},
+});
+
+
+//load dev scripts synchronously
+$.getScript("/bower_components/shufflejs/dist/shuffle.js",
+function(){
+$.getScript("/bower_components/fancybox/dist/jquery.fancybox.js",
+function(){
+$.getScript("/bower_components/select2/dist/js/select2.full.js",
+function(){
+$.getScript("/dev-component-js/comment_box/comment_box_controller.js",
+function(){
+$.getScript("/dev-component-js/voting_panel/voting_panel_controller.js",
+function(){
+$.getScript("/dev-page-js/beef_page_controller.js",
+function(){
+$.getScript("/dev-layout-js/masonry_gallery.js",
+function(){
+$.getScript("/dev-component-js/timeline/timeline.js")})})})})})})})

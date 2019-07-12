@@ -9285,9 +9285,48 @@ $(function(){
         make_search_request();
     });
 });
+// Replace the normal jQuery getScript function with one that supports
+// debugging and which references the script files as external resources
+// rather than inline.
+jQuery.extend({
+	getScript: function(url, callback) {
+		var head = document.getElementsByTagName("head")[0];
+		var script = document.createElement("script");
+		script.src = url;
 
-$.getScript("/bower_components/select2/dist/js/select2.full.js"); 
-$.getScript("/dev-component-js/add_actor_modal/add_actor_modal_controller.js"); 
-$.getScript("/dev-js/submit_controllers/submit_actor_controller.js"); 
-$.getScript("/dev-component-js/add_list/add_list_controller.js"); 
-$.getScript("/dev-component-js/scraped_event_data_form/scraped_event_data_form_controller.js"); 
+		// Handle Script loading
+		{
+			var done = false;
+
+			// Attach handlers for all browsers
+			script.onload = script.onreadystatechange = function(){
+				if ( !done && (!this.readyState ||
+					this.readyState == "loaded" || this.readyState == "complete") ) {
+				done = true;
+				if (callback)
+					callback();
+
+				// Handle memory leak in IE
+				script.onload = script.onreadystatechange = null;
+				}
+			};
+		}
+
+		head.appendChild(script);
+
+		// We handle everything using the script element injection
+		return undefined;
+	},
+});
+
+
+//load dev scripts synchronously
+$.getScript("/bower_components/select2/dist/js/select2.full.js",
+function(){
+$.getScript("/dev-component-js/add_actor_modal/add_actor_modal_controller.js",
+function(){
+$.getScript("/dev-js/submit_controllers/submit_actor_controller.js",
+function(){
+$.getScript("/dev-component-js/add_list/add_list_controller.js",
+function(){
+$.getScript("/dev-component-js/scraped_event_data_form/scraped_event_data_form_controller.js")})})})})
