@@ -33,6 +33,8 @@ append body
 
         
 append js_scripts
-    script(src="/js/beefs.js")
     script.
-        init_horizontal_slider('featured_beefs_slider_full')
+        function init_horizontal_slider_callback(){
+            init_horizontal_slider('featured_beefs_slider_full')
+        }
+    script(src="/js/beefs.js")
