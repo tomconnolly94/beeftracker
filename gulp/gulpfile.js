@@ -1,13 +1,13 @@
 var gulp = require('gulp'),
     sass = require('gulp-sass'),
     concat = require('gulp-concat'),
-    connect = require('gulp-connect'),
+    //connect = require('gulp-connect'),
     uglify = require('gulp-uglify'),
 	fs = require('fs'),
-	file = require('gulp-file'),
-	footer = require('gulp-footer'),
 	map = require('map-stream'),
-	async = require('async');
+	async = require('async'),
+	argv = require('yargs').argv;
+	isProduction = (argv.production === undefined) ? false : true;
 
 	//import server .env file
 require("dotenv").config({ path: '../.env' });
@@ -25,14 +25,14 @@ gulp.task('css', function() {
 	return gulp.src(scss_directory)
 		.pipe( sass({outputStyle: 'nested'}).on('error', sass.logError) )
 		.pipe( gulp.dest(compiled_css_directory) )
-		.pipe( connect.reload() );
+		//.pipe( connect.reload() );
 
 });
 
 gulp.task('css_fonts', function() {
 	return gulp.src(['node_modules/summernote/dist/font/summernote.ttf', 'node_modules/summernote/dist/font/summernote.woff'])
 		.pipe( gulp.dest(compiled_font_directory))
-		.pipe( connect.reload() );
+		//.pipe( connect.reload() );
 
 });
 
@@ -64,14 +64,22 @@ gulp.task('js', function(done) {
 			var relative_universal_javascript_files = universal_javascript_files.map(add_relative_path);
 			var relevant_js_scripts = relative_universal_javascript_files.concat(specific_js_scripts);
 
-			if(process.env.NODE_ENV == "heroku_production"){
+			if(isProduction/*process.env.NODE_ENV == "heroku_production"*/){
+
+				console.log(relevant_js_scripts);
+				console.log(page_name);
+				console.log(js_out_directory);
+
 				gulp.src(relevant_js_scripts)
 					.pipe( uglify() )
 					.pipe(concat(page_name + ".js"))
 					.pipe(gulp.dest(js_out_directory))
-					//.pipe(connect.reload());
+					//.pipe(connect.reload())
+					//.pipe();
+					resolve();
+				//reject()
 			}
-			else if(process.env.NODE_ENV == "local_dev"){
+			else if(true /*process.env.NODE_ENV == "local_dev"*/){
 		
 				//initial file_string content extends jQuery to load dev js scripts as external files so theya re available in the chrome debugger
 				var file_string = `
@@ -139,7 +147,7 @@ jQuery.extend({
 					}
 
 					file_string += `\n$.getScript("${specific_js_script}"`;
-					
+
 					if(specific_js_scripts_index != specific_js_scripts.length -1){
 						file_string += `,\nfunction(){`;
 					}

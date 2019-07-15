@@ -11,13 +11,7 @@
     "start": "node index.js"
   },
   "dependencies": {
-<<<<<<< HEAD
-<<<<<<< HEAD
     "async": "^2.6.2",
-=======
->>>>>>> 66984e1... file re-organisation; gulp build dev
-=======
->>>>>>> 66984e1... file re-organisation; gulp build dev
     "async-looper": "^1.0.8",
     "body-parser": "^1.19.0",
     "bootstrap": "^3.4.1",
@@ -90,11 +84,13 @@
     "gulp-sass": "^3.2.0",
     "gulp-uglify": "^3.0.2",
     "gulp-util": "^3.0.8",
+    "jslint": "^0.12.1",
     "map-stream": "0.0.7",
-    "marked": "^0.3.17",
+    "marked": "^0.7.0",
     "mocha": "^5.2.0",
     "proxyquire": "^2.1.0",
     "sinon": "^7.3.2",
-    "webpack": "^2.2.1"
+    "webpack": "^2.2.1",
+    "yargs": "^13.2.4"
   }
 }
