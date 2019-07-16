@@ -59,4 +59,4 @@ function validate_event_submission(event_submission){
     }
     
     return "validation_successful";
-};
+}

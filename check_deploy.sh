@@ -76,9 +76,9 @@ echo "Building server files..."
 
 exit_code=2
 if $DEBUG_MODE ; then
-    gulp build || unsuccessful_exit $exit_code
+    gulp build --production || unsuccessful_exit $exit_code
 else
-    gulp build > /dev/null 2>&1 || unsuccessful_exit $exit_code
+    gulp build --production > /dev/null 2>&1 || unsuccessful_exit $exit_code
 fi
 
 echo "Build successful."
@@ -110,6 +110,7 @@ cd bf-dev
 echo "Running Node server..."
 exit_code=5
 node index.js "load_envs_manually" > /dev/null &
+sleep 3
 server_pid=$(echo $! | tr ":" "\n")
 jobsvar=$(jobs)
 if [ -n "$jobsvar" ]; then

@@ -36,4 +36,4 @@
         return "https://img.youtube.com/vi/" + params.v + "/0.jpg";
     };
 
-})(typeof exports === 'undefined'? this['youtube_url_translation'] = {}: exports);
+})(typeof exports === 'undefined'? this.youtube_url_translation = {}: exports);

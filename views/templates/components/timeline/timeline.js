@@ -1,5 +1,5 @@
 $(function() {
-        const timeline = document.querySelector(".timeline ol"),
+        var timeline = document.querySelector(".timeline ol"),
         elH = document.querySelectorAll(".timeline li > div"),
         arrows = document.querySelectorAll(".timeline-container .arrows .arrow"),
         arrowPrev = document.querySelector(".timeline-container .arrows .arrow__prev"),
@@ -19,7 +19,7 @@ $(function() {
         function setEqualHeights(el) {
             let counter = 0;
             for (let i = 0; i < el.length; i++) {
-              const singleHeight = el[i].offsetHeight;
+              var singleHeight = el[i].offsetHeight;
 
               if (counter < singleHeight) {
                 counter = singleHeight;
@@ -32,7 +32,7 @@ $(function() {
         }
 
         function isElementInViewport(el) {
-        const rect = el.getBoundingClientRect();
+        var rect = el.getBoundingClientRect();
         return (
           rect.top >= 0 &&
           rect.left >= 0 &&

@@ -184,7 +184,7 @@ app.get("/sitemap", function (req, res) {
 
 // ### Serve an error page on unrecognised uri###
 app.get('/*', function (req, res, next) {
-    res.render("pages/static/error.jade");
+    res.status(404).render("pages/static/error.jade");
 });
 
 var success_msg = "Node app is running on port: ";

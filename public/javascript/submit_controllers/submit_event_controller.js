@@ -139,7 +139,7 @@ $(function(){
         }
         
         //format aggressors
-        for(var i = 0; i < targets_li.length; i++){
+        for(i = 0; i < targets_li.length; i++){
             if($(targets_li[i]).children("div").children("h4").attr("x-actor-id")){
 
                 var new_actor_record = {
@@ -170,7 +170,7 @@ $(function(){
 
         var actors = extract_actors_from_page();
         var aggressors = actors[0].map(function(actor){ return actor._id });
-        var targets = actors[1].map(function(actor){ return actor._id });;
+        var targets = actors[1].map(function(actor){ return actor._id });
         
         //extract data sources
         for(var i = 0; i < li_items_data_sources.length; i++){
@@ -181,7 +181,7 @@ $(function(){
         var gallery_items = [];
         
         //extract gallery items
-        for(var i = 0; i < li_items_gallery_manager.length; i++){
+        for(i = 0; i < li_items_gallery_manager.length; i++){
             var item = li_items_gallery_manager[i];
             
             var media_type = $(item).children("img").attr("x-media-type");
@@ -298,5 +298,5 @@ $(function(){
     });
 
     var actors = extract_actors_from_page();
-    window["select_actor_modal_controller__render_voting_panel"](actors[0], actors[1]);
+    window.select_actor_modal_controller__render_voting_panel(actors[0], actors[1]);
 });
