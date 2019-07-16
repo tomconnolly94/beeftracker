@@ -71,7 +71,7 @@ $(function(){
         $("#actor_bio").val("").trigger("change");
         
         //reset all fields in variable_fields_panel
-        $("#variable_fields_panel").find("input").val("").trigger("change")
+        $("#variable_fields_panel").find("input").val("").trigger("change");
         
         //reset link fields
         $("#add_actor_website_link").val("").trigger("change");
@@ -85,12 +85,12 @@ $(function(){
         $("#add_actor_modal .list-group-item").remove();
         
         //reset img_preview
-        $("#actor_photo_preview").attr("src", "/images/no_preview_available.jpg")
-        $("#actor_photo_preview").attr("x-media-link", "")
-        $("#actor_photo_preview").attr("x-file-name", "")
+        $("#actor_photo_preview").attr("src", "/images/no_preview_available.jpg");
+        $("#actor_photo_preview").attr("x-media-link", "");
+        $("#actor_photo_preview").attr("x-file-name", "");
         
         //reset actor type selection
-        $("#step-1").find("a").each(function(){ $(this).removeClass("active") } );
+        $("#step-1").find("a").each(function(){ $(this).removeClass("active"); } );
         $("#step-1").parent().attr("x-selected-actor-type", null);
         
         //clear data_sources input tag
@@ -102,7 +102,7 @@ $(function(){
         file_input_tag.unwrap();
         
         //clear error_panel
-        render_actor_modal_error_messages([])
+        render_actor_modal_error_messages([]);
     }
     
     $(".submit_new_actor_button").unbind().click(function(event){
@@ -125,7 +125,7 @@ $(function(){
 
             if(item.className.includes("list")){
                 //deal with list
-                variable_fields_obj[$($(item).children("div").find("ul")[0]).attr("id")] = $.makeArray($(item).find("li").map(function(){ return $(this).text()}));
+                variable_fields_obj[$($(item).children("div").find("ul")[0]).attr("id")] = $.makeArray($(item).find("li").map(function(){ return $(this).text();}));
             }
             else{
                 variable_fields_obj[$(item).children("input").attr("id")] = $(item).children("input").val();
@@ -164,7 +164,7 @@ $(function(){
         var also_known_as = [];
         
         //extract data sources
-        for(var i = 0; i < li_items_also_known_as.length; i++){
+        for(i = 0; i < li_items_also_known_as.length; i++){
             also_known_as.push(li_items_also_known_as[i].textContent);
         }
         
@@ -172,7 +172,7 @@ $(function(){
         var data_sources = [];
         
         //extract data sources
-        for(var i = 0; i < li_items_data_sources.length; i++){
+        for(i = 0; i < li_items_data_sources.length; i++){
             data_sources.push(li_items_data_sources[i].textContent);
         }
         
@@ -197,7 +197,7 @@ $(function(){
             link: media_name,
             main_graphic: true,
             cover_image: null
-        }
+        };
 
         gallery_items.push(gallery_item_formatted);
         form_data.append("file-" + i, gallery_item_formatted.file, gallery_item_formatted.link);

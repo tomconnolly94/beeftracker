@@ -85,16 +85,7 @@ describe('Module: actors_controller', function () {
         
         assert.deepEqual(result_keys, expected_results_keys);
         
-        for(var i = 0; i < result_keys.length; i++){
-            
-            var key = result_keys[i];
-            var fields_to_skip = [ "date_added" ];
-            
-            if(fields_to_skip.indexOf(result[key]) != -1){
-                assert.deepEqual(result[key], expected_results[key]);
-            }
-        }
-        globals.compare_objects(result._doc, expected_results._doc, fields_to_skip);
+        globals.compare_objects(result, expected_results, fields_to_skip);
     });
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////

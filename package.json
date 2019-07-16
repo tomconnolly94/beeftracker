@@ -67,6 +67,7 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "async": "^2.6.2",
     "autocannon": "^2.4.1",
     "chai": "^4.2.0",
     "clinic": "^0.8.3",
@@ -76,15 +77,22 @@
     "gulp-concat": "^2.6.1",
     "gulp-connect": "^5.7.0",
     "gulp-copy": "^1.1.0",
+    "gulp-file": "^0.4.0",
+    "gulp-footer": "^2.0.2",
     "gulp-jade": "^1.1.0",
     "gulp-livereload": "^3.8.1",
+    "gulp-minify": "^3.1.0",
     "gulp-sass": "^3.2.0",
-    "gulp-uglify": "^3.0.2",
+    "gulp-terser": "^1.2.0",
     "gulp-util": "^3.0.8",
-    "marked": "^0.3.17",
+    "jshint": "^2.10.2",
+    "jslint": "^0.12.1",
+    "map-stream": "0.0.7",
+    "marked": "^0.7.0",
     "mocha": "^5.2.0",
     "proxyquire": "^2.1.0",
     "sinon": "^7.3.2",
-    "webpack": "^2.2.1"
+    "webpack": "^2.2.1",
+    "yargs": "^13.2.4"
   }
 }

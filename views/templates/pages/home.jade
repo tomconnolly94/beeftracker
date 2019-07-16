@@ -71,9 +71,8 @@ append body
 
 
 append js_scripts
-    script(src="/js/home.js")
     script.
-        $(function(){
+        function init_horizontal_slider_callback(){
             init_horizontal_slider('featured_beefs_slider_full')
-        })
-        
+        }
+    script(src="/js/home.js")

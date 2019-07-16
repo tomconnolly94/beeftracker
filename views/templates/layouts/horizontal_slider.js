@@ -34,3 +34,5 @@ function init_horizontal_slider(slider_id){
         instance.update();
     });
 }
+
+init_horizontal_slider_callback();

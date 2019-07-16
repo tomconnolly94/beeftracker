@@ -17,7 +17,7 @@ var email_interface = require("../interfaces/email_interface");
 var logger = require("../tools/logging.js");
 
 //get db uri
-const db_url = process.env.MONGODB_URI;
+var db_url = process.env.MONGODB_URI;
 
 var post_insert_procedure = function (db, document, insert_object, table, options) {
 
