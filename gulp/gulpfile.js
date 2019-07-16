@@ -3,16 +3,16 @@ var gulp = require('gulp'),
 	concat = require('gulp-concat'),
 	gutil = require('gulp-util'),
 	uglify = require('gulp-terser'),
+	cleanCSS = require('gulp-clean-css'),
+	purify = require('gulp-purifycss'),
+	gulpif = require('gulp-if'),
 	fs = require('fs'),
 	map = require('map-stream'),
+	jade = require('gulp-jade'),
 	async = require('async'),
 		argv = require('yargs').argv,
 		isProduction = (argv.production === undefined) ? false : true;
 
-//import server .env file
-require("dotenv").config({
-	path: '../.env'
-});
 
 var path_to_root = "../";
 var compiled_css_directory = path_to_root + "public/dist/css";
@@ -21,13 +21,63 @@ var compiled_webfonts_directory = path_to_root + "public/fonts";
 var compiled_font_directory = path_to_root + "public/dist/css/font";
 var js_out_directory = path_to_root + "public/dist/javascript/"
 
+//import server .env file
+require("dotenv").config({
+	path: path_to_root + '.env'
+});
 
 // --- Basic Tasks ---
 gulp.task('css', function () {
+
+	var tmp_html_dir = "../public/dist/tmp/html/";
+	if(false){
+		var srcs = [
+			'**/*.jade',
+			'**/**/*.jade',
+			'**/**/**/*.jade'
+		]
+
+		srcs = srcs.map(function(path){ return `${path_to_root}views/templates/${path}`})
+
+		console.log(srcs)
+
+		//build all jade to html
+		gulp.src(srcs)
+			.pipe(jade({ locals: { 
+				item: { 
+					name: "name",
+					beef_chain_ids: [
+						"123"
+					],
+					title: "title"
+				},
+				data: {
+					rating: 1
+				},
+				actor_data: {
+					name: "name",
+					also_known_as: "also_known_as",
+					variable_field_values: {
+						"helo": "hello"
+					}
+				},
+				gallery_items:[
+					{
+						file_name: "file_name",
+						link: "link",
+						media_type: "image"
+					}
+				]
+			}}))
+			.pipe(gulp.dest(tmp_html_dir))
+	}
+
 	return gulp.src(scss_directory)
 		.pipe(sass({
 			outputStyle: 'nested'
 		}).on('error', sass.logError))
+		.pipe(gulpif(isProduction, cleanCSS({debug: true})))
+		//.pipe(gulpif(isProduction, purify([tmp_html_dir + "*.html"])))
 		.pipe(gulp.dest(compiled_css_directory))
 });
 

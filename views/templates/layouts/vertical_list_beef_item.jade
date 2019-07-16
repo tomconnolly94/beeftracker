@@ -8,21 +8,16 @@ mixin vertical-list-beef-item(item, image_resize_params)
         - var formatted_date = format_date(item.event_date);
         - var letter_mapping = ["one", "two", "three", "four", "five" ];
         
-        //div.vertical-list-item.beef-category-music(class=item == data[2] ? "hidden_on_lg" : "")
         div.vertical-list-item.beef-category-music
             a(href="/beef/" + item.beef_chain_ids[0] + "/" + item._id).row
                 div.col-6.vertical-list-item-thumbnail
                     img(src=file_server_url_builder(file_server_url_prefix, "events", item.cover_image, image_resize_params), style="width:100%;")
                 div.col-6.vertical-list-item-details
                     h5 #{item.title.length > 40 ? item.title.slice(0,40)+ "..." : item.title}
-                        //-span.fas.fa-comments &nbsp;&nbsp;
-                        //-| #{item.comments.length}
                     ul.beef-info
                         li #{formatted_date}
                         li
                             span.beefometer.small(class=letter_mapping[data.rating - 1] + "-beefs")
-                    //p.
-                        #{item.description.slice(0, 90).trim()}...
     - }
                 
 - if(!item){
