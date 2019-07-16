@@ -81,7 +81,6 @@
     "gulp-footer": "^2.0.2",
     "gulp-jade": "^1.1.0",
     "gulp-livereload": "^3.8.1",
-    "gulp-minify": "^3.1.0",
     "gulp-sass": "^3.2.0",
     "gulp-terser": "^1.2.0",
     "gulp-util": "^3.0.8",
