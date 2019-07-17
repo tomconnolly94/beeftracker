@@ -704,10 +704,9 @@ module.exports = {
 
                         //remove the event._id entry from the relevant beef_chain documents
                         db_interface.updateSingle(beef_chain_update_config, function(result){
-                            console.log(result);
-
+                            
                             //remove the event from the beef_chain table only if events array is empty after above removal
-                            if(result.event_ids.length == 0){
+                            if(result.event_ids.length == 0 || (result.event_ids.length == 1 && result.event_ids[0] == event_id)){
 
                                 var beef_chain_delete_config = {
                                     table: db_ref.get_beef_chain_table(),
