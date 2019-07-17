@@ -24,6 +24,7 @@ $(function(){
 
     var panel_aggressors = [];
     var panel_targets = [];
+    var selected_actor_id;
             
     function assign_click_listeners(){
 
@@ -49,14 +50,14 @@ $(function(){
                 }
             }
             
-            render_voting_panel(panel_aggressors, panel_targets)
+            render_versus_panel(panel_aggressors, panel_targets)
         });
     }
     
-    assign_click_listeners();
-    $('#select_actor').val("default").trigger("change");
+    assign_click_listeners(); //trigger click listener registration
 
-    
+    $('#select_actor').val("default").trigger("change"); //set the select actor list to its default value
+        
     //function to take data from the select actor modal and assign it to the DOM
     $("#select_actor_modal_submit").click(function(){
         
@@ -80,13 +81,13 @@ $(function(){
             _id: actor_id
         };
                 
-        render_voting_panel(actor_type == "beefer" ? panel_aggressors.concat([ new_actor_record ]) : panel_aggressors, actor_type == "beefee" ? panel_targets.concat([ new_actor_record ]) : panel_targets)
+        render_versus_panel(actor_type == "beefer" ? panel_aggressors.concat([ new_actor_record ]) : panel_aggressors, actor_type == "beefee" ? panel_targets.concat([ new_actor_record ]) : panel_targets)
         
         $('#select_actor').val("default").trigger("change"); //reset actor input select box
         $("#selector_actor_modal").modal("hide"); //hide modal
     });
     
-    $("#select_actor").unbind().change(function(){
+    $("#select_actor").unbind().change(function(event){
         $("#select_actor_modal_submit").removeAttr("disabled")
     });
     
@@ -96,7 +97,7 @@ $(function(){
     });
 
 
-    var render_voting_panel = function(aggressors, targets){
+    var render_versus_panel = function(aggressors, targets){
 
         panel_aggressors = aggressors;
         panel_targets = targets;
@@ -115,5 +116,5 @@ $(function(){
     }
 
     //assign to window so it is accessible to other controllers
-    window["select_actor_modal_controller__render_voting_panel"] = render_voting_panel;
+    window["select_actor_modal_controller__render_versus_panel"] = render_versus_panel;
 });
