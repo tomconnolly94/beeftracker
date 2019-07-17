@@ -180,7 +180,10 @@ app.get("/sitemap", function (req, res) {
         res.header("Content-Type", "application/xml");
         res.send(xml);
     });
-});
+}); //sitemap
+app.get('/ads.txt', function (request, response) {
+    response.sendFile(__dirname + '/public/verification_files/ads.txt');
+}); //ads.txt for adsense
 
 // ### Serve an error page on unrecognised uri###
 app.get('/*', function (req, res, next) {
