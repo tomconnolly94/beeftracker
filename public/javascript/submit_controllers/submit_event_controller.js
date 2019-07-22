@@ -298,5 +298,5 @@ $(function(){
     });
 
     var actors = extract_actors_from_page();
-    window.select_actor_modal_controller__render_voting_panel(actors[0], actors[1]);
+    window["select_actor_modal_controller__render_versus_panel"](actors[0], actors[1]);
 });
