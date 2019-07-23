@@ -20471,14 +20471,19 @@ function load_template_render_function(template_name, success_callback){
         success_callback(true);
     }
     else{
-        $.getScript("/template_functions/" + template_name, function(data, status, jqxhr){
-            if(status == "success"){
+
+        $.ajax({
+            url: "/template_functions/" + template_name,
+            dataType: 'script',
+            success: function(data, status, jqxhr){
+                eval(data);
                 success_callback(true);
-            }
-            else{
+            },
+            error: function(){
                 console.log("Unable to access template on server or client in order to re-render " + template_name);
-            }
-        });
+            },
+            async: false
+          });
     }
 }
 

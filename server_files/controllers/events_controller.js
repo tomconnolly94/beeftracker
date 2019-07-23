@@ -30,7 +30,7 @@ var Event = require("../schemas/event.schema");
 var EventContribution = require("../schemas/event_contribution.schema").model;
 var BeefChain = require("../schemas/beef_chain.schema");
 
-var test_mode = false;
+var test_mode = true;
 var event_projection = {
     "_id": 1,
     "title": 1,
