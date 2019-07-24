@@ -24,7 +24,7 @@ var format_embeddable_items = require('../tools/formatting.js').format_embeddabl
 //objects
 var Actor = require('../schemas/actor.schema');
 
-var test_mode = true;
+var test_mode = false;
 if(test_mode) { console.log(" ### WARNING: TEST_MODE FOR 'actors_controller.js' IS ACTIVATED"); }
 
 var actor_intermediate_projection = {

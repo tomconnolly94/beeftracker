@@ -63,28 +63,22 @@ function extract_actors_from_page(){
     //format aggressors
     for(var i = 0; i < aggressors_li.length; i++){
         if($(aggressors_li[i]).children("div").children("h4").attr("x-actor-id")){
-
-            var new_actor_record = {
+            aggressors.push({
                 src: $(aggressors_li[i]).children("div").children("a").children("img").attr("src"),
                 name: $(aggressors_li[i]).children("div").children("h4").text(),
                 _id: $(aggressors_li[i]).children("div").children("h4").attr("x-actor-id")
-            };
-
-            aggressors.push(new_actor_record);
+            });
         }
     }
     
     //format aggressors
     for(i = 0; i < targets_li.length; i++){
         if($(targets_li[i]).children("div").children("h4").attr("x-actor-id")){
-
-            var new_actor_record = {
+            targets.push({
                 src: $(targets_li[i]).children("div").children("a").children("img").attr("src"),
                 name: $(targets_li[i]).children("div").children("h4").text(),
                 _id: $(targets_li[i]).children("div").children("h4").attr("x-actor-id")
-            };
-
-            targets.push(new_actor_record);
+            });
         }
     }
 
