@@ -30,7 +30,9 @@ var Event = require("../schemas/event.schema");
 var EventContribution = require("../schemas/event_contribution.schema").model;
 var BeefChain = require("../schemas/beef_chain.schema");
 
-var test_mode = true;
+var test_mode = false;
+if(test_mode) { console.log(" ### WARNING: TEST_MODE FOR 'events_controller.js' IS ACTIVATED"); }
+
 var event_projection = {
     "_id": 1,
     "title": 1,

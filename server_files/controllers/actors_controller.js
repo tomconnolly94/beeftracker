@@ -12,7 +12,6 @@
 //write test for update function to ensure refactoring was a success
 
 //external dependencies
-var moment = require("moment");
 var BSON = require('bson');
 
 //internal dependencies
@@ -25,7 +24,9 @@ var format_embeddable_items = require('../tools/formatting.js').format_embeddabl
 //objects
 var Actor = require('../schemas/actor.schema');
 
-var test_mode = false;
+var test_mode = true;
+if(test_mode) { console.log(" ### WARNING: TEST_MODE FOR 'actors_controller.js' IS ACTIVATED"); }
+
 var actor_intermediate_projection = {
     $project: {
         _id: 1, 
