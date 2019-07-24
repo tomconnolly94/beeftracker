@@ -20789,7 +20789,7 @@ jQuery.extend({
 
 
 //load dev scripts synchronously
-$.getScript("/dev-js/submit_controllers/submit_user_data_controller.js",
+$.getScript("/dev-js/submit_controllers/submit_user_data/click_listeners.js",
 function(){
 $.getScript("/dev-layout-js/masonry_gallery.js",
 function(){

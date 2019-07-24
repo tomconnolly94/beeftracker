@@ -20793,8 +20793,12 @@ $.getScript("/bower_components/select2/dist/js/select2.full.js",
 function(){
 $.getScript("/dev-component-js/add_actor_modal/add_actor_modal_controller.js",
 function(){
-$.getScript("/dev-js/submit_controllers/submit_actor_controller.js",
+$.getScript("/dev-js/submit_controllers/submit_actor/input_validator.js",
+function(){
+$.getScript("/dev-js/submit_controllers/submit_actor/helper_functions.js",
+function(){
+$.getScript("/dev-js/submit_controllers/submit_actor/click_listeners.js",
 function(){
 $.getScript("/dev-component-js/add_list/add_list_controller.js",
 function(){
-$.getScript("/dev-component-js/scraped_event_data_form/scraped_event_data_form_controller.js")})})})})
+$.getScript("/dev-component-js/scraped_event_data_form/scraped_event_data_form_controller.js")})})})})})})
