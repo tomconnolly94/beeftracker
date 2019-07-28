@@ -34,9 +34,9 @@ gulp.task('css_fonts', function() {
 
 var client_javascript_page_config = JSON.parse(fs.readFileSync('client_javascript_page_config.json', 'utf8'));
 var universal_javascript_files = [
-	"node_modules/jquery/dist/jquery.js",
+	"node_modules/jquery/dist/jquery.min.js",
 	"node_modules/jquery-lazy/jquery.lazy.js",
-	"node_modules/toastr/build/toastr.js",
+	"node_modules/toastr/build/toastr.min.js",
 	"bower_components/bootstrap/dist/js/bootstrap.bundle.js",
 	"bower_components/hammerjs/hammer.js",
 	"public/javascript/service_worker/service_worker_init.js",
