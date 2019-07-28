@@ -12,7 +12,8 @@ $(function () {
         placeholder: 'Select actor ',
         theme: 'classic',
         width: "100%",
-        dropdownParent: $("#selector_actor_modal")
+        dropdownParent: $("#selector_actor_modal"),
+        sorter: data => data.sort((a, b) => a.text.localeCompare(b.text)) //TODO: this must run on every 'change' to the list if an element is selected or removed, elements revert to their original order
     });
 
     $('#selector_actor_modal #add_new_actor').click(function () {
@@ -38,17 +39,37 @@ $(function () {
 
         $(".remove_actor").unbind().click(function () {
 
+            var container_div = $(this).parent();
+
+            var removed_actor_record = {
+                src: container_div.find(".actor-avatar").attr("src"),
+                name: container_div.children("h4").text(),
+                _id: container_div.children("h4").attr("x-actor-id")
+            };
+
             for (var i = 0; i < panel_aggressors.length; i++) {
-                if (panel_aggressors[i]._id == $(this).parent().children("h4").attr("x-actor-id")) {
+                if (panel_aggressors[i]._id == removed_actor_record._id) {
                     panel_aggressors.splice(i, 1);
                 }
             }
 
             for (var i = 0; i < panel_targets.length; i++) {
-                if (panel_targets[i]._id == $(this).parent().children("h4").attr("x-actor-id")) {
+                if (panel_targets[i]._id == removed_actor_record._id) {
                     panel_targets.splice(i, 1);
                 }
             }
+
+            //create new actor option
+            var removed_actor_option = $("<option/>", {
+                "value": removed_actor_record._id,
+                "text": removed_actor_record.name,
+                "x-actor-image-link": removed_actor_record.src,
+                "x-actor-name": removed_actor_record.name,
+                "x-actor-id": removed_actor_record._id
+            });
+
+            //re-add actor to select_actor_modal actor list
+            $('#select_actor').append(removed_actor_option);
 
             render_versus_panel(panel_aggressors, panel_targets)
         });
@@ -83,6 +104,7 @@ $(function () {
 
         render_versus_panel(actor_type == "beefer" ? panel_aggressors.concat([new_actor_record]) : panel_aggressors, actor_type == "beefee" ? panel_targets.concat([new_actor_record]) : panel_targets)
 
+        $(`#select_actor option[value='${new_actor_record._id}']`).remove(); //remove selected option from list
         $('#select_actor').val("default").trigger("change"); //reset actor input select box
         $("#selector_actor_modal").modal("hide"); //hide modal
     });

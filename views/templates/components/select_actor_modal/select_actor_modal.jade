@@ -10,7 +10,7 @@ mixin select-actor-modal()
                         select#select_actor.form-control(name="select_actor")
                             option(value="default", selected="true", disabled="disabled") Select Actor
 
-                            - actor_data.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+                            //- actor_data.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
 
                             - each actor in actor_data
                                 option(value=actor._id, x-actor-image-link=actor.img_title_fullsize, x-actor-name=actor.name, x-actor-id=actor._id) #{actor.name}
