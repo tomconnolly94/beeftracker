@@ -10196,6 +10196,6 @@ jQuery.extend({
 
 
 //load dev scripts synchronously
-$.getScript("/bower_components/select2/dist/js/select2.full.js",
+$.getScript("/modules/select2/dist/js/select2.full.min.js",
 function(){
 $.getScript("/dev-component-js/register_form/register_form_controller.js")})

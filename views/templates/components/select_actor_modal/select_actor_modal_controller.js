@@ -7,13 +7,28 @@ $(function () {
         return "versus_panel";
     }
 
+    function sort_actor_options(a, b){
+        if (a.text < b.text)
+            return -1;
+        if (a.text > b.text)
+            return 1;
+        return 0;
+    }
+
     //init components
     $('#select_actor').select2({
         placeholder: 'Select actor ',
         theme: 'classic',
         width: "100%",
         dropdownParent: $("#selector_actor_modal"),
-        sorter: data => data.sort((a, b) => a.text.localeCompare(b.text)) //TODO: this must run on every 'change' to the list if an element is selected or removed, elements revert to their original order
+        sorter: data => data.sort((a, b) => a.text.localeCompare(b.text)),
+        //sorter: sort_actor_options //TODO: this must run on every 'change' to the list if an element is selected or removed, elements revert to their original order
+    });
+
+    $("#select_actor").unbind().change(function (event) {
+        $('#select_actor .select2-selection__rendered li.select2-selection__choice').sort(function(a, b) {
+            return $(a).text() < $(b).text() ? -1 : $(a).text() > $(b).text() ? 1 : 0;
+        }).prependTo('.select2-selection__rendered');
     });
 
     $('#selector_actor_modal #add_new_actor').click(function () {

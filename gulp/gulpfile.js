@@ -118,7 +118,7 @@ jQuery.extend({
 						//declare route replacement mappings
 						var path_replacement_mappings = {
 							"public/javascript": "dev-js",
-							//"views/templates": "views",
+							"node_modules": "modules",
 							"views/templates/components": "dev-component-js",
 							"views/templates/layouts": "dev-layout-js",
 							"views/templates/pages": "dev-page-js",

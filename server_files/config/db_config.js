@@ -80,5 +80,9 @@ module.exports = {
     
     get_contact_requests_table: function(){
         return "contact_requests";
+    },
+    
+    get_broken_links_table: function(){
+        return "broken_links";
     }
 }

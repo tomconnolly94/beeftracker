@@ -10200,7 +10200,7 @@ $.getScript("/bower_components/shufflejs/dist/shuffle.js",
 function(){
 $.getScript("/bower_components/fancybox/dist/jquery.fancybox.js",
 function(){
-$.getScript("/bower_components/select2/dist/js/select2.full.js",
+$.getScript("/modules/select2/dist/js/select2.full.min.js",
 function(){
 $.getScript("/dev-component-js/comment_box/comment_box_controller.js",
 function(){

@@ -1,6 +1,6 @@
 {
 	"scraping_dump": [
-		"bower_components/select2/dist/js/select2.full.js",
+		"node_modules/select2/dist/js/select2.full.min.js",
 		"views/templates/components/add_actor_modal/add_actor_modal_controller.js",
 		"public/javascript/submit_controllers/submit_actor/input_validator.js",
 		"public/javascript/submit_controllers/submit_actor/helper_functions.js",
@@ -30,7 +30,7 @@
 		"views/templates/components/section_control_toolbar/section_control_toolbar_controller.js"
 	],
 	"add_beef": [
-		"bower_components/select2/dist/js/select2.full.js",
+		"node_modules/select2/dist/js/select2.full.min.js",
 		"bower_components/smartwizard/dist/js/jquery.smartWizard.js",
 		"views/templates/components/add_list/add_list_controller.js",
 		"views/templates/components/add_actor_modal/add_actor_modal_controller.js",
@@ -49,7 +49,7 @@
 	"beef": [
 		"bower_components/shufflejs/dist/shuffle.js",
 		"bower_components/fancybox/dist/jquery.fancybox.js",
-		"bower_components/select2/dist/js/select2.full.js",
+		"node_modules/select2/dist/js/select2.full.min.js",
 		"views/templates/components/comment_box/comment_box_controller.js",
 		"views/templates/components/voting_panel/voting_panel_controller.js",
 		"views/templates/pages/beef_page_controller.js",
@@ -70,7 +70,7 @@
 	],
 	"login": [],
 	"register": [
-		"bower_components/select2/dist/js/select2.full.js",
+		"node_modules/select2/dist/js/select2.full.min.js",
 		"views/templates/components/register_form/register_form_controller.js"
 	],
 	"user_profile": [

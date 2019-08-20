@@ -19,7 +19,7 @@ module.exports = {
         
         var email_title = send_config.email_title;
         var email_html = send_config.email_html;
-        var recipient_address = send_config.recipient_address;
+        var recipient_address = send_config.recipient_address || process.env.SERVER_EMAIL_ADDRESS;
         
         //send email with link in it to a page where a user can reset their password
         var transporter = nodemailer.createTransport({

@@ -48,6 +48,11 @@ var master_functions_object = {
     },
     test_gallery_items_structure: function (gallery_items, files) {
 
+        //check if gallery_items is a single gallery_item, if so turn it into an array
+        if(typeof gallery_items == "object"){
+            gallery_items = [ gallery_items ];
+        }
+
         for (var i = 0; i < gallery_items.length; i++) {
 
             var gallery_item = gallery_items[i];
@@ -68,13 +73,13 @@ var master_functions_object = {
             }
 
 
-            if (gallery_item["media_type"] == 'undefined' || gallery_item["media_type"].length < 1) {
+            if (gallery_item.media_type == 'undefined' || gallery_item.media_type.length < 1) {
                 return false;
-            } else if (gallery_item["link"] == 'undefined' || gallery_item["link"].length < 1) {
+            } else if (gallery_item.link == 'undefined' || gallery_item.link.length < 1) {
                 return false;
-            } else if (gallery_item["main_graphic"] == 'undefined') {
+            } else if (gallery_item.main_graphic == 'undefined') {
                 return false;
-            } else if (gallery_item["cover_image"] == 'undefined') {
+            } else if (gallery_itemcover_image == 'undefined') {
                 return false;
             }
         }

@@ -314,7 +314,7 @@ module.exports = {
         }
 
         //format target_ids array
-        for (var i = 0; i < submission_data.targets.length; i++) {
+        for (i = 0; i < submission_data.targets.length; i++) {
             target_ids.push(BSON.ObjectID.createFromHexString(submission_data.targets[i]));
         }
 

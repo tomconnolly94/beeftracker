@@ -1,0 +1,67 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Module: contact_requests_controller
+// Author: Tom Connolly
+// Description: Module to handle finding and storing data concerning contact attempts from either 
+// registered or unregistered users regarding more information, complaints or queries about the 
+// site
+// Testing script: test/unit_testing/controller_tests/contact_requests_controller.test.js
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//external dependencies
+
+//internal dependencies
+var db_ref = require("../config/db_config.js");
+var db_interface = require("../interfaces/db_interface.js");
+
+//objects
+var BrokenLink = require("../schemas/broken_link.schema");
+
+module.exports = {
+    
+    findBrokenLinks: function(query, callback){
+
+        var query_config = {
+            table: db_ref.get_broken_links_table(),
+            aggregate_array: [
+                {
+                    $match: {}
+                }
+            ]
+        }
+        db_interface.get(query_config, function(results){
+            callback(results);
+        },
+        function(error_object){
+            callback(error_object);
+        });
+    },
+    
+    createNewBrokenLink: function(broken_link_data, callback){
+        
+        var broken_link_record = new BrokenLink({
+            event_id: broken_link_data.event_id,
+            gallery_items: broken_link_data.gallery_items
+        });
+
+        var insert_config = {
+            record: broken_link_record,
+            table: db_ref.get_broken_links_table(),
+            options: {
+                email_config: {
+                    email_title: "[Beeftracker] New Broken Link Report", // Subject line
+                    email_html: "<html> <h1> Record </h1> <h5> ENV: " + process.env.NODE_ENV + " </h5> <p>" + JSON.stringify(broken_link_record) + "</p> </html>",
+                    recipient_address: null
+                }
+            }
+        };
+
+        db_interface.insert(insert_config, function(result){
+            callback(result);
+        },
+        function(error_object){
+            callback(error_object);
+        });
+    }    
+}
