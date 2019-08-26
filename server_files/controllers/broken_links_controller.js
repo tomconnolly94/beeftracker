@@ -47,13 +47,15 @@ module.exports = {
             gallery_items: broken_link_data.gallery_items
         });
 
+        var broken_link_record_reduced = JSON.parse(JSON.stringify(broken_link_record)).forEach((x) => delete x.file); //remove file property to avoid printing a file buffer to the email;
+
         var insert_config = {
             record: broken_link_record,
             table: db_ref.get_broken_links_table(),
             options: {
                 email_config: {
                     email_title: "[Beeftracker] New Broken Link Report", // Subject line
-                    email_html: "<html> <h1> Record </h1> <h5> ENV: " + process.env.NODE_ENV + " </h5> <p>" + JSON.stringify(broken_link_record) + "</p> </html>",
+                    email_html: "<html> <h1> Record </h1> <h5> ENV: " + process.env.NODE_ENV + " </h5> <p>" + JSON.stringify(broken_link_record_reduced) + "</p> </html>",
                     recipient_address: null
                 }
             }
