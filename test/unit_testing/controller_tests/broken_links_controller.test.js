@@ -9,7 +9,7 @@ var globals = require('../testing_globals.js');
 
 describe('Module: broken_links_controller', function () {
 
-    var broken_links_controller, broken_link_example, db_insert_spy, db_interface;
+    var broken_links_controller, broken_link_example, db_insert_spy, db_delete_spy, db_interface;
 
     before(function () {
 
@@ -36,10 +36,16 @@ describe('Module: broken_links_controller', function () {
                 gallery_items: globals.event_example.gallery_items
             });
         };
+
+        db_interface.delete = function (delete_config, callback) {
+            db_delete_spy();
+            callback({});
+        };
     });
 
     beforeEach(function () {
         db_insert_spy = sinon.spy();
+        db_delete_spy = sinon.spy();
     });
 
     it('findBrokenLinks', function (done) {
@@ -55,12 +61,22 @@ describe('Module: broken_links_controller', function () {
 
     it('createBrokenLink', function (done) {
 
-        broken_links_controller.createNewBrokenLink(broken_link_example, function (result) {
+        broken_links_controller.createBrokenLink(broken_link_example, function (result) {
             assert.equal(globals.dummy_object_id, result._id);
             //simply testing that what is returned by the db_interface.insert function is returned by the controller function
             assert.equal(globals.event_example.gallery_items, result.gallery_items);
 
             assert(db_insert_spy.called);
+            done();
+        });
+    });
+
+    it('deleteBrokenLink', function (done) {
+
+        broken_links_controller.deleteBrokenLink(globals.dummy_object_id, function (result) {
+            assert.equal(result, result);
+
+            assert(db_delete_spy.called);
             done();
         });
     });

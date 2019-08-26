@@ -10,6 +10,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //external dependencies
+var BSON = require('bson');
 
 //internal dependencies
 var db_ref = require("../config/db_config.js");
@@ -27,7 +28,8 @@ module.exports = {
             aggregate_array: [
                 {
                     $match: {}
-                }
+                },
+                { $limit: 20 }
             ]
         }
         db_interface.get(query_config, function(results){
@@ -38,7 +40,7 @@ module.exports = {
         });
     },
     
-    createNewBrokenLink: function(broken_link_data, callback){
+    createBrokenLink: function(broken_link_data, callback){
         
         var broken_link_record = new BrokenLink({
             event_id: broken_link_data.event_id,
@@ -63,5 +65,21 @@ module.exports = {
         function(error_object){
             callback(error_object);
         });
-    }    
+    },
+
+    deleteBrokenLink: function(broken_link_id, callback){
+
+        var delete_config = {
+            table: db_ref.get_broken_links_table(),
+            delete_multiple_records: true,
+            match_query: { _id: BSON.ObjectID.createFromHexString(broken_link_id) }
+        }
+        ;
+        db_interface.delete(delete_config, function(){
+            callback();
+        },
+        function(error_object){
+            callback(error_object);
+        });
+    }
 }
