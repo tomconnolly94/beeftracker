@@ -47,9 +47,8 @@ var master_functions_object = {
         }
     },
     test_gallery_items_structure: function (gallery_items, files) {
-
         //check if gallery_items is a single gallery_item, if so turn it into an array
-        if(typeof gallery_items == "object"){
+        if(!Array.isArray(gallery_items)){
             gallery_items = [ gallery_items ];
         }
 
@@ -58,7 +57,7 @@ var master_functions_object = {
             var gallery_item = gallery_items[i];
             var gallery_item_found_in_files = false;
 
-            if (gallery_item.media_type == "image") {
+            if (files && gallery_item.media_type == "image") {
                 //loop through files to make sure the gallery item link is included
                 for (var j = 0; j < files.length; j++) {
                     if (gallery_item.link == files[j].originalname) {
@@ -71,15 +70,14 @@ var master_functions_object = {
                     return false;
                 }
             }
-
-
+            
             if (gallery_item.media_type == 'undefined' || gallery_item.media_type.length < 1) {
                 return false;
             } else if (gallery_item.link == 'undefined' || gallery_item.link.length < 1) {
                 return false;
             } else if (gallery_item.main_graphic == 'undefined') {
                 return false;
-            } else if (gallery_itemcover_image == 'undefined') {
+            } else if (gallery_item.cover_image == 'undefined') {
                 return false;
             }
         }

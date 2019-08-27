@@ -26,14 +26,31 @@ module.exports = {
         var query_config = {
             table: db_ref.get_broken_links_table(),
             aggregate_array: [
-                {
-                    $match: {}
-                },
+                query,
                 { $limit: 20 }
             ]
         }
         db_interface.get(query_config, function(results){
             callback(results);
+        },
+        function(error_object){
+            callback(error_object);
+        });
+    },
+    
+    findBrokenLink: function(broken_link_id, callback){
+
+        var query_config = {
+            table: db_ref.get_broken_links_table(),
+            aggregate_array: [
+                {
+                    $match: { _id: BSON.ObjectID.createFromHexString(broken_link_id)}
+                },
+                { $limit: 1 }
+            ]
+        }
+        db_interface.get(query_config, function(result){
+            callback(result);
         },
         function(error_object){
             callback(error_object);
@@ -47,17 +64,17 @@ module.exports = {
             gallery_items: broken_link_data.gallery_items
         });
 
-        var broken_link_record_reduced = JSON.parse(JSON.stringify(broken_link_record)).forEach((x) => delete x.file); //remove file property to avoid printing a file buffer to the email;
+        var broken_link_record_reduced = JSON.parse(JSON.stringify(broken_link_record)).gallery_items.forEach((x) => delete x.file); //remove file property to avoid printing a file buffer to the email;
 
         var insert_config = {
             record: broken_link_record,
             table: db_ref.get_broken_links_table(),
             options: {
-                email_config: {
-                    email_title: "[Beeftracker] New Broken Link Report", // Subject line
-                    email_html: "<html> <h1> Record </h1> <h5> ENV: " + process.env.NODE_ENV + " </h5> <p>" + JSON.stringify(broken_link_record_reduced) + "</p> </html>",
-                    recipient_address: null
-                }
+                // email_config: {
+                //     email_title: "[Beeftracker] New Broken Link Report", // Subject line
+                //     email_html: "<html> <h1> Record </h1> <h5> ENV: " + process.env.NODE_ENV + " </h5> <p>" + JSON.stringify(broken_link_record_reduced) + "</p> </html>",
+                //     recipient_address: null
+                // }
             }
         };
 
@@ -78,7 +95,7 @@ module.exports = {
         }
         ;
         db_interface.delete(delete_config, function(){
-            callback();
+            callback({});
         },
         function(error_object){
             callback(error_object);

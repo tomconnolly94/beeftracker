@@ -9,7 +9,7 @@ var globals = require('../testing_globals.js');
 
 describe('Module: broken_links_controller', function () {
 
-    var broken_links_controller, broken_link_example, db_insert_spy, db_delete_spy, db_interface;
+    var broken_links_controller, broken_link_example, db_insert_spy, db_delete_spy, db_interface, db_match_query;
 
     before(function () {
 
@@ -18,6 +18,8 @@ describe('Module: broken_links_controller', function () {
         broken_links_controller = proxyquire("../../../server_files/controllers/broken_links_controller", {
             "../interfaces/db_interface.js": db_interface
         });
+
+        db_match_query = { $match: { name: "steve" } };
 
         broken_link_example = {
             event_id: globals.dummy_object_id,
@@ -50,11 +52,32 @@ describe('Module: broken_links_controller', function () {
 
     it('findBrokenLinks', function (done) {
 
-        var expected_results = [broken_link_example];
+        db_interface.get = function (query_config, callback) {
+            assert.equal(db_match_query, query_config.aggregate_array[0]);
+            callback([broken_link_example]);
+        }
 
-        broken_links_controller.findBrokenLinks(globals.dummy_object_id, function (results) {
+        var expected_results = [ broken_link_example ];
+
+        broken_links_controller.findBrokenLinks(db_match_query, function (results) {
             assert.equal(results.length, expected_results.length)
             globals.compare_objects(results[0], expected_results[0]);
+            done();
+        });
+    });
+
+    it('findBrokenLink', function (done) {
+
+
+        db_interface.get = function (query_config, callback) {
+            assert.equal(globals.dummy_object_id, query_config.aggregate_array[0]["$match"]._id);
+            callback(broken_link_example);
+        }
+
+        var expected_results = broken_link_example;
+
+        broken_links_controller.findBrokenLink(globals.dummy_object_id, function (result) {
+            globals.compare_objects(result, expected_results);
             done();
         });
     });

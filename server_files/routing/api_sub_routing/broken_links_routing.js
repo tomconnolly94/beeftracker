@@ -16,7 +16,7 @@ var send_unsuccessful_response = responses_object.send_unsuccessful_response;
 
 //Actors endpoints
 router.route('/').get(function (request, response) {
-    broken_links_controller.findBrokenLinks(query, function (data) {
+    broken_links_controller.findBrokenLinks({ $match: {} }, function (data) {
         if (data.failed) {
             send_unsuccessful_response(response, 400, "No broken links found.");
         } else {
@@ -26,7 +26,22 @@ router.route('/').get(function (request, response) {
 
 }); //built, written, tested, needs query handling
 
-router.route('/').post(broken_link_validator.validate, token_authentication.authenticate_endpoint_with_user_token, memoryUpload, function (request, response) {
+//Actors endpoints
+router.route('/:broken_link_id').get(url_param_validator.validate, function (request, response) {
+
+    var broken_link_id = request.locals.validated_params.broken_link_id;
+
+    broken_links_controller.findBrokenLink(broken_link_id, function (data) {
+        if (data.failed) {
+            send_unsuccessful_response(response, 400, "No broken links found.");
+        } else {
+            send_successful_response(response, 200, data);
+        }
+    });
+
+}); //built, written, tested, needs query handling
+
+router.route('/').post(token_authentication.authenticate_endpoint_with_user_token, broken_link_validator.validate, memoryUpload, function (request, response) {
 
     var data = request.locals.validated_data;
     
@@ -39,9 +54,9 @@ router.route('/').post(broken_link_validator.validate, token_authentication.auth
     });
 }); //built, written, tested
 
-router.route('/:broken_link_id').delete(url_param_validator.validate, token_authentication.authenticate_endpoint_with_admin_user_token, function(request, response){
+router.route('/:broken_link_id').delete(token_authentication.authenticate_endpoint_with_admin_user_token, url_param_validator.validate, function(request, response){
     
-    var broken_link_id = request.locals.broken_link_id;
+    var broken_link_id = request.locals.validated_params.broken_link_id;
     
     broken_links_controller.deleteBrokenLink(broken_link_id, function(data){
         if(data.failed){
@@ -53,3 +68,4 @@ router.route('/:broken_link_id').delete(url_param_validator.validate, token_auth
     });
 });//built, written, tested, needs admin auth
 
+module.exports = router;

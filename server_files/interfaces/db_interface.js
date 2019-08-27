@@ -29,7 +29,11 @@ var post_insert_procedure = function (db, document, insert_object, table, option
         insert_object._id = document.ops[0]._id;
 
         if (options.email_config) { //deal with sending email notification
-            email_interface.send(options.email_config);
+            email_interface.send(options.email_config, 
+            function(){},
+            function(error_object){
+                logger.submit_log(logger.LOG_TYPE.ERROR, error_object.message);
+            });
         }
     }
 }

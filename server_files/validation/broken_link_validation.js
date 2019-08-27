@@ -17,11 +17,6 @@ module.exports = {
         var filename_split = __filename.split("/");
         logger.submit_log(logger.LOG_TYPE.INFO, filename_split[filename_split.length - 1].split(".")[0] + " started.");
         
-        //access form data and reassign it to the request body
-        if (typeof request.body.data === 'string' || request.body.data instanceof String){
-            request.body = JSON.parse(request.body.data); //if body.data. is a string, reassign it to the body
-        }
-
         //validate title
         request.checkBody("event_id", "Field is empty.").notEmpty();
         request.checkBody("event_id", "Field is null.").not_null();
@@ -30,7 +25,7 @@ module.exports = {
         //validate gallery_items
         request.checkBody("gallery_items", "Field is empty").notEmpty();
         request.checkBody("gallery_items", "Field is null.").not_null();
-        request.checkBody("gallery_items", "Gallery items are not formatted correctly.").test_gallery_items_structure(request.files);
+        request.checkBody("gallery_items", "Gallery items are not formatted correctly.").test_gallery_items_structure(null);
         
         request.getValidationResult().then(function(validationResult){
             
