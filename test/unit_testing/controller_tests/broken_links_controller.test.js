@@ -71,7 +71,7 @@ describe('Module: broken_links_controller', function () {
 
         db_interface.get = function (query_config, callback) {
             assert.equal(globals.dummy_object_id, query_config.aggregate_array[0]["$match"]._id);
-            callback(broken_link_example);
+            callback([broken_link_example]);
         }
 
         var expected_results = broken_link_example;

@@ -50,7 +50,7 @@ module.exports = {
             ]
         }
         db_interface.get(query_config, function(result){
-            callback(result);
+            callback(result[0]);
         },
         function(error_object){
             callback(error_object);
