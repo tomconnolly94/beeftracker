@@ -60,7 +60,7 @@ gulp.task('js', function(done) {
 			var relative_universal_javascript_files = universal_javascript_files.map(add_relative_path);
 			var relevant_js_scripts = relative_universal_javascript_files.concat(specific_js_scripts);
 
-			if(isProduction/*process.env.NODE_ENV == "heroku_production"*/){
+			if(isProduction || process.env.NODE_ENV == "heroku_production"){
 				gulp.src(relevant_js_scripts)
 					//.pipe(minifyJS())
 					.pipe(concat(page_name + ".js"))
@@ -180,14 +180,23 @@ jQuery.extend({
 	Promise.all(page_promises).then(function(values){
 		done();
 	});
-
 });
+
+
+gulp.task('default', function() {
+	console.log("Usage:");
+	console.log("	--production - production build, minify javascript and collapse each views required scripts into one master js file.")
+	return;
+});
+
+
+// Default Task
+
 gulp.task('icons', function() {
     return gulp.src('./bower_components/components-font-awesome/webfonts/**.*')
         .pipe(gulp.dest(compiled_webfonts_directory));
 });
 
-// Default Task
 //gulp.task('build', ['js', 'vendor_js', 'css', 'css_fonts', 'images', 'templates', 'icons']);
 gulp.task('build', ['css', 'css_fonts', 'icons', 'js']);
 //gulp.task('default', ['js', 'vendor_js', 'css', 'css_fonts', 'images', 'templates', 'icons', 'server','watch']);

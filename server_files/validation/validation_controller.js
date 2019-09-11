@@ -66,11 +66,11 @@ var master_functions_object = {
                     }
                 }
 
-                if (!gallery_item_found_in_files) {
+                if (!gallery_item_found_in_files && gallery_item.link != "default") {
                     return false;
                 }
             }
-            
+
             if (gallery_item.media_type == 'undefined' || gallery_item.media_type.length < 1) {
                 return false;
             } else if (gallery_item.link == 'undefined' || gallery_item.link.length < 1) {

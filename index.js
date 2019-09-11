@@ -25,7 +25,7 @@ if (process.argv[2] == "load_envs_manually") {
     const dotenv_result = require("dotenv").config();
     if (dotenv_result.error) {
         throw dotenv_result.error
-    };
+    }
 }
 
 // ## Sitemap generation ###

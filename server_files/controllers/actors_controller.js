@@ -317,7 +317,7 @@ module.exports = {
                         //remove file extension from all image gallery items
                         if(actor_insert.gallery_items[i].media_type == "image"){ //set file to null to avoid storing file buffer in db
                             actor_insert.gallery_items[i].link = strip_file_ext(actor_insert.gallery_items[i].link);
-                            actor_insert.gallery_items[i].file_name = strip_file_ext(actor_insert.gallery_items[i].file_name);
+                            actor_insert.gallery_items[i].file_name = actor_insert.gallery_items[i].file_name ? strip_file_ext(actor_insert.gallery_items[i].file_name) : null;
                         }
 
                         if(actor_insert.gallery_items[i].file){

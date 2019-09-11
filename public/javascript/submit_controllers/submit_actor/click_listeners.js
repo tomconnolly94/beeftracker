@@ -75,26 +75,25 @@ $(".submit_new_actor_button").unbind().click(function(event){
 
     var media_link = $("#actor_photo_preview").attr("src");
     var media_name = $("#actor_photo_preview").attr("x-file-name");
-    var file = null;
-    var link = null;
+
+    var gallery_item_formatted = {
+        file: null,
+        media_type: "image",
+        link: media_name || "default",
+        main_graphic: true,
+        cover_image: true
+    };
 
     if(media_link && media_link.length > 0 && media_link != "/images/no_preview_available.jpg"){
         
         if(media_link.indexOf("data:image") != -1){
-            file = b64toBlob(media_link.split("base64,")[1]);
+            gallery_item_formatted.file = b64toBlob(media_link.split("base64,")[1]);
+            form_data.append("file-" + i, gallery_item_formatted.file, gallery_item_formatted.link);
         }
     }
 
-    var gallery_item_formatted = {
-        file: file,
-        media_type: "image",
-        link: media_name,
-        main_graphic: true,
-        cover_image: null
-    };
 
     gallery_items.push(gallery_item_formatted);
-    form_data.append("file-" + i, gallery_item_formatted.file, gallery_item_formatted.link);
     
     var formatted_date = new Date(parseInt(date_of_origin[0]), parseInt(date_of_origin[1])-1, parseInt(date_of_origin[2]), parseInt(12), parseInt(00));
     
