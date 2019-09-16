@@ -11,7 +11,7 @@ var globals = require('../testing_globals.js');
 
 describe('Module: formatting', function () {
 
-    var formatting, image_gallery_item, soundcloud_gallery_item;
+    var formatting;
 
     before(function(){
         
@@ -80,21 +80,6 @@ describe('Module: formatting', function () {
 
         formatting = proxyquire("../../../server_files/tools/formatting", { "request": request_mock });
 
-        image_gallery_item = {
-            media_type: "image",
-            file: {
-                originalname: "fake_image_originalname"
-            }
-        }
-
-        soundcloud_gallery_item = {
-            media_type: "soundcloud_embed",
-            link: "https://soundcloud.com/joebuddenpodcast/141a",
-            main_graphic: false,
-            file: null,
-            file_name: null
-        };
-
         dotenv.config();
     });
     
@@ -102,20 +87,94 @@ describe('Module: formatting', function () {
     });
     
     it('format_embeddable_items - soundcloud_embed', function (done) {
-        var gallery_items = [
-            soundcloud_gallery_item
-        ];
+
+        var soundcloud_gallery_item = {
+            media_type: "soundcloud_embed",
+            link: "https://soundcloud.com/joebuddenpodcast/141a",
+            main_graphic: false,
+            cover_image: false
+        };
 
         var expected_gallery_item_link = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/372107174&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
         
-        formatting.format_embeddable_items(gallery_items, [], function(new_gallery_items){
-            var soundcloud_gallery_item = new_gallery_items[0];
+        formatting.format_embeddable_items([ soundcloud_gallery_item ], [], function(new_gallery_items){
+            var new_soundcloud_gallery_item = new_gallery_items[0];
 
-            assert.equal(soundcloud_gallery_item.media_type, soundcloud_gallery_item.media_type);
+            assert.equal(new_soundcloud_gallery_item.media_type, soundcloud_gallery_item.media_type);
             assert.equal(expected_gallery_item_link, soundcloud_gallery_item.link);
-            assert.equal(soundcloud_gallery_item.main_graphic, soundcloud_gallery_item.main_graphic);
-            assert.equal(soundcloud_gallery_item.file, soundcloud_gallery_item.file);
-            assert.equal(soundcloud_gallery_item.file_name, soundcloud_gallery_item.file_name);
+            assert.equal(new_soundcloud_gallery_item.main_graphic, soundcloud_gallery_item.main_graphic);
+            assert.equal(new_soundcloud_gallery_item.cover_image, soundcloud_gallery_item.cover_image);
+
+            done();
+        });
+    });
+    
+    it('format_embeddable_items - image with file', function (done) {
+
+        var image_gallery_item = {
+            media_type: "image",
+            main_graphic: false,
+            cover_image: false,
+            file: null,
+            link: "fake_image_originalname"
+        }
+
+        var image_file_object = {
+            originalname: "fake_image_originalname"
+        };
+
+        formatting.format_embeddable_items([ image_gallery_item ], [ image_file_object ], function(new_gallery_items){
+            var new_image_gallery_item = new_gallery_items[0];
+
+            assert.equal(image_gallery_item.media_type, new_image_gallery_item.media_type);
+            assert.equal(image_gallery_item.main_graphic, new_image_gallery_item.main_graphic);
+            assert.equal(image_gallery_item.cover_image, new_image_gallery_item.cover_image);
+            assert.equal(image_gallery_item.file.originalname, new_image_gallery_item.file.originalname);
+
+            done();
+        });
+    });
+    
+    it('format_embeddable_items - image with link', function (done) {
+
+        var image_gallery_item = {
+            media_type: "image",
+            main_graphic: false,
+            cover_image: false,
+            file: null,
+            link: "http://www.fakeimage.jpg"
+        }
+
+        formatting.format_embeddable_items([ image_gallery_item ], [], function(new_gallery_items){
+            var new_image_gallery_item = new_gallery_items[0];
+
+            assert.equal(image_gallery_item.media_type, new_image_gallery_item.media_type);
+            assert.equal(image_gallery_item.main_graphic, new_image_gallery_item.main_graphic);
+            assert.equal(image_gallery_item.cover_image, new_image_gallery_item.cover_image);
+            assert.equal(image_gallery_item.link, new_image_gallery_item.link);
+
+            done();
+        });
+    });
+    
+    it('format_embeddable_items - instagram_embed', function (done) {
+
+        var instagram_gallery_item = {
+            media_type: "soundcloud_embed",
+            link: "https://instagram.com/joebuddenpodcast/141a?extralilbitthatwedontneed",
+            main_graphic: false,
+            cover_image: false
+        };
+
+        var expected_instagram_link = "https://instagram.com/joebuddenpodcast/141a";
+
+        formatting.format_embeddable_items([ instagram_gallery_item ], [], function(new_gallery_items){
+            var new_instagram_gallery_item = new_gallery_items[0];
+
+            assert.equal(instagram_gallery_item.media_type, new_instagram_gallery_item.media_type);
+            assert.equal(instagram_gallery_item.main_graphic, new_instagram_gallery_item.main_graphic);
+            assert.equal(instagram_gallery_item.cover_image, new_instagram_gallery_item.cover_image);
+            assert.equal(expected_instagram_link, new_instagram_gallery_item.link);
 
             done();
         });
