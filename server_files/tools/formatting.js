@@ -13,6 +13,10 @@ var request = require("request");
 
 //internal dependencies
 
+
+var youtube_id_regex = /.*(?:v=|embed.|\.be.)([a-zA-Z1-9_]*)/i;
+var spotify_id_regex = /.*(?:track[/:])([a-zA-Z1-9]*)/i;
+
 module.exports = {
  
     format_embeddable_items: function(items, files, callback){
@@ -60,13 +64,10 @@ module.exports = {
 
                 format_promises.push(
                     new Promise(function(resolve, reject){
-                        if(gallery_item.link.indexOf("embed") == -1){
-                            var video_id = gallery_item.link.split('v=')[1];
-                            var ampersandPosition = video_id.indexOf('&');
-                            if(ampersandPosition != -1) {
-                                video_id = video_id.substring(0, ampersandPosition);
-                            }
-                            items[i].link = "https://www.youtube.com/embed/" + video_id;
+                        var youtube_id = youtube_id_regex.exec(gallery_item.link);
+
+                        if(youtube_id.length > 1){
+                            items[i].link = "https://www.youtube.com/embed/" + youtube_id[1];
                         }
                         resolve(gallery_item);
                     })
@@ -76,14 +77,10 @@ module.exports = {
 
                 format_promises.push(
                     new Promise(function(resolve, reject){
-                        if(gallery_item.link.indexOf("spotify:track") > 0){
-                            var video_id = gallery_item.link.split("track:")[1];
-                            items[i].link = "https://embed.spotify.com/?uri=spotify%3Atrack%3A" + video_id;
-                        }
-                        else if(gallery_item.link.indexOf("embed") == -1){
+                        var spotify_id = spotify_id_regex.exec(gallery_item.link);
 
-                            var video_id = items[i].link.split('track/')[1];
-                            items[i].link = "https://embed.spotify.com/?uri=spotify%3Atrack%3A" + video_id;
+                        if(spotify_id.length > 1){
+                            items[i].link = "https://open.spotify.com/embed/track/" + spotify_id[1];
                         }
                         resolve(gallery_item);
                     })
@@ -120,6 +117,7 @@ module.exports = {
             callback(values)
         }).catch(function(error){
             console.log(error);
+            callback(error);
         });
     }
 }
