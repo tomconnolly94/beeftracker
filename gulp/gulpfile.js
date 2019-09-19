@@ -18,65 +18,9 @@ var scss_directory = path_to_root + "public/scss/*.scss";
 var compiled_webfonts_directory = path_to_root + "public/fonts";
 var compiled_font_directory = path_to_root + "public/dist/css/font";
 var js_out_directory = path_to_root + "public/dist/javascript/"
-
-
-// --- Basic Tasks ---
-gulp.task('css', function() {
-	return gulp.src(scss_directory)
-		.pipe( sass({outputStyle: 'nested'}).on('error', sass.logError) )
-		.pipe( gulp.dest(compiled_css_directory) )
-});
-
-gulp.task('css_fonts', function() {
-	return gulp.src(['node_modules/summernote/dist/font/summernote.ttf', 'node_modules/summernote/dist/font/summernote.woff'])
-		.pipe( gulp.dest(compiled_font_directory))
-});
-
-var client_javascript_page_config = JSON.parse(fs.readFileSync('client_javascript_page_config.json', 'utf8'));
-var universal_javascript_files = [
-	"node_modules/jquery/dist/jquery.min.js",
-	"node_modules/jquery-lazy/jquery.lazy.js",
-	"node_modules/toastr/build/toastr.min.js",
-	"bower_components/bootstrap/dist/js/bootstrap.bundle.js",
-	"bower_components/hammerjs/hammer.js",
-	"public/javascript/service_worker/service_worker_init.js",
-	"public/javascript/globals.js",
-	"views/templates/components/login/login_form_controller.js",
-	"views/templates/components/inline_beef_search/inline_beef_search_controller.js"
-]
-
-gulp.task('js', function(done) {
-
-	var page_names = Object.keys(client_javascript_page_config);
-	var page_promises = [];
-
-	for(var page_name_index = 0; page_name_index < page_names.length; page_name_index++){
-
-		var page_promise = new Promise(function(resolve, reject){
-			var page_name = page_names[page_name_index];
-			//console.log(page_name, "start");
-			var add_relative_path = function(item){ return path_to_root + item; };
-			var specific_js_scripts = client_javascript_page_config[page_name].map(add_relative_path);
-			var relative_universal_javascript_files = universal_javascript_files.map(add_relative_path);
-			var relevant_js_scripts = relative_universal_javascript_files.concat(specific_js_scripts);
-
-			if(isProduction || process.env.NODE_ENV == "heroku_production"){
-				gulp.src(relevant_js_scripts)
-					//.pipe(minifyJS())
-					.pipe(concat(page_name + ".js"))
-					.pipe(uglify())
-					.on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
-					.pipe(gulp.dest(js_out_directory))
-					resolve();
-			}
-			else if(true /*process.env.NODE_ENV == "local_dev"*/){
-				var file_string = "";
-				if(specific_js_scripts.length > 0){
-					//initial file_string content extends jQuery to load dev js scripts as external files so theya re available in the chrome debugger
-					file_string = `
-// Replace the normal jQuery getScript function with one that supports
-// debugging and which references the script files as external resources
-// rather than inline.
+var file_string = `
+/* Include calls to individual javascript files so they appear in the debugger 
+as separate files, increasing the ease of file navigation */
 jQuery.extend({
 	getScript: function(url, callback) {
 		var head = document.getElementsByTagName("head")[0];
@@ -110,6 +54,61 @@ jQuery.extend({
 
 
 //load dev scripts synchronously`;
+
+
+gulp.task('css', function() {
+
+	var client_css_page_config = JSON.parse(fs.readFileSync('client_css_page_config.json', 'utf8'));
+	var page_names = Object.keys(client_css_page_config);
+	var page_promises = [];
+
+	for(var page_name_index = 0; page_name_index < page_names.length; page_name_index++){
+		var page_name = page_names[page_name_index];
+		var universal_javascript_files = client_css_page_config["all"];
+		var page_promises = [];
+	
+	}
+
+
+	return gulp.src(scss_directory)
+		.pipe( sass({outputStyle: 'nested'}).on('error', sass.logError) )
+		.pipe( gulp.dest(compiled_css_directory) )
+});
+
+
+gulp.task('css_fonts', function() {
+	return gulp.src(['node_modules/summernote/dist/font/summernote.ttf', 'node_modules/summernote/dist/font/summernote.woff'])
+		.pipe( gulp.dest(compiled_font_directory))
+});
+
+
+gulp.task('js', function(done) {
+
+	var client_javascript_page_config = JSON.parse(fs.readFileSync('client_javascript_page_config.json', 'utf8'))
+	var page_names = Object.keys(client_javascript_page_config);
+	var universal_javascript_files = client_javascript_page_config["all"];
+	var page_promises = [];
+
+	for(var page_name_index = 1; page_name_index < page_names.length; page_name_index++){
+
+		var page_promise = new Promise(function(resolve, reject){
+			var page_name = page_names[page_name_index];
+			var add_relative_path = function(item){ return path_to_root + item; };
+			var specific_js_scripts = client_javascript_page_config[page_name].map(add_relative_path);
+			var relative_universal_javascript_files = universal_javascript_files.map(add_relative_path);
+			var relevant_js_scripts = relative_universal_javascript_files.concat(specific_js_scripts);
+
+			if(isProduction || process.env.NODE_ENV == "heroku_production"){
+				gulp.src(relevant_js_scripts)
+					//.pipe(minifyJS())
+					.pipe(concat(page_name + ".js"))
+					.pipe(uglify())
+					.on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
+					.pipe(gulp.dest(js_out_directory))
+					resolve();
+			}
+			else if(true /*process.env.NODE_ENV == "local_dev"*/){
+				if(specific_js_scripts.length > 0){
 
 					for(var specific_js_scripts_index = 0; specific_js_scripts_index < specific_js_scripts.length; specific_js_scripts_index++){
 
@@ -163,7 +162,7 @@ jQuery.extend({
 								if(file_string.length > 0){
 									var fileContents = file.contents.toString();
 									fileContents = fileContents += file_string;
-									file.contents = new Buffer(fileContents);
+									file.contents = Buffer.from(fileContents)
 								}
 								cb(null, file);
 							}))
@@ -173,7 +172,6 @@ jQuery.extend({
 				], resolve);
 			}
 		});
-
 		page_promises.push(page_promise);
 	}
 
@@ -190,13 +188,10 @@ gulp.task('default', function() {
 });
 
 
-// Default Task
-
 gulp.task('icons', function() {
     return gulp.src('./bower_components/components-font-awesome/webfonts/**.*')
         .pipe(gulp.dest(compiled_webfonts_directory));
 });
 
-//gulp.task('build', ['js', 'vendor_js', 'css', 'css_fonts', 'images', 'templates', 'icons']);
+
 gulp.task('build', ['css', 'css_fonts', 'icons', 'js']);
-//gulp.task('default', ['js', 'vendor_js', 'css', 'css_fonts', 'images', 'templates', 'icons', 'server','watch']);

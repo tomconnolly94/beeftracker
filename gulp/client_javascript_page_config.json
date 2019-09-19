@@ -1,4 +1,15 @@
 {
+	"all": [
+		"node_modules/jquery/dist/jquery.min.js",
+		"node_modules/jquery-lazy/jquery.lazy.js",
+		"node_modules/toastr/build/toastr.min.js",
+		"bower_components/bootstrap/dist/js/bootstrap.bundle.js",
+		"bower_components/hammerjs/hammer.js",
+		"public/javascript/service_worker/service_worker_init.js",
+		"public/javascript/globals.js",
+		"views/templates/components/login/login_form_controller.js",
+		"views/templates/components/inline_beef_search/inline_beef_search_controller.js"
+	],
 	"scraping_dump": [
 		"node_modules/select2/dist/js/select2.full.min.js",
 		"views/templates/components/add_actor_modal/add_actor_modal_controller.js",
