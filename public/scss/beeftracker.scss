@@ -28,7 +28,7 @@
 //-*****
 // Beeftracker imports
 //-*****
-@import './includes/variables';
+@import './includes/_variables';
 @import './includes/nav.scss';
 @import './includes/footer.scss';
 @import './includes/section.scss';
@@ -63,5 +63,5 @@
 //@Pages
 @import './pages/beef-page.scss';
 @import './pages/contact-page.scss';
-
+//core css
 @import 'main.scss';

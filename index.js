@@ -113,7 +113,7 @@ app.use('/favicon.ico', function (request, response) {
     response.end(img, 'binary');
 }); //route to reference logo favicon
 app.use('/images', express.static(__dirname + '/public/assets/images/other_graphics')); //logo images
-app.use('/stylesheets', express.static(__dirname + '/public/dist/css/')); //css scripts
+app.use('/css', express.static(__dirname + '/public/dist/css/')); //css scripts
 app.use('/webfonts', express.static(__dirname + '/public/fonts/')); //fonts
 app.use('/modules', express.static(__dirname + '/node_modules/')); //npm packages
 app.use('/bower_components', express.static(__dirname + '/bower_components/')); //bower packages

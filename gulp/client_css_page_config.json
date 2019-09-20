@@ -1,6 +1,16 @@
 {
     "all": [
         "https://fonts.googleapis.com/css?family=Roboto:300,400,50",
+        "bower_components/components-font-awesome/scss/fontawesome.scss",
+        "bower_components/components-font-awesome/scss/fa-solid.scss",
+        "bower_components/components-font-awesome/scss/fa-regular.scss",
+        "bower_components/components-font-awesome/scss/fa-brands.scss",
+        "bower_components/swiper/dist/css/swiper",
+        "bower_components/fancybox/dist/jquery.fancybox",
+        "node_modules/select2/dist/css/select2.min",
+        "bower_components/smartwizard/dist/css/smart_wizard",
+        "bower_components/smartwizard/dist/css/smart_wizard_theme_circles",
+        "node_modules/summernote/dist/summernote-lite",
         "bower_components/bootstrap/scss/bootstrap-reboot.scss",
         "bower_components/bootstrap/scss/bootstrap-grid.scss",
         "bower_components/bootstrap/scss/transitions.scss",
