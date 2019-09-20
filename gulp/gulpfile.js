@@ -59,7 +59,7 @@ var add_relative_root_path = function(item){
 	if(item.indexOf("https://") >= 0){
 		return `url("${item}")`;
 	}
-	if(item.indexOf(".css") >= 0){
+	else if(item.indexOf("css") >= 0){
 		return `"${path_to_root}${item}"`;
 	}
 	return `${path_to_root}${item}`;
@@ -156,7 +156,7 @@ gulp.task('js', function(done) {
 			else{
 				var file_string = "";
 				if(specific_js_scripts.length > 0){
-					
+
 					file_string = file_string_base;
 
 					for(var specific_js_scripts_index = 0; specific_js_scripts_index < specific_js_scripts.length; specific_js_scripts_index++){

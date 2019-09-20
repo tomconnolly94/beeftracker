@@ -103,6 +103,24 @@ cd - > /dev/null 2>&1
 
 
 
+### PRE SERVER RUN CHECKS ###
+
+exit_code=7
+cd bf-dev
+grep -q "MONGODB_URIprod" .env
+mongodb_test=$(echo $?)
+grep -q "CLOUDINARY_URLprod" .env
+cloudinary_test=$(echo $?)
+
+#ensure that these uri env variables exist, if they do not, they may be used by the server
+if [ $mongodb_test != 0 ] || [ $cloudinary_test != 0 ]; then 
+    echo "!!! ERROR: YOU MAY BE USING PRODUCTION ENV VARIABLES. CHANGE TO DEV OR EDIT THIS SCRIPT !!!";
+    unsuccessful_exit $exit_code
+fi
+cd - > /dev/null
+
+
+
 ### RUN NODE SERVER ###
 
 echo ""
