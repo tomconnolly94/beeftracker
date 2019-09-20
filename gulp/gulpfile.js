@@ -19,7 +19,7 @@ var css_out_directory = path_to_root + "public/dist/css";
 var compiled_webfonts_directory = path_to_root + "public/fonts";
 var compiled_font_directory = path_to_root + "public/dist/css/font";
 var js_out_directory = path_to_root + "public/dist/javascript/";
-var file_string = `
+var file_string_base = `
 /* Include calls to individual javascript files so they appear in the debugger 
 as separate files, increasing the ease of file navigation */
 jQuery.extend({
@@ -59,7 +59,10 @@ var add_relative_root_path = function(item){
 	if(item.indexOf("https://") >= 0){
 		return `url("${item}")`;
 	}
-	return `"${path_to_root}${item}"`;
+	if(item.indexOf(".css") >= 0){
+		return `"${path_to_root}${item}"`;
+	}
+	return `${path_to_root}${item}`;
 };
 
 
@@ -126,7 +129,6 @@ gulp.task('css_fonts', function() {
 		.pipe( gulp.dest(compiled_font_directory))
 });
 
-
 gulp.task('js', function(done) {
 
 	var client_javascript_page_config = JSON.parse(fs.readFileSync('client_javascript_page_config.json', 'utf8'))
@@ -137,18 +139,12 @@ gulp.task('js', function(done) {
 	for(var page_name_index = 1; page_name_index < page_names.length; page_name_index++){
 
 		page_promises.push(new Promise(function(resolve, reject){
-
 			var page_name = page_names[page_name_index];
 			var specific_js_scripts = client_javascript_page_config[page_name].map(add_relative_root_path);
 			var relative_universal_javascript_files = universal_javascript_files.map(add_relative_root_path);
 			var relevant_js_scripts = relative_universal_javascript_files.concat(specific_js_scripts);
 
 			if(is_production){
-
-				console.log(page_name);
-				console.log(relevant_js_scripts);
-				console.log(js_out_directory);
-
 				gulp.src(relevant_js_scripts)
 					//.pipe(minifyJS())
 					.pipe(concat(page_name + ".js"))
@@ -157,8 +153,11 @@ gulp.task('js', function(done) {
 					.pipe(gulp.dest(js_out_directory))
 					resolve();
 			}
-			else {
+			else{
+				var file_string = "";
 				if(specific_js_scripts.length > 0){
+					
+					file_string = file_string_base;
 
 					for(var specific_js_scripts_index = 0; specific_js_scripts_index < specific_js_scripts.length; specific_js_scripts_index++){
 
@@ -199,23 +198,20 @@ gulp.task('js', function(done) {
 				}
 				async.series([
 					function (next) {
-						console.log("async started")
 						gulp.src(relative_universal_javascript_files)
-							//.pipe(concat(page_name + ".js"))
+							//.pipe( uglify() )
+							.pipe(concat(page_name + ".js"))
 							.pipe(gulp.dest(js_out_directory))
 							.on('end', next);
 					},
 					function (next) {
-						console.log("hello2")
 						//append file_string to dist file
 						gulp.src(js_out_directory + page_name + ".js")
 							.pipe(map(function(file, cb) {
-								console.log("hello1")
 								if(file_string.length > 0){
-									console.log("hello")
 									var fileContents = file.contents.toString();
 									fileContents = fileContents += file_string;
-									file.contents = Buffer.from(fileContents)
+									file.contents = Buffer.from(fileContents);
 								}
 								cb(null, file);
 							}))
@@ -228,7 +224,6 @@ gulp.task('js', function(done) {
 	}
 
 	Promise.all(page_promises).then(function(values){
-		console.log("all done")
 		done();
 	});
 });
