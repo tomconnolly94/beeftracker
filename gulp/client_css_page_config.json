@@ -29,8 +29,8 @@
         "public/scss/includes/variables.scss",
         "public/scss/includes/nav.scss",
         "public/scss/includes/footer.scss",
+        
         "public/scss/includes/section.scss",
-        "public/scss/includes/beef-thumbnail.scss",
         "public/scss/includes/swiper.scss",
         "public/scss/includes/user-profile.scss",
         "public/scss/includes/vertical-list.scss",
@@ -62,27 +62,31 @@
         "public/scss/main.scss"
     ],
     "scraping_dump": [
+        "public/scss/includes/beef-thumbnail.scss"
     ],
     "disclaimer": [],
     "privacy_policy": [],
     "terms_and_conditions": [],
     "about": [],
-    "contact": [
-    ],
+    "contact": [],
     "error": [],
     "offline": [],
     "successful_submission": [],
     "actor": [
     ],
     "actors": [
+        "public/scss/includes/beef-thumbnail.scss"
     ],
     "add_beef": [
     ],
     "beef": [
+        "public/scss/includes/beef-thumbnail.scss"
     ],
     "beefs": [
+        "public/scss/includes/beef-thumbnail.scss"
     ],
     "home": [
+        "public/scss/includes/beef-thumbnail.scss"
     ],
     "login": [],
     "register": [
