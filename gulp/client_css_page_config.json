@@ -29,13 +29,9 @@
         "public/scss/includes/variables.scss",
         "public/scss/includes/nav.scss",
         "public/scss/includes/footer.scss",
-        
         "public/scss/includes/section.scss",
-        "public/scss/includes/swiper.scss",
-        "public/scss/includes/user-profile.scss",
-        "public/scss/includes/vertical-list.scss",
         "public/scss/includes/mini-vertical-list.scss",
-        "public/scss/includes/categories.scss",
+
         "public/scss/includes/beefometer.scss",
         "public/scss/includes/actor.scss",
         "public/scss/includes/forms.scss",
@@ -43,7 +39,6 @@
         "public/scss/includes/modal.scss",
         "public/scss/includes/smartwizard.override.scss",
         "public/scss/components/trending-beefs-section.scss",
-        "public/scss/components/categories-browser.scss",
         "public/scss/components/inline-beef-search.scss",
         "public/scss/components/masonry-grid.scss",
         "public/scss/components/gallery-manager.scss",
@@ -83,14 +78,21 @@
         "public/scss/includes/beef-thumbnail.scss"
     ],
     "beefs": [
-        "public/scss/includes/beef-thumbnail.scss"
+        "public/scss/includes/beef-thumbnail.scss",
+        "public/scss/includes/swiper.scss"
     ],
     "home": [
-        "public/scss/includes/beef-thumbnail.scss"
+        "public/scss/includes/beef-thumbnail.scss",
+        "public/scss/includes/swiper.scss"
     ],
     "login": [],
     "register": [
     ],
     "user_profile": [
+        "public/scss/includes/user-profile.scss"
+    ],
+    "unused": [
+        "public/scss/includes/categories.scss",
+        "public/scss/components/categories-browser.scss"
     ]
 }

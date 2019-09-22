@@ -24,8 +24,7 @@ append body
         +section('New', 'BEEF', 'fa-clock', 'Check out the latest contributions to our site!')
             div.row
                 +thumbnail-grid(new_beef_data, "events")
-        //-section('HOT', 'BEEFS')
-            horizontal-slider('featured_beefs_slider', grid_data, "events")
+
 append body 
     div.bt-content
         +section('JOINTHE', 'COMMUNITY', 'fa fa-comments', 'Discover more ways to get involved with the project, vote and contribute now!')
@@ -38,11 +37,6 @@ append body
                 div.col-sm-4
                     a.btn.btn-lg.btn-primary.btn-float.add-beef-button(href="/add-beef") Add Beef
                     a.btn.btn-lg.btn-primary.btn-float(href="/register") Create an Account
-
-//-append body
-    div.bt-content
-        +adsense-banner-ad()
-        +category-browser-section(categories, category_event_data)
 
 append body
     div.bt-content
@@ -61,7 +55,6 @@ append body
       div.container
           +section('HOT', 'BEEF','', "Check out what's hot right now!")
                +horizontal-slider('featured_beefs_slider_full', slider_data, "events", "c_fill,g_face,h_219,w_340")
-
 
 append js_scripts
     script.
