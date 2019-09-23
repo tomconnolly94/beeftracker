@@ -59,10 +59,10 @@ var add_relative_root_path = function(item){
 	if(item.indexOf("https://") >= 0){
 		return `url("${item}")`;
 	}
-	else if(item.indexOf("css") >= 0){
-		return `"${path_to_root}${item}"`;
+	else if(item.indexOf(".js") >= 0){
+		return `${path_to_root}${item}`;
 	}
-	return `${path_to_root}${item}`;
+	return `"${path_to_root}${item}"`;
 };
 
 
@@ -106,10 +106,13 @@ gulp.task('css', function(done) {
 					)
 					.pipe( gulp.dest(css_out_directory) )
 					.on('end', function(){
-						fs.unlink(tmp_scss_config_file, function (err) { //delete tmp file
-							if (err) throw err;
-							resolve();
-						})
+						if(delete_tmp_folder){
+							fs.unlink(tmp_scss_config_file, function (err) { //delete tmp file
+								if (err) throw err;
+								resolve();
+							});
+						}
+						resolve();
 					});
 			});
 		}));

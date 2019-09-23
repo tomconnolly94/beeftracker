@@ -186,7 +186,7 @@ router.get("/actors", token_authentication.recognise_user_token, blanket_middlew
     }).catch(function(error){
         console.log(error);
     });
-}); // about_us page
+}); // actors page
 router.get("/actor/:actor_id", url_param_validator.validate, token_authentication.recognise_user_token, blanket_middleware, function(request, response) { 
 
     //extract data
