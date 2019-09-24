@@ -1,14 +1,13 @@
-$(function() {
-
+$(function () {
 	var timeline = document.querySelector(".timeline ol"),
-	elH = document.querySelectorAll(".timeline li > div"),
-	arrows = document.querySelectorAll(".timeline-container .arrows .arrow"),
-	arrowPrev = document.querySelector(".timeline-container .arrows .arrow__prev"),
-	arrowNext = document.querySelector(".timeline-container .arrows .arrow__next"),
-	firstItem = document.querySelector(".timeline li:first-child"),
-	lastItem = document.querySelector(".timeline li:last-child"),
-	xScrolling = 280,
-	disabledClass = "disabled";
+		elH = document.querySelectorAll(".timeline li > div"),
+		arrows = document.querySelectorAll(".timeline-container .arrows .arrow"),
+		arrowPrev = document.querySelector(".timeline-container .arrows .arrow__prev"),
+		arrowNext = document.querySelector(".timeline-container .arrows .arrow__next"),
+		firstItem = document.querySelector(".timeline li:first-child"),
+		lastItem = document.querySelector(".timeline li:last-child"),
+		xScrolling = 280,
+		disabledClass = "disabled";
 
 
 	var clicking = false;
@@ -23,7 +22,7 @@ $(function() {
 			var singleHeight = el[i].offsetHeight;
 
 			if (counter < singleHeight) {
-			counter = singleHeight;
+				counter = singleHeight;
 			}
 		}
 
@@ -33,34 +32,34 @@ $(function() {
 	}
 
 	function isElementInViewport(el) {
-	var rect = el.getBoundingClientRect();
-	return (
-		rect.top >= 0 &&
-		rect.left >= 0 &&
-		rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-		rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-	);
+		var rect = el.getBoundingClientRect();
+		return (
+			rect.top >= 0 &&
+			rect.left >= 0 &&
+			rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+			rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+		);
 	}
 
 	// SET STATE OF PREV/NEXT ARROWS
 	function setBtnState(el, flag = true) {
 		if (flag) {
-		el.classList.add(disabledClass);
+			el.classList.add(disabledClass);
 		} else {
-		if (el.classList.contains(disabledClass)) {
-			el.classList.remove(disabledClass);
-		}
-		el.disabled = false;
+			if (el.classList.contains(disabledClass)) {
+				el.classList.remove(disabledClass);
+			}
+			el.disabled = false;
 		}
 	}
 
-	$(".timeline a").on("click", function(e) {
+	$(".timeline a").on("click", function (e) {
 		if (dragging) {
-		e.preventDefault();
-	}
+			e.preventDefault();
+		}
 	});
 
-	$(".timeline").on('mousedown', function(e) {
+	$(".timeline").on('mousedown', function (e) {
 
 		e.preventDefault();
 		previousX = e.clientX || e.touches[0].clientX;
@@ -68,7 +67,7 @@ $(function() {
 		clicking = true;
 	});
 
-	$(".timeline").on('touchstart', function(e) {
+	$(".timeline").on('touchstart', function (e) {
 
 
 		previousX = e.clientX || e.touches[0].clientX;
@@ -76,33 +75,33 @@ $(function() {
 		clicking = true;
 	});
 
-	$(document).on('mouseup touchend', function(e) {
+	$(document).on('mouseup touchend', function (e) {
 
 		if (clicking) {
-		if (dragging) {
+			if (dragging) {
+				//e.preventDefault();
+			}
+			clicking = false;
+
+			setTimeout(function () {
+				dragging = false;
+			}, 500);
+		}
+	});
+
+	$("#timeline").on('mouseleave touchcancel', function (e) {
+
+		if (clicking) {
 			//e.preventDefault();
-		}
-		clicking = false;
+			clicking = false;
 
-			setTimeout(function() {
-			dragging = false;
-		}, 500);
-		}
-	});
-
-	$("#timeline").on('mouseleave touchcancel', function(e) {
-
-		if (clicking) {
-		//e.preventDefault();
-		clicking = false;
-
-		setTimeout(function() {
-			dragging = false;
-		}, 500);
+			setTimeout(function () {
+				dragging = false;
+			}, 500);
 		}
 	});
 
-	$(".timeline").on('mousemove touchmove', function(e) {
+	$(".timeline").on('mousemove touchmove', function (e) {
 
 		if (clicking) {
 			dragging = true;
@@ -115,15 +114,23 @@ $(function() {
 			$(".timeline").scrollTop($(".timeline").scrollTop() + (previousY - clientY));
 			previousX = clientX;
 			previousY = clientY;
+
+			// loads all elements in current viewport threshold
+			$('.lazy').data("plugin_lazy").update();
 		}
+
 	});
 
 	setEqualHeights(elH);
-	arrowNext.addEventListener("click", function(e) {
-		$(".timeline").animate({scrollLeft:  $(".timeline").scrollLeft() + 200}, 1500);
+	arrowNext.addEventListener("click", function (e) {
+		$(".timeline").animate({
+			scrollLeft: $(".timeline").scrollLeft() + 200
+		}, 1500);
 	});
 
-	arrowPrev.addEventListener("click", function(e) {
-		$(".timeline").animate({scrollLeft:  $(".timeline").scrollLeft() - 200}, 1500);
+	arrowPrev.addEventListener("click", function (e) {
+		$(".timeline").animate({
+			scrollLeft: $(".timeline").scrollLeft() - 200
+		}, 1500);
 	});
 });

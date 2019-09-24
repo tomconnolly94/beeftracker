@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"mocha.env": {
+			"CLOUDINARY_URL": "cloudinary//default@username:password",
+			"JWT_SECRET": "jw_secret"
+		}
+	}
+}

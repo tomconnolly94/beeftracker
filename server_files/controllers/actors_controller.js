@@ -12,7 +12,6 @@
 //write test for update function to ensure refactoring was a success
 
 //external dependencies
-var moment = require("moment");
 var BSON = require('bson');
 
 //internal dependencies
@@ -26,6 +25,8 @@ var format_embeddable_items = require('../tools/formatting.js').format_embeddabl
 var Actor = require('../schemas/actor.schema');
 
 var test_mode = false;
+if(test_mode) { console.log(" ### WARNING: TEST_MODE FOR 'actors_controller.js' IS ACTIVATED"); }
+
 var actor_intermediate_projection = {
     $project: {
         _id: 1, 
@@ -316,7 +317,7 @@ module.exports = {
                         //remove file extension from all image gallery items
                         if(actor_insert.gallery_items[i].media_type == "image"){ //set file to null to avoid storing file buffer in db
                             actor_insert.gallery_items[i].link = strip_file_ext(actor_insert.gallery_items[i].link);
-                            actor_insert.gallery_items[i].file_name = strip_file_ext(actor_insert.gallery_items[i].file_name);
+                            actor_insert.gallery_items[i].file_name = actor_insert.gallery_items[i].file_name ? strip_file_ext(actor_insert.gallery_items[i].file_name) : null;
                         }
 
                         if(actor_insert.gallery_items[i].file){

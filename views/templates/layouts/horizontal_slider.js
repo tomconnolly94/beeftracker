@@ -29,9 +29,8 @@ function init_horizontal_slider(slider_id){
 
     //triggers image lazy loading of newly visible images on slideChange
     swiper.on('transitionEnd', function () {
-        var instance = $('.lazy').data("plugin_lazy");
         // loads all elements in current viewport threshold
-        instance.update();
+        $('.lazy').data("plugin_lazy").update();
     });
 }
 

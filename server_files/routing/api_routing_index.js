@@ -12,6 +12,7 @@ router.use("/activity-logs", require("./api_sub_routing/activity_logs_routing.js
 router.use("/auth", require("./authentication_routing")); //routes send javascript functions which render HTML on the client side
 router.use("/actors", require("./api_sub_routing/actors_routing.js"));
 router.use("/actor-variable-fields-config", require("./api_sub_routing/actor_variable_fields_config_routing.js"));
+router.use("/broken-links", require("./api_sub_routing/broken_links_routing.js"));
 router.use("/comments", require("./api_sub_routing/comments_routing.js"));
 router.use("/contact-requests", require("./api_sub_routing/contact_requests_routing.js"));
 router.use("/event-categories", require("./api_sub_routing/event_categories_routing.js"));
@@ -48,7 +49,7 @@ router.use("/votes", require("./api_sub_routing/votes_routing.js"));
 // });//built, written, not tested
 
 //broken link reporting
-router.route("/report-broken-link").post(function(request, response){
+router.route("/broken-link").post(function(request, response){
    console.log("link reported broken.") //unimplemented
    send_successful_api_response(response, 204, {});
 });

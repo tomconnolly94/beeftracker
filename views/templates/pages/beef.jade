@@ -78,7 +78,7 @@ append body
                             - console.log(main_graphic.link)
                     - else if(main_graphic.media_type == "youtube_embed")
                         div.beef-body-content-youtube-video
-                            iframe(id="youtube_iframe", height="315", scrolling="no", frameborder="no", src=main_graphic.link, allow="autoplay; encrypted-media")
+                            iframe(id="youtube_iframe", height="315", scrolling="no", frameborder="no", src=main_graphic.link, allow="autoplay; encrypted-media", allowfullscreen="allowfullscreen", mozallowfullscreen="mozallowfullscreen", msallowfullscreen="msallowfullscreen", oallowfullscreen="oallowfullscreen", webkitallowfullscreen="webkitallowfullscreen")
                             //iframe(id="youtube_iframe", height="315", scrolling="no", frameborder="no", onerror="handle_youtube_error", src="https://www.youtube.com/embed/VmwOMtkDxtk", allow="autoplay; encrypted-media")
                     - else if(main_graphic.media_type == "image")
                         div.row.col-md-6(style="margin: 0 auto;")
@@ -164,3 +164,6 @@ append body
 
 append js_scripts
     script(src="/js/beef.js")
+
+append css_scripts
+    link(href='/css/beef.css', rel='stylesheet')

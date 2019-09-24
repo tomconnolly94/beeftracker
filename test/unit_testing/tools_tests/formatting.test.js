@@ -11,7 +11,7 @@ var globals = require('../testing_globals.js');
 
 describe('Module: formatting', function () {
 
-    var formatting, image_gallery_item, soundcloud_gallery_item;
+    var formatting, expected_youtube_link, expected_spotify_link;
 
     before(function(){
         
@@ -79,43 +79,226 @@ describe('Module: formatting', function () {
         };
 
         formatting = proxyquire("../../../server_files/tools/formatting", { "request": request_mock });
+        dotenv.config();
 
-        image_gallery_item = {
-            media_type: "image",
-            file: {
-                originalname: "fake_image_originalname"
-            }
-        }
+        expected_youtube_link = "https://www.youtube.com/embed/5PHqk_7kIWk";
+        expected_spotify_link = "https://open.spotify.com/embed/track/56IGGA6VwAbIni6KoN7VC5";
+    });
+    
+    beforeEach(function () {});
+    
+    it('format_embeddable_items - soundcloud_embed', function (done) {
 
-        soundcloud_gallery_item = {
+        var soundcloud_gallery_item = {
             media_type: "soundcloud_embed",
             link: "https://soundcloud.com/joebuddenpodcast/141a",
             main_graphic: false,
-            file: null,
-            file_name: null
+            cover_image: false
         };
-
-        dotenv.config();
-    });
-    
-    beforeEach(function () {
-    });
-    
-    it('format_embeddable_items - soundcloud_embed', function (done) {
-        var gallery_items = [
-            soundcloud_gallery_item
-        ];
 
         var expected_gallery_item_link = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/372107174&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
         
-        formatting.format_embeddable_items(gallery_items, [], function(new_gallery_items){
-            var soundcloud_gallery_item = new_gallery_items[0];
+        formatting.format_embeddable_items([ soundcloud_gallery_item ], [], function(new_gallery_items){
+            var new_soundcloud_gallery_item = new_gallery_items[0];
 
-            assert.equal(soundcloud_gallery_item.media_type, soundcloud_gallery_item.media_type);
+            assert.equal(new_soundcloud_gallery_item.media_type, soundcloud_gallery_item.media_type);
             assert.equal(expected_gallery_item_link, soundcloud_gallery_item.link);
-            assert.equal(soundcloud_gallery_item.main_graphic, soundcloud_gallery_item.main_graphic);
-            assert.equal(soundcloud_gallery_item.file, soundcloud_gallery_item.file);
-            assert.equal(soundcloud_gallery_item.file_name, soundcloud_gallery_item.file_name);
+            assert.equal(new_soundcloud_gallery_item.main_graphic, soundcloud_gallery_item.main_graphic);
+            assert.equal(new_soundcloud_gallery_item.cover_image, soundcloud_gallery_item.cover_image);
+
+            done();
+        });
+    });
+    
+    it('format_embeddable_items - image with file', function (done) {
+
+        var image_gallery_item = {
+            media_type: "image",
+            main_graphic: false,
+            cover_image: false,
+            file: null,
+            link: "fake_image_originalname"
+        }
+
+        var image_file_object = {
+            originalname: "fake_image_originalname"
+        };
+
+        formatting.format_embeddable_items([ image_gallery_item ], [ image_file_object ], function(new_gallery_items){
+            var new_image_gallery_item = new_gallery_items[0];
+
+            assert.equal(image_gallery_item.media_type, new_image_gallery_item.media_type);
+            assert.equal(image_gallery_item.main_graphic, new_image_gallery_item.main_graphic);
+            assert.equal(image_gallery_item.cover_image, new_image_gallery_item.cover_image);
+            assert.equal(image_gallery_item.file.originalname, new_image_gallery_item.file.originalname);
+
+            done();
+        });
+    });
+    
+    it('format_embeddable_items - image with link', function (done) {
+
+        var image_gallery_item = {
+            media_type: "image",
+            main_graphic: false,
+            cover_image: false,
+            file: null,
+            link: "http://www.fakeimage.jpg"
+        }
+
+        formatting.format_embeddable_items([ image_gallery_item ], [], function(new_gallery_items){
+            var new_image_gallery_item = new_gallery_items[0];
+
+            assert.equal(image_gallery_item.media_type, new_image_gallery_item.media_type);
+            assert.equal(image_gallery_item.main_graphic, new_image_gallery_item.main_graphic);
+            assert.equal(image_gallery_item.cover_image, new_image_gallery_item.cover_image);
+            assert.equal(image_gallery_item.link, new_image_gallery_item.link);
+
+            done();
+        });
+    });
+    
+    it('format_embeddable_items - instagram_embed', function (done) {
+
+        var instagram_gallery_item = {
+            media_type: "instagram_embed",
+            link: "https://instagram.com/joebuddenpodcast/141a?extralilbitthatwedontneed",
+            main_graphic: false,
+            cover_image: false
+        };
+
+        var expected_instagram_link = "https://instagram.com/joebuddenpodcast/141a";
+
+        formatting.format_embeddable_items([ instagram_gallery_item ], [], function(new_gallery_items){
+            var new_instagram_gallery_item = new_gallery_items[0];
+
+            assert.equal(instagram_gallery_item.media_type, new_instagram_gallery_item.media_type);
+            assert.equal(instagram_gallery_item.main_graphic, new_instagram_gallery_item.main_graphic);
+            assert.equal(instagram_gallery_item.cover_image, new_instagram_gallery_item.cover_image);
+            assert.equal(expected_instagram_link, new_instagram_gallery_item.link);
+
+            done();
+        });
+    });
+    
+    it('format_embeddable_items - youtube_embed - embed', function (done) {
+
+        var youtube_gallery_item_embed = {
+            media_type: "youtube_embed",
+            link: expected_youtube_link,
+            main_graphic: false,
+            cover_image: false
+        };
+
+        formatting.format_embeddable_items([ youtube_gallery_item_embed ], [], function(new_gallery_items){
+            var new_youtube_gallery_item = new_gallery_items[0];
+
+            assert.equal(youtube_gallery_item_embed.media_type, new_youtube_gallery_item.media_type);
+            assert.equal(youtube_gallery_item_embed.main_graphic, new_youtube_gallery_item.main_graphic);
+            assert.equal(youtube_gallery_item_embed.cover_image, new_youtube_gallery_item.cover_image);
+            assert.equal(expected_youtube_link, new_youtube_gallery_item.link);
+
+            done();
+        });
+
+    });
+    
+    it('format_embeddable_items - youtube_embed - url', function (done) {
+        var youtube_gallery_item_url = {
+            media_type: "youtube_embed",
+            link: "https://www.youtube.com/watch?v=5PHqk_7kIWk",
+            main_graphic: false,
+            cover_image: false
+        };
+
+        formatting.format_embeddable_items([ youtube_gallery_item_url ], [], function(new_gallery_items){
+            var new_youtube_gallery_item = new_gallery_items[0];
+
+            assert.equal(youtube_gallery_item_url.media_type, new_youtube_gallery_item.media_type);
+            assert.equal(youtube_gallery_item_url.main_graphic, new_youtube_gallery_item.main_graphic);
+            assert.equal(youtube_gallery_item_url.cover_image, new_youtube_gallery_item.cover_image);
+            assert.equal(expected_youtube_link, new_youtube_gallery_item.link);
+
+            done();
+        });
+
+    });
+    
+    it('format_embeddable_items - youtube_embed - short link', function (done) {
+        var youtube_gallery_item_short_link = {
+            media_type: "youtube_embed",
+            link: "https://youtu.be/5PHqk_7kIWk",
+            main_graphic: false,
+            cover_image: false
+        };
+
+        formatting.format_embeddable_items([ youtube_gallery_item_short_link ], [], function(new_gallery_items){
+            var new_youtube_gallery_item = new_gallery_items[0];
+
+            assert.equal(youtube_gallery_item_short_link.media_type, new_youtube_gallery_item.media_type);
+            assert.equal(youtube_gallery_item_short_link.main_graphic, new_youtube_gallery_item.main_graphic);
+            assert.equal(youtube_gallery_item_short_link.cover_image, new_youtube_gallery_item.cover_image);
+            assert.equal(expected_youtube_link, new_youtube_gallery_item.link);
+
+            done();
+        });
+    });
+    
+    it('format_embeddable_items - spotify_embed - link', function (done) {
+        var spotify_gallery_item_short_link = {
+            media_type: "spotify_embed",
+            link: "https://open.spotify.com/track/56IGGA6VwAbIni6KoN7VC5?si=C1v2N0qfQaagrqpDwZs4FQ",
+            main_graphic: false,
+            cover_image: false
+        };
+
+        formatting.format_embeddable_items([ spotify_gallery_item_short_link ], [], function(new_gallery_items){
+            var new_spotify_gallery_item = new_gallery_items[0];
+
+            assert.equal(spotify_gallery_item_short_link.media_type, new_spotify_gallery_item.media_type);
+            assert.equal(spotify_gallery_item_short_link.main_graphic, new_spotify_gallery_item.main_graphic);
+            assert.equal(spotify_gallery_item_short_link.cover_image, new_spotify_gallery_item.cover_image);
+            assert.equal(expected_spotify_link, new_spotify_gallery_item.link);
+
+            done();
+        });
+    });
+    
+    it('format_embeddable_items - spotify_embed - embed', function (done) {
+        var spotify_gallery_item_short_link = {
+            media_type: "spotify_embed",
+            link: "https://open.spotify.com/embed/track/56IGGA6VwAbIni6KoN7VC5",
+            main_graphic: false,
+            cover_image: false
+        };
+
+        formatting.format_embeddable_items([ spotify_gallery_item_short_link ], [], function(new_gallery_items){
+            var new_spotify_gallery_item = new_gallery_items[0];
+
+            assert.equal(spotify_gallery_item_short_link.media_type, new_spotify_gallery_item.media_type);
+            assert.equal(spotify_gallery_item_short_link.main_graphic, new_spotify_gallery_item.main_graphic);
+            assert.equal(spotify_gallery_item_short_link.cover_image, new_spotify_gallery_item.cover_image);
+            assert.equal(expected_spotify_link, new_spotify_gallery_item.link);
+
+            done();
+        });
+    });
+    
+    it('format_embeddable_items - spotify_embed - uri', function (done) {
+        var spotify_gallery_item_short_link = {
+            media_type: "spotify_embed",
+            link: "spotify:track:56IGGA6VwAbIni6KoN7VC5",
+            main_graphic: false,
+            cover_image: false
+        };
+
+        formatting.format_embeddable_items([ spotify_gallery_item_short_link ], [], function(new_gallery_items){
+            var new_spotify_gallery_item = new_gallery_items[0];
+
+            assert.equal(spotify_gallery_item_short_link.media_type, new_spotify_gallery_item.media_type);
+            assert.equal(spotify_gallery_item_short_link.main_graphic, new_spotify_gallery_item.main_graphic);
+            assert.equal(spotify_gallery_item_short_link.cover_image, new_spotify_gallery_item.cover_image);
+            assert.equal(expected_spotify_link, new_spotify_gallery_item.link);
 
             done();
         });

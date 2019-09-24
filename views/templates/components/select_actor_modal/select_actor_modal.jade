@@ -5,19 +5,14 @@ mixin select-actor-modal()
     +modal('Select Actor', '#', false)(id="selector_actor_modal", large_modal=false)
         div.row
             div.col-md-12
-                //- div.form-row
-                //-     div.form-group.col-md-12
-                //-         label(for="login_email") Email
-                //-         input(type="email").form-control#login_email
-                //- div.form-row
-                //-     div.form-group.col-md-12
-                //-         label(for="login_password") Password
-                //-         input(type="password").form-control#login_password
                 div.form-row
                     div.form-group.col-md-12
                         select#select_actor.form-control(name="select_actor")
-                            option(value="default", selected="true", disabled="disabled") Select Actor 
-                            each actor in actor_data
+                            option(value="default", selected="true", disabled="disabled") Select Actor
+
+                            //- actor_data.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+
+                            - each actor in actor_data
                                 option(value=actor._id, x-actor-image-link=actor.img_title_fullsize, x-actor-name=actor.name, x-actor-id=actor._id) #{actor.name}
                 div.form-row
                     div.col-md-12

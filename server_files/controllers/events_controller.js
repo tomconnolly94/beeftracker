@@ -31,6 +31,8 @@ var EventContribution = require("../schemas/event_contribution.schema").model;
 var BeefChain = require("../schemas/beef_chain.schema");
 
 var test_mode = false;
+if(test_mode) { console.log(" ### WARNING: TEST_MODE FOR 'events_controller.js' IS ACTIVATED"); }
+
 var event_projection = {
     "_id": 1,
     "title": 1,
@@ -321,7 +323,7 @@ module.exports = {
         }
 
         //format target_ids array
-        for (var i = 0; i < submission_data.targets.length; i++) {
+        for (i = 0; i < submission_data.targets.length; i++) {
             target_ids.push(BSON.ObjectID.createFromHexString(submission_data.targets[i]));
         }
 
@@ -704,7 +706,6 @@ module.exports = {
 
                         //remove the event._id entry from the relevant beef_chain documents
                         db_interface.updateSingle(beef_chain_update_config, function(result){
-                            
                             //remove the event from the beef_chain table only if events array is empty after above removal
                             if(result.event_ids.length == 0 || (result.event_ids.length == 1 && result.event_ids[0] == event_id)){
 

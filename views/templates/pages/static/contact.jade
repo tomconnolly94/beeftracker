@@ -39,6 +39,8 @@ append body
         +trending-beefs-section(trending_data)
         +add-beef-cta()
 
-    append js_scripts
-        script(src="/js/submit_controllers/submit_contact_request.js" async)
-        script(src="/component_controllers/pagination/pagination_controller.js")
+append js_scripts
+    script(src="/js/contact.js")
+
+append css_scripts
+    link(href='/css/contact.css', rel='stylesheet')

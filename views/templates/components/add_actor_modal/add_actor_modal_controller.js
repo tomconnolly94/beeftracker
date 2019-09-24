@@ -102,7 +102,10 @@ $(function(){
         
         $.get("/api/actor-variable-fields-config", {}, function(data){
             load_template_render_function(template_dir + "/" + template_name, function(status){
-                fade_new_content_to_div("#variable_fields_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, browser: browser, variable_fields: data, active_classification: id }))
+                fade_new_content_to_div("#variable_fields_panel", window[template_name + "_tmpl_render_func"]({ file_server_url_prefix: file_server_url_prefix, browser: browser, variable_fields: data, active_classification: id }), function(){
+                    //register add_list click listeners 
+                    window.register_add_list_controllers(); //@definition: components/add_list/add_list_controller.js
+                })
             });
         });
         

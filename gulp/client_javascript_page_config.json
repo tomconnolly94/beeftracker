@@ -1,8 +1,21 @@
 {
+	"all": [
+		"node_modules/jquery/dist/jquery.min.js",
+		"node_modules/jquery-lazy/jquery.lazy.js",
+		"node_modules/toastr/build/toastr.min.js",
+		"bower_components/bootstrap/dist/js/bootstrap.bundle.js",
+		"bower_components/hammerjs/hammer.js",
+		"public/javascript/service_worker/service_worker_init.js",
+		"public/javascript/globals.js",
+		"views/templates/components/login/login_form_controller.js",
+		"views/templates/components/inline_beef_search/inline_beef_search_controller.js"
+	],
 	"scraping_dump": [
-		"bower_components/select2/dist/js/select2.full.js",
+		"node_modules/select2/dist/js/select2.full.min.js",
 		"views/templates/components/add_actor_modal/add_actor_modal_controller.js",
-		"public/javascript/submit_controllers/submit_actor_controller.js",
+		"public/javascript/submit_controllers/submit_actor/input_validator.js",
+		"public/javascript/submit_controllers/submit_actor/helper_functions.js",
+		"public/javascript/submit_controllers/submit_actor/click_listeners.js",
 		"views/templates/components/add_list/add_list_controller.js",
 		"views/templates/components/scraped_event_data_form/scraped_event_data_form_controller.js"
 	],
@@ -10,7 +23,10 @@
 	"privacy_policy": [],
 	"terms_and_conditions": [],
 	"about": [],
-	"contact": [],
+	"contact": [
+		"public/javascript/submit_controllers/submit_contact_request/click_listeners.js",
+		"views/templates/components/pagination/pagination_controller.js"
+	],
 	"error": [],
 	"offline": [],
 	"successful_submission": [],
@@ -25,24 +41,26 @@
 		"views/templates/components/section_control_toolbar/section_control_toolbar_controller.js"
 	],
 	"add_beef": [
-		"bower_components/select2/dist/js/select2.full.js",
+		"node_modules/select2/dist/js/select2.full.min.js",
 		"bower_components/smartwizard/dist/js/jquery.smartWizard.js",
 		"views/templates/components/add_list/add_list_controller.js",
 		"views/templates/components/add_actor_modal/add_actor_modal_controller.js",
 		"views/templates/components/select_actor_modal/select_actor_modal_controller.js",
 		"public/javascript/server_client_common/youtube_url_translation.js",
 		"views/templates/components/upload_gallery_item_modal/upload_gallery_item_modal_controller.js",
-		"public/javascript/submit_controllers/submit_actor_controller.js",
-		"public/javascript/submit_controllers/submit_event/event_input_validator.js",
+		"public/javascript/submit_controllers/submit_event/input_validator.js",
 		"public/javascript/submit_controllers/submit_event/helper_functions.js",
 		"public/javascript/submit_controllers/submit_event/click_listeners.js",
+		"public/javascript/submit_controllers/submit_actor/input_validator.js",
+		"public/javascript/submit_controllers/submit_actor/helper_functions.js",
+		"public/javascript/submit_controllers/submit_actor/click_listeners.js",
 		"views/templates/pages/add_beef_page_controller.js",
 		"public/javascript/load_url_params_to_page.js"
 	],
 	"beef": [
 		"bower_components/shufflejs/dist/shuffle.js",
 		"bower_components/fancybox/dist/jquery.fancybox.js",
-		"bower_components/select2/dist/js/select2.full.js",
+		"node_modules/select2/dist/js/select2.full.min.js",
 		"views/templates/components/comment_box/comment_box_controller.js",
 		"views/templates/components/voting_panel/voting_panel_controller.js",
 		"views/templates/pages/beef_page_controller.js",
@@ -63,11 +81,11 @@
 	],
 	"login": [],
 	"register": [
-		"bower_components/select2/dist/js/select2.full.js",
+		"node_modules/select2/dist/js/select2.full.min.js",
 		"views/templates/components/register_form/register_form_controller.js"
 	],
 	"user_profile": [
-		"public/javascript/submit_controllers/submit_user_data_controller.js",
+		"public/javascript/submit_controllers/submit_user_data/click_listeners.js",
 		"views/templates/layouts/masonry_gallery.js",
 		"views/templates/components/timeline/timeline.js"
 	]
