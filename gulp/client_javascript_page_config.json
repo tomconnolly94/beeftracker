@@ -24,7 +24,6 @@
 	"terms_and_conditions": [],
 	"about": [],
 	"contact": [
-		"node_modules/select2/dist/js/select2.full.min.js",
 		"public/javascript/submit_controllers/submit_contact_request/click_listeners.js",
 		"views/templates/components/pagination/pagination_controller.js"
 	],
