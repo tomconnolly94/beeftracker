@@ -1,3 +1,5 @@
+
+//external dependencies
 var gulp = require('gulp'),
     sass = require('gulp-sass'),
     concat = require('gulp-concat'),
@@ -6,12 +8,13 @@ var gulp = require('gulp'),
 	gulpif = require('gulp-if'),
 	fs = require('fs'),
 	map = require('map-stream'),
-	jade = require('gulp-jade'),
 	async = require('async'),
-	argv = require('yargs').argv,
-	production_arg = (argv.production === undefined) ? false : true;
+	argv = require('yargs').argv;
 
+//internal dependencies
+var production_arg = (argv.production === undefined) ? false : true;
 
+//global variables
 var is_production = production_arg || process.env.NODE_ENV == "heroku_production"
 var path_to_root = "../";
 var css_out_directory = path_to_root + "public/dist/css";
@@ -55,7 +58,53 @@ jQuery.extend({
 
 
 //load dev scripts synchronously`;
-var add_relative_root_path = function(item){
+
+//global functions
+function build_file_string(specific_js_scripts){
+
+	file_string = file_string_base;
+
+	for (var specific_js_scripts_index = 0; specific_js_scripts_index < specific_js_scripts.length; specific_js_scripts_index++) {
+
+		var specific_js_script = specific_js_scripts[specific_js_scripts_index];
+
+		//declare route replacement mappings
+		var path_replacement_mappings = {
+			"public/javascript": "dev-js",
+			"node_modules": "modules",
+			"views/templates/components": "dev-component-js",
+			"views/templates/layouts": "dev-layout-js",
+			"views/templates/pages": "dev-page-js",
+			"..": ""
+		}
+
+		var path_replacement_mappings_keys = Object.keys(path_replacement_mappings);
+
+		//modify each path to use the available server route, not the directory structure
+		for (var mapping_index = 0; mapping_index < path_replacement_mappings_keys.length; mapping_index++) {
+
+			var mapping_key = path_replacement_mappings_keys[mapping_index];
+
+			if (specific_js_script.includes(mapping_key)) {
+				specific_js_script = specific_js_script.replace(mapping_key, path_replacement_mappings[mapping_key]);
+			}
+		}
+
+		file_string += `\n$.getScript("${specific_js_script}"`;
+
+		if (specific_js_scripts_index != specific_js_scripts.length - 1) {
+			file_string += `,\nfunction(){`;
+		} else {
+			file_string += ")"
+		}
+	}
+	file_string += Array(specific_js_scripts.length).join('})');
+
+	return file_string;
+}
+
+
+function add_relative_root_path(item){
 	if(item.indexOf("https://") >= 0){
 		return `url("${item}")`;
 	}
@@ -164,47 +213,8 @@ gulp.task('js', function(done) {
 					resolve();
 			}
 			else{
-				var file_string = "";
-				if(specific_js_scripts.length > 0){
+				var file_string = specific_js_scripts.length > 0 ? build_file_string(specific_js_scripts) : "";
 
-					file_string = file_string_base;
-
-					for (var specific_js_scripts_index = 0; specific_js_scripts_index < specific_js_scripts.length; specific_js_scripts_index++) {
-
-						var specific_js_script = specific_js_scripts[specific_js_scripts_index];
-
-						//declare route replacement mappings
-						var path_replacement_mappings = {
-							"public/javascript": "dev-js",
-							"node_modules": "modules",
-							"views/templates/components": "dev-component-js",
-							"views/templates/layouts": "dev-layout-js",
-							"views/templates/pages": "dev-page-js",
-							"..": ""
-						}
-
-						var path_replacement_mappings_keys = Object.keys(path_replacement_mappings);
-
-						//modify each path to use the available server route, not the directory structure
-						for (var mapping_index = 0; mapping_index < path_replacement_mappings_keys.length; mapping_index++) {
-
-							var mapping_key = path_replacement_mappings_keys[mapping_index];
-
-							if (specific_js_script.includes(mapping_key)) {
-								specific_js_script = specific_js_script.replace(mapping_key, path_replacement_mappings[mapping_key]);
-							}
-						}
-
-						file_string += `\n$.getScript("${specific_js_script}"`;
-
-						if (specific_js_scripts_index != specific_js_scripts.length - 1) {
-							file_string += `,\nfunction(){`;
-						} else {
-							file_string += ")"
-						}
-					}
-					file_string += Array(specific_js_scripts.length).join('})');
-				}
 				async.series([
 					function (next) {
 						gulp.src(relative_universal_javascript_files)
