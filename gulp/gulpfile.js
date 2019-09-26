@@ -18,6 +18,7 @@ var css_out_directory = path_to_root + "public/dist/css";
 var compiled_webfonts_directory = path_to_root + "public/fonts";
 var compiled_font_directory = path_to_root + "public/dist/css/font";
 var js_out_directory = path_to_root + "public/dist/javascript/";
+var non_page_config_lists = [ "all", "unused"];
 var file_string_base = `
 /* Include calls to individual javascript files so they appear in the debugger 
 as separate files, increasing the ease of file navigation */
@@ -77,11 +78,14 @@ gulp.task('css', function(done) {
 	//if it doesnt exist, create tmp folder to hold page scss config files
 	if (!fs.existsSync(tmp_page_scss_config_folder)) { fs.mkdirSync(tmp_page_scss_config_folder); }
 
-	//for(var page_name_index = 1; page_name_index < page_names.length; page_name_index++){
-	for(var page_name_index = 1; page_name_index < page_names.length; page_name_index++){
+	for(var page_name_index = 0; page_name_index < page_names.length; page_name_index++){
+
+		var page_name = page_names[page_name_index];
+		if(non_page_config_lists.indexOf(page_name) >= 0){ //exit if page_name is a non_page config
+			continue;
+		}
 
 		page_promises.push(new Promise(function(resolve, reject){
-			var page_name = page_names[page_name_index];
 			var specific_css_scripts = client_css_page_config[page_name].map(add_relative_root_path);
 			var relative_universal_css_files = universal_css_files.map(add_relative_root_path);
 			var relevant_css_scripts = relative_universal_css_files.concat(specific_css_scripts);
@@ -138,10 +142,14 @@ gulp.task('js', function(done) {
 	var universal_javascript_files = client_javascript_page_config["all"];
 	var page_promises = [];
 
-	for(var page_name_index = 1; page_name_index < page_names.length; page_name_index++){
+	for(var page_name_index = 0; page_name_index < page_names.length; page_name_index++){
+
+		var page_name = page_names[page_name_index];
+		if(non_page_config_lists.indexOf(page_name) >= 0){ //exit if page_name is a non_page config
+			continue;
+		}
 
 		page_promises.push(new Promise(function(resolve, reject){
-			var page_name = page_names[page_name_index];
 			var specific_js_scripts = client_javascript_page_config[page_name].map(add_relative_root_path);
 			var relative_universal_javascript_files = universal_javascript_files.map(add_relative_root_path);
 			var relevant_js_scripts = relative_universal_javascript_files.concat(specific_js_scripts);

@@ -88,5 +88,6 @@
 		"public/javascript/submit_controllers/submit_user_data/click_listeners.js",
 		"views/templates/layouts/masonry_gallery.js",
 		"views/templates/components/timeline/timeline.js"
-	]
+	],
+	"unused": []
 }
