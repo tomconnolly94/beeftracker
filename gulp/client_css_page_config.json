@@ -82,6 +82,7 @@
         "public/scss/components/error-panel.scss"
     ],
     "beef": [
+        "public/scss/includes/categories.scss",
         "node_modules/select2/dist/css/select2",
         "public/scss/includes/beef-thumbnail.scss",
         "public/scss/includes/beefometer.scss",
@@ -120,7 +121,6 @@
         "public/scss/pages/beef-page.scss"
     ],
     "unused": [
-        "public/scss/includes/categories.scss",
         "public/scss/components/categories-browser.scss",
         "public/scss/components/trending-beefs-section.scss"
     ]

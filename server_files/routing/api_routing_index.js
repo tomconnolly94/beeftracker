@@ -48,11 +48,7 @@ router.use("/votes", require("./api_sub_routing/votes_routing.js"));
 //     });
 // });//built, written, not tested
 
-//broken link reporting
-router.route("/broken-link").post(function(request, response){
-   console.log("link reported broken.") //unimplemented
-   send_successful_api_response(response, 204, {});
-});
+router.use("/broken-link", require("./api_sub_routing/broken_links_routing.js"));
 
 //handle errors
 router.route("/*").get(function(request, response) {response.status(400).send({success: false, message: "endpoint not found"}); });

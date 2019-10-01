@@ -67,15 +67,14 @@ append body
             div.beef-content-container
                 div.col-md-12.beef-summary
 
-                    - if(main_graphic.media_type != "image" && false)
-                        form(action="/api/report-broken-link",method="POST")
+                    - if(main_graphic.media_type != "image")
+                        form(action="/api/broken-link",method="POST")
                             div.main-graphic-undertext
                                 input(type="submit",value="Is the media below broken? Report it here with a single click!")
 
                     - if(main_graphic.media_type == "soundcloud_embed")
                         div.beef-body-content-soundcloud
                             iframe(height="300", scrolling="no", frameborder="no", allow="autoplay", src=main_graphic.link)
-                            - console.log(main_graphic.link)
                     - else if(main_graphic.media_type == "youtube_embed")
                         div.beef-body-content-youtube-video
                             iframe(id="youtube_iframe", height="315", scrolling="no", frameborder="no", src=main_graphic.link, allow="autoplay; encrypted-media", allowfullscreen="allowfullscreen", mozallowfullscreen="mozallowfullscreen", msallowfullscreen="msallowfullscreen", oallowfullscreen="oallowfullscreen", webkitallowfullscreen="webkitallowfullscreen")

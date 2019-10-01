@@ -41,7 +41,7 @@ router.route('/:broken_link_id').get(url_param_validator.validate, function (req
 
 }); //built, written, tested, needs query handling
 
-router.route('/').post(token_authentication.authenticate_endpoint_with_user_token, broken_link_validator.validate, memoryUpload, function (request, response) {
+router.route('/').post(broken_link_validator.validate, memoryUpload, function (request, response) {
 
     var data = request.locals.validated_data;
     
