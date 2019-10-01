@@ -1,0 +1,46 @@
+extends ../../layouts/layout.jade
+include ../../components/trending_beef/trending_beef.jade
+include ../../components/add_beef_call_to_action/add_beef_call_to_action.jade
+
+append body
+    div.bt-content
+        +section('CONTACT', 'US', 'fa fa-envelope')
+            form#contact_request_form
+                div.form-row
+                    div.form-group.col-md-6
+                        label(for="fullname") Name
+                        input(type="text").form-control#fullname
+                     div.form-group.col-md-6
+                        label(for="email") Email
+                        input(type="email").form-control#email
+                div.form-row
+                    div.form-group.col-md-12
+                        label(for="subject") Subject
+                        input(type="text").form-control#subject
+                div.form-row
+                    div.form-group.col-md-12
+                        label(for="message") Message
+                        textarea.form-control#message
+                button(type="submit").btn.btn-primary.float-right Send
+        +section('STAYIN', 'TOUCH', 'fa fa-thumbs-up')(class="social-media-section")
+            div.row
+                div.col-md-4
+                   a.social-media-item.facebook(href="https://www.facebook.com/beeftracker/", target="_blank")
+                    i.fab.fa-facebook-f
+                div.col-md-4
+                    a.social-media-item.twitter(href="https://twitter.com/beeftracker/", target="_blank")
+                        i.fab.fa-twitter
+                div.col-md-4
+                    a.social-media-item.instagram(href="https://www.instagram.com/beeftracker/", target="_blank")
+                        i.fab.fa-instagram
+                //div.col-md-3
+                    a.social-media-item.linkedin(href="#")
+                        i.fab.fa-linkedin-in
+        +trending-beefs-section(trending_data)
+        +add-beef-cta()
+
+append js_scripts
+    script(src="/js/contact.js")
+
+append css_scripts
+    link(href='/css/contact.css', rel='stylesheet')

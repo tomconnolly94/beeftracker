@@ -1,0 +1,24 @@
+include ../template_helper_functions/file_server_url_builder.jade
+include ../template_helper_functions/date_formatter.jade
+
+mixin vertical-list-actor-item(item, image_resize_params)
+
+    - var formatted_date = format_date(item.date_of_origin);
+
+    div.vertical-list-item.beef-category-default
+        a(href="/actor/" + item._id).row
+            div.col-6.vertical-list-item-thumbnail
+                img(src=file_server_url_builder(file_server_url_prefix, "actors", item.img_title_fullsize, image_resize_params), style="width:100%;")
+            div.col-6.vertical-list-item-details
+                h5 #{item.name.length > 40 ? item.name.slice(0,40)+ "..." : item.name}
+                ul.beef-info
+                        li #{formatted_date}
+- if(!item){
+-     item = "none";
+- }
+
+- if(!image_resize_params){
+-     image_resize_params = "none";
+- }
+
++vertical-list-beef-item(item, image_resize_params)

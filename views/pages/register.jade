@@ -1,0 +1,13 @@
+extends ../layouts/layout.jade
+include ../components/register_form/register_form.jade
+include ../components/google_adsense/adsense_banner_ad.jade
+
+append body
+    +register-form()
+    +adsense-banner-ad()
+
+append js_scripts
+    script(src="/js/register.js" )
+
+append css_scripts
+    link(href='/css/register.css', rel='stylesheet')

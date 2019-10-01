@@ -1,0 +1,16 @@
+include ../../template_helper_functions/file_server_url_builder.jade
+
+mixin related-beefs(related_events, data_type, image_resize_params, main_event_id)
+
+    div.rounded-mini-thumbs.related-beefs
+        h4 Related Beef
+        ul
+            each related_event in related_events            
+                - if(String(related_event._id) != String(main_event_id)){
+                    li
+                        a(href="/beef/#{related_event.beef_chain_ids[0]}/#{related_event._id}")
+                            img(src=file_server_url_builder(file_server_url_prefix, data_type, related_event.cover_image, image_resize_params))
+                            div    
+                                p #{related_event.title.slice(0,20)}
+                                p #{related_event.aggressors[0].name.split(" ")[related_event.aggressors[0].name.split(" ").length-1]} v. #{related_event.targets[0].name.split(" ")[related_event.targets[0].name.split(" ").length-1]}
+                - }

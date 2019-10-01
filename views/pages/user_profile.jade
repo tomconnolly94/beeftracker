@@ -1,0 +1,72 @@
+extends ../layouts/layout.jade
+include ../components/trending_beef/trending_beef.jade
+include ../components/timeline/timeline.jade
+include ../components/related_actors/related_actors.jade
+include ../layouts/masonry_gallery.jade
+include ../layouts/vertical_beef_list.jade
+include ../components/google_adsense/adsense_banner_ad.jade
+
+append body
+
+    - if(user_data.d_o_b instanceof Date){}
+    - else{
+    -   user_data.d_o_b = new Date(user_data.d_o_b);
+    - }
+
+    - var day = user_data.d_o_b.getDate();
+    - var monthIndex = user_data.d_o_b.getMonth();
+    - var year = user_data.d_o_b.getFullYear();
+    - var formatted_date =  day + '/' + monthIndex + '/' + year;
+            
+    div.bt-content
+        div.beef-content.beef-category-default
+            div.beef-content-header
+                div.beef-title
+                    h2
+                        | #{user_data.first_name} #{user_data.last_name}
+                        
+                        //span.beefometer.medium(class=letter_mapping[user_data.rating - 1] + "-beefs")
+                div.beef-content-category
+                    //span.category-name #{user_data.classification}
+                //div.beef-content-contribute
+                    a.btn.btn-primary(href="/add-beef") Contribute
+            div.beef-content-container
+                div.col-md-12.beef-summary.row
+                    div.user-thumb.col-md-4
+                        img(src=file_server_url_prefix + "/user_profiles/" + user_data.img_title, alt=user_data.img_title).float-left
+                        //div.beef-content-thumb-border
+                        label.btn.btn-primary(style="float:left;")
+                            | Change picture...
+                            input#change_user_image(type="file", hidden)
+                        div
+                            a.btn.btn-primary(href="#")#logout_button Log out
+                    div.col-md-8
+                        ul.actor-attributes
+                            li.actor-attribute(style="display:none;")
+                                span#user_id #{user_data._id}
+                            li.actor-attribute
+                                span @#{user_data.username}
+                            li.actor-attribute
+                                span #{user_data.email_address}
+                            li.actor-attribute
+                                span #{formatted_date}
+                            - if(user_data.country){
+                                li.actor-attribute
+                                    span #{user_data.country.name}
+                            - }
+                            li.actor-attribute
+                                span Beef score: #{user_data.contribution_score}
+                                
+                //-div.row(style="margin-top:50px;")
+                    div.col-md-6
+                        h2 Beef you have contributed to:
+                        +vertical-beefs(events_added_by_user, "events", "c_fill,g_face,h_120,w_116")
+                    div.col-md-6
+                        h2 Recently viewed:
+                        +vertical-beefs(recently_viewed_events, "events", "c_fill,g_face,h_120,w_116")
+
+append js_scripts
+    script(src="/js/user_profile.js")
+
+append css_scripts
+    link(href='/css/user_profile.css', rel='stylesheet')

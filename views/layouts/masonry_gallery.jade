@@ -1,0 +1,51 @@
+mixin tile(obj, data_type)
+
+    figure.masonry-item.js-item.column(class=obj.variant + " " + obj.type+"-item")
+        - ratio = '16x9'
+
+        if obj.variant == 'col-span'
+            - ratio = '32x9'
+        else if obj.variant == 'row-span'
+            - ratio = '9x80'
+
+        - type = obj.type
+
+        div.aspect(class="aspect--" + ratio + " " + type)
+            div.aspect__inner
+                if obj.type == 'image'
+                    a(data-fancybox="gallery", href=file_server_url_prefix + "/" + data_type + "/" + obj.src)
+                        img(src=file_server_url_prefix + "/" + data_type + "/" + obj.src, alt=obj.alt)
+                else if obj.type == 'video' || obj.type == 'youtube_embed'
+                    a(data-fancybox="gallery", href=obj.url)
+                        img(src=obj.youtube_src, obj.alt)
+                        i.play-button.fas.fa-play
+                else if obj.type == 'soundcloud'
+                    a(data-fancybox="gallery", data-type="iframe", href=obj.url)
+                        img(src=obj.src, obj.alt)
+                        i.play-button.fas.fa-play
+                else if obj.type == 'tweet'
+                    a(data-fancybox="gallery", data-src="#hidden-content", href="javascript:;")
+                        i.fab.fa-twitter
+                        <p>Sunsets don't get much better than this one over @GrandTetonNPS. #nature #sunset</p>
+
+                    #hidden-content(style='display: none;')
+                    //- <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Sunsets don&#39;t get much better than this one over <a href="https://twitter.com/GrandTetonNPS?ref_src=twsrc%5Etfw">@GrandTetonNPS</a>. <a href="https://twitter.com/hashtag/nature?src=hash&amp;ref_src=twsrc%5Etfw">#nature</a> <a href="https://twitter.com/hashtag/sunset?src=hash&amp;ref_src=twsrc%5Etfw">#sunset</a> <a href="http://t.co/YuKy2rcjyU">pic.twitter.com/YuKy2rcjyU</a></p>&mdash; US Department of the Interior (@Interior) <a href="https://twitter.com/Interior/status/463440424141459456?ref_src=twsrc%5Etfw">May 5, 2014</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+mixin masonry-gallery-section(gallery_items, data_type)
+    //- Define some images
+    - var images = [];
+
+    each gallery_item in gallery_items
+        - var youtube_id = gallery_item.link.split("/")[gallery_item.link.split("/").length-1]
+    
+        - images.push({ alt: gallery_item.file_name, src: gallery_item.link, youtube_src: "https://img.youtube.com/vi/" + youtube_id + "/0.jpg", type: gallery_item.media_type, url: gallery_item.link })
+
+
+    
+    //- Loop through all the images and create tiles from them.
+    div.js-grid.my-shuffle
+        each obj in images
+            +tile(obj, data_type)
+        .column.my-sizer-element

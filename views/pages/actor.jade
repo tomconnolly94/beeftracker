@@ -1,0 +1,54 @@
+extends ../layouts/layout.jade
+include ../components/trending_beef/trending_beef.jade
+include ../components/timeline/timeline.jade
+include ../components/related_actors/related_actors.jade
+include ../layouts/masonry_gallery.jade
+include ../components/google_adsense/adsense_banner_ad.jade
+
+append body
+
+    - var letter_mapping = ["one", "two", "three", "four", "five" ]
+
+    div.bt-content
+        div.beef-content.beef-category-music
+            div.beef-content-header
+                div.beef-title
+                    h2
+                        | #{actor_data.name}
+                        //-span.beefometer.medium(class=letter_mapping[actor_data.rating - 1] + "-beefs")
+                div.beef-content-category
+                    span.category-name #{actor_data.classification}
+                div.beef-content-contribute
+                    a.btn.btn-primary(href="/add-beef") Contribute
+            div.beef-content-container
+                    div.col-md-12.beef-summary
+                        div.beef-thumb
+                            img(src=file_server_url_prefix + "/actors/" + actor_data.img_title_fullsize, alt=actor_data.img_title_fullsize).float-left
+                            //div.beef-content-thumb-border
+                        ul.actor-attributes
+                            li.actor-attribute
+                                strong.attribute-name Also Known As
+                                each also_known_as in actor_data.also_known_as
+                                    span.list #{also_known_as}
+                            each variable_field_key in Object.keys(actor_data.variable_field_values)
+                                li.actor-attribute
+                                    strong.attribute-name #{variable_field_key}
+                                    - if(Array.isArray(actor_data.variable_field_values[variable_field_key]))
+                                        each variable_field in actor_data.variable_field_values[variable_field_key]
+                                            span.list #{variable_field}
+                                    - else
+                                        span.list #{actor_data.variable_field_values[variable_field_key]}
+                        p.
+                            #{actor_data.description}
+
+                        //+related-actors(actor_data.related_actors.slice(0, 6), "c_fill,g_face,h_120,w_120", actor_data._id)
+        div.row
+            +adsense-banner-ad()
+        +section('EXPLORE', 'GALLERY', '')
+            +masonry-gallery-section(actor_data.gallery_items, "actors")
+
+append js_scripts
+    script(src="/js/actor.js")
+
+append css_scripts
+    link(href='/css/actor.css', rel='stylesheet')

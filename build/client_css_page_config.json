@@ -1,0 +1,127 @@
+{
+    "all": [
+        "public/fonts/roboto.font",
+        "bower_components/components-font-awesome/scss/fontawesome.scss",
+        "bower_components/components-font-awesome/scss/fa-solid.scss",
+        "bower_components/components-font-awesome/scss/fa-regular.scss",
+        "bower_components/components-font-awesome/scss/fa-brands.scss",
+        "bower_components/fancybox/dist/jquery.fancybox",
+        "node_modules/summernote/dist/summernote-lite",
+        "node_modules/toastr/build/toastr",
+        "bower_components/bootstrap/scss/bootstrap-reboot.scss",
+        "bower_components/bootstrap/scss/bootstrap-grid.scss",
+        "bower_components/bootstrap/scss/transitions.scss",
+        "bower_components/bootstrap/scss/utilities.scss",
+        "bower_components/bootstrap/scss/print.scss",
+        "bower_components/bootstrap/scss/buttons.scss",
+        "bower_components/bootstrap/scss/nav.scss",
+        "bower_components/bootstrap/scss/navbar.scss",
+        "bower_components/bootstrap/scss/dropdown.scss",
+        "bower_components/bootstrap/scss/forms.scss",
+        "bower_components/bootstrap/scss/images.scss",
+        "bower_components/bootstrap/scss/modal.scss",
+        "bower_components/bootstrap/scss/close.scss",
+        "bower_components/bootstrap/scss/input-group.scss",
+        "bower_components/bootstrap/scss/list-group.scss",
+        "public/scss/includes/variables.scss",
+        "public/scss/includes/nav.scss",
+        "public/scss/includes/footer.scss",
+        "public/scss/includes/section.scss",
+        "public/scss/includes/mini-vertical-list.scss",
+        "public/scss/includes/modal.scss",
+        "public/scss/components/inline-beef-search.scss",
+        "public/scss/main.scss"
+    ],
+    "scraping_dump": [
+        "node_modules/select2/dist/css/select2",
+        "public/scss/includes/beef-thumbnail.scss",
+        "public/scss/includes/beefometer.scss",
+        "public/scss/components/scraped_events_accordion.scss",
+        "public/scss/components/add-actor-modal.scss",
+        "public/scss/components/error-panel.scss"
+    ],
+    "disclaimer": [],
+    "privacy_policy": [],
+    "terms_and_conditions": [],
+    "about": [
+        "public/scss/components/add-beef-cta.scss",
+        "public/scss/components/how-it-works.scss"
+    ],
+    "contact": [
+        "public/scss/includes/beef-thumbnail.scss",
+        "public/scss/includes/beefometer.scss",
+        "public/scss/includes/forms.scss",
+        "public/scss/includes/vertical-list.scss",
+        "public/scss/components/add-beef-cta.scss",
+        "public/scss/pages/contact-page.scss"
+    ],
+    "error": [],
+    "offline": [],
+    "successful_submission": [],
+    "actor": [
+        "public/scss/includes/rounded-mini-thumbs.scss",
+        "public/scss/components/masonry-grid.scss",
+        "public/scss/pages/beef-page.scss"
+    ],
+    "actors": [
+        "public/scss/includes/beef-thumbnail.scss",
+        "public/scss/includes/beefometer.scss",
+        "public/scss/components/add-beef-cta.scss",
+        "public/scss/components/pagination.scss"
+    ],
+    "add_beef": [
+        "node_modules/select2/dist/css/select2",
+        "bower_components/smartwizard/dist/css/smart_wizard",
+        "bower_components/smartwizard/dist/css/smart_wizard_theme_circles",
+        "public/scss/includes/actor.scss",
+        "public/scss/includes/forms.scss",
+        "public/scss/includes/smartwizard.override.scss",
+        "public/scss/components/gallery-manager.scss",
+        "public/scss/components/upload-gallery-item-modal.scss",
+        "public/scss/components/add-actor-modal.scss",
+        "public/scss/components/error-panel.scss"
+    ],
+    "beef": [
+        "public/scss/includes/categories.scss",
+        "node_modules/select2/dist/css/select2",
+        "public/scss/includes/beef-thumbnail.scss",
+        "public/scss/includes/beefometer.scss",
+        "public/scss/includes/actor.scss",
+        "public/scss/includes/rounded-mini-thumbs.scss",
+        "public/scss/components/masonry-grid.scss",
+        "public/scss/components/timeline.scss",
+        "public/scss/components/comment-box.scss",
+        "public/scss/pages/beef-page.scss"
+    ],
+    "beefs": [
+        "public/scss/includes/beef-thumbnail.scss",
+        "public/scss/includes/swiper.scss",
+        "public/scss/includes/beefometer.scss",
+        "public/scss/components/pagination.scss"
+        
+    ],
+    "home": [
+        "bower_components/swiper/dist/css/swiper",
+        "public/scss/includes/beef-thumbnail.scss",
+        "public/scss/includes/swiper.scss",
+        "public/scss/includes/beefometer.scss",
+        "public/scss/components/add-beef-cta.scss",
+        "public/scss/components/featured-beefs.scss"
+    ],
+    "login": [
+        "public/scss/components/error-panel.scss"
+    ],
+    "register": [
+        "node_modules/select2/dist/css/select2",
+        "public/scss/includes/forms.scss",
+        "public/scss/components/error-panel.scss"
+    ],
+    "user_profile": [
+        "public/scss/includes/user-profile.scss",
+        "public/scss/pages/beef-page.scss"
+    ],
+    "unused": [
+        "public/scss/components/categories-browser.scss",
+        "public/scss/components/trending-beefs-section.scss"
+    ]
+}

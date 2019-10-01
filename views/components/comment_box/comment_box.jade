@@ -1,0 +1,39 @@
+include ./comment_box_display.jade
+include ../../template_helper_functions/date_formatter.jade
+
+mixin comment-box(comments, content_classification)
+    div.row.comment-box
+        div.col-md-12
+            div.row
+                div.col-md-12
+                    - if(!user_data)    
+                        p
+                            | You must be logged in to comment.&nbsp;
+                            a(href="#", data-toggle="modal", data-target="#login_modal") Login
+            div.row.new-comment
+                div.col-md-1.d-none.d-md-block.d-lg-block.d-xl-block
+                    - if(user_data)
+                        img#user_img(src=file_server_url_builder(file_server_url_prefix, "user_profiles", user_data.img_title, "c_fill,g_face,h_65,w_65"), x-user-id=user_data._id, x-content-type=content_classification).img-fluid
+                    - else
+                        img(src=file_server_url_builder(file_server_url_prefix, "user_profiles", "default", "c_fill,g_face,h_65,w_65")).img-fluid
+                div.col-md-11
+                    div.row
+                        div.col-md-12
+                            form
+                                - if(user_data)
+                                    div.col-md-12
+                                        textarea.form-control#comment_text_area
+                                    div.col-md-12
+                                        button.btn.btn-primary.float-right#submit_comment(type="submit") Submit
+                                - else
+                                    div.col-md-12
+                                        textarea.form-control#comment_text_area(disabled)
+                                    div.col-md-12
+                                        button.btn.btn-primary.float-right#submit_comment(type="submit", disabled) Submit
+            div#comment_box_display
+                +comment-box-display(comments)
+
+mixin comment-box-section(data, content_classification)
+    //+section('BEEF', 'COMMENTS', 'fa-comments')
+    +section('D', 'ISCUSSION', 'fa-comments')
+        +comment-box(data, content_classification)

@@ -1,0 +1,50 @@
+mixin register-form()
+    div.bt-content(style="padding-top:30px;")
+        div.row(id="register_error_panel")
+            - var errors = []
+            +error-panel(errors, "register_error_panel")
+        div.row
+            div.col-md-12.text-right
+                p
+                    | Already have an account?&nbsp;
+                    a(href="#", data-toggle="modal", data-target="#login_modal") Login Now
+        div.row(style="padding-top: 20px")
+            //-div.col-md-6
+                h3 Register via
+                div.fb-login-button(data-max-rows="1", data-size="large", data-button-type="login_with", data-show-face="false", data-auto-logout-link="false", data-use-continue-as="false")
+            div.col-md-6(style="margin: 0 auto")
+                h3 Register a Beeftracker account
+                form
+                    div.form-row
+                        div.form-group.col-md-12
+                            label(for="register_username") Username
+                            input(type="text").form-control#register_username
+                    div.form-row
+                        div.form-group.col-md-12
+                            label(for="register_first_name") First name
+                            input(type="text").form-control#register_first_name
+                    div.form-row
+                        div.form-group.col-md-12
+                            label(for="register_last_name") Last name
+                            input(type="text").form-control#register_last_name
+                    div.form-row    
+                        div.form-group.col-md-12
+                            label(for="register_d_o_b") Date of birth
+                            input(type="date").form-control#register_d_o_b
+                    div.form-row
+                        div.form-group.col-md-12
+                                label(for="register_email") Email
+                                input(type="email").form-control#register_email
+                    div.form-row
+                        div.form-group.col-md-12
+                            label(for="register_password") Password
+                            input(type="password").form-control#register_password
+                    div.form-row
+                        div.form-group.col-md-12
+                            button.btn.btn-primary.float-right#register_submit Register
+                    div.form-row
+                        div.form-group.col-md-12
+                            p
+                                | By registering, you are agreeing to BeefTracker's&nbsp;
+                                a(href="/terms-and-conditions") Terms and Conditions
+                                

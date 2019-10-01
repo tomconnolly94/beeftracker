@@ -1,0 +1,11 @@
+mixin gallery-manager()
+    div.col-md-4.gallery-manager-add-item
+        a(href="#", data-toggle="modal", data-target="#upload_gallery_item_modal")
+            i.fas.fa-plus
+    each gallery_item, index in gallery_items
+        div.col-md-4.gallery-manager-item
+            a(href="#").remove-gallery-item#remove_gallery_item
+                i.fas.fa-trash.fa
+            img(src=gallery_item.src, x-media-type=gallery_item.media_type, x-file-name=gallery_item.file_name, x-media-link=gallery_item.link, x-main-graphic=gallery_item.main_graphic, x-cover-image=gallery_item.cover_image, x-gallery-item-index=index)
+        
++gallery-manager()

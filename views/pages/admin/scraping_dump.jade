@@ -1,0 +1,23 @@
+extends ../../layouts/layout.jade
+include ../../components/scraped_event_data_form/scraped_event_data_form.jade
+include ../../components/add_actor_modal/add_actor_modal.jade
+
+append body
+    div.bt-content
+    
+        h2#heading Scraped Events:
+    
+        //- var scraped_records = [ { title: "title1", description: "description1" }, { title: "title2", description: "description2" } ]
+    
+        div.panel-group#accordion
+            - for(var i = 0; i < scraped_records.length; i++){
+                +scraped-data-event-form(scraped_records[i])
+            - }
+    div.bt-content
+        +add-actor-modal(actor_variable_fields)
+
+append js_scripts 
+    script(src="/js/scraping_dump.js")
+
+append css_scripts
+    link(href='/css/scraping_dump.css', rel='stylesheet')

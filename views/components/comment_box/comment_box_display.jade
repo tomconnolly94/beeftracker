@@ -1,0 +1,28 @@
+include ../../template_helper_functions/file_server_url_builder.jade
+include ../../template_helper_functions/date_formatter.jade
+
+mixin comment-box-display(comments)
+
+    - if(false)
+        - console.log(comments);
+        each comment in comments
+            - var formatted_date = format_date(data.event_date);
+            - comment.text = String(comment.text)
+            
+            div.comment-box-item
+                div.col-md-1.d-none.d-md-block.d-lg-block.d-xl-block
+                    - console.log(comment.user);
+                    img(src=file_server_url_builder(file_server_url_prefix, "user_profiles", comment.user.img_title, "c_fill,g_face,h_65,w_65")).img-fluid
+                div.col-md-11
+                    div.row
+                        div.col-md-12
+                            strong.author #{comment.user.first_name} #{comment.user.last_name}
+                            small.date #{formatted_date} #{formatted_time}
+                        div.col-md-12
+                            p #{comment.text}
+                            
+- if(!comments){
+-     comments = [];
+- }
+                            
++comment-box-display(comments)

@@ -1,0 +1,74 @@
+extends ../layouts/layout.jade
+include ../components/trending_beef/trending_beef.jade
+include ../components/add_beef_call_to_action/add_beef_call_to_action.jade
+include ../components/featured_beef/featured_beef.jade
+include ../components/category_browser/category_browser.jade
+include ../components/google_adsense/adsense_banner_ad.jade
+include ../layouts/horizontal_slider.jade
+
+append body
+    div.bt-content
+        +section('WHATIS', 'THIS', 'fas fa-question')
+            div.row
+                div.col-sm-12
+                    h5
+                        | Home of beef! Explore our broad collection of conflict/beef/argument stories below! Get informed about who you agree with and 
+                        a(href="/register") join the community 
+                        | to start contributing today!
+
+    div.bt-content
+        - if(featured_data && featured_data.length == 3){
+            +featured-beef-section(featured_data, "events", "c_fill,g_face,h_215,w_350")
+            +adsense-banner-ad()
+        - }
+        +section('New', 'BEEF', 'fa-clock', 'Check out the latest contributions to our site!')
+            div.row
+                +thumbnail-grid(new_beef_data, "events")
+
+append body 
+    div.bt-content
+        +section('JOINTHE', 'COMMUNITY', 'fa fa-comments', 'Discover more ways to get involved with the project, vote and contribute now!')
+            div.row
+                div.col-sm-8
+                    h4
+                        | Beeftracker is creating a community of Beef lovers to share and discuss every beef out there. If you have information that we don't have yet, create an account and join our contributors in building the biggest beef based database this world has ever seen...
+                    p
+                        | Beef can be found everywhere and anywhere. We follow Beef in Music, Politics, Sport and even Silicon Valley to ensure any argument you're interested in will be covered, and if we havent got round to it yet, join, and help us out!
+                div.col-sm-4
+                    a.btn.btn-lg.btn-primary.btn-float.add-beef-button(href="/add-beef") Add Beef
+                    a.btn.btn-lg.btn-primary.btn-float(href="/register") Create an Account
+
+append body
+    div.bt-content
+        +adsense-banner-ad()
+        +section('RANDOM', 'BEEF', 'fa-clock', 'Roll the Dice!')
+            div.row
+                +thumbnail-grid(random_beef_data, "events")
+
+append body
+    div.bt-content
+        +adsense-banner-ad()
+        +section('CLASSIC', 'BEEF', 'fa-clock', 'Find the old stanky ones!')
+            div.row
+                +thumbnail-grid(classic_beef_data, "events")
+
+append body
+    div.bt-content
+        +adsense-banner-ad()
+        +add-beef-cta()
+
+append body
+    div.bt-content-full-width.dark
+      div.container
+          +section('HOT', 'BEEF','', "Check out what's hot right now!")
+               +horizontal-slider('featured_beefs_slider_full', slider_data, "events", "c_fill,g_face,h_219,w_340")
+
+append js_scripts
+    script.
+        function init_horizontal_slider_callback(){
+            init_horizontal_slider('featured_beefs_slider_full')
+        }
+    script(src="/js/home.js")
+
+append css_scripts
+    link(href='/css/home.css', rel='stylesheet')

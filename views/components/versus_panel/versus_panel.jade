@@ -1,0 +1,80 @@
+include ../../template_helper_functions/file_server_url_builder.jade
+
+mixin versus-panel(aggressors, targets)
+
+    - var longest_actor_array;
+
+    - if(aggressors.length > targets.length){
+        - longest_actor_array = aggressors
+    - }
+    - else{
+        - longest_actor_array = targets
+    - }
+
+    div.col-5(style="text-align:right;")
+        h4 Aggressor/s *
+    div.col-2
+    div.col-5(style="text-align:left;")
+        h4 Target/s *
+
+
+    - for(var i = 0; i < longest_actor_array.length+1; i++){
+        - if(aggressors[i] ){ //if user has added aggressors, paint them 
+            div.col-5.beefer
+                div
+                    a.remove_actor(href="#")
+                        i.fas.fa-times(style="float: left;")
+                    a.selector.select_actor_beefer(id="select_actor_beefer_" + i)
+                        img.actor-avatar(src=file_server_url_builder(file_server_url_prefix, "actors", aggressors[i].src, "c_fill,g_face,h_150,w_150", "webp"))
+                        //-i.fas.fa-plus
+                    h4#beefer_name(x-actor-id=aggressors[i]._id) #{aggressors[i].name}
+        -}
+        - else if(i == aggressors.length){ //make sure to paint an extra button to allow adding more actors
+            div.col-5.beefer
+                div
+                    //-h4#beefer_name &nbsp;
+                    a.selector.select_actor_beefer(href="#", data-toggle="modal", data-target="#selector_actor_modal", id="select_actor_beefer_" + i)
+                        //-img(src="", style="display:none;").actor-avatar
+                        i.fas.fa-plus
+        - }
+        - else{ //add empty div to ensure spacing is kept even
+            div.col-5.beefer
+        - }
+        
+        div.col-2.versus
+            - if(i == 0){
+                h4 VS.
+            - }
+        
+        - if(targets[i] ){ //if user has added aggressors, paint them 
+            div.col-5.beefee
+                div
+                    a.remove_actor(href="#")
+                        i.fas.fa-times(style="float: left;")
+                    a.selector.select_actor_beefee(id="select_actor_beefer_" + i)
+                        img.actor-avatar(src=file_server_url_builder(file_server_url_prefix, "actors", targets[i].src, "c_fill,g_face,h_150,w_150", "webp"))
+                        //-i.fas.fa-plus
+                    h4#beefee_name(x-actor-id=targets[i]._id) #{targets[i].name}
+        -}
+        - else if(i == targets.length){ //make sure to paint an extra button to allow adding more actors
+            div.col-5.beefee
+                div
+                    //-h4#beefee_name &nbsp;
+                    a.selector.select_actor_beefee(href="#", data-toggle="modal", data-target="#selector_actor_modal", id="select_actor_beefer_" + i)
+                        //-img(src="", style="display:none;").actor-avatar
+                        i.fas.fa-plus
+        - }
+        - else{ //add empty div to ensure spacing is kept even
+            div.col-5.beefee
+        - }                    
+    - }
+
+- if(!aggressors){
+-     aggressors = "none";
+- }
+
+- if(!targets){
+-     targets = "none";
+- }
+
++versus-panel(aggressors, targets)

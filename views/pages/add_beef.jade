@@ -1,0 +1,117 @@
+extends ../layouts/layout.jade
+include ../components/trending_beef/trending_beef.jade
+include ../components/upload_gallery_item_modal/upload_gallery_item_modal.jade
+include ../components/select_actor_modal/select_actor_modal.jade
+include ../components/add_actor_modal/add_actor_modal.jade
+include ../components/gallery_manager/gallery_manager.jade
+include ../components/add_list/add_list.jade
+include ../components/error_panel/error_panel.jade
+include ../components/versus_panel/versus_panel.jade
+include ../components/google_adsense/adsense_banner_ad.jade
+
+append body
+    div.bt-content
+        div.hidden#post_url(value=post_url)
+        +add-actor-modal(actor_variable_fields)
+        +upload-gallery-item-modal()
+        +select-actor-modal()
+        section
+            div.row.title
+                h2.col-10
+                    | Add
+                    span
+                        | Beef
+                span.col-2.icon.fas-plus
+            div(style="padding-top: 20px;")
+                div.row(id="submit_event_error_panel")
+                    - var errors = []
+                    +error-panel(errors, "submit_event_error_panel")
+                
+                form(action="", method="POST")
+                    div.row
+                        div.col-12
+                            div.button-group.float-right
+                                //-a(href="#").btn.btn-secondary Cancel
+                                - if(post_url.includes("update-request")){
+                                    button(type="submit").btn.btn-primary.submit_update_request_button Suggest update
+                                - } 
+                                - else{
+                                    button(type="submit").btn.btn-primary.submit_new_event_button Submit
+                                - }
+                    div.row.versus-panel#versus_panel
+                        - var aggressors = [];
+                        - var targets = [];
+                        - if(event_data){
+                            - var map_actor_src_field = function(actor){ actor.src = actor.img_title_fullsize; return actor;};
+                            - aggressors = event_data.aggressors.map(map_actor_src_field);
+                            - targets = event_data.targets.map(map_actor_src_field);
+                        - }
+                        +versus-panel(aggressors, targets)
+                    div.row
+                        div.col-12
+                            div.form-row
+                                div.form-group.col-md-6
+                                    label(for="beef_title") Title *
+                                    input(type="text", value=event_data ? event_data.title : "").form-control#beef_title 
+                                 div.form-group.col-md-6.row
+                                    - var date_split = event_data ? new Date(event_data.event_date).toISOString().split("T") : ["", "12:00"]
+                                     div.form-group.col-md-6
+                                        label(for="beef_date") Date *
+                                        input(type="date", value=date_split[0]).form-control#beef_date
+                                     div.form-group.col-md-6
+                                        label(for="beef_time") Time *
+                                        input(type="time", value=date_split[1].slice(0,5)).form-control#beef_time 
+                            div.form-row
+                                div.form-group.col-md-6
+                                    label(for="beef_category") Category *
+                                    select#beef_category.form-control(name="beef_category")
+                                        option(selected=!event_data, disabled="disabled") Select Category
+                                        each category in categories
+                                            option(value=category.cat_id, selected=event_data && category.cat_id == event_data.categories[0].cat_id) #{category.name}
+                                div.form-group.col-md-6
+                                    label(for="beef_tags") Tags
+                                    select#beef_tags.form-control(name="beef_tags", multiple="multiple")
+                                        - if(event_data){
+                                            - for(var i = 0; i < event_data.tags.length; i++){
+                                                option(value=event_data.tags[i], selected) #{event_data.tags[i]}
+                                            - }
+                                        - }
+                            div.form-row
+                                div.form-group.col-md-12
+                                    label(for="beef_content_summernote") What happened? *
+                                    textarea.form-control#beef_description
+                                        - if(event_data){
+                                            | #{event_data.description}
+                                        - }
+                            
+                            +add-list(event_data ? event_data.data_sources : [], "add_event_data_sources", "Data Sources")
+                            
+                            div.form-row
+                                div.form-group.col-md-12
+                                    h2 Gallery *
+                            div.row.gallery-manager#gallery_manager
+                                - if(gallery_items){
+                                    - gallery_items.map(function(gallery_item){
+                                        - if(gallery_item.media_type == "image"){
+                                            - gallery_item.src = file_server_url_builder(file_server_url_prefix, "events", gallery_item.link, "c_fill,g_face,h_240,w_350")
+                                        - }
+                                    - })
+                                - }
+                                +gallery-manager()
+                                
+                    div.row
+                        div.col-12
+                            div.button-group.float-right
+                                //-a(href="#").btn.btn-secondary Cancel
+                                - if(post_url.includes("update-request")){
+                                    button(type="submit").btn.btn-primary.submit_update_request_button Suggest update
+                                - } 
+                                - else{
+                                    button(type="submit").btn.btn-primary.submit_new_event_button Submit
+                                - }
+
+append js_scripts
+    script(src="/js/add_beef.js")
+
+append css_scripts
+    link(href='/css/add_beef.css', rel='stylesheet')
