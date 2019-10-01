@@ -84,7 +84,7 @@ app.use(validator({
 
 // ### Configure node constiables ###
 app.set('port', (process.env.PORT || 5000));
-app.set('views', __dirname + '/views/templates');
+app.set('views', __dirname + '/views');
 //app.set('view engine', 'ejs');
 app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({
@@ -117,13 +117,14 @@ app.use('/css', express.static(__dirname + '/public/dist/css/')); //css scripts
 app.use('/webfonts', express.static(__dirname + '/public/fonts/')); //fonts
 app.use('/modules', express.static(__dirname + '/node_modules/')); //npm packages
 app.use('/bower_components', express.static(__dirname + '/bower_components/')); //bower packages
-app.use('/component_controllers', express.static(__dirname + '/views/templates/components/')); //client side controller js scripts
+app.use('/component_controllers', express.static(__dirname + '/public/javascript/components/')); //client side controller js scripts
 app.use('/js', express.static(__dirname + '/public/dist/javascript/')); //dist js scripts
-if(process.env.NODE_ENV == "local_dev"){
+
+if(process.env.NODE_ENV == "local_dev"){ //allow access to individual js scripts for dev purposes only when in dev env
     app.use('/dev-js', express.static(__dirname + '/public/javascript/')); //dev js scripts
-    app.use('/dev-component-js', express.static(__dirname + '/views/templates/components')); //dev js scripts
-    app.use('/dev-layout-js', express.static(__dirname + '/views/templates/layouts')); //dev js scripts
-    app.use('/dev-page-js', express.static(__dirname + '/views/templates/pages')); //dev js scripts
+    app.use('/dev-component-js', express.static(__dirname + '/public/javascript/components')); //dev js scripts
+    app.use('/dev-layout-js', express.static(__dirname + '/public/javascript/layouts')); //dev js scripts
+    app.use('/dev-page-js', express.static(__dirname + '/public/javascript/pages')); //dev js scripts
 }
 
 //route for service worker script must be here to allow it to cache files globally across the site

@@ -71,7 +71,7 @@ cd ../
 ### BUILD SERVER FILES ###
 
 echo ""
-cd bf-dev/gulp
+cd bf-dev
 echo "Building server files..."
 
 exit_code=2
