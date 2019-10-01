@@ -7,7 +7,7 @@ var fs = require('fs');
 //internal dependencies
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
 
-var template_dir = "public/javascript/components/";
+var template_dir = "views/components/";
 
 //function to find jade template file based on endpoint
 var build_template_function = function(request, response){
