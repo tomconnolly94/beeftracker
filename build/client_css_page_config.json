@@ -102,6 +102,7 @@
     ],
     "home": [
         "bower_components/swiper/dist/css/swiper",
+        "public/scss/includes/categories.scss",
         "public/scss/includes/beef-thumbnail.scss",
         "public/scss/includes/swiper.scss",
         "public/scss/includes/beefometer.scss",
