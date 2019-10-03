@@ -7,27 +7,27 @@ var sinon = require("sinon");
 //internal dependencies
 var globals = require('../testing_globals.js');
 
-describe('Module: broken_links_controller', function () {
+describe('Module: broken_media_controller', function () {
 
-    var broken_links_controller, broken_link_example, db_insert_spy, db_delete_spy, db_interface, db_match_query;
+    var broken_media_controller, broken_media_example, db_insert_spy, db_delete_spy, db_interface, db_match_query;
 
     before(function () {
 
         //db_interface stub
         db_interface = require("../module_mocking/db_interface.mock.js");
-        broken_links_controller = proxyquire("../../../server_files/controllers/broken_links_controller", {
+        broken_media_controller = proxyquire("../../../server_files/controllers/broken_media_controller", {
             "../interfaces/db_interface.js": db_interface
         });
 
         db_match_query = { $match: { name: "steve" } };
 
-        broken_link_example = {
+        broken_media_example = {
             event_id: globals.dummy_object_id,
             gallery_items: globals.event_example.gallery_items
         }
 
         db_interface.get = function (query_config, callback) {
-            callback([broken_link_example]);
+            callback([broken_media_example]);
         }
 
         db_interface.insert = function (insert_config, callback) {
@@ -50,41 +50,41 @@ describe('Module: broken_links_controller', function () {
         db_delete_spy = sinon.spy();
     });
 
-    it('findBrokenLinks', function (done) {
+    it('findBrokenMediaRecords', function (done) {
 
         db_interface.get = function (query_config, callback) {
             assert.equal(db_match_query, query_config.aggregate_array[0]);
-            callback([broken_link_example]);
+            callback([broken_media_example]);
         }
 
-        var expected_results = [ broken_link_example ];
+        var expected_results = [ broken_media_example ];
 
-        broken_links_controller.findBrokenLinks(db_match_query, function (results) {
+        broken_media_controller.findBrokenMediaRecords(db_match_query, function (results) {
             assert.equal(results.length, expected_results.length)
             globals.compare_objects(results[0], expected_results[0]);
             done();
         });
     });
 
-    it('findBrokenLink', function (done) {
+    it('findBrokenMedia', function (done) {
 
 
         db_interface.get = function (query_config, callback) {
             assert.equal(globals.dummy_object_id, query_config.aggregate_array[0]["$match"]._id);
-            callback([broken_link_example]);
+            callback([broken_media_example]);
         }
 
-        var expected_results = broken_link_example;
+        var expected_results = broken_media_example;
 
-        broken_links_controller.findBrokenLink(globals.dummy_object_id, function (result) {
+        broken_media_controller.findBrokenMedia(globals.dummy_object_id, function (result) {
             globals.compare_objects(result, expected_results);
             done();
         });
     });
 
-    it('createBrokenLink', function (done) {
+    it('createBrokenMedia', function (done) {
 
-        broken_links_controller.createBrokenLink(broken_link_example, function (result) {
+        broken_media_controller.createBrokenMedia(broken_media_example, function (result) {
             assert.equal(globals.dummy_object_id, result._id);
             //simply testing that what is returned by the db_interface.insert function is returned by the controller function
             assert.equal(globals.event_example.gallery_items, result.gallery_items);
@@ -94,9 +94,9 @@ describe('Module: broken_links_controller', function () {
         });
     });
 
-    it('deleteBrokenLink', function (done) {
+    it('deleteBrokenMedia', function (done) {
 
-        broken_links_controller.deleteBrokenLink(globals.dummy_object_id, function (result) {
+        broken_media_controller.deleteBrokenMedia(globals.dummy_object_id, function (result) {
             assert.equal(result, result);
 
             assert(db_delete_spy.called);

@@ -82,7 +82,7 @@ module.exports = {
         return "contact_requests";
     },
     
-    get_broken_links_table: function(){
-        return "broken_links";
+    get_broken_media_table: function(){
+        return "broken_media";
     }
 }

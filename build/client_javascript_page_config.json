@@ -65,7 +65,8 @@
 		"public/javascript/components/voting_panel/voting_panel_controller.js",
 		"public/javascript/pages/beef_page_controller.js",
 		"public/javascript/layouts/masonry_gallery.js",
-		"public/javascript/components/timeline/timeline.js"
+		"public/javascript/components/timeline/timeline.js",
+		"public/javascript/components/broken_media/broken_media_controller.js"
 	],
 	"beefs": [
 		"bower_components/swiper/dist/js/swiper.js",

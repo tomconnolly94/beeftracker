@@ -68,13 +68,12 @@ append body
                 div.col-md-12.beef-summary
 
                     - if(main_graphic.media_type != "image")
-                        form(action="/api/broken-link",method="POST")
-                            div.main-graphic-undertext
-                                input(type="submit",value="Is the media below broken? Report it here with a single click!")
+                        div.broken-media-link
+                            a#broken-media-link Is the media below missing/broken? Report it here with a single click!
 
                     - if(main_graphic.media_type == "soundcloud_embed")
                         div.beef-body-content-soundcloud
-                            iframe(height="300", scrolling="no", frameborder="no", allow="autoplay", src=main_graphic.link)
+                            iframe(id="soundcloud_iframe" height="300", scrolling="no", frameborder="no", allow="autoplay", src=main_graphic.link)
                     - else if(main_graphic.media_type == "youtube_embed")
                         div.beef-body-content-youtube-video
                             iframe(id="youtube_iframe", height="315", scrolling="no", frameborder="no", src=main_graphic.link, allow="autoplay; encrypted-media", allowfullscreen="allowfullscreen", mozallowfullscreen="mozallowfullscreen", msallowfullscreen="msallowfullscreen", oallowfullscreen="oallowfullscreen", webkitallowfullscreen="webkitallowfullscreen")
@@ -85,7 +84,7 @@ append body
                                 img(src=file_server_url_builder(file_server_url_prefix, "events", main_graphic.link, "", "webp")).float-left.col-sm-12
                     - else if(main_graphic.media_type == "video_embed")
                         div.beef-body-content-video
-                            iframe(scrolling="no" src=main_graphic.link frameborder="0" allowtransparency="true")
+                            iframe(id="video_iframe" scrolling="no" src=main_graphic.link frameborder="0" allowtransparency="true")
 
                     //div.beef-thumb
                         img(src=server_url_prefix_with_image_formatting + "/events/" + event_data.img_title_fullsize).float-left
