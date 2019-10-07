@@ -3,16 +3,12 @@ var router = require("express").Router();
 
 //internal dependencies
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
-var globals = require("../config/globals.js")
+var storage_config = require("../config/storage_config.js")
 var cookie_parser = require("../tools/cookie_parsing.js");
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
 var logger = require("../tools/logging");
 var url_param_validator = require("../validation/url_param_validation");
 var responses_object = require("./endpoint_response.js");
-
-//extract response functions
-var send_successful_page_response = responses_object.send_unsuccessful_api_response;
-var send_unsuccessful_page_response = responses_object.send_unsuccessful_api_response;
 
 //endpoint controllers
 var actor_controller = require("../controllers/actors_controller.js");
@@ -33,11 +29,15 @@ if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if 
     });
 }
 
-var view_parameters_global = { 
-    file_server_url_prefix: globals.file_server_url_prefix,
+
+var view_parameters_global = {
     server_rendered: true,
     dev_env: process.env.NODE_ENV == "local_dev" ? true : false
 }
+
+storage_config.get_storage_server_base_url(function(file_server_url_prefix){
+    view_parameters_global.file_server_url_prefix = file_server_url_prefix;
+});
 
 //find full user record from validated user token
 function resolve_user_from_locals_token(request, callback){
