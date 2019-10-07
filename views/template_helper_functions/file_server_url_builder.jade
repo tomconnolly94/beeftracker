@@ -1,5 +1,10 @@
 - function file_server_url_builder(prefix, directory_path, image_id, image_resize_params, extension){
 
+    //if prefix == "/" local serving is in use
+    - if(prefix == "/"){
+        - return "/dev-images/image.jpg";
+    - }
+
     - if(!image_id){
         - console.log("#### NO IMAGE_ID in file_server_url_builder.jade. data: ", prefix, directory_path, image_id, image_resize_params, extension)
         - return "";
@@ -11,9 +16,10 @@
     - }
 
     - var split_prefix = prefix.split("/");
-    -if(image_id.includes(split_prefix[2])){
+    - if(image_id.includes(split_prefix[2])){
         - return image_id;
     - }
+
     - split_prefix.splice(split_prefix.length-1, 0, image_resize_params);
     - var image_url = split_prefix.join("/");
     
