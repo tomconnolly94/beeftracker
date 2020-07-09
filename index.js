@@ -121,7 +121,6 @@ if(process.env.NODE_ENV == "local_dev"){ //allow access to individual js scripts
 app.use('/css', express.static(__dirname + '/public/dist/css/')); //css scripts
 app.use('/webfonts', express.static(__dirname + '/public/fonts/')); //fonts
 app.use('/modules', express.static(__dirname + '/node_modules/')); //npm packages
-app.use('/bower_components', express.static(__dirname + '/bower_components/')); //bower packages
 app.use('/component_controllers', express.static(__dirname + '/public/javascript/components/')); //client side controller js scripts
 app.use('/js', express.static(__dirname + '/public/dist/javascript/')); //dist js scripts
 

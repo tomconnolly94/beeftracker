@@ -72,7 +72,6 @@ function build_file_string(specific_js_scripts){
 		var path_replacement_mappings = {
 			"public/javascript": "/dev-js",
 			"node_modules": "/modules",
-			"bower_components": "/bower_components",
 			"public/javascript/components": "/dev-component-js",
 			"public/javascript/layouts": "/dev-layout-js",
 			"public/javascript/pages": "/dev-page-js",
@@ -258,7 +257,7 @@ gulp.task('default', function() {
 
 
 gulp.task('icons', function() {
-    return gulp.src('./bower_components/components-font-awesome/webfonts/**.*')
+    return gulp.src('./node_modules/components-font-awesome/webfonts/**.*')
         .pipe(gulp.dest(compiled_webfonts_directory));
 });
 

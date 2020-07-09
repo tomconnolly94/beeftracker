@@ -8,7 +8,6 @@ var cookie_parser = require("../tools/cookie_parsing.js");
 var token_authentication = require("../tools/token_authentication.js"); //get token authentication object
 var logger = require("../tools/logging");
 var url_param_validator = require("../validation/url_param_validation");
-var responses_object = require("./endpoint_response.js");
 
 //endpoint controllers
 var actor_controller = require("../controllers/actors_controller.js");
@@ -19,14 +18,29 @@ var user_controller = require("../controllers/users_controller.js");
 
 if(process.env.NODE_ENV == "heroku_production"){ //only apply https redirect if deployed on a heroku server
     /* Detect any http requests, if found, redirect to https, otherwise continue to other routes */
-    router.get("*", function(req,res,next){
-        if(req.headers["x-forwarded-proto"] != "https"){
-            res.redirect("https://www.beeftracker.co.uk"+req.url)
-        }
-        else{
-            next();
-        }
-    });
+    
+    var https_enabled_on_remote_server = false;
+
+    if(https_enabled_on_remote_server){
+        router.get("*", function(req,res,next){
+            if(req.headers["x-forwarded-proto"] != "https"){
+                res.redirect("https://www.beeftracker.co.uk" + req.url)
+            }
+            else{
+                next();
+            }
+        });
+    }
+    else{
+        router.get("*", function(req,res,next){
+            if(req.headers["x-forwarded-proto"] != "http"){
+                res.redirect("http://www.beeftracker.co.uk" + req.url)
+            }
+            else{
+                next();
+            }
+        });
+    }
 }
 
 

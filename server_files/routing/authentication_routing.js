@@ -5,8 +5,8 @@ var router = express.Router();
 var FacebookStrategy = require("passport-facebook").Strategy;*/
 
 router.use('/local', require("../authentication/local_auth"));
-router.use('/facebook', require("../authentication/facebook_auth"));
-router.use('/twitter', require("../authentication/twitter_auth"));
+//router.use('/facebook', require("../authentication/facebook_auth"));
+//router.use('/twitter', require("../authentication/twitter_auth"));
 /*router.use('/google', require("../authentication/google_auth"));*/
 
 module.exports = router;

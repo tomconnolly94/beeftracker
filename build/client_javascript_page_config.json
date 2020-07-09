@@ -3,8 +3,8 @@
 		"node_modules/jquery/dist/jquery.min.js",
 		"node_modules/jquery-lazy/jquery.lazy.js",
 		"node_modules/toastr/build/toastr.min.js",
-		"bower_components/bootstrap/dist/js/bootstrap.bundle.js",
-		"bower_components/hammerjs/hammer.js",
+		"node_modules/bootstrap/dist/js/bootstrap.js",
+		"node_modules/hammerjs/hammer.js",
 		"public/javascript/service_worker/service_worker_init.js",
 		"public/javascript/globals.js",
 		"public/javascript/components/login/login_form_controller.js",
@@ -31,8 +31,8 @@
 	"offline": [],
 	"successful_submission": [],
 	"actor": [
-		"bower_components/shufflejs/dist/shuffle.js",
-		"bower_components/fancybox/dist/jquery.fancybox.js",
+		"node_modules/shufflejs/dist/shuffle.js",
+		"node_modules/fancybox/dist/js/jquery.fancybox.js",
 		"public/javascript/layouts/masonry_gallery.js",
 		"public/javascript/components/timeline/timeline.js"
 	],
@@ -42,7 +42,7 @@
 	],
 	"add_beef": [
 		"node_modules/select2/dist/js/select2.full.min.js",
-		"bower_components/smartwizard/dist/js/jquery.smartWizard.js",
+		"node_modules/smartwizard/dist/js/jquery.smartWizard.js",
 		"public/javascript/components/add_list/add_list_controller.js",
 		"public/javascript/components/add_actor_modal/add_actor_modal_controller.js",
 		"public/javascript/components/select_actor_modal/select_actor_modal_controller.js",
@@ -58,8 +58,8 @@
 		"public/javascript/load_url_params_to_page.js"
 	],
 	"beef": [
-		"bower_components/shufflejs/dist/shuffle.js",
-		"bower_components/fancybox/dist/jquery.fancybox.js",
+		"node_modules/shufflejs/dist/shuffle.js",
+		"node_modules/fancybox/dist/js/jquery.fancybox.js",
 		"node_modules/select2/dist/js/select2.full.min.js",
 		"public/javascript/components/comment_box/comment_box_controller.js",
 		"public/javascript/components/voting_panel/voting_panel_controller.js",
@@ -69,13 +69,13 @@
 		"public/javascript/components/broken_media/broken_media_controller.js"
 	],
 	"beefs": [
-		"bower_components/swiper/dist/js/swiper.js",
+		"node_modules/swiper/js/swiper.js",
 		"public/javascript/components/category_browser/category_browser_controller.js",
 		"public/javascript/components/pagination/pagination_controller.js",
 		"public/javascript/components/section_control_toolbar/section_control_toolbar_controller.js"
 	],
 	"home": [
-		"bower_components/swiper/dist/js/swiper.js",
+		"node_modules/swiper/js/swiper.js",
 		"public/javascript/layouts/horizontal_slider.js",
 		"public/javascript/components/login/login_form_controller.js",
 		"public/javascript/components/category_browser/category_browser_controller.js"

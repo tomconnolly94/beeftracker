@@ -391,6 +391,33 @@ describe('Module: actors_controller', function () {
             done()
         });
     });
+
+    
+    it('createActor - no image', function (done) {
+        
+        db_interface.insert = function(insert_config, callback){
+            callback({ 
+                _id: globals.dummy_object_id,
+                gallery_items: globals.dummy_object_id 
+            }); 
+        };
+        
+        var files = [ ];
+        var actor_example_no_image = actor_example.clone();
+        actor_example_no_image.gallery_items = [];
+        
+        storage_interface.upload = function(upload_config, callback){            
+            callback(upload_config.item_data);
+        };
+                
+        actors_controller.createActor(actor_example, files, function(result){
+            callback_spy();
+            
+            assert.equal(globals.dummy_object_id, result._id);
+            assert.equal(globals.dummy_object_id, result.gallery_items); //simply testing that what is returned by the db_interface.insert function is returned by the controller function
+            done()
+        });
+    });
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     //
